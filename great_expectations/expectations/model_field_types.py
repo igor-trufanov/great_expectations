@@ -56,7 +56,11 @@ class _Mostly(Number):
 Mostly = Annotated[float, _Mostly]
 
 MostlyField = pydantic.Field(
-    default=1.0, description=MOSTLY_DESCRIPTION, ge=0.0, le=1.0, multiple_of=0.01
+    default=1.0,
+    description=MOSTLY_DESCRIPTION,
+    ge=0.0,
+    le=1.0,
+    schema_overrides={"multiple_of": 0.01},
 )
 
 ListOfStrings = Annotated[list[str], pydantic.Field(title="Text", min_items=1)]
