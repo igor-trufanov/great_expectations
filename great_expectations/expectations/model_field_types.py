@@ -72,9 +72,14 @@ ValueSetField = Annotated[
         schema_overrides={
             "anyOf": [
                 {
+                    "title": "Value Set",
                     "description": "A set of objects used for comparison.",
                     "oneOf": [
                         {
+                            "title": "Text",
+                            "type": "array",
+                            "items": {"type": "string", "minLength": 1},
+                            "minItems": 1,
                             "examples": [
                                 ["a", "b", "c", "d", "e"],
                                 [
@@ -85,27 +90,22 @@ ValueSetField = Annotated[
                                     "2024-01-05",
                                 ],
                             ],
-                            "items": {"minLength": 1, "type": "string"},
-                            "minItems": 1,
-                            "title": "Text",
-                            "type": "array",
                         },
                         {
+                            "title": "Numbers",
+                            "type": "array",
+                            "items": {"type": "number"},
+                            "minItems": 1,
                             "examples": [
                                 [1, 2, 3, 4, 5],
                                 [1.1, 2.2, 3.3, 4.4, 5.5],
                                 [1, 2.2, 3, 4.4, 5],
                             ],
-                            "items": {"type": "number"},
-                            "minItems": 1,
-                            "title": "Numbers",
-                            "type": "array",
                         },
                     ],
-                    "title": "Value Set",
                 },
                 {"type": "object"},
-            ],
+            ]
         },
     ),
 ]
