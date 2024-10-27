@@ -55,22 +55,19 @@ class _Mostly(Number):
 
 Mostly = Annotated[float, _Mostly]
 
-MostlyField = pydantic.Field(
-    default=1.0,
-    description=MOSTLY_DESCRIPTION,
-    ge=0.0,
-    le=1.0,
-    # This is just for the schema, it should not be validated on input
-    schema_overrides={"multiple_of": 0.01},
-)
-
-ListOfStrings = Annotated[Sequence[str], pydantic.Field(title="Text", min_items=1)]
-SetOfStrings = Annotated[set[str], pydantic.Field(title="Text", min_items=1)]
-ListOfNumbers = Annotated[Sequence[Union[int, float]], pydantic.Field(title="Numbers", min_items=1)]
-SetOfNumbers = Annotated[set[Union[int, float]], pydantic.Field(title="Numbers", min_items=1)]
+MostlyField = Annotated[
+    float,
+    pydantic.Field(
+        description=MOSTLY_DESCRIPTION,
+        ge=0.0,
+        le=1.0,
+        # This is just for the schema, it should not be validated on input
+        schema_overrides={"multiple_of": 0.01},
+    ),
+]
 
 ValueSetField = Annotated[
-    Union[ListOfNumbers, ListOfStrings, SetOfNumbers, SetOfStrings, SuiteParameterDict, None],
+    Union[Sequence, set, SuiteParameterDict, None],
     pydantic.Field(
         title="Value Set",
         description=VALUE_SET_DESCRIPTION,
