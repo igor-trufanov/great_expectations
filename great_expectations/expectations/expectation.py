@@ -62,12 +62,11 @@ from great_expectations.expectations.model_field_descriptions import (
     COLUMN_B_DESCRIPTION,
     COLUMN_DESCRIPTION,
     COLUMN_LIST_DESCRIPTION,
-    MOSTLY_DESCRIPTION,
     WINDOWS_DESCRIPTION,
 )
 from great_expectations.expectations.model_field_types import (
     ConditionParser,
-    Mostly,
+    MostlyField,
 )
 from great_expectations.expectations.registry import (
     get_metric_kwargs,
@@ -311,6 +310,12 @@ class Expectation(pydantic.BaseModel, metaclass=MetaExpectation):
                     },
                 },
             }
+
+            for prop in schema["properties"].values():
+                if overrides := prop.pop("schema_overrides", None):
+                    assert isinstance(overrides, dict)
+                    for key, value in overrides.items():
+                        prop[key] = value
 
     id: Union[str, None] = None
     meta: Union[dict, None] = None
@@ -1811,7 +1816,7 @@ class ColumnMapExpectation(BatchExpectation, ABC):
     """  # noqa: E501
 
     column: StrictStr = Field(min_length=1, description=COLUMN_DESCRIPTION)
-    mostly: Mostly = 1.0  # type: ignore[assignment] # TODO: Fix in CORE-412
+    mostly: float = MostlyField
     row_condition: Union[str, None] = None
     condition_parser: Union[ConditionParser, None] = None
 
@@ -2079,7 +2084,7 @@ class ColumnPairMapExpectation(BatchExpectation, ABC):
 
     column_A: StrictStr = Field(min_length=1, description=COLUMN_A_DESCRIPTION)
     column_B: StrictStr = Field(min_length=1, description=COLUMN_B_DESCRIPTION)
-    mostly: Mostly = 1.0  # type: ignore[assignment] # TODO: Fix in CORE-412
+    mostly: float = MostlyField
     row_condition: Union[str, None] = None
     condition_parser: Union[ConditionParser, None] = None
 
@@ -2335,7 +2340,7 @@ class MulticolumnMapExpectation(BatchExpectation, ABC):
     """  # noqa: E501
 
     column_list: List[StrictStr] = pydantic.Field(description=COLUMN_LIST_DESCRIPTION)
-    mostly: Mostly = pydantic.Field(default=1.0, description=MOSTLY_DESCRIPTION)
+    mostly: float = MostlyField
     row_condition: Union[str, None] = None
     condition_parser: Union[ConditionParser, None] = None
     ignore_row_if: Literal["all_values_are_missing", "any_value_is_missing", "never"] = (

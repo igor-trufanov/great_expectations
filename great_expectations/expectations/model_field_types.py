@@ -2,8 +2,12 @@ from enum import Enum
 from numbers import Number
 from typing import Any, Callable, Dict, Generator, Iterable, Union
 
+from great_expectations.compatibility import pydantic
 from great_expectations.compatibility.pydantic import fields
 from great_expectations.compatibility.typing_extensions import Annotated, override
+from great_expectations.core.suite_parameters import (
+    SuiteParameterDict,  # used in pydantic validation
+)
 from great_expectations.expectations.model_field_descriptions import (
     MOSTLY_DESCRIPTION,
     VALUE_SET_DESCRIPTION,
@@ -50,6 +54,62 @@ class _Mostly(Number):
 
 
 Mostly = Annotated[float, _Mostly]
+
+MostlyField = pydantic.Field(
+    default=1.0, description=MOSTLY_DESCRIPTION, ge=0.0, le=1.0, multiple_of=0.01
+)
+
+# ValueSetField =
+ListOfStrings = Annotated[list[str], pydantic.Field(title="Text", min_items=1)]
+ListOfNumbers = Annotated[list[float], pydantic.Field(title="Numbers", min_items=1)]
+SetOfStrings = Annotated[set[str], pydantic.Field(title="Text", min_items=1)]
+SetOfNumbers = Annotated[set[float], pydantic.Field(title="Numbers", min_items=1)]
+
+ValueSetField = Annotated[
+    Union[ListOfNumbers, ListOfStrings, SetOfNumbers, SetOfStrings, SuiteParameterDict, None],
+    pydantic.Field(
+        title="Value Set",
+        description=VALUE_SET_DESCRIPTION,
+        schema_overrides={
+            "anyOf": [
+                {
+                    "description": "A set of objects used for comparison.",
+                    "oneOf": [
+                        {
+                            "examples": [
+                                ["a", "b", "c", "d", "e"],
+                                [
+                                    "2024-01-01",
+                                    "2024-01-02",
+                                    "2024-01-03",
+                                    "2024-01-04",
+                                    "2024-01-05",
+                                ],
+                            ],
+                            "items": {"minLength": 1, "type": "string"},
+                            "minItems": 1,
+                            "title": "Text",
+                            "type": "array",
+                        },
+                        {
+                            "examples": [
+                                [1, 2, 3, 4, 5],
+                                [1.1, 2.2, 3.3, 4.4, 5.5],
+                                [1, 2.2, 3, 4.4, 5],
+                            ],
+                            "items": {"type": "number"},
+                            "minItems": 1,
+                            "title": "Numbers",
+                            "type": "array",
+                        },
+                    ],
+                    "title": "Value Set",
+                },
+                {"type": "object"},
+            ],
+        },
+    ),
+]
 
 
 class _ValueSet(Iterable):
