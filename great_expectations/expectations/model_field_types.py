@@ -59,7 +59,6 @@ MostlyField = pydantic.Field(
     default=1.0, description=MOSTLY_DESCRIPTION, ge=0.0, le=1.0, multiple_of=0.01
 )
 
-# ValueSetField =
 ListOfStrings = Annotated[list[str], pydantic.Field(title="Text", min_items=1)]
 ListOfNumbers = Annotated[list[float], pydantic.Field(title="Numbers", min_items=1)]
 SetOfStrings = Annotated[set[str], pydantic.Field(title="Text", min_items=1)]
