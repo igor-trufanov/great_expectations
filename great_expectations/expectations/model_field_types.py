@@ -1,6 +1,6 @@
 from enum import Enum
 from numbers import Number
-from typing import Any, Callable, Dict, Generator, Iterable, Union
+from typing import Any, Callable, Dict, Generator, Iterable, Sequence, Union
 
 from great_expectations.compatibility import pydantic
 from great_expectations.compatibility.pydantic import fields
@@ -60,13 +60,14 @@ MostlyField = pydantic.Field(
     description=MOSTLY_DESCRIPTION,
     ge=0.0,
     le=1.0,
+    # This is just for the schema, it should not be validated on input
     schema_overrides={"multiple_of": 0.01},
 )
 
-ListOfStrings = Annotated[list[str], pydantic.Field(title="Text", min_items=1)]
-ListOfNumbers = Annotated[list[float], pydantic.Field(title="Numbers", min_items=1)]
+ListOfStrings = Annotated[Sequence[str], pydantic.Field(title="Text", min_items=1)]
 SetOfStrings = Annotated[set[str], pydantic.Field(title="Text", min_items=1)]
-SetOfNumbers = Annotated[set[float], pydantic.Field(title="Numbers", min_items=1)]
+ListOfNumbers = Annotated[Sequence[Union[int, float]], pydantic.Field(title="Numbers", min_items=1)]
+SetOfNumbers = Annotated[set[Union[int, float]], pydantic.Field(title="Numbers", min_items=1)]
 
 ValueSetField = Annotated[
     Union[ListOfNumbers, ListOfStrings, SetOfNumbers, SetOfStrings, SuiteParameterDict, None],
