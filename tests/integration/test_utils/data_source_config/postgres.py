@@ -3,7 +3,7 @@ from typing import Union
 
 import pandas as pd
 import pytest
-from sqlalchemy import Column, Integer, MetaData, Table, create_engine, insert
+from sqlalchemy import Column, MetaData, Table, create_engine, insert
 from sqlalchemy.dialects.postgresql import (
     ARRAY,
     BIGINT,
@@ -181,6 +181,8 @@ class PostgresBatchTestSetup(BatchTestSetup[PostgreSQLDatasourceTestConfig]):
         self.table = Table(self.table_name, self.metadata, *columns, schema=self.schema)
         self.metadata.create_all(self.engine)
         with self.engine.connect() as conn:
+            # pd.DataFrame(...).to_dict("index") returns a dictionary where the keys are the row
+            # index and the values are a dict of column names mapped to column values.
             for row_dict in self.data.to_dict("index").values():
                 insert_stmt = insert(self.table).values(row_dict)
                 conn.execute(insert_stmt)
@@ -190,15 +192,3 @@ class PostgresBatchTestSetup(BatchTestSetup[PostgreSQLDatasourceTestConfig]):
     def teardown(self) -> None:
         if self.table is not None:
             self.table.drop(self.engine)
-
-
-if __name__ == "__main__":
-    engine = create_engine(url="postgresql://postgres@localhost/test_ci")
-    metadata_obj = MetaData()
-    user = Table(
-        "user",
-        metadata_obj,
-        Column("user_id", Integer, primary_key=True),
-    )
-    metadata_obj.create_all(engine)
-    user.drop(engine)
