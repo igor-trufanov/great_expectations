@@ -23,6 +23,10 @@ if TYPE_CHECKING:
 
 @public_api
 class CheckpointFactory(Factory[Checkpoint]):
+    """
+    Responsible for managing CRUD operations for Checkpoints.
+    """
+
     def __init__(self, store: CheckpointStore):
         self._store = store
 

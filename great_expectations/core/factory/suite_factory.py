@@ -21,6 +21,10 @@ if TYPE_CHECKING:
 
 @public_api
 class SuiteFactory(Factory[ExpectationSuite]):
+    """
+    Responsible for managing CRUD operations for ExpectationSuites.
+    """
+
     def __init__(self, store: ExpectationsStore):
         self._store = store
 
