@@ -66,8 +66,7 @@ from tests.integration.test_utils.data_source_config.base import (
 
 # Sqlalchemy follows the convention of exporting all known valid types for a given dialect
 # as uppercase types from the namespace `sqlalchemy.dialects.<dialect>
-# Commented out types are present in the latest SqlAlchemy, but not in a previous version
-# which we still support.
+# commented out types are present in SqlAlchemy 2.x but not 1.4
 PostgresColumnType = Union[
     type[ARRAY],
     type[BIGINT],
