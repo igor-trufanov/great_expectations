@@ -12,7 +12,7 @@ from sqlalchemy.dialects.postgresql import (
     BYTEA,
     CHAR,
     CIDR,
-    CITEXT,
+    # CITEXT, # import causes errors in some tests, likely due to old version of SqlAlchemy
     DATE,
     DATEMULTIRANGE,
     DATERANGE,
@@ -72,7 +72,7 @@ PostgresColumnType = Union[
     type[BYTEA],
     type[CHAR],
     type[CIDR],
-    type[CITEXT],
+    # type[CITEXT],  # import causes errors in some tests, likely due to old version of SqlAlchemy
     type[DATE],
     type[DATEMULTIRANGE],
     type[DATERANGE],
