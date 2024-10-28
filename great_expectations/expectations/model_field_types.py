@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Sequence, Union
+from typing import Sequence, TypeAlias, Union
 
 from great_expectations.compatibility import pydantic
 from great_expectations.compatibility.typing_extensions import Annotated
@@ -22,51 +22,79 @@ MostlyField = Annotated[
     ),
 ]
 
-ValueSetField = Annotated[
-    Union[Sequence, set, SuiteParameterDict, None],
-    pydantic.Field(
-        title="Value Set",
-        description=VALUE_SET_DESCRIPTION,
-        schema_overrides={
-            "anyOf": [
-                {
-                    "title": "Value Set",
-                    "description": "A set of objects used for comparison.",
-                    "oneOf": [
-                        {
-                            "title": "Text",
-                            "type": "array",
-                            "items": {"type": "string", "minLength": 1},
-                            "minItems": 1,
-                            "examples": [
-                                ["a", "b", "c", "d", "e"],
-                                [
-                                    "2024-01-01",
-                                    "2024-01-02",
-                                    "2024-01-03",
-                                    "2024-01-04",
-                                    "2024-01-05",
-                                ],
-                            ],
-                        },
-                        {
-                            "title": "Numbers",
-                            "type": "array",
-                            "items": {"type": "number"},
-                            "minItems": 1,
-                            "examples": [
-                                [1, 2, 3, 4, 5],
-                                [1.1, 2.2, 3.3, 4.4, 5.5],
-                                [1, 2.2, 3, 4.4, 5],
-                            ],
-                        },
-                    ],
-                },
-                {"type": "object"},
-            ]
-        },
-    ),
+ValueSetNumberSequence = Annotated[
+    Sequence[Union[int, float]],
+    pydantic.Field(description=VALUE_SET_DESCRIPTION, minItems=1, ge=0, le=1),
 ]
+
+ValueSetTextSequence = Annotated[
+    Sequence[Union[int, float]],
+    pydantic.Field(description=VALUE_SET_DESCRIPTION, minItems=1, ge=0, le=1),
+]
+
+ValueSetNumberSet = Annotated[
+    set[Union[int, float]],
+    pydantic.Field(description=VALUE_SET_DESCRIPTION, minItems=1, ge=0, le=1),
+]
+
+ValueSetTextSet = Annotated[
+    set[Union[int, float]],
+    pydantic.Field(description=VALUE_SET_DESCRIPTION, minItems=1, ge=0, le=1),
+]
+
+ValueSetField: TypeAlias = Union[
+    ValueSetNumberSequence,
+    ValueSetTextSequence,
+    ValueSetNumberSet,
+    ValueSetTextSet,
+    SuiteParameterDict,
+    None,
+]
+# ValueSetField = Annotated[
+#     Union[Sequence, set, SuiteParameterDict, None],
+#     pydantic.Field(
+#         title="Value Set",
+#         description=VALUE_SET_DESCRIPTION,
+#         schema_overrides={
+#             "anyOf": [
+#                 {
+#                     "title": "Value Set",
+#                     "description": "A set of objects used for comparison.",
+#                     "oneOf": [
+#                         {
+#                             "title": "Text",
+#                             "type": "array",
+#                             "items": {"type": "string", "minLength": 1},
+#                             "minItems": 1,
+#                             "examples": [
+#                                 ["a", "b", "c", "d", "e"],
+#                                 [
+#                                     "2024-01-01",
+#                                     "2024-01-02",
+#                                     "2024-01-03",
+#                                     "2024-01-04",
+#                                     "2024-01-05",
+#                                 ],
+#                             ],
+#                         },
+#                         {
+#                             "title": "Numbers",
+#                             "type": "array",
+#                             "items": {"type": "number"},
+#                             "minItems": 1,
+#                             "examples": [
+#                                 [1, 2, 3, 4, 5],
+#                                 [1.1, 2.2, 3.3, 4.4, 5.5],
+#                                 [1, 2.2, 3, 4.4, 5],
+#                             ],
+#                         },
+#                     ],
+#                 },
+#                 {"type": "object"},
+#             ]
+#         },
+#     ),
+# ]
 
 
 class ConditionParser(str, Enum):

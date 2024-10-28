@@ -8,6 +8,7 @@ from great_expectations.expectations.expectation import (
 from great_expectations.expectations.model_field_descriptions import COLUMN_DESCRIPTION
 from great_expectations.expectations.model_field_types import (
     ValueSetField,  # noqa: TCH001  # type needed in pydantic validation
+    ValueSetNumberSequence,  # noqa: TCH001  # type needed in pydantic validation
 )
 from great_expectations.render import (
     LegacyDescriptiveRendererType,
@@ -184,6 +185,7 @@ class ExpectColumnValuesToBeInSet(ColumnMapExpectation):
                 }}
     """  # noqa: E501
 
+    test: ValueSetNumberSequence
     value_set: ValueSetField
 
     library_metadata: ClassVar[Dict[str, Union[str, list, bool]]] = {
