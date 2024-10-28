@@ -295,6 +295,7 @@ class Expectation(pydantic.BaseModel, metaclass=MetaExpectation):
 
         @staticmethod
         def schema_extra(schema: Dict[str, Any], model: Type[Expectation]) -> None:
+            # Add metadata to the schema
             schema["properties"]["metadata"] = {
                 "type": "object",
                 "properties": {
@@ -311,6 +312,9 @@ class Expectation(pydantic.BaseModel, metaclass=MetaExpectation):
                 },
             }
 
+            # Add extra fields to schema from custom schema_overrides
+            # schema_overrides is not a pydantic concept, but pydantic.Field allows
+            # us to pass through arbitrary fields.
             for prop in schema["properties"].values():
                 if overrides := prop.pop("schema_overrides", None):
                     assert isinstance(overrides, dict)
