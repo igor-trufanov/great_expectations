@@ -4,6 +4,9 @@ from typing import Union
 import pandas as pd
 import pytest
 from sqlalchemy import Column, MetaData, Table, create_engine, insert
+
+# commented out types are present in the latest SqlAlchemy, but not in a previous version
+# which we still support.
 from sqlalchemy.dialects.postgresql import (
     ARRAY,
     BIGINT,
@@ -12,9 +15,9 @@ from sqlalchemy.dialects.postgresql import (
     BYTEA,
     CHAR,
     CIDR,
-    # CITEXT, # import causes errors in some tests, likely due to old version of SqlAlchemy
+    # CITEXT,
     DATE,
-    DATEMULTIRANGE,
+    # DATEMULTIRANGE,
     DATERANGE,
     DOMAIN,
     DOUBLE_PRECISION,
@@ -64,6 +67,8 @@ from tests.integration.test_utils.data_source_config.base import (
 
 # Sqlalchemy follows the convention of exporting all known valid types for a given dialect
 # as uppercase types from the namespace `sqlalchemy.dialects.<dialect>
+# Commented out types are present in the latest SqlAlchemy, but not in a previous version
+# which we still support.
 PostgresColumnType = Union[
     type[ARRAY],
     type[BIGINT],
@@ -72,9 +77,9 @@ PostgresColumnType = Union[
     type[BYTEA],
     type[CHAR],
     type[CIDR],
-    # type[CITEXT],  # import causes errors in some tests, likely due to old version of SqlAlchemy
+    # type[CITEXT],
     type[DATE],
-    type[DATEMULTIRANGE],
+    # type[DATEMULTIRANGE],
     type[DATERANGE],
     type[DOMAIN],
     type[DOUBLE_PRECISION],
