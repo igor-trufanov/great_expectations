@@ -475,6 +475,7 @@ class TestCustomAnnotatedFields:
             1.0,
         ],
     )
+    @pytest.mark.unit
     def test_valid_mostly_values(self, mostly: float):
         expectation = _SampleExpectation(mostly=mostly, value_set=[1, 2, 3])
         assert expectation.mostly == mostly
@@ -488,6 +489,7 @@ class TestCustomAnnotatedFields:
             2,
         ],
     )
+    @pytest.mark.unit
     def test_invalid_mostly_values(self, mostly: Any):
         with pytest.raises(pydantic.ValidationError):
             _SampleExpectation(mostly=mostly, value_set=[1, 2, 3])
@@ -505,6 +507,7 @@ class TestCustomAnnotatedFields:
             {"$PARAMETER": "my_param"},
         ],
     )
+    @pytest.mark.unit
     def test_valid_value_set_values(self, value_set: Union[Sequence, set]):
         expectation = _SampleExpectation(mostly=1, value_set=value_set)
         assert expectation.value_set == value_set
