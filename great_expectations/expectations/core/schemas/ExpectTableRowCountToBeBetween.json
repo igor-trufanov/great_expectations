@@ -175,7 +175,7 @@
     "definitions": {
         "ResultFormat": {
             "title": "ResultFormat",
-            "description": "An enumeration.",
+            "description": "--Public API--\nResponsible for configuring the level of detail for Validation Results in Data Docs.\n\nFor example, you can return a success or failure message, a summary of observed values, a list\nof failing values, or you can add a query or a filter function that returns all failing rows.\nTypical use cases for this parameter include cleaning data and excluding Validation Result data\nin published Data Docs.\n\nPossible options:\n- BOOLEAN_ONLY: No result is returned; results can be evaluated based on their success param.\n- BASIC: Result contains basic justifications for success or failure.\n- SUMMARY: Result contains summary justification for success or failure.\n- COMPLETE: Result contains all available justification about success or failure.",
             "enum": [
                 "BOOLEAN_ONLY",
                 "BASIC",
