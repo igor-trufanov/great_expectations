@@ -17,7 +17,7 @@ if TYPE_CHECKING:
     from pytest import FixtureRequest
 
 
-@dataclass(frozen=True)
+@dataclass
 class DataSourceTestConfig(ABC):
     name: Optional[str] = None
 

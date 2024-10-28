@@ -1,4 +1,5 @@
 import pandas as pd
+import sqlalchemy.dialects.postgresql as POSTGRESQL_TYPES
 
 import great_expectations.expectations as gxe
 from tests.integration.conftest import parameterize_batch_for_data_sources
@@ -6,12 +7,14 @@ from tests.integration.test_utils.data_source_config import (
     PandasDataFrameDatasourceTestConfig,
     PandasFilesystemCsvDatasourceTestConfig,
 )
+from tests.integration.test_utils.data_source_config.postgres import PostgreSQLDatasourceTestConfig
 
 
 @parameterize_batch_for_data_sources(
     data_source_configs=[
         PandasDataFrameDatasourceTestConfig(),
         PandasFilesystemCsvDatasourceTestConfig(),
+        PostgreSQLDatasourceTestConfig(column_map={"a": POSTGRESQL_TYPES.INTEGER}),
     ],
     data=pd.DataFrame({"a": [1, 2]}),
 )
