@@ -190,6 +190,29 @@ class PostgresBatchTestSetup(BatchTestSetup[PostgreSQLDatasourceTestConfig]):
             self.table.drop(self.engine)
 
     def get_column_types(self) -> Dict[str, PostgresColumnType]:
-        if self.config.column_types is None:
-            return {}
-        return self.config.column_types
+        column_types = self.infer_column_types()
+        # prefer explicit types if they're provided
+        column_types.update(self.config.column_types or {})
+        untyped_columns = set(self.data.columns) - set(column_types.keys())
+        if untyped_columns:
+            message = (
+                f"Unable to infer types for the following column(s): {', '.join(untyped_columns)}. "
+                "Please provide the intended PostgreSQL type to test definition."
+            )
+            raise RuntimeError(message)
+        return column_types
+
+    def infer_column_types(self) -> Dict[str, PostgresColumnType]:
+        inferrable_types_lookup = {
+            str: VARCHAR,
+            int: INTEGER,
+            float: FLOAT,
+            bool: BOOLEAN,
+        }
+        inferred_column_types: Dict[str, PostgresColumnType] = {}
+        for column, value_list in self.data.to_dict("list").items():
+            python_type = type(value_list[0])
+            inferred_type = inferrable_types_lookup.get(python_type)
+            if inferred_type:
+                inferred_column_types[str(column)] = inferred_type
+        return inferred_column_types
