@@ -14,7 +14,7 @@ from tests.integration.test_utils.data_source_config.postgres import PostgreSQLD
     data_source_configs=[
         PandasDataFrameDatasourceTestConfig(),
         PandasFilesystemCsvDatasourceTestConfig(),
-        PostgreSQLDatasourceTestConfig(column_map={"a": POSTGRESQL_TYPES.INTEGER}),
+        PostgreSQLDatasourceTestConfig(column_types={"a": POSTGRESQL_TYPES.INTEGER}),
     ],
     data=pd.DataFrame({"a": [1, 2]}),
 )
@@ -28,6 +28,7 @@ def test_expect_column_min_to_be_between(batch_for_datasource) -> None:
     data_source_configs=[
         PandasDataFrameDatasourceTestConfig(),
         PandasFilesystemCsvDatasourceTestConfig(),
+        PostgreSQLDatasourceTestConfig(column_types={"a": POSTGRESQL_TYPES.INTEGER}),
     ],
     data=pd.DataFrame({"a": [1, 2]}),
 )

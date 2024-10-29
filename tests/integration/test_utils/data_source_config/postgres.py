@@ -1,5 +1,5 @@
 from random import randint
-from typing import Union
+from typing import Dict, Union
 
 import pandas as pd
 import pytest
@@ -119,13 +119,7 @@ PostgresColumnType = Union[
 ]
 
 
-class PostgreSQLDatasourceTestConfig(DataSourceTestConfig):
-    column_map: dict[str, PostgresColumnType]
-
-    def __init__(self, column_map: dict[str, PostgresColumnType]):
-        # todo: make column map optional and add type inference
-        self.column_map = column_map
-
+class PostgreSQLDatasourceTestConfig(DataSourceTestConfig[PostgresColumnType]):
     @property
     @override
     def label(self) -> str:
@@ -178,9 +172,7 @@ class PostgresBatchTestSetup(BatchTestSetup[PostgreSQLDatasourceTestConfig]):
 
     @override
     def setup(self) -> None:
-        columns = [
-            Column(name, column_type) for name, column_type in self.config.column_map.items()
-        ]
+        columns = [Column(name, type) for name, type in self.get_column_types().items()]
         self.table = Table(self.table_name, self.metadata, *columns, schema=self.schema)
         self.metadata.create_all(self.engine)
         with self.engine.connect() as conn:
@@ -196,3 +188,8 @@ class PostgresBatchTestSetup(BatchTestSetup[PostgreSQLDatasourceTestConfig]):
     def teardown(self) -> None:
         if self.table is not None:
             self.table.drop(self.engine)
+
+    def get_column_types(self) -> Dict[str, PostgresColumnType]:
+        if self.config.column_types is None:
+            return {}
+        return self.config.column_types
