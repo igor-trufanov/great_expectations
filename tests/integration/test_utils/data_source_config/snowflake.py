@@ -65,7 +65,9 @@ class SnowflakeConnectionConfig(BaseSettings):
 
 
 class SnowflakeBatchTestSetup(SQLBatchTestSetup[SnowflakeDatasourceTestConfig]):
-    snowflake_config = SnowflakeConnectionConfig()  # type: ignore [call-arg]
+    def __init__(self, config, data) -> None:
+        self.snowflake_config = SnowflakeConnectionConfig()  # type: ignore [call-arg]
+        super().__init__(config, data)
 
     @override
     @property

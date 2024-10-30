@@ -3,7 +3,7 @@ from typing import Dict, Type, Union
 import pandas as pd
 import pytest
 
-from great_expectations.compatibility.sqlalchemy import TypeEngine, postgresql
+from great_expectations.compatibility.sqlalchemy import POSTGRESQL_TYPES, TypeEngine
 from great_expectations.compatibility.typing_extensions import override
 from great_expectations.datasource.fluent.interfaces import Batch
 from tests.integration.test_utils.data_source_config.base import (
@@ -49,10 +49,10 @@ class PostgresBatchTestSetup(SQLBatchTestSetup[PostgreSQLDatasourceTestConfig]):
     @property
     def inferrable_types_lookup(self) -> Dict[Type, TypeEngine]:
         return {
-            str: postgresql.VARCHAR,  # type: ignore[dict-item]
-            int: postgresql.INTEGER,  # type: ignore[dict-item]
-            float: postgresql.FLOAT,  # type: ignore[dict-item]
-            bool: postgresql.BOOLEAN,  # type: ignore[dict-item]
+            str: POSTGRESQL_TYPES.VARCHAR,  # type: ignore[dict-item]
+            int: POSTGRESQL_TYPES.INTEGER,  # type: ignore[dict-item]
+            float: POSTGRESQL_TYPES.FLOAT,  # type: ignore[dict-item]
+            bool: POSTGRESQL_TYPES.BOOLEAN,  # type: ignore[dict-item]
         }
 
     @override

@@ -286,6 +286,6 @@ except (ImportError, AttributeError):
 
 
 try:
-    from sqlalchemy.dialects import postgresql
+    from sqlalchemy.dialects import postgresql as POSTGRESQL_TYPES  # noqa: F401
 except (ImportError, AttributeError):
     postgresql = SQLALCHEMY_NOT_IMPORTED  # type: ignore[misc,assignment]

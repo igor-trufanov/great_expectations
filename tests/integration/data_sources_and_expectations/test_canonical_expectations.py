@@ -2,7 +2,7 @@ import pandas as pd
 
 import great_expectations.expectations as gxe
 from great_expectations.compatibility.snowflake import SNOWFLAKE_TYPES
-from great_expectations.compatibility.sqlalchemy import postgresql
+from great_expectations.compatibility.sqlalchemy import POSTGRESQL_TYPES
 from tests.integration.conftest import parameterize_batch_for_data_sources
 from tests.integration.test_utils.data_source_config import (
     PandasDataFrameDatasourceTestConfig,
@@ -18,7 +18,7 @@ from tests.integration.test_utils.data_source_config import (
         PandasFilesystemCsvDatasourceTestConfig(),
         # this test has explicit column types as an example:
         SnowflakeDatasourceTestConfig(column_types={"a": SNOWFLAKE_TYPES.NUMBER}),
-        PostgreSQLDatasourceTestConfig(column_types={"a": postgresql.INTEGER}),
+        PostgreSQLDatasourceTestConfig(column_types={"a": POSTGRESQL_TYPES.INTEGER}),
     ],
     data=pd.DataFrame({"a": [1, 2]}),
 )
