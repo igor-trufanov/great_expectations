@@ -1,28 +1,23 @@
-from random import randint
-from typing import TYPE_CHECKING, Dict, List, TypeVar, Union
+from __future__ import annotations
 
-import pandas as pd
+from typing import TYPE_CHECKING, Dict, Type, Union
+
 import pytest
 
 from great_expectations.compatibility.pydantic import BaseSettings
-from great_expectations.compatibility.sqlalchemy import (
-    Column,
-    MetaData,
-    Table,
-    create_engine,
-    insert,
-)
+from great_expectations.compatibility.snowflake import SNOWFLAKE_TYPES
 from great_expectations.compatibility.typing_extensions import override
 from great_expectations.datasource.fluent.interfaces import Batch
 from tests.integration.test_utils.data_source_config.base import (
     BatchTestSetup,
     DataSourceTestConfig,
+    SQLBatchTestSetup,
 )
 
 if TYPE_CHECKING:
-    from great_expectations.compatibility.snowflake import SnowflakeType
+    import pandas as pd
 
-_SnowflakeType = TypeVar("_SnowflakeType")
+    from great_expectations.compatibility.sqlalchemy import TypeEngine
 
 
 class SnowflakeDatasourceTestConfig(DataSourceTestConfig):
@@ -69,18 +64,27 @@ class SnowflakeConnectionConfig(BaseSettings):
         )
 
 
-class SnowflakeBatchTestSetup(BatchTestSetup[SnowflakeDatasourceTestConfig]):
-    def __init__(
-        self,
-        config: SnowflakeDatasourceTestConfig,
-        data: pd.DataFrame,
-    ) -> None:
-        self.table_name = f"snowflake_expectation_test_table_{randint(0, 1000000)}"
-        self.snowflake_connection_config = SnowflakeConnectionConfig()  # type: ignore[call-arg]  # retrieves env vars
-        self.engine = create_engine(url=self.snowflake_connection_config.connection_string)
-        self.metadata = MetaData()
-        self.table: Union[Table, None] = None
-        super().__init__(config=config, data=data)
+class SnowflakeBatchTestSetup(SQLBatchTestSetup[SnowflakeDatasourceTestConfig]):
+    snowflake_config = SnowflakeConnectionConfig()  # type: ignore [call-arg]
+
+    @override
+    @property
+    def connection_string(self) -> str:
+        return self.snowflake_config.connection_string
+
+    @override
+    @property
+    def schema(self) -> Union[str, None]:
+        return self.snowflake_config.SNOWFLAKE_SCHEMA
+
+    @override
+    @property
+    def inferrable_types_lookup(self) -> Dict[Type, TypeEngine]:
+        return {
+            str: SNOWFLAKE_TYPES.STRING,  # type: ignore[dict-item]
+            int: SNOWFLAKE_TYPES.NUMBER,  # type: ignore[dict-item]
+            float: SNOWFLAKE_TYPES.DEC,  # type: ignore[dict-item]
+        }
 
     @override
     def make_batch(self) -> Batch:
@@ -88,13 +92,13 @@ class SnowflakeBatchTestSetup(BatchTestSetup[SnowflakeDatasourceTestConfig]):
         return (
             self._context.data_sources.add_snowflake(
                 name=name,
-                account=self.snowflake_connection_config.SNOWFLAKE_ACCOUNT,
-                user=self.snowflake_connection_config.SNOWFLAKE_USER,
-                password=self.snowflake_connection_config.SNOWFLAKE_PW,
-                database=self.snowflake_connection_config.SNOWFLAKE_DATABASE,
-                schema=self.snowflake_connection_config.SNOWFLAKE_SCHEMA,
-                warehouse=self.snowflake_connection_config.SNOWFLAKE_WAREHOUSE,
-                role=self.snowflake_connection_config.SNOWFLAKE_ROLE,
+                account=self.snowflake_config.SNOWFLAKE_ACCOUNT,
+                user=self.snowflake_config.SNOWFLAKE_USER,
+                password=self.snowflake_config.SNOWFLAKE_PW,
+                database=self.snowflake_config.SNOWFLAKE_DATABASE,
+                schema=self.snowflake_config.SNOWFLAKE_SCHEMA,
+                warehouse=self.snowflake_config.SNOWFLAKE_WAREHOUSE,
+                role=self.snowflake_config.SNOWFLAKE_ROLE,
             )
             .add_table_asset(
                 name=name,
@@ -103,36 +107,3 @@ class SnowflakeBatchTestSetup(BatchTestSetup[SnowflakeDatasourceTestConfig]):
             .add_batch_definition_whole_table(name=name)
             .get_batch()
         )
-
-    @override
-    def setup(self) -> None:
-        column_types: Dict[str, SnowflakeType] = self.get_column_types()
-        columns: List[Column] = [
-            Column(name, column_type) for name, column_type in column_types.items()
-        ]
-        self.table = Table(
-            self.table_name,
-            self.metadata,
-            *columns,
-            schema=self.snowflake_connection_config.SNOWFLAKE_SCHEMA,
-        )
-        self.metadata.create_all(self.engine)
-        with self.engine.connect() as conn:
-            # pd.DataFrame(...).to_dict("index") returns a dictionary where the keys are the row
-            # index and the values are a dict of column names mapped to column values.
-            # Then we pass that list of dicts in as parameters to our insert statement.
-            #   INSERT INTO test_table (my_int_column, my_str_column) VALUES (?, ?)
-            #   [...] [('1', 'foo'), ('2', 'bar')]
-            conn.execute(insert(self.table), list(self.data.to_dict("index").values()))
-            conn.commit()
-
-    @override
-    def teardown(self) -> None:
-        if self.table is not None:
-            self.table.drop(self.engine)
-
-    def get_column_types(self) -> Dict[str, _SnowflakeType]:
-        if self.config.column_types is None:
-            raise NotImplementedError("Column inference not implemented")
-        else:
-            return self.config.column_types
