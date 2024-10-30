@@ -83,9 +83,9 @@ class SnowflakeBatchTestSetup(SQLBatchTestSetup[SnowflakeDatasourceTestConfig]):
     @property
     def inferrable_types_lookup(self) -> Dict[Type, TypeEngine]:
         return {
-            str: SNOWFLAKE_TYPES.STRING,  # type: ignore[dict-item]
-            int: SNOWFLAKE_TYPES.NUMBER,  # type: ignore[dict-item]
-            float: SNOWFLAKE_TYPES.DEC,  # type: ignore[dict-item]
+            str: SNOWFLAKE_TYPES.STRING,
+            int: SNOWFLAKE_TYPES.NUMBER,
+            float: SNOWFLAKE_TYPES.DEC,
         }
 
     @override
