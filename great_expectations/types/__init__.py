@@ -60,8 +60,8 @@ class DictDot:
     For more examples of usage, please see `test_dataclass_serializable_dot_dict_pattern.py` in the tests folder.
     """  # noqa: E501
 
-    include_field_names: ClassVar[Set[str]] = set()
-    exclude_field_names: ClassVar[Set[str]] = set()
+    include_field_names: ClassVar[set[str]] = set()
+    exclude_field_names: ClassVar[set[str]] = set()
 
     def __getitem__(self, item):
         if isinstance(item, int):
@@ -164,9 +164,9 @@ class DictDot:
 
     def property_names(  # noqa: C901
         self,
-        include_keys: Optional[Set[str]] = None,
-        exclude_keys: Optional[Set[str]] = None,
-    ) -> Set[str]:
+        include_keys: Optional[set[str]] = None,
+        exclude_keys: Optional[set[str]] = None,
+    ) -> set[str]:
         """
         Assuming that -- by convention -- names of private properties of an object are prefixed by "_" (a single
         underscore character), return these property names as public property names.  To support this convention, the
@@ -191,20 +191,20 @@ class DictDot:
 
         # Gather private fields:
         # By Python convention, properties of non-trivial length, prefixed by underscore ("_") character, are private.  # noqa: E501
-        private_fields: Set[str] = set(
+        private_fields: set[str] = set(
             filter(
                 lambda name: len(name) > 1,
                 [key[1:] for key in self.keys() if key[0] == "_"],
             )
         )
         # Gather public fields.
-        public_fields: Set[str] = {key for key in self.keys() if key[0] != "_"}
+        public_fields: set[str] = {key for key in self.keys() if key[0] != "_"}
         # Combine private and public fields using the "Set Union" operation.
-        property_names: Set[str] = public_fields | private_fields
+        property_names: set[str] = public_fields | private_fields
 
         keys_for_exclusion: list = []
 
-        def assert_valid_keys(keys: Set[str], purpose: str) -> None:
+        def assert_valid_keys(keys: set[str], purpose: str) -> None:
             name: str
             for name in keys:
                 try:
@@ -233,7 +233,7 @@ class DictDot:
 
 
 class SerializableDictDot(DictDot):
-    def to_json_dict(self) -> Dict[str, JSONValues]:
+    def to_json_dict(self) -> dict[str, JSONValues]:
         """Returns a JSON-serializable dict representation of the SerializableDictDot.
 
         Subclasses must implement this abstract method.

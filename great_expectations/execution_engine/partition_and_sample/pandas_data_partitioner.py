@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import hashlib
-from typing import TYPE_CHECKING, List, Union
+from typing import TYPE_CHECKING, Union
 
 import great_expectations.exceptions as gx_exceptions
 from great_expectations.execution_engine.partition_and_sample.data_partitioner import (
@@ -103,7 +103,7 @@ class PandasDataPartitioner(DataPartitioner):
         df: pd.DataFrame,
         column_name: str,
         batch_identifiers: dict,
-        date_parts: Union[List[DatePart], List[str]],
+        date_parts: Union[list[DatePart], list[str]],
     ) -> pd.DataFrame:
         """Partition on date_part values in column_name.
 
@@ -203,7 +203,7 @@ class PandasDataPartitioner(DataPartitioner):
 
     @staticmethod
     def partition_on_multi_column_values(
-        df, column_names: List[str], batch_identifiers: dict
+        df, column_names: list[str], batch_identifiers: dict
     ) -> pd.DataFrame:
         """Partition on the joint values in the named columns"""
 

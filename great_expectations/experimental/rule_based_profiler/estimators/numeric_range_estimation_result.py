@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass
-from typing import TYPE_CHECKING, List, Union
+from typing import TYPE_CHECKING, Union
 
 from great_expectations.compatibility.typing_extensions import override
 from great_expectations.types import DictDot
@@ -27,7 +27,7 @@ class NumericRangeEstimationResult(DictDot):
     """  # noqa: E501
 
     estimation_histogram: np.ndarray
-    value_range: Union[np.ndarray, List[np.float64]]
+    value_range: Union[np.ndarray, list[np.float64]]
 
     @override
     def to_dict(self) -> dict:

@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Any, Dict
+from typing import Any
 
 from great_expectations.compatibility import pyspark
 from great_expectations.compatibility.pyspark import functions as F
@@ -51,7 +51,7 @@ class ColumnValuesIncreasing(ColumnMapMetricProvider):
         execution_engine: SparkDFExecutionEngine,
         metric_domain_kwargs: dict,
         metric_value_kwargs: dict,
-        metrics: Dict[str, Any],
+        metrics: dict[str, Any],
         runtime_configuration: dict,
     ):
         # check if column is any type that could have na (numeric types)

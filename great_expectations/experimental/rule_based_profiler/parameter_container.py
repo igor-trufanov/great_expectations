@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import copy
 from dataclasses import asdict, dataclass
-from typing import TYPE_CHECKING, Any, Dict, Final, List, Optional, Set, TypeVar, Union
+from typing import TYPE_CHECKING, Any, Final, Optional, TypeVar, Union
 
 from pyparsing import (
     Literal,
@@ -59,7 +59,7 @@ FULLY_QUALIFIED_PARAMETER_NAME_ATTRIBUTED_VALUE_KEY: Final[str] = "attributed_va
 FULLY_QUALIFIED_PARAMETER_NAME_METADATA_KEY: Final[str] = "details"
 FULLY_QUALIFIED_PARAMETER_NAME_VALUE_KEY: Final[str] = "value"
 
-RESERVED_TERMINAL_LITERALS: Final[Set[str]] = {
+RESERVED_TERMINAL_LITERALS: Final[set[str]] = {
     FULLY_QUALIFIED_PARAMETER_NAME_ATTRIBUTED_VALUE_KEY,
     FULLY_QUALIFIED_PARAMETER_NAME_METADATA_KEY,
     FULLY_QUALIFIED_PARAMETER_NAME_VALUE_KEY,
@@ -223,7 +223,7 @@ class ParameterContainer(SerializableDictDot):
     within the same "name space" serves as the dictionary key, and the root-level ParameterNode objects are the values).
     """  # noqa: E501
 
-    parameter_nodes: Optional[Dict[str, ParameterNode]] = None
+    parameter_nodes: Optional[dict[str, ParameterNode]] = None
 
     def set_parameter_node(self, parameter_name_root: str, parameter_node: ParameterNode) -> None:
         if self.parameter_nodes is None:
@@ -305,7 +305,7 @@ def convert_parameter_node_to_dictionary(
 
 
 def build_parameter_container_for_variables(
-    variables_configs: Dict[str, Any],
+    variables_configs: dict[str, Any],
 ) -> ParameterContainer:
     """
     Build a ParameterContainer for all of the profiler config variables passed as key value pairs
@@ -319,7 +319,7 @@ def build_parameter_container_for_variables(
     key: str
     value: Any
     for key, value in variables_configs.items():
-        key_parts: List[str] = [PARAMETER_NAME_ROOT_FOR_VARIABLES] + key.split(
+        key_parts: list[str] = [PARAMETER_NAME_ROOT_FOR_VARIABLES] + key.split(
             FULLY_QUALIFIED_PARAMETER_NAME_SEPARATOR_CHARACTER
         )
         _build_parameter_node_tree_for_one_parameter(parameter_node, key_parts, value)
@@ -335,7 +335,7 @@ def build_parameter_container_for_variables(
 
 def build_parameter_container(
     parameter_container: ParameterContainer,
-    parameter_values: Dict[str, Any],
+    parameter_values: dict[str, Any],
 ) -> None:
     """
     Builds the ParameterNode trees, corresponding to the fully_qualified_parameter_name first-level keys.
@@ -368,7 +368,7 @@ def build_parameter_container(
     parameter_node: Optional[ParameterNode]
     fully_qualified_parameter_name: str
     parameter_value: Any
-    fully_qualified_parameter_name_as_list: List[str]
+    fully_qualified_parameter_name_as_list: list[str]
     parameter_name_root: str
     for (
         fully_qualified_parameter_name,
@@ -399,7 +399,7 @@ def build_parameter_container(
 
 def _build_parameter_node_tree_for_one_parameter(
     parameter_node: ParameterNode,
-    parameter_name_as_list: List[str],
+    parameter_name_as_list: list[str],
     parameter_value: Any,
 ) -> None:
     """
@@ -437,7 +437,7 @@ def get_parameter_value_by_fully_qualified_parameter_name(
     fully_qualified_parameter_name: str,
     domain: Optional[Domain] = None,
     variables: Optional[ParameterContainer] = None,
-    parameters: Optional[Dict[str, ParameterContainer]] = None,
+    parameters: Optional[dict[str, ParameterContainer]] = None,
 ) -> Optional[Union[Any, ParameterNode]]:
     """
     Get the parameter value from the current "rule state" using the fully-qualified parameter name.
@@ -488,7 +488,7 @@ def get_parameter_value_by_fully_qualified_parameter_name(
 
     fully_qualified_parameter_name = fully_qualified_parameter_name[1:]
 
-    fully_qualified_parameter_name_as_list: List[str] = fully_qualified_parameter_name.split(
+    fully_qualified_parameter_name_as_list: list[str] = fully_qualified_parameter_name.split(
         FULLY_QUALIFIED_PARAMETER_NAME_SEPARATOR_CHARACTER
     )
 
@@ -504,7 +504,7 @@ def get_parameter_value_by_fully_qualified_parameter_name(
 
 def _get_parameter_value_from_parameter_container(
     fully_qualified_parameter_name: str,
-    fully_qualified_parameter_name_as_list: List[str],
+    fully_qualified_parameter_name_as_list: list[str],
     parameter_container: ParameterContainer,
 ) -> Optional[Union[Any, ParameterNode]]:
     if parameter_container is None:
@@ -562,8 +562,8 @@ def _get_parameter_value_from_parameter_container(
 def get_parameter_values_for_fully_qualified_parameter_names(
     domain: Optional[Domain] = None,
     variables: Optional[ParameterContainer] = None,
-    parameters: Optional[Dict[str, ParameterContainer]] = None,
-) -> Dict[str, Any]:
+    parameters: Optional[dict[str, ParameterContainer]] = None,
+) -> dict[str, Any]:
     fully_qualified_parameter_name: str
     return {
         fully_qualified_parameter_name: get_parameter_value_by_fully_qualified_parameter_name(
@@ -583,9 +583,9 @@ def get_parameter_values_for_fully_qualified_parameter_names(
 def get_fully_qualified_parameter_names(
     domain: Optional[Domain] = None,
     variables: Optional[ParameterContainer] = None,
-    parameters: Optional[Dict[str, ParameterContainer]] = None,
-) -> List[str]:
-    fully_qualified_parameter_names: List[str] = []
+    parameters: Optional[dict[str, ParameterContainer]] = None,
+) -> list[str]:
+    fully_qualified_parameter_names: list[str] = []
     if not (variables is None or variables.parameter_nodes is None):
         fully_qualified_parameter_names.extend(
             _get_parameter_node_attribute_names(
@@ -617,10 +617,10 @@ def get_fully_qualified_parameter_names(
 def _get_parameter_node_attribute_names(
     parameter_name_root: Optional[str] = None,
     parameter_node: Optional[ParameterNode] = None,
-) -> List[str]:
-    attribute_names_as_lists: List[List[str]] = []
+) -> list[str]:
+    attribute_names_as_lists: list[list[str]] = []
 
-    parameter_name_root_as_list: Optional[List[str]] = None
+    parameter_name_root_as_list: Optional[list[str]] = None
     if parameter_name_root:
         parameter_name_root_as_list = [parameter_name_root]
 
@@ -630,7 +630,7 @@ def _get_parameter_node_attribute_names(
         parameter_node=parameter_node,
     )
 
-    attribute_names: Set[str] = set()
+    attribute_names: set[str] = set()
 
     attribute_name: str
     for attribute_name_as_list in attribute_names_as_lists:
@@ -646,14 +646,14 @@ def _get_parameter_node_attribute_names(
 
 
 def _get_parameter_node_attribute_names_as_lists(
-    attribute_names_as_lists: List[List[str]],
-    parameter_name_root_as_list: Optional[List[str]] = None,
+    attribute_names_as_lists: list[list[str]],
+    parameter_name_root_as_list: Optional[list[str]] = None,
     parameter_node: Optional[ParameterNode] = None,
 ) -> None:
     if parameter_node is None or parameter_name_root_as_list is None:
         return
 
-    partial_parameter_name_root_as_list: List[str]
+    partial_parameter_name_root_as_list: list[str]
 
     attribute_name_part: str
     attribute_value_part: Any
@@ -671,8 +671,8 @@ def _get_parameter_node_attribute_names_as_lists(
 
 
 def _get_parameter_name_parts_up_to_including_reserved_literal(
-    attribute_name_as_list: List[str],
-) -> List[str]:
+    attribute_name_as_list: list[str],
+) -> list[str]:
     if attribute_name_as_list[0] == PARAMETER_NAME_ROOT_FOR_VARIABLES:
         return [
             PARAMETER_NAME_ROOT_FOR_VARIABLES,
@@ -683,7 +683,7 @@ def _get_parameter_name_parts_up_to_including_reserved_literal(
         return attribute_name_as_list
 
     # TODO: <Alex>12/29/2022: Lexicographical order avoids collisions between regular keys and reserved literals.</Alex>  # noqa: E501
-    reserved_terminal_literals: List[str] = list(sorted(RESERVED_TERMINAL_LITERALS))
+    reserved_terminal_literals: list[str] = list(sorted(RESERVED_TERMINAL_LITERALS))
 
     idx: Optional[int] = None
     key: str

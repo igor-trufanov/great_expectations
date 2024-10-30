@@ -1,14 +1,14 @@
 from __future__ import annotations
 
 from contextlib import contextmanager
-from typing import Any, Dict, List
+from typing import Any
 
 
 class MockSaInspector:
-    def get_columns(self) -> List[Dict[str, Any]]:  # type: ignore[empty-body]
+    def get_columns(self) -> list[dict[str, Any]]:  # type: ignore[empty-body]
         ...
 
-    def get_schema_names(self) -> List[str]:  # type: ignore[empty-body]
+    def get_schema_names(self) -> list[str]:  # type: ignore[empty-body]
         ...
 
     def get_table_names(self, schema: str | None): ...

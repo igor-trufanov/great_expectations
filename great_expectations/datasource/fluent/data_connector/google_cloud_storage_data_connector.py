@@ -3,7 +3,7 @@ from __future__ import annotations
 import logging
 import re
 import warnings
-from typing import TYPE_CHECKING, Callable, ClassVar, List, Optional, Type
+from typing import TYPE_CHECKING, Callable, ClassVar, Optional
 
 from great_expectations.compatibility import pydantic
 from great_expectations.compatibility.typing_extensions import override
@@ -51,7 +51,7 @@ class GoogleCloudStorageDataConnector(FilePathDataConnector):
         "gcs_max_results",
         "gcs_recursive_file_discovery",
     )
-    asset_options_type: ClassVar[Type[_GCSOptions]] = _GCSOptions
+    asset_options_type: ClassVar[type[_GCSOptions]] = _GCSOptions
 
     def __init__(  # noqa: PLR0913
         self,
@@ -172,14 +172,14 @@ class GoogleCloudStorageDataConnector(FilePathDataConnector):
 
     # Interface Method
     @override
-    def get_data_references(self) -> List[str]:
+    def get_data_references(self) -> list[str]:
         query_options: dict = {
             "bucket_or_name": self._bucket_or_name,
             "prefix": self._sanitized_prefix,
             "delimiter": self._delimiter,
             "max_results": self._max_results,
         }
-        path_list: List[str] = list_gcs_keys(
+        path_list: list[str] = list_gcs_keys(
             gcs_client=self._gcs_client,
             query_options=query_options,
             recursive=self._recursive_file_discovery,
@@ -213,7 +213,7 @@ def list_gcs_keys(
     gcs_client,
     query_options: dict,
     recursive: bool = False,
-) -> List[str]:
+) -> list[str]:
     """
     Utilizes the GCS connection object to retrieve blob names based on user-provided criteria.
 
@@ -262,7 +262,7 @@ def list_gcs_keys(
         )
         query_options["delimiter"] = None
 
-    keys: List[str] = []
+    keys: list[str] = []
     for blob in gcs_client.list_blobs(**query_options):
         name: str = blob.name
         if name.endswith("/"):  # GCS includes directories in blob output

@@ -5,11 +5,7 @@ import traceback
 from typing import (
     TYPE_CHECKING,
     Callable,
-    Dict,
-    List,
     Optional,
-    Set,
-    Tuple,
     Union,
 )
 
@@ -78,7 +74,7 @@ class ValidationGraph:
     def __init__(
         self,
         execution_engine: ExecutionEngine,
-        edges: Optional[List[MetricEdge]] = None,
+        edges: Optional[list[MetricEdge]] = None,
     ) -> None:
         self._execution_engine = execution_engine
 
@@ -95,12 +91,12 @@ class ValidationGraph:
         return self.edge_ids == other.edge_ids
 
     @property
-    def edges(self) -> List[MetricEdge]:
+    def edges(self) -> list[MetricEdge]:
         """Returns "MetricEdge" objects, contained within this "ValidationGraph" object (as list)."""  # noqa: E501
         return self._edges
 
     @property
-    def edge_ids(self) -> Set[Tuple[str, str]]:
+    def edge_ids(self) -> set[tuple[str, str]]:
         """Returns "MetricEdge" objects, contained within this "ValidationGraph" object (as set of two-tuples)."""  # noqa: E501
         return {edge.id for edge in self._edges}
 
@@ -167,7 +163,7 @@ class ValidationGraph:
 
     def set_metric_configuration_default_kwargs_if_absent(
         self, metric_configuration: MetricConfiguration
-    ) -> Tuple[MetricProvider, Callable]:
+    ) -> tuple[MetricProvider, Callable]:
         """
         Updates "metric_domain_kwargs" and/or "metric_value_kwargs" of "MetricConfiguration" with defualts (if needed).
         """  # noqa: E501
@@ -195,11 +191,11 @@ class ValidationGraph:
         min_graph_edges_pbar_enable: int = 0,
         # Set to low number (e.g., 3) to suppress progress bar for small graphs.
         show_progress_bars: bool = True,
-    ) -> Tuple[
-        Dict[_MetricKey, MetricValue],
+    ) -> tuple[
+        dict[_MetricKey, MetricValue],
         _AbortedMetricsInfoDict,
     ]:
-        resolved_metrics: Dict[_MetricKey, MetricValue] = {}
+        resolved_metrics: dict[_MetricKey, MetricValue] = {}
 
         # updates graph with aborted metrics
         aborted_metrics_info: _AbortedMetricsInfoDict = self._resolve(
@@ -213,7 +209,7 @@ class ValidationGraph:
 
     def _resolve(  # noqa: C901, PLR0912, PLR0915
         self,
-        metrics: Dict[_MetricKey, MetricValue],
+        metrics: dict[_MetricKey, MetricValue],
         runtime_configuration: Optional[dict] = None,
         min_graph_edges_pbar_enable: int = 0,  # Set to low number (e.g., 3) to suppress progress bar for small graphs.  # noqa: E501
         show_progress_bars: bool = True,
@@ -232,8 +228,8 @@ class ValidationGraph:
         failed_metric_info: _AbortedMetricsInfoDict = {}
         aborted_metrics_info: _AbortedMetricsInfoDict = {}
 
-        ready_metrics: Set[MetricConfiguration]
-        needed_metrics: Set[MetricConfiguration]
+        ready_metrics: set[MetricConfiguration]
+        needed_metrics: set[MetricConfiguration]
 
         exception_info: ExceptionInfo
 
@@ -323,8 +319,8 @@ class ValidationGraph:
 
     def _parse(
         self,
-        metrics: Dict[_MetricKey, MetricValue],
-    ) -> Tuple[Set[MetricConfiguration], Set[MetricConfiguration]]:
+        metrics: dict[_MetricKey, MetricValue],
+    ) -> tuple[set[MetricConfiguration], set[MetricConfiguration]]:
         """Given validation graph, returns the ready and needed metrics necessary for validation using a traversal of
         validation graph (a graph structure of metric ids) edges"""  # noqa: E501
         unmet_dependency_ids = set()
@@ -349,7 +345,7 @@ class ValidationGraph:
     def _set_default_metric_kwargs_if_absent(
         default_kwarg_values: dict,
         metric_kwargs: IDDict,
-        keys: Tuple[str, ...],
+        keys: tuple[str, ...],
     ) -> None:
         key: str
         for key in keys:
@@ -400,11 +396,11 @@ class ExpectationValidationGraph:
     def get_exception_info(
         self,
         metric_info: _AbortedMetricsInfoDict,
-    ) -> Dict[str, Union[MetricConfiguration, ExceptionInfo, int]]:
+    ) -> dict[str, Union[MetricConfiguration, ExceptionInfo, int]]:
         metric_info = self._filter_metric_info_in_graph(metric_info=metric_info)
-        metric_exception_info: Dict[str, Union[MetricConfiguration, ExceptionInfo, int]] = {}
+        metric_exception_info: dict[str, Union[MetricConfiguration, ExceptionInfo, int]] = {}
         metric_id: _MetricKey
-        metric_info_item: Dict[str, Union[MetricConfiguration, ExceptionInfo, int]]
+        metric_info_item: dict[str, Union[MetricConfiguration, ExceptionInfo, int]]
         for metric_id, metric_info_item in metric_info.items():
             metric_exception_info[str(metric_id)] = metric_info_item["exception_info"]
 
@@ -414,7 +410,7 @@ class ExpectationValidationGraph:
         self,
         metric_info: _AbortedMetricsInfoDict,
     ) -> _AbortedMetricsInfoDict:
-        graph_metric_ids: List[_MetricKey] = []
+        graph_metric_ids: list[_MetricKey] = []
         edge: MetricEdge
         vertex: MetricConfiguration
         for edge in self.graph.edges:
@@ -423,7 +419,7 @@ class ExpectationValidationGraph:
                     graph_metric_ids.append(vertex.id)
 
         metric_id: _MetricKey
-        metric_info_item: Dict[str, Union[MetricConfiguration, Set[ExceptionInfo], int]]
+        metric_info_item: dict[str, Union[MetricConfiguration, set[ExceptionInfo], int]]
         return {
             metric_id: metric_info_item
             for metric_id, metric_info_item in metric_info.items()

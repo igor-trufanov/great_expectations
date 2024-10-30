@@ -5,7 +5,7 @@ import logging
 import pathlib
 import re
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, Dict, List, Tuple, cast
+from typing import TYPE_CHECKING, cast
 
 import pytest
 
@@ -85,7 +85,7 @@ def spark_filesystem_datasource(empty_data_context, test_backends) -> SparkFiles
     # Verify test directory has files we expect
     years = ["2018", "2019", "2020"]
     file_name: PathStr
-    all_files: List[str] = [
+    all_files: list[str] = [
         file_name.stem
         for file_name in list(pathlib.Path(spark_filesystem_datasource.base_directory).iterdir())
     ]
@@ -838,7 +838,7 @@ def test_get_batch_list_from_partially_specified_batch_request(
 ):
     # Verify test directory has files that don't match what we will query for
     file_name: PathStr
-    all_files: List[str] = [
+    all_files: list[str] = [
         file_name.stem
         for file_name in list(pathlib.Path(spark_filesystem_datasource.base_directory).iterdir())
     ]
@@ -1094,29 +1094,29 @@ def daily_partitioner():
 
 
 @pytest.fixture
-def daily_batch_parameters_and_expected_result() -> Tuple[Dict[str, int], int]:
+def daily_batch_parameters_and_expected_result() -> tuple[dict[str, int], int]:
     batch_parameters = {"year": 2018, "month": 1, "day": 11}
     expected_result = 3
     return batch_parameters, expected_result
 
 
 @pytest.fixture
-def monthly_batch_parameters_and_expected_result() -> Tuple[Dict[str, int], int]:
+def monthly_batch_parameters_and_expected_result() -> tuple[dict[str, int], int]:
     batch_parameters = {"year": 2018, "month": 1}
     expected_result = 10
     return batch_parameters, expected_result
 
 
 @pytest.fixture
-def yearly_batch_parameters_and_expected_result() -> Tuple[Dict[str, int], int]:
+def yearly_batch_parameters_and_expected_result() -> tuple[dict[str, int], int]:
     batch_parameters = {"year": 2018}
     expected_result = 120
     return batch_parameters, expected_result
 
 
 @pytest.fixture
-def whole_directory_batch_parameters_and_expected_result() -> Tuple[Dict[str, int], int]:
-    batch_parameters: Dict[str, int] = {}
+def whole_directory_batch_parameters_and_expected_result() -> tuple[dict[str, int], int]:
+    batch_parameters: dict[str, int] = {}
     expected_result = 360
     return batch_parameters, expected_result
 
@@ -1152,7 +1152,7 @@ class TestPartitionerDirectoryAsset:
     def test_yearly_batch_definition_workflow(
         self,
         directory_asset: DirectoryCSVAsset,
-        yearly_batch_parameters_and_expected_result: Tuple[Dict[str, int], int],
+        yearly_batch_parameters_and_expected_result: tuple[dict[str, int], int],
     ):
         batch_parameters = {"year": 2018}
         expected_result = 120
@@ -1166,9 +1166,9 @@ class TestPartitionerDirectoryAsset:
     def test_whole_table_batch_definition_workflow(
         self,
         directory_asset: DirectoryCSVAsset,
-        whole_directory_batch_parameters_and_expected_result: Tuple[Dict[str, int], int],
+        whole_directory_batch_parameters_and_expected_result: tuple[dict[str, int], int],
     ):
-        batch_parameters: Dict[str, int] = {}
+        batch_parameters: dict[str, int] = {}
         expected_result = 360
         batch_def = directory_asset.add_batch_definition_whole_directory(name="whole directory")
         batch = batch_def.get_batch(batch_parameters=batch_parameters)
@@ -1207,7 +1207,7 @@ class TestPartitionerDirectoryAsset:
         self,
         directory_asset: DirectoryCSVAsset,
         partitioner: ColumnPartitioner,
-        expected_keys: Tuple[str, ...],
+        expected_keys: tuple[str, ...],
     ):
         assert directory_asset.get_batch_parameters_keys(partitioner=partitioner) == expected_keys
 

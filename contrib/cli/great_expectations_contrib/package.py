@@ -5,7 +5,7 @@ import os
 import sys
 from dataclasses import asdict, dataclass
 from enum import Enum
-from typing import Any, Dict, List, Optional, Type
+from typing import Any, Optional
 
 import pkg_resources
 from ruamel.yaml import YAML
@@ -61,7 +61,7 @@ class SocialLink(SerializableDictDot):
 @dataclass
 class DomainExpert(SerializableDictDot):
     full_name: str
-    social_links: Optional[List[SocialLink]] = None
+    social_links: Optional[list[SocialLink]] = None
     picture: Optional[str] = None
     title: Optional[str] = None
     bio: Optional[str] = None
@@ -80,16 +80,16 @@ class GreatExpectationsContribPackageManifest(SerializableDictDot):
     package_name: Optional[str] = None
     icon: Optional[str] = None
     description: Optional[str] = None
-    expectations: Optional[Dict[str, ExpectationDiagnostics]] = None
+    expectations: Optional[dict[str, ExpectationDiagnostics]] = None
     expectation_count: Optional[int] = None
-    dependencies: Optional[List[Dependency]] = None
+    dependencies: Optional[list[Dependency]] = None
     maturity: Optional[Maturity] = None
     status: Optional[PackageCompletenessStatus] = None
 
     # Users
-    owners: Optional[List[GitHubUser]] = None
-    contributors: Optional[List[GitHubUser]] = None
-    domain_experts: Optional[List[DomainExpert]] = None
+    owners: Optional[list[GitHubUser]] = None
+    contributors: Optional[list[GitHubUser]] = None
+    domain_experts: Optional[list[DomainExpert]] = None
 
     # Metadata
     version: Optional[str] = None
@@ -111,7 +111,7 @@ class GreatExpectationsContribPackageManifest(SerializableDictDot):
         )
         self._update_attrs_with_diagnostics(diagnostics)
 
-    def _update_attrs_with_diagnostics(self, diagnostics: List[ExpectationDiagnostics]) -> None:
+    def _update_attrs_with_diagnostics(self, diagnostics: list[ExpectationDiagnostics]) -> None:
         self._update_from_package_info("package_info.yml")
         self._update_expectations(diagnostics)
         self._update_dependencies("requirements.txt")
@@ -182,7 +182,7 @@ class GreatExpectationsContribPackageManifest(SerializableDictDot):
                 domain_expert = DomainExpert(**expert)
                 self.domain_experts.append(domain_expert)
 
-    def _update_expectations(self, diagnostics: List[ExpectationDiagnostics]) -> None:
+    def _update_expectations(self, diagnostics: list[ExpectationDiagnostics]) -> None:
         expectations = {}
         status = {maturity.name: 0 for maturity in Maturity}
 
@@ -228,7 +228,7 @@ class GreatExpectationsContribPackageManifest(SerializableDictDot):
         dependencies = list(map(_convert_to_dependency, requirements))
         self.dependencies = dependencies
 
-    def _update_contributors(self, diagnostics: List[ExpectationDiagnostics]) -> None:
+    def _update_contributors(self, diagnostics: list[ExpectationDiagnostics]) -> None:
         contributors = []
         for diagnostic in diagnostics:
             for contributor in diagnostic.library_metadata.contributors:
@@ -239,7 +239,7 @@ class GreatExpectationsContribPackageManifest(SerializableDictDot):
         self.contributors = contributors
 
     @staticmethod
-    def retrieve_package_expectations_diagnostics() -> List[ExpectationDiagnostics]:
+    def retrieve_package_expectations_diagnostics() -> list[ExpectationDiagnostics]:
         try:
             package = GreatExpectationsContribPackageManifest._identify_user_package()
             expectations_module = (
@@ -282,18 +282,15 @@ class GreatExpectationsContribPackageManifest(SerializableDictDot):
         # Need to add user's project to the PYTHONPATH
         cwd = os.getcwd()  # noqa: PTH109
         sys.path.append(cwd)
-        try:
-            expectations_module = importlib.import_module(f"{package}.expectations")
-            return expectations_module
-        except ModuleNotFoundError:  # noqa: TRY203
-            raise
+        expectations_module = importlib.import_module(f"{package}.expectations")
+        return expectations_module
 
     @staticmethod
     def _retrieve_expectations_from_module(
         expectations_module: Any,
-    ) -> List[Type[Expectation]]:
-        expectations: List[Type[Expectation]] = []
-        names: List[str] = []
+    ) -> list[type[Expectation]]:
+        expectations: list[type[Expectation]] = []
+        names: list[str] = []
         for name, obj in inspect.getmembers(expectations_module):
             # ProfileNumericColumnsDiffExpectation from capitalone_dataprofiler_expectations
             # is a base class that the contrib Expectations in that package all inherit from
@@ -306,8 +303,8 @@ class GreatExpectationsContribPackageManifest(SerializableDictDot):
 
     @staticmethod
     def _gather_diagnostics(
-        expectations: List[Type[Expectation]],
-    ) -> List[ExpectationDiagnostics]:
+        expectations: list[type[Expectation]],
+    ) -> list[ExpectationDiagnostics]:
         diagnostics_list = []
         for expectation in expectations:
             instance = expectation()

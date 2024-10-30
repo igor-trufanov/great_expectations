@@ -1,5 +1,4 @@
 import os
-from typing import Dict, Tuple
 from unittest import mock
 
 import pandas as pd
@@ -368,10 +367,10 @@ def test_resolve_metric_bundle():
     # Building engine and configurations in attempt to resolve metrics
     engine = PandasExecutionEngine(batch_data_dict={"made-up-id": df})
 
-    metrics: Dict[Tuple[str, str, str], MetricValue] = {}
+    metrics: dict[tuple[str, str, str], MetricValue] = {}
 
     table_columns_metric: MetricConfiguration
-    results: Dict[Tuple[str, str, str], MetricValue]
+    results: dict[tuple[str, str, str], MetricValue]
 
     table_columns_metric, results = get_table_columns_metric(execution_engine=engine)
     metrics.update(results)

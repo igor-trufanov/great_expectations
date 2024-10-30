@@ -1,6 +1,6 @@
 import logging
 import os
-from typing import Dict, Tuple, cast
+from typing import cast
 
 import pandas as pd
 import pytest
@@ -260,10 +260,10 @@ def test_sa_batch_aggregate_metrics(caplog, sa):
         pd.DataFrame({"a": [1, 2, 1, 2, 3, 3], "b": [4, 4, 4, 4, 4, 4]}), sa
     )
 
-    metrics: Dict[Tuple[str, str, str], MetricValue] = {}
+    metrics: dict[tuple[str, str, str], MetricValue] = {}
 
     table_columns_metric: MetricConfiguration
-    results: Dict[Tuple[str, str, str], MetricValue]
+    results: dict[tuple[str, str, str], MetricValue]
 
     table_columns_metric, results = get_table_columns_metric(execution_engine=execution_engine)
     metrics.update(results)
@@ -966,10 +966,10 @@ def test_resolve_metric_bundle_with_compute_domain_kwargs_json_serialization(sa)
         batch_id="1234",
     )
 
-    metrics: Dict[Tuple[str, str, str], MetricValue] = {}
+    metrics: dict[tuple[str, str, str], MetricValue] = {}
 
     table_columns_metric: MetricConfiguration
-    results: Dict[Tuple[str, str, str], MetricValue]
+    results: dict[tuple[str, str, str], MetricValue]
 
     table_columns_metric, results = get_table_columns_metric(execution_engine=execution_engine)
     metrics.update(results)
@@ -1049,10 +1049,10 @@ def test_sa_batch_unexpected_condition_temp_table(caplog, sa):
         pd.DataFrame({"a": [1, 2, 1, 2, 3, 3], "b": [4, 4, 4, 4, 4, 4]}), sa
     )
 
-    metrics: Dict[Tuple[str, str, str], MetricValue] = {}
+    metrics: dict[tuple[str, str, str], MetricValue] = {}
 
     table_columns_metric: MetricConfiguration
-    results: Dict[Tuple[str, str, str], MetricValue]
+    results: dict[tuple[str, str, str], MetricValue]
 
     table_columns_metric, results = get_table_columns_metric(execution_engine=execution_engine)
     metrics.update(results)

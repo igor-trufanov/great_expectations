@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import logging
-from typing import TYPE_CHECKING, Dict, Iterable, List, Optional, Set, Union
+from typing import TYPE_CHECKING, Iterable, Optional, Union
 
 from great_expectations.core.domain import Domain  # noqa: TCH001
 from great_expectations.core.metric_function_types import (
@@ -38,7 +38,7 @@ if TYPE_CHECKING:
 
 logger = logging.getLogger(__name__)
 
-DEFAULT_CANDIDATE_STRINGS: Set[str] = {
+DEFAULT_CANDIDATE_STRINGS: set[str] = {
     "%H:%M:%S",
     "%H:%M:%S,%f",
     "%H:%M:%S.%f",
@@ -115,7 +115,7 @@ class SimpleDateFormatStringParameterBuilder(ParameterBuilder):
         metric_value_kwargs: Optional[Union[str, dict]] = None,
         threshold: Union[str, float] = 1.0,
         candidate_strings: Optional[Union[Iterable[str], str]] = None,
-        suite_parameter_builder_configs: Optional[List[ParameterBuilderConfig]] = None,
+        suite_parameter_builder_configs: Optional[list[ParameterBuilderConfig]] = None,
         data_context: Optional[AbstractDataContext] = None,
     ) -> None:
         """
@@ -168,14 +168,14 @@ class SimpleDateFormatStringParameterBuilder(ParameterBuilder):
     @property
     def candidate_strings(
         self,
-    ) -> Union[str, Union[List[str], Set[str]]]:
+    ) -> Union[str, Union[list[str], set[str]]]:
         return self._candidate_strings
 
     def _build_parameters(
         self,
         domain: Domain,
         variables: Optional[ParameterContainer] = None,
-        parameters: Optional[Dict[str, ParameterContainer]] = None,
+        parameters: Optional[dict[str, ParameterContainer]] = None,
         runtime_configuration: Optional[dict] = None,
     ) -> Attributes:
         """
@@ -228,8 +228,8 @@ class SimpleDateFormatStringParameterBuilder(ParameterBuilder):
 
         # Obtain candidate_strings from "rule state" (i.e., variables and parameters); from instance variable otherwise.  # noqa: E501
         candidate_strings: Union[
-            List[str],
-            Set[str],
+            list[str],
+            set[str],
         ] = get_parameter_value_and_validate_return_type(
             domain=domain,
             parameter_reference=self.candidate_strings,
@@ -240,7 +240,7 @@ class SimpleDateFormatStringParameterBuilder(ParameterBuilder):
 
         # Gather "metric_value_kwargs" for all candidate "strftime_format" strings.
         format_string: str
-        match_strftime_metric_value_kwargs_list: List[dict] = []
+        match_strftime_metric_value_kwargs_list: list[dict] = []
         match_strftime_metric_value_kwargs: dict
         for format_string in candidate_strings:
             if self.metric_value_kwargs:

@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from copy import deepcopy
-from typing import TYPE_CHECKING, Any, ClassVar, Dict, Optional, Type, Union
+from typing import TYPE_CHECKING, Any, ClassVar, Optional, Union
 
 from great_expectations.compatibility import pydantic
 from great_expectations.compatibility.typing_extensions import override
@@ -151,7 +151,7 @@ class ExpectTableRowCountToEqualOtherTable(BatchExpectation):
     row_condition: Union[str, None] = None
     condition_parser: Union[ConditionParser, None] = None
 
-    library_metadata: ClassVar[Dict[str, Union[str, list, bool]]] = {
+    library_metadata: ClassVar[dict[str, Union[str, list, bool]]] = {
         "maturity": "production",
         "tags": ["core expectation", "table expectation", "multi-table expectation"],
         "contributors": [
@@ -172,7 +172,7 @@ class ExpectTableRowCountToEqualOtherTable(BatchExpectation):
 
         @staticmethod
         def schema_extra(
-            schema: Dict[str, Any], model: Type[ExpectTableRowCountToEqualOtherTable]
+            schema: dict[str, Any], model: type[ExpectTableRowCountToEqualOtherTable]
         ) -> None:
             BatchExpectation.Config.schema_extra(schema, model)
             schema["properties"]["metadata"]["properties"].update(
@@ -313,7 +313,7 @@ class ExpectTableRowCountToEqualOtherTable(BatchExpectation):
     @override
     def _validate(
         self,
-        metrics: Dict,
+        metrics: dict,
         runtime_configuration: Optional[dict] = None,
         execution_engine: Optional[ExecutionEngine] = None,
     ):

@@ -1,5 +1,4 @@
 import urllib.parse
-from typing import Dict
 from unittest import mock
 
 import pytest
@@ -142,7 +141,7 @@ def test_datasource_store_delete_by_id(
 )
 def test_datasource_http_error_handling(
     datasource_store_ge_cloud_backend: DatasourceStore,
-    mock_http_unavailable: Dict[str, mock.Mock],  # noqa: TID251
+    mock_http_unavailable: dict[str, mock.Mock],  # noqa: TID251
     http_verb: str,
     method: str,
     args: list,

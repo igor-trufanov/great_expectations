@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import logging
-from typing import TYPE_CHECKING, Dict, Optional
+from typing import TYPE_CHECKING, Optional
 
 from great_expectations.experimental.rule_based_profiler.estimators.numeric_range_estimator import (
     NumericRangeEstimator,
@@ -57,7 +57,7 @@ class BootstrapNumericRangeEstimator(NumericRangeEstimator):
         metric_values: np.ndarray,
         domain: Domain,
         variables: Optional[ParameterContainer] = None,
-        parameters: Optional[Dict[str, ParameterContainer]] = None,
+        parameters: Optional[dict[str, ParameterContainer]] = None,
     ) -> NumericRangeEstimationResult:
         if is_ndarray_datetime_dtype(
             data=metric_values,

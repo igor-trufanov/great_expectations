@@ -4,8 +4,6 @@ import logging
 from typing import (
     TYPE_CHECKING,
     Any,
-    Dict,
-    List,
     Union,
 )
 
@@ -39,7 +37,7 @@ def _pandas_column_pair_map_condition_values(
     execution_engine: PandasExecutionEngine,
     metric_domain_kwargs: dict,
     metric_value_kwargs: dict,
-    metrics: Dict[str, Any],
+    metrics: dict[str, Any],
     **kwargs,
 ) -> list[tuple[Any, Any]]:
     """Return values from the specified domain that match the map-style metric in the metrics dictionary."""  # noqa: E501
@@ -73,7 +71,7 @@ def _pandas_column_pair_map_condition_values(
     # noinspection PyPep8Naming
     column_B_name = accessor_domain_kwargs["column_B"]
 
-    column_names: List[Union[str, sqlalchemy.quoted_name]] = [
+    column_names: list[Union[str, sqlalchemy.quoted_name]] = [
         column_A_name,
         column_B_name,
     ]
@@ -104,7 +102,7 @@ def _pandas_column_pair_map_condition_filtered_row_count(
     execution_engine: PandasExecutionEngine,
     metric_domain_kwargs: dict,
     metric_value_kwargs: dict,
-    metrics: Dict[str, Any],
+    metrics: dict[str, Any],
     **kwargs,
 ) -> int:
     """Return record counts from the specified domain that match the map-style metric in the metrics dictionary."""  # noqa: E501
@@ -137,7 +135,7 @@ def _sqlalchemy_column_pair_map_condition_values(
     execution_engine: SqlAlchemyExecutionEngine,
     metric_domain_kwargs: dict,
     metric_value_kwargs: dict,
-    metrics: Dict[str, Any],
+    metrics: dict[str, Any],
     **kwargs,
 ) -> list[tuple[Any, Any]]:
     """Return values from the specified domain that match the map-style metric in the metrics dictionary."""  # noqa: E501
@@ -189,7 +187,7 @@ def _sqlalchemy_column_pair_map_condition_filtered_row_count(
     execution_engine: SqlAlchemyExecutionEngine,
     metric_domain_kwargs: dict,
     metric_value_kwargs: dict,
-    metrics: Dict[str, Any],
+    metrics: dict[str, Any],
     **kwargs,
 ) -> Any | None:
     """Return record counts from the specified domain that match the map-style metric in the metrics dictionary."""  # noqa: E501
@@ -217,7 +215,7 @@ def _spark_column_pair_map_condition_values(
     execution_engine: SparkDFExecutionEngine,
     metric_domain_kwargs: dict,
     metric_value_kwargs: dict,
-    metrics: Dict[str, Any],
+    metrics: dict[str, Any],
     **kwargs,
 ) -> list[tuple[Any, Any]]:
     """Return values from the specified domain that match the map-style metric in the metrics dictionary."""  # noqa: E501
@@ -276,7 +274,7 @@ def _spark_column_pair_map_condition_filtered_row_count(
     execution_engine: SparkDFExecutionEngine,
     metric_domain_kwargs: dict,
     metric_value_kwargs: dict,
-    metrics: Dict[str, Any],
+    metrics: dict[str, Any],
     **kwargs,
 ) -> int:
     """Return record counts from the specified domain that match the map-style metric in the metrics dictionary."""  # noqa: E501

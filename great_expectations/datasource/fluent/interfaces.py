@@ -14,18 +14,14 @@ from typing import (
     Any,
     Callable,
     ClassVar,
-    Dict,
     Final,
     Generic,
-    List,
     Mapping,
     MutableMapping,
     MutableSequence,
     Optional,
     Protocol,
     Sequence,
-    Set,
-    Type,
     TypeVar,
     Union,
     overload,
@@ -134,7 +130,7 @@ class PartitionerProtocol(PartitionerSortingProtocol, Protocol):
         """
         ...
 
-    def partitioner_method_kwargs(self) -> Dict[str, Any]:
+    def partitioner_method_kwargs(self) -> dict[str, Any]:
         """A shim to our execution engine partitioner methods
 
         We translate any internal Partitioner state and what is passed in from
@@ -146,7 +142,7 @@ class PartitionerProtocol(PartitionerSortingProtocol, Protocol):
 
     def batch_parameters_to_batch_spec_kwarg_identifiers(
         self, options: BatchParameters
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Translates `options` to the execution engine batch spec kwarg identifiers
 
         Arguments:
@@ -224,7 +220,7 @@ class GxSerializationWarning(GxDatasourceWarning):
     pass
 
 
-BatchMetadata: TypeAlias = Dict[str, Any]
+BatchMetadata: TypeAlias = dict[str, Any]
 
 
 @pydantic_dc.dataclass(frozen=True)
@@ -233,7 +229,7 @@ class Sorter:
     reverse: bool = False
 
 
-SortersDefinition: TypeAlias = List[Union[Sorter, str, dict]]
+SortersDefinition: TypeAlias = list[Union[Sorter, str, dict]]
 
 
 def _is_sorter_list(
@@ -300,9 +296,9 @@ class DataAsset(GenericBaseModel, Generic[DatasourceT, PartitionerT], ABC):
     id: Optional[uuid.UUID] = Field(default=None, description="DataAsset id")
 
     # TODO: order_by should no longer be used and should be removed
-    order_by: List[Sorter] = Field(default_factory=list)
+    order_by: list[Sorter] = Field(default_factory=list)
     batch_metadata: BatchMetadata = pydantic.Field(default_factory=dict)
-    batch_definitions: List[BatchDefinition] = Field(default_factory=list)
+    batch_definitions: list[BatchDefinition] = Field(default_factory=list)
 
     # non-field private attributes
     _datasource: DatasourceT = pydantic.PrivateAttr()
@@ -355,7 +351,7 @@ class DataAsset(GenericBaseModel, Generic[DatasourceT, PartitionerT], ABC):
         )
 
     @abstractmethod
-    def get_batch_identifiers_list(self, batch_request: BatchRequest) -> List[dict]: ...
+    def get_batch_identifiers_list(self, batch_request: BatchRequest) -> list[dict]: ...
 
     @abstractmethod
     def get_batch(self, batch_request: BatchRequest) -> Batch: ...
@@ -515,8 +511,8 @@ class DataAsset(GenericBaseModel, Generic[DatasourceT, PartitionerT], ABC):
     # Sorter methods
     @pydantic.validator("order_by", pre=True)
     def _order_by_validator(
-        cls, order_by: Optional[List[Union[Sorter, str, dict]]] = None
-    ) -> List[Sorter]:
+        cls, order_by: Optional[list[Union[Sorter, str, dict]]] = None
+    ) -> list[Sorter]:
         if order_by:
             raise DataAssetInitializationError(
                 message="'order_by' is no longer a valid argument. "
@@ -525,8 +521,8 @@ class DataAsset(GenericBaseModel, Generic[DatasourceT, PartitionerT], ABC):
         return []
 
     def sort_batches(
-        self, batch_list: List[Batch], partitioner: PartitionerSortingProtocol
-    ) -> List[Batch]:
+        self, batch_list: list[Batch], partitioner: PartitionerSortingProtocol
+    ) -> list[Batch]:
         """Sorts batch_list in place in the order configured in this DataAsset.
         Args:
             batch_list: The list of batches to sort in place.
@@ -540,9 +536,9 @@ class DataAsset(GenericBaseModel, Generic[DatasourceT, PartitionerT], ABC):
 
     def sort_legacy_batch_definitions(
         self,
-        legacy_batch_definition_list: List[LegacyBatchDefinition],
+        legacy_batch_definition_list: list[LegacyBatchDefinition],
         partitioner: PartitionerSortingProtocol,
-    ) -> List[LegacyBatchDefinition]:
+    ) -> list[LegacyBatchDefinition]:
         """Sorts batch_definition_list in the order configured by the partitioner."""
 
         def get_value(key: str) -> Callable[[LegacyBatchDefinition], Any]:
@@ -551,8 +547,8 @@ class DataAsset(GenericBaseModel, Generic[DatasourceT, PartitionerT], ABC):
         return self._sort_batch_data_list(legacy_batch_definition_list, partitioner, get_value)
 
     def sort_batch_identifiers_list(
-        self, batch_identfiers_list: List[dict], partitioner: PartitionerSortingProtocol
-    ) -> List[dict]:
+        self, batch_identfiers_list: list[dict], partitioner: PartitionerSortingProtocol
+    ) -> list[dict]:
         """Sorts batch_identfiers_list in the order configured by the partitioner."""
 
         def get_value(key: str) -> Callable[[dict], Any]:
@@ -562,10 +558,10 @@ class DataAsset(GenericBaseModel, Generic[DatasourceT, PartitionerT], ABC):
 
     def _sort_batch_data_list(
         self,
-        batch_data_list: List[_T],
+        batch_data_list: list[_T],
         partitioner: PartitionerSortingProtocol,
         get_value: Callable[[str], Any],
-    ) -> List[_T]:
+    ) -> list[_T]:
         """Sorts batch_data_list in the order configured by the partitioner."""
         reverse = not partitioner.sort_ascending
         for key in reversed(partitioner.param_names):
@@ -630,15 +626,15 @@ class Datasource(
     # data context method `data_context.data_sources.add_my_datasource` method.
 
     # class attrs
-    asset_types: ClassVar[Sequence[Type[DataAsset]]] = []
+    asset_types: ClassVar[Sequence[type[DataAsset]]] = []
     # Not all Datasources require a DataConnector
-    data_connector_type: ClassVar[Optional[Type[DataConnector]]] = None
+    data_connector_type: ClassVar[Optional[type[DataConnector]]] = None
     # Datasource sublcasses should update this set if the field should not be passed to the execution engine  # noqa: E501
-    _EXTRA_EXCLUDED_EXEC_ENG_ARGS: ClassVar[Set[str]] = set()
+    _EXTRA_EXCLUDED_EXEC_ENG_ARGS: ClassVar[set[str]] = set()
     _type_lookup: ClassVar[TypeLookup]  # This attribute is set in `MetaDatasource.__new__`
     # Setting this in a Datasource subclass will override the execution engine type.
     # The primary use case is to inject an execution engine for testing.
-    execution_engine_override: ClassVar[Optional[Type[_ExecutionEngineT]]] = None  # type: ignore[misc]  # ClassVar cannot contain type variables
+    execution_engine_override: ClassVar[Optional[type[_ExecutionEngineT]]] = None  # type: ignore[misc]  # ClassVar cannot contain type variables
 
     # instance attrs
     type: str
@@ -648,7 +644,7 @@ class Datasource(
 
     # private attrs
     _data_context: Union[GXDataContext, None] = pydantic.PrivateAttr(None)
-    _cached_execution_engine_kwargs: Dict[str, Any] = pydantic.PrivateAttr({})
+    _cached_execution_engine_kwargs: dict[str, Any] = pydantic.PrivateAttr({})
     _execution_engine: Union[_ExecutionEngineT, None] = pydantic.PrivateAttr(None)
 
     @property
@@ -666,7 +662,7 @@ class Datasource(
     @pydantic.validator("assets", each_item=True)
     @classmethod
     def _load_asset_subtype(
-        cls: Type[Datasource[_DataAssetT, _ExecutionEngineT]], data_asset: DataAsset
+        cls: type[Datasource[_DataAssetT, _ExecutionEngineT]], data_asset: DataAsset
     ) -> _DataAssetT:
         """
         Some `data_asset` may be loaded as a less specific asset subtype different than
@@ -676,7 +672,7 @@ class Datasource(
         """
         logger.debug(f"Loading '{data_asset.name}' asset ->\n{pf(data_asset, depth=4)}")
         asset_type_name: str = data_asset.type
-        asset_type: Type[_DataAssetT] = cls._type_lookup[asset_type_name]
+        asset_type: type[_DataAssetT] = cls._type_lookup[asset_type_name]
 
         if asset_type is type(data_asset):
             # asset is already the intended type
@@ -698,7 +694,7 @@ class Datasource(
             batch_definition.set_data_asset(data_asset)
         return data_asset
 
-    def _execution_engine_type(self) -> Type[_ExecutionEngineT]:
+    def _execution_engine_type(self) -> type[_ExecutionEngineT]:
         """Returns the execution engine to be used"""
         return self.execution_engine_override or self.execution_engine_type
 
@@ -774,7 +770,7 @@ class Datasource(
         data_asset = self.get_asset(batch_request.data_asset_name)
         return data_asset.get_batch(batch_request)
 
-    def get_batch_identifiers_list(self, batch_request: BatchRequest) -> List[dict]:
+    def get_batch_identifiers_list(self, batch_request: BatchRequest) -> list[dict]:
         data_asset = self.get_asset(batch_request.data_asset_name)
         return data_asset.get_batch_identifiers_list(batch_request)
 
@@ -791,7 +787,7 @@ class Datasource(
 
         return assets_as_dict
 
-    def get_asset_names(self) -> Set[str]:
+    def get_asset_names(self) -> set[str]:
         """Returns the set of available DataAsset names
 
         Returns:
@@ -857,7 +853,7 @@ class Datasource(
 
         asset.test_connection()
 
-        asset_names: Set[str] = self.get_asset_names()
+        asset_names: set[str] = self.get_asset_names()
         if asset.name in asset_names:
             raise ValueError(  # noqa: TRY003
                 f'"{asset.name}" already exists (all existing assets are {", ".join(asset_names)})'
@@ -910,7 +906,7 @@ class Datasource(
                     )
         if asset_build_failure_direct_cause:
             # TODO: allow users to opt out of these warnings
-            names_and_error: List[str] = [
+            names_and_error: list[str] = [
                 f"{name}:{type(exc).__name__}"
                 for (name, exc) in asset_build_failure_direct_cause.items()
             ]
@@ -920,7 +916,7 @@ class Datasource(
             )
 
     @staticmethod
-    def _update_asset_forward_refs(asset_type: Type[_DataAssetT]) -> None:
+    def _update_asset_forward_refs(asset_type: type[_DataAssetT]) -> None:
         """Update forward refs of an asset_type if necessary.
 
         Note, this should be overridden in child datasource classes if forward
@@ -938,7 +934,7 @@ class Datasource(
 
     # Abstract Methods
     @property
-    def execution_engine_type(self) -> Type[_ExecutionEngineT]:
+    def execution_engine_type(self) -> type[_ExecutionEngineT]:
         """Return the ExecutionEngine type use for this Datasource"""
         raise NotImplementedError(
             """One needs to implement "execution_engine_type" on a Datasource subclass."""
@@ -969,7 +965,7 @@ class Datasource(
         pass
 
     @classmethod
-    def _get_exec_engine_excludes(cls) -> Set[str]:
+    def _get_exec_engine_excludes(cls) -> set[str]:
         """
         Return a set of field names to exclude from the execution engine.
 
@@ -984,7 +980,7 @@ class Datasource(
 
 
 # This is used to prevent passing things like `type`, `assets` etc. to the execution engine
-_BASE_DATASOURCE_FIELD_NAMES: Final[Set[str]] = {name for name in Datasource.__fields__}
+_BASE_DATASOURCE_FIELD_NAMES: Final[set[str]] = {name for name in Datasource.__fields__}
 
 
 @dataclasses.dataclass(frozen=True)
@@ -1018,7 +1014,7 @@ class Batch:
         batch_markers: BatchMarkers,
         batch_spec: BatchSpec,
         batch_definition: LegacyBatchDefinition,
-        metadata: Dict[str, Any] | None = None,
+        metadata: dict[str, Any] | None = None,
     ):
         # Immutable attributes
         self._datasource = datasource
@@ -1081,7 +1077,7 @@ class Batch:
 
     @public_api
     @validate_arguments
-    def columns(self) -> List[str]:
+    def columns(self) -> list[str]:
         """Return column names of this Batch.
 
         Returns

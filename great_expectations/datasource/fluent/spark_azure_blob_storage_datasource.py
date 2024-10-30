@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import logging
 import re
-from typing import TYPE_CHECKING, Any, ClassVar, Dict, Final, Literal, Type, Union
+from typing import TYPE_CHECKING, Any, ClassVar, Final, Literal, Union
 
 from great_expectations._docs_decorators import public_api
 from great_expectations.compatibility import azure, pydantic
@@ -38,7 +38,7 @@ class SparkAzureBlobStorageDatasourceError(SparkDatasourceError):
 @public_api
 class SparkAzureBlobStorageDatasource(_SparkFilePathDatasource):
     # class attributes
-    data_connector_type: ClassVar[Type[AzureBlobStorageDataConnector]] = (
+    data_connector_type: ClassVar[type[AzureBlobStorageDataConnector]] = (
         AzureBlobStorageDataConnector
     )
 
@@ -46,7 +46,7 @@ class SparkAzureBlobStorageDatasource(_SparkFilePathDatasource):
     type: Literal["spark_abs"] = "spark_abs"
 
     # Azure Blob Storage specific attributes
-    azure_options: Dict[str, Union[ConfigStr, Any]] = {}
+    azure_options: dict[str, Union[ConfigStr, Any]] = {}
 
     _account_name: str = pydantic.PrivateAttr(default="")
     # on 3.11 the annotation must be type-checking import otherwise it will fail at import time

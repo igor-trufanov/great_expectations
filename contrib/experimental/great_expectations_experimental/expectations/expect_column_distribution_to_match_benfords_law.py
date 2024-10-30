@@ -1,5 +1,5 @@
 import math
-from typing import Dict, Optional
+from typing import Optional
 
 from great_expectations.execution_engine import ExecutionEngine, PandasExecutionEngine
 from great_expectations.execution_engine.sqlalchemy_execution_engine import (
@@ -300,7 +300,7 @@ class ExpectColumnDistributionToMatchBenfordsLaw(ColumnAggregateExpectation):
 
     def _validate(
         self,
-        metrics: Dict,
+        metrics: dict,
         runtime_configuration: dict = None,
         execution_engine: ExecutionEngine = None,
     ):

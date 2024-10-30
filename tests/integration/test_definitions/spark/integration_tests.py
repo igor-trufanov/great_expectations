@@ -1,13 +1,11 @@
-from typing import List
-
 from tests.integration.backend_dependencies import BackendDependencies
 from tests.integration.integration_test_fixture import IntegrationTestFixture
 
 spark_integration_tests = []
 
-connecting_to_your_data: List[IntegrationTestFixture] = []
+connecting_to_your_data: list[IntegrationTestFixture] = []
 
-databricks_deployment_patterns: List[IntegrationTestFixture] = [
+databricks_deployment_patterns: list[IntegrationTestFixture] = [
     # unable to mock dbfs in CI
     # IntegrationTestFixture(
     #     name="databricks_deployment_patterns_file_python_configs",

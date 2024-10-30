@@ -7,10 +7,8 @@ from typing import (
     ClassVar,
     Final,
     Generator,
-    List,
     NamedTuple,
     Optional,
-    Type,
     Union,
     overload,
 )
@@ -68,9 +66,9 @@ class TypeRegistrationError(TypeError): ...
 
 class _FieldDetails(NamedTuple):
     default_value: Any
-    type_annotation: Type
+    type_annotation: type
 
-def _get_field_details(model: Type[pydantic.BaseModel], field_name: str) -> _FieldDetails: ...
+def _get_field_details(model: type[pydantic.BaseModel], field_name: str) -> _FieldDetails: ...
 
 class DataSourceManager:
     type_lookup: ClassVar[TypeLookup]
@@ -78,15 +76,15 @@ class DataSourceManager:
     @classmethod
     def register_datasource(
         cls,
-        ds_type: Type[Datasource],
+        ds_type: type[Datasource],
     ) -> None: ...
     @property
     def pandas_default(self) -> PandasDatasource: ...
     @property
-    def factories(self) -> List[str]: ...
+    def factories(self) -> list[str]: ...
     def __getattr__(self, attr_name: str): ...
     @override
-    def __dir__(self) -> List[str]: ...
+    def __dir__(self) -> list[str]: ...
     def add_pandas(
         self,
         name_or_datasource: Optional[Union[str, Datasource]] = None,
@@ -741,4 +739,4 @@ class DataSourceManager:
 
 def _iter_all_registered_types(
     include_datasource: bool = True, include_data_asset: bool = True
-) -> Generator[tuple[str, Type[Datasource] | Type[DataAsset]], None, None]: ...
+) -> Generator[tuple[str, type[Datasource | DataAsset]], None, None]: ...

@@ -16,7 +16,7 @@ import pydoc
 import re
 import shutil
 from pathlib import Path
-from typing import Any, Dict, Iterable, List, Set, Tuple
+from typing import Any, Iterable
 from typing import Generator as typeGenerator
 
 WHITELISTED_TAG = "--Public API--"
@@ -137,7 +137,7 @@ def _get_indentation(value: str) -> int:
 
 def _get_dictionary_from_block_in_docstring(
     docstring: str, block_heading_text: str
-) -> Dict[str, str]:
+) -> dict[str, str]:
     """Builds a dictionary of key: description pairs from a block of text in a docstring.
 
     Note: The description portion of the key: description pair will have all non-alphanumerics that are used in Markdown
@@ -256,7 +256,7 @@ def get_paragraph_block_contents(block_heading_text: str, docstring: str) -> str
     return block_contents.strip()
 
 
-def get_yield_or_return_block(docstring: str) -> Tuple[str, str]:
+def get_yield_or_return_block(docstring: str) -> tuple[str, str]:
     """Retrieves the content of the `Yields:` or the `Returns:` block in a docstring, if one of those blocks exists.
 
     The retrieved block's contents will be reformatted as a string without line breaks or extra whitespace.
@@ -321,7 +321,7 @@ def condense_whitespace(docstring: str) -> str:
 
 def build_relevant_api_reference_files(
     docstring: str, api_doc_id: str, api_doc_path: str
-) -> Set[str]:
+) -> set[str]:
     """Builds importable link snippets according to the contents of a docstring's `# Documentation` block.
 
     This method will create files if they do not exist, and will append links to the files that already do exist.
@@ -350,7 +350,7 @@ def build_relevant_api_reference_files(
 
 def get_whitelisted_methods(
     imported_class: object,
-) -> typeGenerator[Tuple[str, object], None, None]:
+) -> typeGenerator[tuple[str, object], None, None]:
     """Provides the method_name and a reference to the method itself for every Public API method in a class.
 
     Args:
@@ -367,8 +367,8 @@ def get_whitelisted_methods(
 
 
 def parse_method_signature(
-    signature: inspect.Signature, param_dict: Dict[str, str]
-) -> List[List[str]]:
+    signature: inspect.Signature, param_dict: dict[str, str]
+) -> list[list[str]]:
     """Combines Signature with the contents of a param_dict to create rows for a parameter table.
 
     Args:
@@ -425,7 +425,7 @@ def get_title(file_path: Path) -> str:
                 return title
 
 
-def build_relevant_documentation_block(docstring: str) -> List[str]:
+def build_relevant_documentation_block(docstring: str) -> list[str]:
     """Builds a list of links to documentation listed in the '--Documentation--' block of a docstring.
 
     Args:
@@ -447,7 +447,7 @@ def build_relevant_documentation_block(docstring: str) -> List[str]:
 
 def build_method_document(  # noqa: C901
     method_name: str, method: Any, qualified_path: str, github_path: str
-) -> Tuple[str, Set[str], str]:
+) -> tuple[str, set[str], str]:
     """Create API documentation for a given method.
 
     This method both creates the content for the API documentation and also writes it to the corresponding file.  It
@@ -560,7 +560,7 @@ def build_method_document(  # noqa: C901
 
 def build_class_document(
     class_name: str, imported_class: object, import_path: str, github_path: str
-) -> Tuple[Set[str], str]:
+) -> tuple[set[str], str]:
     """Create API documentation for a given class and its methods that are part of the Public API.
 
     This method both creates the content for the API documentation and also writes it to the corresponding file.
@@ -620,7 +620,7 @@ def build_class_document(
     # Build API documentation for the class's Public API methods and populate the sidebar update.
     whitelisted_methods = get_whitelisted_methods(imported_class)
     in_progress_methods = []
-    all_edited_cross_link_files: Set[str] = set()
+    all_edited_cross_link_files: set[str] = set()
     sidebar_method_items = []
     for method_name, whitelisted_method in whitelisted_methods:
         abbreviated_method, cross_links, sidebar_id = build_method_document(
@@ -683,7 +683,7 @@ def prettify_docstring(docstring: str) -> str:
     return new_content
 
 
-def remove_existing_api_reference_files(directory_path: Path) -> List[Path]:
+def remove_existing_api_reference_files(directory_path: Path) -> list[Path]:
     """Remove any files in the file tree for `directory_path` that end in the value of API_CROSS_LINK_SUFFIX.
 
     Args:
@@ -712,7 +712,7 @@ def _gather_source_files(directory_path: Path) -> Iterable[Path]:
     return directory_path.rglob("*.py")
 
 
-def _filter_source_files(file_paths: Iterable[Path]) -> List[Path]:
+def _filter_source_files(file_paths: Iterable[Path]) -> list[Path]:
     """Filters out paths to files starting with an underscore from a list of paths.
 
     Args:
@@ -725,7 +725,7 @@ def _filter_source_files(file_paths: Iterable[Path]) -> List[Path]:
     return [_ for _ in file_paths if not _.name.startswith("_")]
 
 
-def get_relevant_source_files(directory_path: Path) -> List[Path]:
+def get_relevant_source_files(directory_path: Path) -> list[Path]:
     """Retrieves filepaths to all public python files in a directory tree.
 
     Args:
@@ -769,7 +769,7 @@ def convert_to_import_path(file_path: Path) -> str:
 
 def gather_classes_to_document(
     import_path: str,
-) -> typeGenerator[Tuple[str, object], None, None]:
+) -> typeGenerator[tuple[str, object], None, None]:
     """Get all the class names and object references for Public API classes in a given module.
 
     Args:

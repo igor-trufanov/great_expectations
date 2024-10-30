@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import logging
 import traceback
-from typing import TYPE_CHECKING, Any, Callable, Dict, Optional, Type, Union
+from typing import TYPE_CHECKING, Any, Callable, Optional, Union
 
 from great_expectations.core import (
     ExpectationValidationResult,
@@ -31,10 +31,10 @@ logger = logging.getLogger(__name__)
 
 
 class ContentBlockRenderer(Renderer):
-    _rendered_component_type: Type[RenderedComponentContent] = TextContent
+    _rendered_component_type: type[RenderedComponentContent] = TextContent
     _default_header = ""
 
-    _default_content_block_styling: Dict[str, JSONValues] = {"classes": ["col-12"]}
+    _default_content_block_styling: dict[str, JSONValues] = {"classes": ["col-12"]}
 
     _default_element_styling = {}
 

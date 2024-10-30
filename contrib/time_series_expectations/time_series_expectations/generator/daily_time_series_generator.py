@@ -1,4 +1,4 @@
-from typing import List, Optional, Tuple
+from typing import Optional
 
 import numpy as np
 import pandas as pd
@@ -15,7 +15,7 @@ class DailyTimeSeriesGenerator(TimeSeriesGenerator):
     def _generate_trend(
         self,
         date_range: np.ndarray,
-        trend_params: List[TrendParams],
+        trend_params: list[TrendParams],
     ) -> np.ndarray:
         """Generate a trend component for a time series."""
 
@@ -31,7 +31,7 @@ class DailyTimeSeriesGenerator(TimeSeriesGenerator):
     def _generate_weekday_seasonality(
         self,
         date_range: np.ndarray,
-        weekday_dummy_params: List[float],
+        weekday_dummy_params: list[float],
     ) -> np.ndarray:
         """Generate a weekday seasonality component for a time series."""
 
@@ -40,7 +40,7 @@ class DailyTimeSeriesGenerator(TimeSeriesGenerator):
     def _generate_annual_seasonality(
         self,
         date_range: np.ndarray,
-        annual_seasonality_params: List[Tuple[float, float]],
+        annual_seasonality_params: list[tuple[float, float]],
     ) -> np.ndarray:
         """Generate an annual seasonality component for a time series."""
 
@@ -65,9 +65,9 @@ class DailyTimeSeriesGenerator(TimeSeriesGenerator):
     def _generate_component_time_series(
         self,
         size: int,
-        trend_params: List[TrendParams],
-        weekday_dummy_params: List[float],
-        annual_seasonality_params: List[Tuple[float, float]],
+        trend_params: list[TrendParams],
+        weekday_dummy_params: list[float],
+        annual_seasonality_params: list[tuple[float, float]],
         holiday_alpha: float,
         outlier_alpha: float,
         noise_scale: float,
@@ -97,9 +97,9 @@ class DailyTimeSeriesGenerator(TimeSeriesGenerator):
     def _generate_daily_time_series(
         self,
         size: int = 365 * 3,
-        trend_params: Optional[List[TrendParams]] = None,
-        weekday_dummy_params: Optional[List[float]] = None,
-        annual_seasonality_params: Optional[List[Tuple[float, float]]] = None,
+        trend_params: Optional[list[TrendParams]] = None,
+        weekday_dummy_params: Optional[list[float]] = None,
+        annual_seasonality_params: Optional[list[tuple[float, float]]] = None,
         holiday_alpha: float = 3.5,
         outlier_alpha: float = 2.5,
         noise_scale: float = 1.0,
@@ -170,9 +170,9 @@ class DailyTimeSeriesGenerator(TimeSeriesGenerator):
         self,
         size: Optional[int] = 365 * 3,
         start_date: Optional[str] = "2018-01-01",
-        trend_params: Optional[List[TrendParams]] = None,
-        weekday_dummy_params: Optional[List[float]] = None,
-        annual_seasonality_params: Optional[List[Tuple[float, float]]] = None,
+        trend_params: Optional[list[TrendParams]] = None,
+        weekday_dummy_params: Optional[list[float]] = None,
+        annual_seasonality_params: Optional[list[tuple[float, float]]] = None,
         holiday_alpha: float = 3.5,
         outlier_alpha: float = 2.5,
         noise_scale: float = 1.0,

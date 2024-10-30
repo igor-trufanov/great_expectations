@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import TYPE_CHECKING, Any, ClassVar, Dict, Optional, Tuple, Type, Union
+from typing import TYPE_CHECKING, Any, ClassVar, Optional, Union
 
 from great_expectations.compatibility import pydantic
 from great_expectations.compatibility.typing_extensions import override
@@ -164,7 +164,7 @@ class ExpectTableRowCountToBeBetween(BatchExpectation):
     row_condition: Union[str, None] = None
     condition_parser: Union[ConditionParser, None] = None
 
-    library_metadata: ClassVar[Dict[str, Union[str, list, bool]]] = {
+    library_metadata: ClassVar[dict[str, Union[str, list, bool]]] = {
         "maturity": "production",
         "tags": ["core expectation", "table expectation"],
         "contributors": ["@great_expectations"],
@@ -175,7 +175,7 @@ class ExpectTableRowCountToBeBetween(BatchExpectation):
     _library_metadata = library_metadata
 
     metric_dependencies = ("table.row_count",)
-    domain_keys: ClassVar[Tuple[str, ...]] = tuple()
+    domain_keys: ClassVar[tuple[str, ...]] = tuple()
     success_keys = (
         "min_value",
         "max_value",
@@ -190,7 +190,7 @@ class ExpectTableRowCountToBeBetween(BatchExpectation):
 
         @staticmethod
         def schema_extra(
-            schema: Dict[str, Any], model: Type[ExpectTableRowCountToBeBetween]
+            schema: dict[str, Any], model: type[ExpectTableRowCountToBeBetween]
         ) -> None:
             BatchExpectation.Config.schema_extra(schema, model)
             schema["properties"]["metadata"]["properties"].update(
@@ -315,7 +315,7 @@ class ExpectTableRowCountToBeBetween(BatchExpectation):
     @override
     def _validate(
         self,
-        metrics: Dict,
+        metrics: dict,
         runtime_configuration: Optional[dict] = None,
         execution_engine: Optional[ExecutionEngine] = None,
     ):

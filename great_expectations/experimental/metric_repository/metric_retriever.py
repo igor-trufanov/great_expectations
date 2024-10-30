@@ -5,7 +5,6 @@ import uuid
 from typing import (
     TYPE_CHECKING,
     Any,
-    List,
     Optional,
     Sequence,
 )
@@ -54,7 +53,7 @@ class MetricRetriever(abc.ABC):
     def get_metrics(
         self,
         batch_request: BatchRequest,
-        metric_list: Optional[List[MetricTypes]] = None,
+        metric_list: Optional[list[MetricTypes]] = None,
     ) -> Sequence[Metric]:
         raise NotImplementedError
 
@@ -132,11 +131,11 @@ class MetricRetriever(abc.ABC):
         batch_id = validator.active_batch.id
         return batch_id, computed_metrics, aborted_metrics
 
-    def _get_columns_to_exclude(self, table_column_types: Metric) -> List[str]:
+    def _get_columns_to_exclude(self, table_column_types: Metric) -> list[str]:
         """
         Excludes columns that are unsupported or missing type metadata
         """
-        columns_to_skip: List[str] = []
+        columns_to_skip: list[str] = []
         UNSUPPORTED_COLUMN_TYPES = ["TIME"]
         for column_type in table_column_types.value:
             if not column_type.get("type"):
@@ -148,7 +147,7 @@ class MetricRetriever(abc.ABC):
     def _get_numeric_column_names(
         self,
         batch_request: BatchRequest,
-        exclude_column_names: List[str],
+        exclude_column_names: list[str],
     ) -> list[str]:
         """Get the names of all numeric columns in the batch."""
         return self._get_column_names_for_semantic_types(
@@ -160,7 +159,7 @@ class MetricRetriever(abc.ABC):
     def _get_timestamp_column_names(
         self,
         batch_request: BatchRequest,
-        exclude_column_names: List[str],
+        exclude_column_names: list[str],
     ) -> list[str]:
         """Get the names of all timestamp columns in the batch."""
         return self._get_column_names_for_semantic_types(
@@ -172,8 +171,8 @@ class MetricRetriever(abc.ABC):
     def _get_column_names_for_semantic_types(
         self,
         batch_request: BatchRequest,
-        include_semantic_types: List[SemanticDomainTypes],
-        exclude_column_names: List[str],
+        include_semantic_types: list[SemanticDomainTypes],
+        exclude_column_names: list[str],
     ) -> list[str]:
         """Get the names of all columns matching semantic types in the batch."""
         validator = self.get_validator(batch_request=batch_request)
@@ -213,8 +212,8 @@ class MetricRetriever(abc.ABC):
     def _get_column_metrics(
         self,
         batch_request: BatchRequest,
-        column_list: List[str],
-        column_metric_names: List[MetricTypes | str],
+        column_list: list[str],
+        column_metric_names: list[MetricTypes | str],
         column_metric_type: type[ColumnMetric[Any]],
     ) -> Sequence[Metric]:
         column_metric_configs = self._generate_column_metric_configurations(
@@ -252,7 +251,7 @@ class MetricRetriever(abc.ABC):
     def _generate_column_metric_configurations(
         self, column_list: list[str], column_metric_names: list[str | MetricTypes]
     ) -> list[MetricConfiguration]:
-        column_metric_configs: List[MetricConfiguration] = list()
+        column_metric_configs: list[MetricConfiguration] = list()
         for metric_name in column_metric_names:
             for column in column_list:
                 column_metric_configs.append(
@@ -264,8 +263,8 @@ class MetricRetriever(abc.ABC):
                 )
         return column_metric_configs
 
-    def _get_all_column_names(self, metrics: Sequence[Metric]) -> List[str]:
-        column_list: List[str] = []
+    def _get_all_column_names(self, metrics: Sequence[Metric]) -> list[str]:
+        column_list: list[str] = []
         for metric in metrics:
             if metric.metric_name == MetricTypes.TABLE_COLUMNS:
                 column_list = metric.value
@@ -282,7 +281,7 @@ class MetricRetriever(abc.ABC):
         return self._get_table_metrics(
             batch_request=batch_request,
             metric_name=MetricTypes.TABLE_COLUMNS,
-            metric_type=TableMetric[List[str]],
+            metric_type=TableMetric[list[str]],
         )
 
     def _get_table_column_types(self, batch_request: BatchRequest) -> Metric:
@@ -315,7 +314,7 @@ class MetricRetriever(abc.ABC):
             else:
                 column_types_converted_to_str.append({"name": raw_column_type["name"]})
 
-        return TableMetric[List[str]](
+        return TableMetric[list[str]](
             batch_id=batch_id,
             metric_name=metric_name,
             value=column_types_converted_to_str,

@@ -1,6 +1,5 @@
 import datetime
 import os
-from typing import List, Tuple
 from unittest import mock
 
 import numpy as np
@@ -50,7 +49,7 @@ pytestmark = pytest.mark.spark
 
 @pytest.fixture
 def simple_multi_year_spark_df(spark_session):
-    spark_df_data: List[Tuple] = [
+    spark_df_data: list[tuple] = [
         ("2018-01-01 12:00:00.000",),
         ("2018-10-02 12:00:00.000",),
         ("2019-01-01 12:00:00.000",),
@@ -208,7 +207,7 @@ def test_partition_on_date_parts_multiple_date_parts(
 def test_named_date_part_methods(
     mock_partition_on_date_parts: mock.MagicMock,  # noqa: TID251
     partitioner_method_name: str,
-    called_with_date_parts: List[DatePart],
+    called_with_date_parts: list[DatePart],
     simple_multi_year_spark_df: pyspark.DataFrame,
 ):
     """Test that a partially pre-filled version of partition_on_date_parts() was called with the appropriate params.

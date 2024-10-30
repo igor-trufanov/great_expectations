@@ -1,6 +1,6 @@
 import logging
 import traceback
-from typing import Any, Dict, Tuple
+from typing import Any
 
 import numpy as np
 from scipy import stats
@@ -50,10 +50,10 @@ class ColumnSkew(ColumnAggregateMetricProvider):
     def _sqlalchemy(
         cls,
         execution_engine: "SqlAlchemyExecutionEngine",
-        metric_domain_kwargs: Dict,
-        metric_value_kwargs: Dict,
-        metrics: Dict[Tuple, Any],
-        runtime_configuration: Dict,
+        metric_domain_kwargs: dict,
+        metric_value_kwargs: dict,
+        metrics: dict[tuple, Any],
+        runtime_configuration: dict,
     ):
         (
             selectable,
@@ -379,7 +379,7 @@ class ExpectColumnSkewToBeBetween(ColumnAggregateExpectation):
 
     def _validate(
         self,
-        metrics: Dict,
+        metrics: dict,
         runtime_configuration: dict = None,
         execution_engine: ExecutionEngine = None,
     ):

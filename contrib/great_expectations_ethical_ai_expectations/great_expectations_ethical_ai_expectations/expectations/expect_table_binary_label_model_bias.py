@@ -1,4 +1,4 @@
-from typing import Any, Dict, Optional, Tuple
+from typing import Any, Optional
 
 from aequitas.bias import Bias
 from aequitas.fairness import Fairness
@@ -30,10 +30,10 @@ class TableEvaluateBinaryLabelModelBias(TableMetricProvider):
     def _pandas(
         cls,
         execution_engine: PandasExecutionEngine,
-        metric_domain_kwargs: Dict,
-        metric_value_kwargs: Dict,
-        metrics: Dict[Tuple, Any],
-        runtime_configuration: Dict,
+        metric_domain_kwargs: dict,
+        metric_value_kwargs: dict,
+        metrics: dict[tuple, Any],
+        runtime_configuration: dict,
     ):
         y_true = metric_value_kwargs.get("y_true")
         y_pred = metric_value_kwargs.get("y_pred")

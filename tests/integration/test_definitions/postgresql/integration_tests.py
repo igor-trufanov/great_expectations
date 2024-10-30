@@ -1,5 +1,3 @@
-from typing import List
-
 from tests.integration.backend_dependencies import BackendDependencies
 from tests.integration.integration_test_fixture import IntegrationTestFixture
 
@@ -47,7 +45,7 @@ partition_data = [
     ),
 ]
 
-sample_data: List[IntegrationTestFixture] = []
+sample_data: list[IntegrationTestFixture] = []
 
 
 fluent_datasources = [

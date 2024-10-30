@@ -10,14 +10,10 @@ from typing import (
     Any,
     Callable,
     ClassVar,
-    Dict,
     Generator,
-    List,
     NamedTuple,
     Optional,
     Sequence,
-    Tuple,
-    Type,
     Union,
 )
 
@@ -55,10 +51,10 @@ class TypeRegistrationError(TypeError):
 
 class _FieldDetails(NamedTuple):
     default_value: Any
-    type_annotation: Type
+    type_annotation: type
 
 
-def _get_field_details(model: Type[pydantic.BaseModel], field_name: str) -> _FieldDetails:
+def _get_field_details(model: type[pydantic.BaseModel], field_name: str) -> _FieldDetails:
     """Get the default value of the requested field and its type annotation."""
     return _FieldDetails(
         default_value=model.__fields__[field_name].default,
@@ -73,7 +69,7 @@ class CrudMethodType(str, Enum):
     ADD_OR_UPDATE = "ADD_OR_UPDATE"
 
 
-CrudMethodInfoFn: TypeAlias = Callable[..., Tuple[CrudMethodType, Type["Datasource"]]]
+CrudMethodInfoFn: TypeAlias = Callable[..., tuple[CrudMethodType, type["Datasource"]]]
 
 
 @public_api
@@ -91,7 +87,7 @@ class DataSourceManager:
     # A dict-like two way mapping between previously registered `Datasource` or `DataAsset` types
     # and a simplified name for those types.
     type_lookup: ClassVar = TypeLookup()
-    __crud_registry: ClassVar[Dict[str, CrudMethodInfoFn]] = {}
+    __crud_registry: ClassVar[dict[str, CrudMethodInfoFn]] = {}
 
     _data_context: GXDataContext
 
@@ -99,7 +95,7 @@ class DataSourceManager:
         self._data_context = data_context
 
     @classmethod
-    def register_datasource(cls, ds_type: Type[Datasource]) -> None:
+    def register_datasource(cls, ds_type: type[Datasource]) -> None:
         """
         Add/Register a datasource. This registers all the crud datasource methods:
         add_<datasource>, delete_<datasource>, update_<datasource>, add_or_update_<datasource>
@@ -143,7 +139,7 @@ class DataSourceManager:
     @classmethod
     def _register_datasource(
         cls,
-        ds_type: Type[Datasource],
+        ds_type: type[Datasource],
         ds_type_name: str,
         datasource_type_lookup: TypeLookup,
     ) -> str:
@@ -167,19 +163,19 @@ class DataSourceManager:
         return ds_type_name
 
     @classmethod
-    def _register_add_datasource(cls, ds_type: Type[Datasource], ds_type_name: str):
+    def _register_add_datasource(cls, ds_type: type[Datasource], ds_type_name: str):
         method_name = f"add_{ds_type_name}"
 
-        def crud_method_info() -> tuple[CrudMethodType, Type[Datasource]]:
+        def crud_method_info() -> tuple[CrudMethodType, type[Datasource]]:
             return CrudMethodType.ADD, ds_type
 
         cls._register_crud_method(method_name, cls.__doc__, crud_method_info)
 
     @classmethod
-    def _register_update_datasource(cls, ds_type: Type[Datasource], ds_type_name: str):
+    def _register_update_datasource(cls, ds_type: type[Datasource], ds_type_name: str):
         method_name = f"update_{ds_type_name}"
 
-        def crud_method_info() -> tuple[CrudMethodType, Type[Datasource]]:
+        def crud_method_info() -> tuple[CrudMethodType, type[Datasource]]:
             return CrudMethodType.UPDATE, ds_type
 
         cls._register_crud_method(
@@ -187,10 +183,10 @@ class DataSourceManager:
         )
 
     @classmethod
-    def _register_add_or_update_datasource(cls, ds_type: Type[Datasource], ds_type_name: str):
+    def _register_add_or_update_datasource(cls, ds_type: type[Datasource], ds_type_name: str):
         method_name = f"add_or_update_{ds_type_name}"
 
-        def crud_method_info() -> tuple[CrudMethodType, Type[Datasource]]:
+        def crud_method_info() -> tuple[CrudMethodType, type[Datasource]]:
             return CrudMethodType.ADD_OR_UPDATE, ds_type
 
         cls._register_crud_method(
@@ -200,10 +196,10 @@ class DataSourceManager:
         )
 
     @classmethod
-    def _register_delete_datasource(cls, ds_type: Type[Datasource], ds_type_name: str):
+    def _register_delete_datasource(cls, ds_type: type[Datasource], ds_type_name: str):
         method_name = f"delete_{ds_type_name}"
 
-        def crud_method_info() -> tuple[CrudMethodType, Type[Datasource]]:
+        def crud_method_info() -> tuple[CrudMethodType, type[Datasource]]:
             return CrudMethodType.DELETE, ds_type
 
         cls._register_crud_method(
@@ -231,8 +227,8 @@ class DataSourceManager:
         cls.__crud_registry[crud_fn_name] = crud_method_info
 
     @classmethod
-    def _register_assets(cls, ds_type: Type[Datasource], asset_type_lookup: TypeLookup):
-        asset_types: Sequence[Type[DataAsset]] = ds_type.asset_types
+    def _register_assets(cls, ds_type: type[Datasource], asset_type_lookup: TypeLookup):
+        asset_types: Sequence[type[DataAsset]] = ds_type.asset_types
 
         if not asset_types:
             logger.warning(
@@ -265,8 +261,8 @@ class DataSourceManager:
     @classmethod
     def _bind_asset_factory_method_if_not_present(
         cls,
-        ds_type: Type[Datasource],
-        asset_type: Type[DataAsset],
+        ds_type: type[Datasource],
+        asset_type: type[DataAsset],
         asset_type_name: str,
     ):
         add_asset_factory_method_name = f"add_{asset_type_name}_asset"
@@ -362,11 +358,11 @@ class DataSourceManager:
         )
 
     @property
-    def factories(self) -> List[str]:
+    def factories(self) -> list[str]:
         return list(self.__crud_registry.keys())
 
     def _validate_current_datasource_type(
-        self, name: str, datasource_type: Type[Datasource], raise_if_none: bool = True
+        self, name: str, datasource_type: type[Datasource], raise_if_none: bool = True
     ) -> None:
         try:
             current_datasource = self._data_context.data_sources.get(name)
@@ -382,7 +378,7 @@ class DataSourceManager:
 
     def _datasource_passed_in_as_only_argument(
         self,
-        datasource_type: Type[Datasource],
+        datasource_type: type[Datasource],
         name_or_datasource: Optional[Union[str, Datasource]],
         **kwargs,
     ) -> Optional[Datasource]:
@@ -409,7 +405,7 @@ class DataSourceManager:
 
     def _datasource_passed_in(
         self,
-        datasource_type: Type[Datasource],
+        datasource_type: type[Datasource],
         name_or_datasource: Optional[Union[str, Datasource]],
         **kwargs,
     ) -> Optional[Datasource]:
@@ -447,7 +443,7 @@ class DataSourceManager:
 
     def create_add_crud_method(
         self,
-        datasource_type: Type[Datasource],
+        datasource_type: type[Datasource],
         doc_string: str = "",
     ) -> SourceFactoryFn:
         def add_datasource(
@@ -480,7 +476,7 @@ class DataSourceManager:
 
     def create_update_crud_method(
         self,
-        datasource_type: Type[Datasource],
+        datasource_type: type[Datasource],
         doc_string: str = "",
     ) -> SourceFactoryFn:
         def update_datasource(
@@ -527,7 +523,7 @@ class DataSourceManager:
 
     def create_add_or_update_crud_method(
         self,
-        datasource_type: Type[Datasource],
+        datasource_type: type[Datasource],
         doc_string: str = "",
     ) -> SourceFactoryFn:
         def add_or_update_datasource(
@@ -577,7 +573,7 @@ class DataSourceManager:
 
     def create_delete_crud_method(
         self,
-        datasource_type: Type[Datasource],
+        datasource_type: type[Datasource],
         doc_string: str = "",
     ) -> Callable[[str], None]:
         def delete_datasource(name: str) -> None:
@@ -635,24 +631,24 @@ class DataSourceManager:
             raise AttributeError(f"No crud method '{attr_name}' in {self.factories}") from e  # noqa: TRY003
 
     @override
-    def __dir__(self) -> List[str]:
+    def __dir__(self) -> list[str]:
         """Preserves autocompletion for dynamic attributes."""
         return [*self.factories, *super().__dir__()]
 
 
 def _iter_all_registered_types(
     include_datasource: bool = True, include_data_asset: bool = True
-) -> Generator[tuple[str, Type[Datasource] | Type[DataAsset]], None, None]:
+) -> Generator[tuple[str, type[Datasource | DataAsset]], None, None]:
     """
     Iterate through all registered Datasource and DataAsset types.
     Returns tuples of the registered type name and the actual type/class.
     """
     for ds_name in DataSourceManager.type_lookup.type_names():
-        ds_type: Type[Datasource] = DataSourceManager.type_lookup[ds_name]
+        ds_type: type[Datasource] = DataSourceManager.type_lookup[ds_name]
         if include_datasource:
             yield ds_name, ds_type
 
         if include_data_asset:
             for asset_name in ds_type._type_lookup.type_names():
-                asset_type: Type[DataAsset] = ds_type._type_lookup[asset_name]
+                asset_type: type[DataAsset] = ds_type._type_lookup[asset_name]
                 yield asset_name, asset_type

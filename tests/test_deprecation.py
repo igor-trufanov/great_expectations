@@ -1,6 +1,6 @@
 import glob
 import re
-from typing import List, Pattern, Tuple
+from typing import Pattern
 
 import pytest
 from packaging import version
@@ -20,8 +20,8 @@ def regex_for_deprecation_comments() -> Pattern:
 
 
 @pytest.fixture
-def files_with_deprecation_warnings() -> List[str]:
-    files: List[str] = glob.glob(  # noqa: PTH207
+def files_with_deprecation_warnings() -> list[str]:
+    files: list[str] = glob.glob(  # noqa: PTH207
         "great_expectations/**/*.py", recursive=True
     )
     files_to_exclude = [
@@ -41,7 +41,7 @@ def files_with_deprecation_warnings() -> List[str]:
 @pytest.mark.unit
 def test_deprecation_warnings_are_accompanied_by_appropriate_comment(
     regex_for_deprecation_comments: Pattern,
-    files_with_deprecation_warnings: List[str],
+    files_with_deprecation_warnings: list[str],
 ):
     """
     What does this test do and why?
@@ -55,7 +55,7 @@ def test_deprecation_warnings_are_accompanied_by_appropriate_comment(
         with open(file) as f:
             contents = f.read()
 
-        matches: List[str] = regex_for_deprecation_comments.findall(contents)
+        matches: list[str] = regex_for_deprecation_comments.findall(contents)
         warning_count: int = contents.count("DeprecationWarning")
         assert (
             len(matches) == warning_count
@@ -65,7 +65,7 @@ def test_deprecation_warnings_are_accompanied_by_appropriate_comment(
 @pytest.mark.unit
 def test_deprecation_warnings_have_been_removed_after_two_minor_versions(
     regex_for_deprecation_comments: Pattern,
-    files_with_deprecation_warnings: List[str],
+    files_with_deprecation_warnings: list[str],
 ):
     """
     What does this test do and why?
@@ -84,12 +84,12 @@ def test_deprecation_warnings_have_been_removed_after_two_minor_versions(
     current_major_version: int = current_parsed_version.major
     current_minor_version: int = current_parsed_version.minor
 
-    unneeded_deprecation_warnings: List[Tuple[str, str]] = []
+    unneeded_deprecation_warnings: list[tuple[str, str]] = []
     for file in files_with_deprecation_warnings:
         with open(file) as f:
             contents = f.read()
 
-        matches: List[str] = regex_for_deprecation_comments.findall(contents)
+        matches: list[str] = regex_for_deprecation_comments.findall(contents)
         for match in matches:
             parsed_version: version.Version = version.parse(match)
             major_version: int = parsed_version.major
@@ -97,7 +97,7 @@ def test_deprecation_warnings_have_been_removed_after_two_minor_versions(
             if (current_major_version - major_version > 0) and (
                 current_minor_version - minor_version > 2
             ):
-                unneeded_deprecation_warning: Tuple[str, str] = (file, match)
+                unneeded_deprecation_warning: tuple[str, str] = (file, match)
                 unneeded_deprecation_warnings.append(unneeded_deprecation_warning)
 
     if unneeded_deprecation_warnings:

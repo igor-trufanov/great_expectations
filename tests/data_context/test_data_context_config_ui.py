@@ -1,6 +1,6 @@
 import copy
 import os
-from typing import Any, Dict, Final, Optional
+from typing import Any, Final, Optional
 
 import pytest
 
@@ -45,10 +45,10 @@ def construct_data_context_config():
         expectations_store_name: str = DataContextConfigDefaults.DEFAULT_EXPECTATIONS_STORE_NAME.value,  # noqa: E501
         validation_results_store_name: str = DataContextConfigDefaults.DEFAULT_VALIDATIONS_STORE_NAME.value,  # noqa: E501
         checkpoint_store_name: str = DataContextConfigDefaults.DEFAULT_CHECKPOINT_STORE_NAME.value,
-        fluent_datasources: Optional[Dict] = None,
+        fluent_datasources: Optional[dict] = None,
         plugins_directory: Optional[str] = None,
-        stores: Optional[Dict] = None,
-        data_docs_sites: Optional[Dict] = None,
+        stores: Optional[dict] = None,
+        data_docs_sites: Optional[dict] = None,
     ):
         if stores is None:
             stores = copy.deepcopy(DataContextConfigDefaults.DEFAULT_STORES.value)

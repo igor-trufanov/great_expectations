@@ -8,11 +8,8 @@ from typing import (
     TYPE_CHECKING,
     Any,
     ClassVar,
-    Dict,
-    List,
     Mapping,
     Optional,
-    Type,
     Union,
 )
 
@@ -131,7 +128,7 @@ class ExpectationConfiguration(SerializableDictDot):
         success_on_last_run: Optional[bool] = None,
         id: Optional[str] = None,
         expectation_context: Optional[ExpectationContext] = None,
-        rendered_content: Optional[List[RenderedAtomicContent]] = None,
+        rendered_content: Optional[list[RenderedAtomicContent]] = None,
     ) -> None:
         if not isinstance(type, str):
             raise InvalidExpectationConfigurationError("expectation_type must be a string")  # noqa: TRY003
@@ -212,11 +209,11 @@ class ExpectationConfiguration(SerializableDictDot):
         self._kwargs = value
 
     @property
-    def rendered_content(self) -> Optional[List[RenderedAtomicContent]]:
+    def rendered_content(self) -> Optional[list[RenderedAtomicContent]]:
         return self._rendered_content
 
     @rendered_content.setter
-    def rendered_content(self, value: Optional[List[RenderedAtomicContent]]) -> None:
+    def rendered_content(self, value: Optional[list[RenderedAtomicContent]]) -> None:
         self._rendered_content = value
 
     def _get_default_custom_kwargs(self) -> KWargDetailsDict:
@@ -417,7 +414,7 @@ class ExpectationConfiguration(SerializableDictDot):
         return json.dumps(self.to_json_dict(), indent=2)
 
     @override
-    def to_json_dict(self) -> Dict[str, JSONValues]:
+    def to_json_dict(self) -> dict[str, JSONValues]:
         """Returns a JSON-serializable dict representation of this ExpectationConfiguration.
 
         Returns:
@@ -437,7 +434,7 @@ class ExpectationConfiguration(SerializableDictDot):
             myself["rendered_content"] = convert_to_json_serializable(myself["rendered_content"])
         return myself
 
-    def _get_expectation_impl(self) -> Type[Expectation]:
+    def _get_expectation_impl(self) -> type[Expectation]:
         return get_expectation_impl(self.type)
 
     def to_domain_obj(self) -> Expectation:

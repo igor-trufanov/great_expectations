@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, ClassVar, Dict, Optional, Type, Union
+from typing import TYPE_CHECKING, Any, ClassVar, Optional, Union
 
 from great_expectations.compatibility import pydantic
 from great_expectations.compatibility.typing_extensions import override
@@ -169,7 +169,7 @@ class ExpectColumnSumToBeBetween(ColumnAggregateExpectation):
     strict_max: bool = pydantic.Field(False, description=STRICT_MAX_DESCRIPTION)
 
     # This dictionary contains metadata for display in the public gallery
-    library_metadata: ClassVar[Dict[str, Union[str, list, bool]]] = {
+    library_metadata: ClassVar[dict[str, Union[str, list, bool]]] = {
         "maturity": "production",
         "tags": ["core expectation", "column aggregate expectation"],
         "contributors": ["@great_expectations"],
@@ -201,7 +201,7 @@ class ExpectColumnSumToBeBetween(ColumnAggregateExpectation):
         title = "Expect column sum to be between"
 
         @staticmethod
-        def schema_extra(schema: Dict[str, Any], model: Type[ExpectColumnSumToBeBetween]) -> None:
+        def schema_extra(schema: dict[str, Any], model: type[ExpectColumnSumToBeBetween]) -> None:
             ColumnAggregateExpectation.Config.schema_extra(schema, model)
             schema["properties"]["metadata"]["properties"].update(
                 {
@@ -344,7 +344,7 @@ class ExpectColumnSumToBeBetween(ColumnAggregateExpectation):
     @override
     def _validate(
         self,
-        metrics: Dict,
+        metrics: dict,
         runtime_configuration: Optional[dict] = None,
         execution_engine: Optional[ExecutionEngine] = None,
     ):

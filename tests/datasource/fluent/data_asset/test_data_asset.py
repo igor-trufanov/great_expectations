@@ -1,5 +1,3 @@
-from typing import List
-
 import pytest
 
 from great_expectations.core.batch_definition import BatchDefinition
@@ -327,7 +325,7 @@ def test_delete_batch_definition__cloud_data__does_not_clobber_other_assets(
 
 
 def _test_delete_batch_definition__does_not_clobber_other_assets(
-    context: AbstractDataContext, datasource_name: str, asset_names: List[str]
+    context: AbstractDataContext, datasource_name: str, asset_names: list[str]
 ):
     # each asset has one batch config; delete it
     for asset_name in asset_names:
@@ -350,7 +348,7 @@ class _MyPartitioner(FluentBaseModel):
     sort_ascending: bool = True
 
     @property
-    def param_names(self) -> List[str]:
+    def param_names(self) -> list[str]:
         return ["a", "b"]
 
 

@@ -1,6 +1,5 @@
 import datetime
 import logging
-from typing import Dict, Tuple
 
 import numpy as np
 import pandas as pd
@@ -631,10 +630,10 @@ def test_sparkdf_batch_aggregate_metrics(caplog, spark_session):
         batch_id="1234",
     )
 
-    metrics: Dict[Tuple[str, str, str], MetricValue] = {}
+    metrics: dict[tuple[str, str, str], MetricValue] = {}
 
     table_columns_metric: MetricConfiguration
-    results: Dict[Tuple[str, str, str], MetricValue]
+    results: dict[tuple[str, str, str], MetricValue]
 
     table_columns_metric, results = get_table_columns_metric(execution_engine=engine)
 
@@ -1046,10 +1045,10 @@ def test_resolve_metric_bundle_with_compute_domain_kwargs_json_serialization(
         batch_id="my_id",
     )
 
-    metrics: Dict[Tuple[str, str, str], MetricValue] = {}
+    metrics: dict[tuple[str, str, str], MetricValue] = {}
 
     table_columns_metric: MetricConfiguration
-    results: Dict[Tuple[str, str, str], MetricValue]
+    results: dict[tuple[str, str, str], MetricValue]
 
     table_columns_metric, results = get_table_columns_metric(execution_engine=engine)
     metrics.update(results)

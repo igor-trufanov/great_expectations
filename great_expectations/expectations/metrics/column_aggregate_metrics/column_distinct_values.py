@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, Dict, List, Optional, Set
+from typing import TYPE_CHECKING, Any, Optional
 
 from great_expectations.compatibility.pyspark import (
     functions as F,
@@ -35,23 +35,23 @@ class ColumnDistinctValues(ColumnAggregateMetricProvider):
     metric_name = "column.distinct_values"
 
     @column_aggregate_value(engine=PandasExecutionEngine)  # type: ignore[misc] # untyped-decorator
-    def _pandas(cls, column: pd.Series, **kwargs) -> Set[Any]:
+    def _pandas(cls, column: pd.Series, **kwargs) -> set[Any]:
         return set(column.unique())
 
     @metric_value(engine=SqlAlchemyExecutionEngine)
     def _sqlalchemy(
         cls,
         execution_engine: SqlAlchemyExecutionEngine,
-        metric_domain_kwargs: Dict[str, str],
+        metric_domain_kwargs: dict[str, str],
         **kwargs,
-    ) -> Set[Any]:
+    ) -> set[Any]:
         """
         Past implementations of column.distinct_values depended on column.value_counts.
         This was causing performance issues due to the complex query used in column.value_counts and subsequent
         in-memory operations.
         """  # noqa: E501
         selectable: sqlalchemy.Selectable
-        accessor_domain_kwargs: Dict[str, str]
+        accessor_domain_kwargs: dict[str, str]
         (
             selectable,
             _,
@@ -60,7 +60,7 @@ class ColumnDistinctValues(ColumnAggregateMetricProvider):
         column_name: str = accessor_domain_kwargs["column"]
         column: sqlalchemy.ColumnClause = sa.column(column_name)
 
-        distinct_values: List[sqlalchemy.Row]
+        distinct_values: list[sqlalchemy.Row]
         if hasattr(column, "is_not"):
             distinct_values = execution_engine.execute_query(  # type: ignore[assignment]
                 sa.select(column).where(column.is_not(None)).distinct().select_from(selectable)  # type: ignore[arg-type]
@@ -76,23 +76,23 @@ class ColumnDistinctValues(ColumnAggregateMetricProvider):
     def _spark(
         cls,
         execution_engine: SparkDFExecutionEngine,
-        metric_domain_kwargs: Dict[str, str],
+        metric_domain_kwargs: dict[str, str],
         **kwargs,
-    ) -> Set[Any]:
+    ) -> set[Any]:
         """
         Past implementations of column.distinct_values depended on column.value_counts.
         This was causing performance issues due to the complex query used in column.value_counts and subsequent
         in-memory operations.
         """  # noqa: E501
         df: pyspark.DataFrame
-        accessor_domain_kwargs: Dict[str, str]
+        accessor_domain_kwargs: dict[str, str]
         (
             df,
             _,
             accessor_domain_kwargs,
         ) = execution_engine.get_compute_domain(metric_domain_kwargs, MetricDomainTypes.COLUMN)
         column_name: str = accessor_domain_kwargs["column"]
-        distinct_values: List[pyspark.Row] = (
+        distinct_values: list[pyspark.Row] = (
             df.select(F.col(column_name))
             .distinct()
             .where(F.col(column_name).isNotNull())
@@ -147,8 +147,8 @@ class ColumnDistinctValuesCountUnderThreshold(ColumnAggregateMetricProvider):
     @metric_value(engine=SqlAlchemyExecutionEngine)
     def _sqlalchemy(
         cls,
-        metric_value_kwargs: Dict[str, int],
-        metrics: Dict[str, int],
+        metric_value_kwargs: dict[str, int],
+        metrics: dict[str, int],
         **kwargs,
     ) -> bool:
         return metrics["column.distinct_values.count"] < metric_value_kwargs["threshold"]
@@ -156,8 +156,8 @@ class ColumnDistinctValuesCountUnderThreshold(ColumnAggregateMetricProvider):
     @metric_value(engine=SparkDFExecutionEngine)
     def _spark(
         cls,
-        metric_value_kwargs: Dict[str, int],
-        metrics: Dict[str, int],
+        metric_value_kwargs: dict[str, int],
+        metrics: dict[str, int],
         **kwargs,
     ) -> bool:
         return metrics["column.distinct_values.count"] < metric_value_kwargs["threshold"]
@@ -169,7 +169,7 @@ class ColumnDistinctValuesCountUnderThreshold(ColumnAggregateMetricProvider):
         metric: MetricConfiguration,
         configuration: Optional[ExpectationConfiguration] = None,
         execution_engine: Optional[ExecutionEngine] = None,
-        runtime_configuration: Optional[Dict] = None,
+        runtime_configuration: Optional[dict] = None,
     ):
         """Returns a dictionary of given metric names and their corresponding configuration,
         specifying the metric types and their respective domains"""

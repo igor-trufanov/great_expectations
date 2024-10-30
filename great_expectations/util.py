@@ -27,12 +27,8 @@ from typing import (
     TYPE_CHECKING,
     Any,
     Callable,
-    Dict,
-    List,
     Optional,
-    Set,
     SupportsFloat,
-    Tuple,
     Union,
     cast,
     overload,
@@ -92,9 +88,9 @@ class bidict(dict):
     Bi-directional hashmap: https://stackoverflow.com/a/21894086
     """
 
-    def __init__(self, *args: List[Any], **kwargs: Dict[str, Any]) -> None:
+    def __init__(self, *args: list[Any], **kwargs: dict[str, Any]) -> None:
         super().__init__(*args, **kwargs)
-        self.inverse: Dict = {}
+        self.inverse: dict = {}
         for key, value in self.items():
             self.inverse.setdefault(value, []).append(key)
 
@@ -330,8 +326,8 @@ def gen_directory_tree_str(startpath: PathStr):
 
 def filter_properties_dict(  # noqa: C901, PLR0912, PLR0913
     properties: Optional[dict] = None,
-    keep_fields: Optional[Set[str]] = None,
-    delete_fields: Optional[Set[str]] = None,
+    keep_fields: Optional[set[str]] = None,
+    delete_fields: Optional[set[str]] = None,
     clean_nulls: bool = True,
     clean_falsy: bool = False,
     keep_falsy_numerics: bool = True,
@@ -444,8 +440,8 @@ def filter_properties_dict(  # noqa: C901, PLR0912, PLR0913
 @overload
 def deep_filter_properties_iterable(
     properties: dict,
-    keep_fields: Optional[Set[str]] = ...,
-    delete_fields: Optional[Set[str]] = ...,
+    keep_fields: Optional[set[str]] = ...,
+    delete_fields: Optional[set[str]] = ...,
     clean_nulls: bool = ...,
     clean_falsy: bool = ...,
     keep_falsy_numerics: bool = ...,
@@ -456,8 +452,8 @@ def deep_filter_properties_iterable(
 @overload
 def deep_filter_properties_iterable(
     properties: list,
-    keep_fields: Optional[Set[str]] = ...,
-    delete_fields: Optional[Set[str]] = ...,
+    keep_fields: Optional[set[str]] = ...,
+    delete_fields: Optional[set[str]] = ...,
     clean_nulls: bool = ...,
     clean_falsy: bool = ...,
     keep_falsy_numerics: bool = ...,
@@ -468,8 +464,8 @@ def deep_filter_properties_iterable(
 @overload
 def deep_filter_properties_iterable(
     properties: set,
-    keep_fields: Optional[Set[str]] = ...,
-    delete_fields: Optional[Set[str]] = ...,
+    keep_fields: Optional[set[str]] = ...,
+    delete_fields: Optional[set[str]] = ...,
     clean_nulls: bool = ...,
     clean_falsy: bool = ...,
     keep_falsy_numerics: bool = ...,
@@ -480,8 +476,8 @@ def deep_filter_properties_iterable(
 @overload
 def deep_filter_properties_iterable(
     properties: tuple,
-    keep_fields: Optional[Set[str]] = ...,
-    delete_fields: Optional[Set[str]] = ...,
+    keep_fields: Optional[set[str]] = ...,
+    delete_fields: Optional[set[str]] = ...,
     clean_nulls: bool = ...,
     clean_falsy: bool = ...,
     keep_falsy_numerics: bool = ...,
@@ -492,8 +488,8 @@ def deep_filter_properties_iterable(
 @overload
 def deep_filter_properties_iterable(
     properties: None,
-    keep_fields: Optional[Set[str]] = ...,
-    delete_fields: Optional[Set[str]] = ...,
+    keep_fields: Optional[set[str]] = ...,
+    delete_fields: Optional[set[str]] = ...,
     clean_nulls: bool = ...,
     clean_falsy: bool = ...,
     keep_falsy_numerics: bool = ...,
@@ -503,8 +499,8 @@ def deep_filter_properties_iterable(
 
 def deep_filter_properties_iterable(  # noqa: C901, PLR0913
     properties: Union[dict, list, set, tuple, None] = None,
-    keep_fields: Optional[Set[str]] = None,
-    delete_fields: Optional[Set[str]] = None,
+    keep_fields: Optional[set[str]] = None,
+    delete_fields: Optional[set[str]] = None,
     clean_nulls: bool = True,
     clean_falsy: bool = False,
     keep_falsy_numerics: bool = True,
@@ -544,7 +540,7 @@ def deep_filter_properties_iterable(  # noqa: C901, PLR0913
             )
 
         # Upon unwinding the call stack, do a sanity check to ensure cleaned properties.
-        keys_to_delete: List[str] = list(
+        keys_to_delete: list[str] = list(
             filter(
                 lambda k: k not in keep_fields  # type: ignore[arg-type]
                 and _is_to_be_removed_from_deep_filter_properties_iterable(
@@ -597,7 +593,7 @@ def deep_filter_properties_iterable(  # noqa: C901, PLR0913
 def _is_to_be_removed_from_deep_filter_properties_iterable(
     value: Any, clean_nulls: bool, clean_falsy: bool, keep_falsy_numerics: bool
 ) -> bool:
-    conditions: Tuple[bool, ...] = (
+    conditions: tuple[bool, ...] = (
         clean_nulls and value is None,
         not keep_falsy_numerics and is_numeric(value) and value == 0,
         clean_falsy and not (is_numeric(value) or value),
@@ -787,7 +783,7 @@ def convert_ndarray_to_datetime_dtype_best_effort(
     datetime_detected: bool = False,
     parse_strings_as_datetimes: bool = False,
     fuzzy: bool = False,
-) -> Tuple[bool, bool, npt.NDArray]:
+) -> tuple[bool, bool, npt.NDArray]:
     """
     Attempt to parse all elements of 1-D "np.ndarray" argument into "datetime.datetime" type objects.
 
@@ -841,7 +837,7 @@ def convert_ndarray_float_to_datetime_dtype(data: np.ndarray) -> np.ndarray:
 
 def convert_ndarray_float_to_datetime_tuple(
     data: np.ndarray,
-) -> Tuple[datetime.datetime, ...]:
+) -> tuple[datetime.datetime, ...]:
     """
     Convert all elements of 1-D "np.ndarray" argument from "float" type to "datetime.datetime" type tuple elements.
 
@@ -901,7 +897,7 @@ def is_sane_slack_webhook(url: str) -> bool:
     return url.strip().startswith("https://hooks.slack.com/")
 
 
-def is_list_of_strings(_list) -> TypeGuard[List[str]]:
+def is_list_of_strings(_list) -> TypeGuard[list[str]]:
     return isinstance(_list, list) and all(isinstance(site, str) for site in _list)
 
 
@@ -1146,7 +1142,7 @@ def convert_to_json_serializable(  # noqa: C901, PLR0911, PLR0912
         return new_dict
 
     if isinstance(data, (list, tuple, set)):
-        new_list: List[JSONValues] = []
+        new_list: list[JSONValues] = []
         for val in data:
             new_list.append(convert_to_json_serializable(val))
 

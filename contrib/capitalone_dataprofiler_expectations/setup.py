@@ -1,10 +1,8 @@
-from typing import List
-
 import setuptools
 from setuptools import find_packages
 
 
-def get_requirements() -> List[str]:
+def get_requirements() -> list[str]:
     with open("requirements.txt") as f:
         requirements = f.read().splitlines()
     return requirements

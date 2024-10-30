@@ -3,7 +3,7 @@ from __future__ import annotations
 import logging
 import os
 from collections import OrderedDict, defaultdict
-from typing import TYPE_CHECKING, Dict, List, Tuple, Union
+from typing import TYPE_CHECKING, Union
 
 from dateutil.parser import parse
 
@@ -132,7 +132,7 @@ class ValidationResultsPageRenderer(Renderer):
 
     def _parse_run_values(
         self, validation_results: ExpectationSuiteValidationResult
-    ) -> Tuple[str, str]:
+    ) -> tuple[str, str]:
         run_id: Union[str, dict, RunIdentifier] = validation_results.meta["run_id"]
         if isinstance(run_id, str):
             try:
@@ -157,7 +157,7 @@ class ValidationResultsPageRenderer(Renderer):
         self,
         validation_results: ExpectationSuiteValidationResult,
         expectation_suite_name: str,
-    ) -> Dict[str, list]:
+    ) -> dict[str, list]:
         columns = defaultdict(list)
         try:
             suite_meta = (
@@ -184,7 +184,7 @@ class ValidationResultsPageRenderer(Renderer):
 
     def _generate_collapse_content_block(
         self,
-        collapse_content_blocks: List[RenderedTableContent],
+        collapse_content_blocks: list[RenderedTableContent],
         validation_results: ExpectationSuiteValidationResult,
     ) -> CollapseContent:
         attrs = [
@@ -219,10 +219,10 @@ class ValidationResultsPageRenderer(Renderer):
     def _collect_rendered_document_content_sections(
         self,
         validation_results: ExpectationSuiteValidationResult,
-        overview_content_blocks: List[RenderedComponentContent],
-        collapse_content_blocks: List[RenderedTableContent],
-        columns: Dict[str, list],
-    ) -> List[RenderedSectionContent]:
+        overview_content_blocks: list[RenderedComponentContent],
+        collapse_content_blocks: list[RenderedTableContent],
+        columns: dict[str, list],
+    ) -> list[RenderedSectionContent]:
         ordered_columns = Renderer._get_column_list_from_evrs(validation_results)
         sections = [
             RenderedSectionContent(
@@ -639,9 +639,9 @@ class ExpectationSuitePageRenderer(Renderer):
     @staticmethod
     def _get_grouped_and_ordered_expectations_by_column(
         expectation_suite: ExpectationSuite,
-    ) -> Tuple[Dict[str, List[ExpectationConfiguration]], List[str]]:
-        expectations_by_column: Dict[str, List[ExpectationConfiguration]] = {}
-        ordered_columns: List[str] = []
+    ) -> tuple[dict[str, list[ExpectationConfiguration]], list[str]]:
+        expectations_by_column: dict[str, list[ExpectationConfiguration]] = {}
+        ordered_columns: list[str] = []
 
         column: str
         expectation: ExpectationConfiguration
@@ -662,7 +662,7 @@ class ExpectationSuitePageRenderer(Renderer):
                 expectation.type == "expect_table_columns_to_match_ordered_list"
                 and expectation.kwargs.get("column_list")
             ):
-                exp_column_list: List[str] = expectation.kwargs["column_list"]
+                exp_column_list: list[str] = expectation.kwargs["column_list"]
                 if exp_column_list and len(exp_column_list) > 0:
                     ordered_columns = exp_column_list
 

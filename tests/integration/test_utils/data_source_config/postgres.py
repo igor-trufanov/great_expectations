@@ -1,5 +1,5 @@
 from random import randint
-from typing import Dict, Union
+from typing import Union
 
 import pandas as pd
 import pytest
@@ -188,7 +188,7 @@ class PostgresBatchTestSetup(BatchTestSetup[PostgreSQLDatasourceTestConfig]):
         if self.table is not None:
             self.table.drop(self.engine)
 
-    def get_column_types(self) -> Dict[str, PostgresColumnType]:
+    def get_column_types(self) -> dict[str, PostgresColumnType]:
         if self.config.column_types is None:
             return {}
         return self.config.column_types

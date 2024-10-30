@@ -5,7 +5,6 @@ from typing import (
     AbstractSet,
     Any,
     Callable,
-    Dict,
     Generic,
     Mapping,
     Optional,
@@ -43,7 +42,7 @@ if TYPE_CHECKING:
 # partitioner, and we want to query all months in the year 2020, the batch parameters
 # would look like:
 #   options = { "year": 2020 }
-BatchParameters: TypeAlias = Dict[StrictStr, Any]
+BatchParameters: TypeAlias = dict[StrictStr, Any]
 
 
 class BatchRequest(pydantic.GenericModel, Generic[PartitionerT]):

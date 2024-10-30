@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import uuid
 from copy import copy, deepcopy
-from typing import Dict, Union
+from typing import Union
 from unittest import mock
 from unittest.mock import MagicMock, Mock  # noqa: TID251
 from uuid import UUID, uuid4
@@ -774,7 +774,7 @@ class TestEqDunder:
     def test_expectation_suite_equality_false(
         self,
         attribute: str,
-        new_value: Union[str, Dict[str, str]],
+        new_value: Union[str, dict[str, str]],
         suite_with_single_expectation: ExpectationSuite,
     ):
         different_but_equivalent_suite = deepcopy(suite_with_single_expectation)

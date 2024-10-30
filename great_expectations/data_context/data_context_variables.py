@@ -6,7 +6,7 @@ import logging
 import uuid
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, Any, Dict, Generator, Optional
+from typing import TYPE_CHECKING, Any, Generator, Optional
 
 from great_expectations._docs_decorators import public_api
 from great_expectations.compatibility.typing_extensions import override
@@ -310,7 +310,7 @@ class FileDataContextVariables(DataContextVariables):
         NOTE: This could be generalized into a stand-alone context manager function,
         but it would need to take in the data_context containing the fluent objects.
         """
-        config_fluent_datasources_stash: Dict[str, FluentDatasource] = (
+        config_fluent_datasources_stash: dict[str, FluentDatasource] = (
             self.data_context._synchronize_fluent_datasources()
         )
         try:

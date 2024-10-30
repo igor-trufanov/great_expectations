@@ -1,5 +1,5 @@
 from types import ModuleType
-from typing import List, Optional
+from typing import Optional
 
 import pytest
 
@@ -23,7 +23,7 @@ except ImportError:
     reason="sqlalchemy or sqlalchemy_bigquery is not installed",
 )
 @pytest.mark.parametrize("value_set", [[False, True], [False, True, None], [True], [False], [None]])
-def test_sqlalchemy_impl_bigquery_bool(value_set: List[Optional[bool]]):
+def test_sqlalchemy_impl_bigquery_bool(value_set: list[Optional[bool]]):
     column_name = "my_bool_col"
     column = sqlalchemy.column(column_name)
     kwargs = _make_sqlalchemy_kwargs(column_name, sqlalchemy_bigquery)
@@ -41,7 +41,7 @@ def test_sqlalchemy_impl_bigquery_bool(value_set: List[Optional[bool]]):
 @pytest.mark.skipif(sqlalchemy is None, reason="sqlalchemy is not installed")
 @pytest.mark.parametrize("dialect", [mysql, postgresql, sqlite])
 @pytest.mark.parametrize("value_set", [[False, True], [False, True, None], [True], [False], [None]])
-def test_sqlalchemy_impl_not_bigquery_bool(dialect: ModuleType, value_set: List[Optional[bool]]):
+def test_sqlalchemy_impl_not_bigquery_bool(dialect: ModuleType, value_set: list[Optional[bool]]):
     column_name = "my_bool_col"
     column = sqlalchemy.column(column_name)
     kwargs = _make_sqlalchemy_kwargs(column_name, dialect)

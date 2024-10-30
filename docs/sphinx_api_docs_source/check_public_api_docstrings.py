@@ -15,7 +15,6 @@ import pathlib
 import re
 import subprocess
 from dataclasses import dataclass
-from typing import List, Set, Tuple
 
 from .public_api_report import (
     CodeParser,
@@ -52,10 +51,10 @@ class DocstringError:
         return self.raw_error
 
 
-def parse_ruff_errors(raw_errors: List[str]) -> List[DocstringError]:
+def parse_ruff_errors(raw_errors: list[str]) -> list[DocstringError]:
     """Parse raw string output of ruff to DocstringError."""
 
-    docstring_errors: List[DocstringError] = []
+    docstring_errors: list[DocstringError] = []
     pattern = re.compile(r"^D\d{3}")
     for raw_error in raw_errors:
         if not raw_error:
@@ -101,7 +100,7 @@ def _repo_relative_filepath(filepath: pathlib.Path) -> pathlib.Path:
         return filepath
 
 
-def run_ruff(paths: List[pathlib.Path]) -> List[str]:
+def run_ruff(paths: list[pathlib.Path]) -> list[str]:
     """Run ruff to identify issues with docstrings."""
 
     _log_with_timestamp("Running ruff")
@@ -135,7 +134,7 @@ def _log_with_timestamp(content: str) -> None:
 
 def _get_docstring_errors(
     select_paths: list[pathlib.Path] | None = None,
-) -> List[DocstringError]:
+) -> list[DocstringError]:
     """Get all docstring errors."""
     if select_paths:
         filepaths_containing_public_api_entities = [p.resolve() for p in select_paths]
@@ -149,7 +148,7 @@ def _get_docstring_errors(
     return parsed_ruff_errors
 
 
-def get_public_api_definitions() -> Set[Definition]:
+def get_public_api_definitions() -> set[Definition]:
     """Get entities marked with the @public_api decorator."""
     code_file_contents = FileContents.create_from_local_files(
         _default_code_absolute_paths()
@@ -162,7 +161,7 @@ def get_public_api_definitions() -> Set[Definition]:
     return public_api_checker.get_all_public_api_definitions()
 
 
-def get_public_api_module_level_function_definitions() -> Set[Definition]:
+def get_public_api_module_level_function_definitions() -> set[Definition]:
     """Get module level functions marked with the @public_api decorator."""
     code_file_contents = FileContents.create_from_local_files(
         _default_code_absolute_paths()
@@ -177,23 +176,23 @@ def get_public_api_module_level_function_definitions() -> Set[Definition]:
 
 def _public_api_docstring_errors(
     select_paths: list[pathlib.Path] | None = None,
-) -> Set[DocstringError]:
+) -> set[DocstringError]:
     """Get all docstring errors for entities marked with the @public_api decorator."""
 
     _log_with_timestamp("Getting public api definitions.")
     public_api_definitions = get_public_api_definitions()
-    public_api_definition_tuples: Set[Tuple[str, str]] = {
+    public_api_definition_tuples: set[tuple[str, str]] = {
         (str(_repo_relative_filepath(d.filepath)), d.name)
         for d in public_api_definitions
     }
 
     _log_with_timestamp("Getting docstring errors.")
-    public_api_docstring_errors: List[DocstringError] = []
+    public_api_docstring_errors: list[DocstringError] = []
     docstring_errors = _get_docstring_errors(select_paths=select_paths)
 
     _log_with_timestamp("Getting docstring errors applicable to public api.")
     for docstring_error in docstring_errors:
-        docstring_error_tuple: Tuple[str, str] = (
+        docstring_error_tuple: tuple[str, str] = (
             str(docstring_error.filepath_relative_to_repo_root),
             docstring_error.name,
         )

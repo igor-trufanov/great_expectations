@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, ClassVar, Dict, List, Optional, Set, Union
+from typing import TYPE_CHECKING, ClassVar, Optional, Union
 
 from great_expectations.compatibility.typing_extensions import override
 from great_expectations.core.domain import (
@@ -27,7 +27,7 @@ class MultiColumnDomainBuilder(ColumnDomainBuilder):
     This DomainBuilder uses "include_column_names" property of its parent class to specify "column_list" (order-non-preserving).
     """  # noqa: E501
 
-    exclude_field_names: ClassVar[Set[str]] = ColumnDomainBuilder.exclude_field_names | {
+    exclude_field_names: ClassVar[set[str]] = ColumnDomainBuilder.exclude_field_names | {
         "exclude_column_names",
         "include_column_name_suffixes",
         "exclude_column_name_suffixes",
@@ -39,7 +39,7 @@ class MultiColumnDomainBuilder(ColumnDomainBuilder):
 
     def __init__(
         self,
-        include_column_names: Optional[Union[str, Optional[List[str]]]] = None,
+        include_column_names: Optional[Union[str, Optional[list[str]]]] = None,
         data_context: Optional[AbstractDataContext] = None,
     ) -> None:
         """
@@ -70,7 +70,7 @@ class MultiColumnDomainBuilder(ColumnDomainBuilder):
         rule_name: str,
         variables: Optional[ParameterContainer] = None,
         runtime_configuration: Optional[dict] = None,
-    ) -> List[Domain]:
+    ) -> list[Domain]:
         """Obtains and returns Domain object, whose domain_kwargs consists of "column_list" (order-non-preserving).
 
         Args:
@@ -81,11 +81,11 @@ class MultiColumnDomainBuilder(ColumnDomainBuilder):
         Returns:
             List of domains that match the desired tolerance limits.
         """  # noqa: E501
-        batch_ids: List[str] = self.get_batch_ids(variables=variables)  # type: ignore[assignment] # could be None
+        batch_ids: list[str] = self.get_batch_ids(variables=variables)  # type: ignore[assignment] # could be None
 
         validator: Validator = self.get_validator(variables=variables)  # type: ignore[assignment] # could be None
 
-        effective_column_names: List[str] = self.get_effective_column_names(
+        effective_column_names: list[str] = self.get_effective_column_names(
             batch_ids=batch_ids,
             validator=validator,
             variables=variables,
@@ -97,14 +97,14 @@ class MultiColumnDomainBuilder(ColumnDomainBuilder):
             )
 
         column_name: str
-        semantic_types_by_column_name: Dict[str, SemanticDomainTypes] = {
+        semantic_types_by_column_name: dict[str, SemanticDomainTypes] = {
             column_name: self.semantic_type_filter.table_column_name_to_inferred_semantic_domain_type_map[  # type: ignore[union-attr] # could be None  # noqa: E501
                 column_name
             ]
             for column_name in effective_column_names
         }
 
-        domains: List[Domain] = [
+        domains: list[Domain] = [
             Domain(
                 domain_type=self.domain_type,
                 domain_kwargs={

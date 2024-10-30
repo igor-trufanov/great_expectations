@@ -1,5 +1,3 @@
-from typing import Dict
-
 import pytest
 
 from great_expectations.core.http import DEFAULT_TIMEOUT, create_session
@@ -7,7 +5,7 @@ from great_expectations.core.http import DEFAULT_TIMEOUT, create_session
 
 @pytest.mark.unit
 def test_session_factory_contains_appropriate_headers(
-    ge_cloud_access_token: str, request_headers: Dict[str, str]
+    ge_cloud_access_token: str, request_headers: dict[str, str]
 ) -> None:
     session = create_session(access_token=ge_cloud_access_token)
     for key, val in request_headers.items():

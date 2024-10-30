@@ -1,6 +1,6 @@
 import math
 import os
-from typing import Any, Dict, Optional, cast
+from typing import Any, Optional, cast
 
 import numpy as np
 import pytest
@@ -79,7 +79,7 @@ def test_statistics_data_assistant_metrics_count(
     bobby_statistics_data_assistant_result: StatisticsDataAssistantResult,
 ) -> None:
     domain: Domain
-    parameter_values_for_fully_qualified_parameter_names: Dict[str, ParameterNode]
+    parameter_values_for_fully_qualified_parameter_names: dict[str, ParameterNode]
     num_metrics: int
 
     domain_key = Domain(
@@ -110,11 +110,11 @@ def test_statistics_data_assistant_metrics_count(
 def test_statistics_data_assistant_result_batch_id_to_batch_identifier_display_name_map_coverage(
     bobby_statistics_data_assistant_result: StatisticsDataAssistantResult,
 ):
-    metrics_by_domain: Optional[Dict[Domain, Dict[str, ParameterNode]]] = (
+    metrics_by_domain: Optional[dict[Domain, dict[str, ParameterNode]]] = (
         bobby_statistics_data_assistant_result.metrics_by_domain
     )
 
-    parameter_values_for_fully_qualified_parameter_names: Dict[str, ParameterNode]
+    parameter_values_for_fully_qualified_parameter_names: dict[str, ParameterNode]
     parameter_node: ParameterNode
     batch_id: str
     assert all(
@@ -145,7 +145,7 @@ def test_statistics_data_assistant_result_normalized_metrics_vector_output(
     larger dataset, but working with smaller datasets is more efficient (data exploration, Expectation authoring, etc.).
     """
     domain: Domain
-    metrics: Dict[str, ParameterNode]
+    metrics: dict[str, ParameterNode]
     parameter_name: str
     parameter_node: ParameterNode
     parameter_value: Any

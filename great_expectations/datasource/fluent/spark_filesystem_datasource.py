@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import logging
 import pathlib
-from typing import TYPE_CHECKING, ClassVar, Literal, Optional, Type
+from typing import TYPE_CHECKING, ClassVar, Literal, Optional
 
 from great_expectations._docs_decorators import public_api
 from great_expectations.compatibility.typing_extensions import override
@@ -23,7 +23,7 @@ logger = logging.getLogger(__name__)
 @public_api
 class SparkFilesystemDatasource(_SparkFilePathDatasource):
     # class attributes
-    data_connector_type: ClassVar[Type[FilesystemDataConnector]] = FilesystemDataConnector
+    data_connector_type: ClassVar[type[FilesystemDataConnector]] = FilesystemDataConnector
     # these fields should not be passed to the execution engine
     _EXTRA_EXCLUDED_EXEC_ENG_ARGS: ClassVar[set] = {
         "base_directory",

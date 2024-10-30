@@ -12,11 +12,7 @@ from typing import (
     Any,
     Callable,
     ClassVar,
-    Dict,
-    List,
     Optional,
-    Set,
-    Tuple,
     Union,
 )
 
@@ -92,14 +88,14 @@ class ParameterBuilder(ABC, Builder):
         ```
     """  # noqa: E501
 
-    exclude_field_names: ClassVar[Set[str]] = Builder.exclude_field_names | {
+    exclude_field_names: ClassVar[set[str]] = Builder.exclude_field_names | {
         "suite_parameter_builders",
     }
 
     def __init__(
         self,
         name: str,
-        suite_parameter_builder_configs: Optional[List[ParameterBuilderConfig]] = None,
+        suite_parameter_builder_configs: Optional[list[ParameterBuilderConfig]] = None,
         data_context: Optional[AbstractDataContext] = None,
     ) -> None:
         """
@@ -129,9 +125,9 @@ class ParameterBuilder(ABC, Builder):
         self,
         domain: Domain,
         variables: Optional[ParameterContainer] = None,
-        parameters: Optional[Dict[str, ParameterContainer]] = None,
+        parameters: Optional[dict[str, ParameterContainer]] = None,
         parameter_computation_impl: Optional[Callable] = None,
-        batch_list: Optional[List[Batch]] = None,
+        batch_list: Optional[list[Batch]] = None,
         batch_request: Optional[Union[BatchRequestBase, dict]] = None,
         runtime_configuration: Optional[dict] = None,
     ) -> None:
@@ -147,7 +143,7 @@ class ParameterBuilder(ABC, Builder):
         """  # noqa: E501
         runtime_configuration = runtime_configuration or {}
 
-        fully_qualified_parameter_names: List[str] = get_fully_qualified_parameter_names(
+        fully_qualified_parameter_names: list[str] = get_fully_qualified_parameter_names(
             domain=domain,
             variables=variables,
             parameters=parameters,
@@ -187,7 +183,7 @@ class ParameterBuilder(ABC, Builder):
                 runtime_configuration=runtime_configuration,
             )
 
-            parameter_values: Dict[str, Any] = {
+            parameter_values: dict[str, Any] = {
                 self.raw_fully_qualified_parameter_name: parameter_computation_result,
                 self.json_serialized_fully_qualified_parameter_name: convert_to_json_serializable(
                     data=parameter_computation_result
@@ -203,8 +199,8 @@ class ParameterBuilder(ABC, Builder):
         self,
         domain: Domain,
         variables: Optional[ParameterContainer] = None,
-        parameters: Optional[Dict[str, ParameterContainer]] = None,
-        fully_qualified_parameter_names: Optional[List[str]] = None,
+        parameters: Optional[dict[str, ParameterContainer]] = None,
+        fully_qualified_parameter_names: Optional[list[str]] = None,
         runtime_configuration: Optional[dict] = None,
     ) -> None:
         """
@@ -212,7 +208,7 @@ class ParameterBuilder(ABC, Builder):
         "ParameterBuilder" objects), whose output(s) are needed by specified "ParameterBuilder" object to operate.
         """  # noqa: E501
         # Step-1: Check if any "suite_parameter_builders" are configured for specified "ParameterBuilder" object.  # noqa: E501
-        suite_parameter_builders: List[ParameterBuilder] = self.suite_parameter_builders
+        suite_parameter_builders: list[ParameterBuilder] = self.suite_parameter_builders
 
         if not suite_parameter_builders:
             return
@@ -255,7 +251,7 @@ class ParameterBuilder(ABC, Builder):
         self,
         domain: Domain,
         variables: Optional[ParameterContainer] = None,
-        parameters: Optional[Dict[str, ParameterContainer]] = None,
+        parameters: Optional[dict[str, ParameterContainer]] = None,
         runtime_configuration: Optional[dict] = None,
     ) -> Attributes:
         """
@@ -273,13 +269,13 @@ class ParameterBuilder(ABC, Builder):
     @property
     def suite_parameter_builders(
         self,
-    ) -> Optional[List[ParameterBuilder]]:
+    ) -> Optional[list[ParameterBuilder]]:
         return self._suite_parameter_builders
 
     @property
     def suite_parameter_builder_configs(
         self,
-    ) -> Optional[List[ParameterBuilderConfig]]:
+    ) -> Optional[list[ParameterBuilderConfig]]:
         return self._suite_parameter_builder_configs
 
     @property
@@ -300,7 +296,7 @@ class ParameterBuilder(ABC, Builder):
         self,
         domain: Optional[Domain] = None,
         variables: Optional[ParameterContainer] = None,
-        parameters: Optional[Dict[str, ParameterContainer]] = None,
+        parameters: Optional[dict[str, ParameterContainer]] = None,
     ) -> Optional[Validator]:
         return get_validator_using_batch_list_or_batch_request(
             purpose="parameter_builder",
@@ -317,8 +313,8 @@ class ParameterBuilder(ABC, Builder):
         limit: Optional[int] = None,
         domain: Optional[Domain] = None,
         variables: Optional[ParameterContainer] = None,
-        parameters: Optional[Dict[str, ParameterContainer]] = None,
-    ) -> Optional[List[str]]:
+        parameters: Optional[dict[str, ParameterContainer]] = None,
+    ) -> Optional[list[str]]:
         return get_batch_ids_from_batch_list_or_batch_request(
             data_context=self.data_context,
             batch_list=self.batch_list,
@@ -332,15 +328,15 @@ class ParameterBuilder(ABC, Builder):
     def get_metrics(  # noqa: C901, PLR0913
         self,
         metric_name: str,
-        metric_domain_kwargs: Optional[Union[Union[str, dict], List[Union[str, dict]]]] = None,
-        metric_value_kwargs: Optional[Union[Union[str, dict], List[Union[str, dict]]]] = None,
+        metric_domain_kwargs: Optional[Union[Union[str, dict], list[Union[str, dict]]]] = None,
+        metric_value_kwargs: Optional[Union[Union[str, dict], list[Union[str, dict]]]] = None,
         limit: Optional[int] = None,
         enforce_numeric_metric: Union[str, bool] = False,
         replace_nan_with_zero: Union[str, bool] = False,
         runtime_configuration: Optional[dict] = None,
         domain: Optional[Domain] = None,
         variables: Optional[ParameterContainer] = None,
-        parameters: Optional[Dict[str, ParameterContainer]] = None,
+        parameters: Optional[dict[str, ParameterContainer]] = None,
     ) -> MetricComputationResult:
         """
         General multi-batch metric computation facility.
@@ -367,7 +363,7 @@ class ParameterBuilder(ABC, Builder):
 specified (empty "metric_name" value detected)."""  # noqa: E501
             )
 
-        batch_ids: Optional[List[str]] = self.get_batch_ids(
+        batch_ids: Optional[list[str]] = self.get_batch_ids(
             limit=limit,
             domain=domain,
             variables=variables,
@@ -435,15 +431,15 @@ specified (empty "metric_name" value detected)."""  # noqa: E501
         # Step-3: Generate "MetricConfiguration" directives for all "metric_domain_kwargs"/"metric_value_kwargs" pairs.  # noqa: E501
 
         domain_kwargs_cursor: dict
-        kwargs_combinations: List[List[dict]] = [
+        kwargs_combinations: list[list[dict]] = [
             [domain_kwargs_cursor, value_kwargs_cursor]
             for value_kwargs_cursor in metric_value_kwargs
             for domain_kwargs_cursor in metric_domain_kwargs
         ]
 
-        metrics_to_resolve: List[MetricConfiguration]
+        metrics_to_resolve: list[MetricConfiguration]
 
-        kwargs_pair_cursor: List[dict, dict]
+        kwargs_pair_cursor: list[dict, dict]
         metrics_to_resolve = [
             MetricConfiguration(
                 metric_name=metric_name,
@@ -467,10 +463,10 @@ specified (empty "metric_name" value detected)."""  # noqa: E501
             runtime_configuration=runtime_configuration,
         )
 
-        resolved_metrics: Dict[Tuple[str, str, str], MetricValue]
-        aborted_metrics_info: Dict[
-            Tuple[str, str, str],
-            Dict[str, Union[MetricConfiguration, Set[ExceptionInfo], int]],
+        resolved_metrics: dict[tuple[str, str, str], MetricValue]
+        aborted_metrics_info: dict[
+            tuple[str, str, str],
+            dict[str, Union[MetricConfiguration, set[ExceptionInfo], int]],
         ]
         (
             resolved_metrics,
@@ -483,7 +479,7 @@ specified (empty "metric_name" value detected)."""  # noqa: E501
 
         # Step-5: Map resolved metrics to their attributes for identification and recovery by receiver.  # noqa: E501
 
-        attributed_resolved_metrics_map: Dict[str, AttributedResolvedMetrics] = {}
+        attributed_resolved_metrics_map: dict[str, AttributedResolvedMetrics] = {}
 
         resolved_metric_value: MetricValue
         attributed_resolved_metrics: AttributedResolvedMetrics
@@ -577,7 +573,7 @@ specified (empty "metric_name" value detected)."""  # noqa: E501
         replace_nan_with_zero: Union[str, bool] = False,
         domain: Optional[Domain] = None,
         variables: Optional[ParameterContainer] = None,
-        parameters: Optional[Dict[str, ParameterContainer]] = None,
+        parameters: Optional[dict[str, ParameterContainer]] = None,
     ) -> None:
         """
         This method conditions (or "sanitizes") data samples in the format "N x R^m", where "N" (most significant
@@ -608,10 +604,10 @@ specified (empty "metric_name" value detected)."""  # noqa: E501
         if not (enforce_numeric_metric or replace_nan_with_zero):
             return
 
-        metric_values_by_batch_id: Dict[str, MetricValue] = {}
+        metric_values_by_batch_id: dict[str, MetricValue] = {}
 
         # noinspection PyTypeChecker
-        conditioned_attributed_metric_values: Dict[str, MetricValues] = dict(
+        conditioned_attributed_metric_values: dict[str, MetricValues] = dict(
             filter(
                 lambda element: element[1] is not None,
                 attributed_resolved_metrics.conditioned_attributed_metric_values.items(),
@@ -629,11 +625,11 @@ specified (empty "metric_name" value detected)."""  # noqa: E501
 
             # Generate all permutations of indexes for accessing every element of the multi-dimensional metric.  # noqa: E501
             metric_value_shape_idx: int
-            axes: List[np.ndarray] = [
+            axes: list[np.ndarray] = [
                 np.indices(dimensions=(metric_value_shape_idx,))[0]
                 for metric_value_shape_idx in metric_value_shape
             ]
-            metric_value_indices: List[tuple] = list(itertools.product(*tuple(axes)))
+            metric_value_indices: list[tuple] = list(itertools.product(*tuple(axes)))
 
             metric_value_idx: tuple
             for metric_value_idx in metric_value_indices:
@@ -670,9 +666,9 @@ numeric-valued and datetime-valued metrics (value {metric_value} of type "{type(
 
     @staticmethod
     def _get_best_candidate_above_threshold(
-        candidate_ratio_dict: Dict[str, float],
+        candidate_ratio_dict: dict[str, float],
         threshold: float,
-    ) -> Tuple[Optional[str], float]:
+    ) -> tuple[Optional[str], float]:
         """
         Helper method to calculate which candidate strings or patterns are the best match (ie. highest ratio),
         provided they are also above the threshold.
@@ -691,8 +687,8 @@ numeric-valued and datetime-valued metrics (value {metric_value} of type "{type(
 
     @staticmethod
     def _get_sorted_candidates_and_ratios(
-        candidate_ratio_dict: Dict[str, float],
-    ) -> Dict[str, float]:
+        candidate_ratio_dict: dict[str, float],
+    ) -> dict[str, float]:
         """
         Helper method to sort all candidate strings or patterns by success ratio (how well they matched the domain).
 
@@ -709,9 +705,9 @@ numeric-valued and datetime-valued metrics (value {metric_value} of type "{type(
 
 
 def init_rule_parameter_builders(
-    parameter_builder_configs: Optional[List[dict]] = None,
+    parameter_builder_configs: Optional[list[dict]] = None,
     data_context: Optional[AbstractDataContext] = None,
-) -> Optional[List[ParameterBuilder]]:
+) -> Optional[list[ParameterBuilder]]:
     if parameter_builder_configs is None:
         return None
 

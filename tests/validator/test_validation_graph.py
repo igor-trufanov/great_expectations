@@ -1,6 +1,6 @@
 import sys
 import uuid
-from typing import Dict, Iterable, Optional, Set, Tuple, Union, cast
+from typing import Iterable, Optional, Union, cast
 from unittest import mock
 
 import pytest
@@ -32,9 +32,9 @@ def pandas_execution_engine_fake(
         @staticmethod
         def resolve_metrics(
             metrics_to_resolve: Iterable[MetricConfiguration],
-            metrics: Optional[Dict[Tuple[str, str, str], MetricConfiguration]] = None,
+            metrics: Optional[dict[tuple[str, str, str], MetricConfiguration]] = None,
             runtime_configuration: Optional[dict] = None,
-        ) -> Dict[Tuple[str, str, str], MetricValue]:
+        ) -> dict[tuple[str, str, str], MetricValue]:
             """
             This stub method implementation insures that specified "MetricConfiguration", designed to fail, will cause
             appropriate exception to be raised, while its dependencies resolve to actual values ("my_value" is used here
@@ -294,7 +294,7 @@ def test_ExpectationValidationGraph_get_exception_info(
 def test_parse_validation_graph(
     expect_column_value_z_scores_to_be_less_than_expectation_validation_graph: ValidationGraph,
 ):
-    available_metrics: Dict[Tuple[str, str, str], MetricValue]
+    available_metrics: dict[tuple[str, str, str], MetricValue]
 
     # Parse input "ValidationGraph" object and confirm the numbers of ready and still needed metrics.  # noqa: E501
     available_metrics = {}
@@ -382,10 +382,10 @@ def test_resolve_validation_graph_with_bad_config_catch_exceptions_true(
         runtime_configuration=runtime_configuration,
     )
 
-    resolved_metrics: Dict[Tuple[str, str, str], MetricValue]
-    aborted_metrics_info: Dict[
-        Tuple[str, str, str],
-        Dict[str, Union[MetricConfiguration, Set[ExceptionInfo], int]],
+    resolved_metrics: dict[tuple[str, str, str], MetricValue]
+    aborted_metrics_info: dict[
+        tuple[str, str, str],
+        dict[str, Union[MetricConfiguration, set[ExceptionInfo], int]],
     ]
     _resolved_metrics, aborted_metrics_info = graph.resolve(
         runtime_configuration=runtime_configuration,
@@ -471,10 +471,10 @@ def test_progress_bar_config(
             )
 
         graph = ValidationGraph(execution_engine=execution_engine)
-        resolved_metrics: Dict[Tuple[str, str, str], MetricValue]
-        aborted_metrics_info: Dict[
-            Tuple[str, str, str],
-            Dict[str, Union[MetricConfiguration, Set[ExceptionInfo], int]],
+        resolved_metrics: dict[tuple[str, str, str], MetricValue]
+        aborted_metrics_info: dict[
+            tuple[str, str, str],
+            dict[str, Union[MetricConfiguration, set[ExceptionInfo], int]],
         ]
         # noinspection PyUnusedLocal
         _resolved_metrics, _aborted_metrics_info = graph.resolve(**call_args)

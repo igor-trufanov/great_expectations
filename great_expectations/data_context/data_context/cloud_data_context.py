@@ -5,7 +5,6 @@ import os
 import uuid
 from typing import (
     TYPE_CHECKING,
-    Dict,
     Mapping,
     Optional,
     Union,
@@ -413,7 +412,7 @@ class CloudDataContext(SerializableDataContext):
         cloud_base_url: Optional[str] = None,
         cloud_access_token: Optional[str] = None,
         cloud_organization_id: Optional[str] = None,
-    ) -> Dict[GXCloudEnvironmentVariable, Optional[str]]:
+    ) -> dict[GXCloudEnvironmentVariable, Optional[str]]:
         cloud_base_url = (
             cloud_base_url
             or cls._get_global_config_value(

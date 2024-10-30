@@ -11,8 +11,6 @@ from typing import (
     Iterable,
     Mapping,
     Optional,
-    Set,
-    Type,
     Union,
     overload,
 )
@@ -29,7 +27,7 @@ class TypeLookupError(ValueError):
     pass
 
 
-ValidTypes: TypeAlias = Union[str, Type]
+ValidTypes: TypeAlias = Union[str, type]
 
 
 class TypeLookup(
@@ -63,10 +61,10 @@ class TypeLookup(
             continue
 
     @overload
-    def __getitem__(self, key: str) -> Type: ...
+    def __getitem__(self, key: str) -> type: ...
 
     @overload
-    def __getitem__(self, key: Type) -> str: ...
+    def __getitem__(self, key: type) -> str: ...
 
     @override
     def __getitem__(self, key: ValidTypes) -> ValidTypes:
@@ -107,7 +105,7 @@ class TypeLookup(
     def __str__(self) -> str:
         return str(self.data)
 
-    def intersection(self, collection_: Iterable[ValidTypes]) -> Set[ValidTypes]:
+    def intersection(self, collection_: Iterable[ValidTypes]) -> set[ValidTypes]:
         """
         Returns the intersection of a list (or other iterable) and the keys/values of
         the `TypeLookup` instance.

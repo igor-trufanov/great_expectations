@@ -3,7 +3,7 @@ from __future__ import annotations
 import os.path
 import pathlib
 from pprint import pformat as pf
-from typing import Final, List
+from typing import Final
 
 import pytest
 import requirements as rp
@@ -11,7 +11,7 @@ import requirements as rp
 IGNORE_PINS: Final[set[str]] = {"mypy", "ruff", "pytest"}
 
 
-def collect_requirements_files() -> List[pathlib.Path]:
+def collect_requirements_files() -> list[pathlib.Path]:
     project_root = pathlib.Path(__file__).parents[1]
     assert project_root.exists()
     reqs_dir = project_root.joinpath("reqs")

@@ -9,15 +9,11 @@ from typing import (
     ClassVar,
     Hashable,
     Iterable,
-    List,
     Literal,
     Mapping,
     MutableSequence,
     Optional,
     Sequence,
-    Set,
-    Tuple,
-    Type,
     TypeVar,
     Union,
 )
@@ -54,7 +50,7 @@ from great_expectations.datasource.fluent.interfaces import (
 )
 from great_expectations.execution_engine import PandasExecutionEngine
 
-_EXCLUDE_TYPES_FROM_JSON: list[Type]
+_EXCLUDE_TYPES_FROM_JSON: list[type]
 
 MappingIntStrAny: TypeAlias = Mapping[Union[int, str], Any]
 AbstractSetIntStr: TypeAlias = AbstractSet[Union[int, str]]
@@ -63,7 +59,7 @@ logger: Logger
 class PandasDatasourceError(Exception): ...
 
 class _PandasDataAsset(DataAsset):
-    _EXCLUDE_FROM_READER_OPTIONS: ClassVar[Set[str]]
+    _EXCLUDE_FROM_READER_OPTIONS: ClassVar[set[str]]
 
     def _get_reader_method(self) -> str: ...
     @override
@@ -133,16 +129,16 @@ class DataFrameAsset(_PandasDataAsset):
     @override
     def get_batch(self, batch_request: BatchRequest) -> Batch: ...
     @override
-    def get_batch_identifiers_list(self, batch_request: BatchRequest) -> List[dict]: ...
+    def get_batch_identifiers_list(self, batch_request: BatchRequest) -> list[dict]: ...
 
 _PandasDataAssetT = TypeVar("_PandasDataAssetT", bound=_PandasDataAsset)
 
 class _PandasDatasource(Datasource):
-    asset_types: ClassVar[Sequence[Type[DataAsset]]]
+    asset_types: ClassVar[Sequence[type[DataAsset]]]
     assets: MutableSequence[_PandasDataAssetT]  # type: ignore[valid-type]
     @property
     @override
-    def execution_engine_type(self) -> Type[PandasExecutionEngine]: ...
+    def execution_engine_type(self) -> type[PandasExecutionEngine]: ...
     @override
     def test_connection(self, test_assets: bool = ...) -> None: ...
     @override
@@ -161,12 +157,12 @@ class _PandasDatasource(Datasource):
         **dumps_kwargs: Any,
     ) -> str: ...
 
-_DYNAMIC_ASSET_TYPES: list[Type[_PandasDataAsset]]
+_DYNAMIC_ASSET_TYPES: list[type[_PandasDataAsset]]
 
 class PandasDatasource(_PandasDatasource):
-    asset_types: ClassVar[Sequence[Type[DataAsset]]]
+    asset_types: ClassVar[Sequence[type[DataAsset]]]
     type: Literal["pandas"]
-    assets: List[_PandasDataAsset]
+    assets: list[_PandasDataAsset]
     @override
     def test_connection(self, test_assets: bool = ...) -> None: ...
     @deprecated_argument(
@@ -261,7 +257,7 @@ class PandasDatasource(_PandasDatasource):
         batch_metadata: Optional[BatchMetadata] = ...,
         sheet_name: typing.Union[str, int, None] = 0,
         header: Union[int, Sequence[int], None] = 0,
-        names: typing.Union[typing.List[str], None] = ...,
+        names: typing.Union[list[str], None] = ...,
         index_col: Union[int, Sequence[int], None] = ...,
         usecols: typing.Union[int, str, typing.Sequence[int], None] = ...,
         squeeze: typing.Union[bool, None] = ...,
@@ -274,7 +270,7 @@ class PandasDatasource(_PandasDatasource):
         keep_default_na: bool = ...,
         na_filter: bool = ...,
         verbose: bool = ...,
-        parse_dates: typing.Union[typing.List, typing.Dict, bool] = ...,
+        parse_dates: typing.Union[list, dict, bool] = ...,
         thousands: typing.Union[str, None] = ...,
         decimal: str = ".",
         comment: typing.Union[str, None] = ...,
@@ -299,7 +295,7 @@ class PandasDatasource(_PandasDatasource):
         filepath_or_buffer: pydantic.FilePath | pydantic.AnyUrl,
         *,
         batch_metadata: Optional[BatchMetadata] = ...,
-        colspecs: Union[Sequence[Tuple[int, int]], str, None] = ...,
+        colspecs: Union[Sequence[tuple[int, int]], str, None] = ...,
         widths: Union[Sequence[int], None] = ...,
         infer_nrows: int = ...,
         kwargs: Optional[dict] = ...,
@@ -312,12 +308,12 @@ class PandasDatasource(_PandasDatasource):
         batch_metadata: Optional[BatchMetadata] = ...,
         project_id: typing.Union[str, None] = ...,
         index_col: typing.Union[str, None] = ...,
-        col_order: typing.Union[typing.List[str], None] = ...,
+        col_order: typing.Union[list[str], None] = ...,
         reauth: bool = ...,
         auth_local_webserver: bool = ...,
         dialect: typing.Union[str, None] = ...,
         location: typing.Union[str, None] = ...,
-        configuration: typing.Union[typing.Dict[str, typing.Any], None] = ...,
+        configuration: typing.Union[dict[str, typing.Any], None] = ...,
         credentials: typing.Any = ...,
         use_bqstorage_api: typing.Union[bool, None] = ...,
         max_results: typing.Union[int, None] = ...,
@@ -332,10 +328,10 @@ class PandasDatasource(_PandasDatasource):
         key: typing.Any = ...,
         mode: str = "r",
         errors: str = "strict",
-        where: typing.Union[str, typing.List, None] = ...,
+        where: typing.Union[str, list, None] = ...,
         start: typing.Union[int, None] = ...,
         stop: typing.Union[int, None] = ...,
-        columns: typing.Union[typing.List[str], None] = ...,
+        columns: typing.Union[list[str], None] = ...,
         iterator: bool = ...,
         chunksize: typing.Union[int, None] = ...,
         kwargs: typing.Union[dict, None] = ...,
@@ -351,12 +347,12 @@ class PandasDatasource(_PandasDatasource):
         header: Union[int, Sequence[int], None] = ...,
         index_col: Union[int, Sequence[int], None] = ...,
         skiprows: typing.Union[typing.Sequence[int], int, None] = ...,
-        attrs: typing.Union[typing.Dict[str, str], None] = ...,
+        attrs: typing.Union[dict[str, str], None] = ...,
         parse_dates: bool = ...,
         thousands: typing.Union[str, None] = ",",
         encoding: typing.Union[str, None] = ...,
         decimal: str = ".",
-        converters: typing.Union[typing.Dict, None] = ...,
+        converters: typing.Union[dict, None] = ...,
         na_values: Union[Iterable[object], None] = ...,
         keep_default_na: bool = ...,
         displayed_only: bool = ...,
@@ -370,7 +366,7 @@ class PandasDatasource(_PandasDatasource):
         orient: typing.Union[str, None] = ...,
         dtype: typing.Union[dict, None] = ...,
         convert_axes: typing.Any = ...,
-        convert_dates: typing.Union[bool, typing.List[str]] = ...,
+        convert_dates: typing.Union[bool, list[str]] = ...,
         keep_default_dates: bool = ...,
         numpy: bool = ...,
         precise_float: bool = ...,
@@ -389,7 +385,7 @@ class PandasDatasource(_PandasDatasource):
         path: pydantic.FilePath | pydantic.AnyUrl,
         *,
         batch_metadata: Optional[BatchMetadata] = ...,
-        columns: typing.Union[typing.List[str], None] = ...,
+        columns: typing.Union[list[str], None] = ...,
         kwargs: typing.Union[dict, None] = ...,
     ) -> ORCAsset: ...
     def add_parquet_asset(  # noqa: PLR0913
@@ -399,7 +395,7 @@ class PandasDatasource(_PandasDatasource):
         *,
         batch_metadata: Optional[BatchMetadata] = ...,
         engine: str = "auto",
-        columns: typing.Union[typing.List[str], None] = ...,
+        columns: typing.Union[list[str], None] = ...,
         storage_options: StorageOptions = ...,
         use_nullable_dtypes: bool = ...,
         kwargs: typing.Union[dict, None] = ...,
@@ -442,11 +438,11 @@ class PandasDatasource(_PandasDatasource):
         con: sqlalchemy.Engine | sqlite3.Connection | str,
         *,
         batch_metadata: Optional[BatchMetadata] = ...,
-        index_col: typing.Union[str, typing.List[str], None] = ...,
+        index_col: typing.Union[str, list[str], None] = ...,
         coerce_float: bool = ...,
         params: typing.Any = ...,
         parse_dates: typing.Any = ...,
-        columns: typing.Union[typing.List[str], None] = ...,
+        columns: typing.Union[list[str], None] = ...,
         chunksize: typing.Union[int, None] = ...,
     ) -> SQLAsset: ...
     def add_sql_query_asset(  # noqa: PLR0913
@@ -456,10 +452,10 @@ class PandasDatasource(_PandasDatasource):
         con: sqlalchemy.Engine | sqlite3.Connection | str,
         *,
         batch_metadata: Optional[BatchMetadata] = ...,
-        index_col: typing.Union[str, typing.List[str], None] = ...,
+        index_col: typing.Union[str, list[str], None] = ...,
         coerce_float: bool = ...,
-        params: typing.Union[typing.List[str], typing.Dict[str, str], None] = ...,
-        parse_dates: typing.Union[typing.List[str], typing.Dict[str, str], None] = ...,
+        params: typing.Union[list[str], dict[str, str], None] = ...,
+        parse_dates: typing.Union[list[str], dict[str, str], None] = ...,
         chunksize: typing.Union[int, None] = ...,
         dtype: typing.Union[dict, None] = ...,
     ) -> SQLQueryAsset: ...
@@ -471,10 +467,10 @@ class PandasDatasource(_PandasDatasource):
         *,
         batch_metadata: Optional[BatchMetadata] = ...,
         schema: typing.Union[str, None] = ...,
-        index_col: typing.Union[str, typing.List[str], None] = ...,
+        index_col: typing.Union[str, list[str], None] = ...,
         coerce_float: bool = ...,
-        parse_dates: typing.Union[typing.List[str], typing.Dict[str, str], None] = ...,
-        columns: typing.Union[typing.List[str], None] = ...,
+        parse_dates: typing.Union[list[str], dict[str, str], None] = ...,
+        columns: typing.Union[list[str], None] = ...,
         chunksize: typing.Union[int, None] = ...,
     ) -> SQLTableAsset: ...
     def add_stata_asset(  # noqa: PLR0913
@@ -560,14 +556,14 @@ class PandasDatasource(_PandasDatasource):
         *,
         batch_metadata: Optional[BatchMetadata] = ...,
         xpath: str = "./*",
-        namespaces: typing.Union[typing.Dict[str, str], None] = ...,
+        namespaces: typing.Union[dict[str, str], None] = ...,
         elems_only: bool = ...,
         attrs_only: bool = ...,
         names: Union[Sequence[str], None] = ...,
         dtype: typing.Union[dict, None] = ...,
         encoding: typing.Union[str, None] = "utf-8",
         stylesheet: Union[FilePath, None] = ...,
-        iterparse: typing.Union[typing.Dict[str, typing.List[str]], None] = ...,
+        iterparse: typing.Union[dict[str, list[str]], None] = ...,
         compression: CompressionOptions = "infer",
         storage_options: StorageOptions = ...,
     ) -> XMLAsset: ...
@@ -643,7 +639,7 @@ class PandasDatasource(_PandasDatasource):
         batch_metadata: Optional[BatchMetadata] = ...,
         sheet_name: typing.Union[str, int, None] = 0,
         header: Union[int, Sequence[int], None] = 0,
-        names: typing.Union[typing.List[str], None] = ...,
+        names: typing.Union[list[str], None] = ...,
         index_col: Union[int, Sequence[int], None] = ...,
         usecols: typing.Union[int, str, typing.Sequence[int], None] = ...,
         squeeze: typing.Union[bool, None] = ...,
@@ -656,7 +652,7 @@ class PandasDatasource(_PandasDatasource):
         keep_default_na: bool = ...,
         na_filter: bool = ...,
         verbose: bool = ...,
-        parse_dates: typing.Union[typing.List, typing.Dict, bool] = ...,
+        parse_dates: typing.Union[list, dict, bool] = ...,
         thousands: typing.Union[str, None] = ...,
         decimal: str = ".",
         comment: typing.Union[str, None] = ...,
@@ -680,7 +676,7 @@ class PandasDatasource(_PandasDatasource):
         filepath_or_buffer: pydantic.FilePath | pydantic.AnyUrl,
         *,
         batch_metadata: Optional[BatchMetadata] = ...,
-        colspecs: Union[Sequence[Tuple[int, int]], str, None] = ...,
+        colspecs: Union[Sequence[tuple[int, int]], str, None] = ...,
         widths: Union[Sequence[int], None] = ...,
         infer_nrows: int = ...,
         kwargs: Optional[dict] = ...,
@@ -693,12 +689,12 @@ class PandasDatasource(_PandasDatasource):
         batch_metadata: Optional[BatchMetadata] = ...,
         project_id: typing.Union[str, None] = ...,
         index_col: typing.Union[str, None] = ...,
-        col_order: typing.Union[typing.List[str], None] = ...,
+        col_order: typing.Union[list[str], None] = ...,
         reauth: bool = ...,
         auth_local_webserver: bool = ...,
         dialect: typing.Union[str, None] = ...,
         location: typing.Union[str, None] = ...,
-        configuration: typing.Union[typing.Dict[str, typing.Any], None] = ...,
+        configuration: typing.Union[dict[str, typing.Any], None] = ...,
         credentials: typing.Any = ...,
         use_bqstorage_api: typing.Union[bool, None] = ...,
         max_results: typing.Union[int, None] = ...,
@@ -713,10 +709,10 @@ class PandasDatasource(_PandasDatasource):
         key: typing.Any = ...,
         mode: str = "r",
         errors: str = "strict",
-        where: typing.Union[str, typing.List, None] = ...,
+        where: typing.Union[str, list, None] = ...,
         start: typing.Union[int, None] = ...,
         stop: typing.Union[int, None] = ...,
-        columns: typing.Union[typing.List[str], None] = ...,
+        columns: typing.Union[list[str], None] = ...,
         iterator: bool = ...,
         chunksize: typing.Union[int, None] = ...,
         kwargs: typing.Union[dict, None] = ...,
@@ -732,12 +728,12 @@ class PandasDatasource(_PandasDatasource):
         header: Union[int, Sequence[int], None] = ...,
         index_col: Union[int, Sequence[int], None] = ...,
         skiprows: typing.Union[typing.Sequence[int], int, None] = ...,
-        attrs: typing.Union[typing.Dict[str, str], None] = ...,
+        attrs: typing.Union[dict[str, str], None] = ...,
         parse_dates: bool = ...,
         thousands: typing.Union[str, None] = ",",
         encoding: typing.Union[str, None] = ...,
         decimal: str = ".",
-        converters: typing.Union[typing.Dict, None] = ...,
+        converters: typing.Union[dict, None] = ...,
         na_values: Union[Iterable[object], None] = ...,
         keep_default_na: bool = ...,
         displayed_only: bool = ...,
@@ -751,7 +747,7 @@ class PandasDatasource(_PandasDatasource):
         orient: typing.Union[str, None] = ...,
         dtype: typing.Union[dict, None] = ...,
         convert_axes: typing.Any = ...,
-        convert_dates: typing.Union[bool, typing.List[str]] = ...,
+        convert_dates: typing.Union[bool, list[str]] = ...,
         keep_default_dates: bool = ...,
         numpy: bool = ...,
         precise_float: bool = ...,
@@ -770,7 +766,7 @@ class PandasDatasource(_PandasDatasource):
         *,
         asset_name: Optional[str] = ...,
         batch_metadata: Optional[BatchMetadata] = ...,
-        columns: typing.Union[typing.List[str], None] = ...,
+        columns: typing.Union[list[str], None] = ...,
         kwargs: typing.Union[dict, None] = ...,
     ) -> Batch: ...
     def read_parquet(  # noqa: PLR0913
@@ -780,7 +776,7 @@ class PandasDatasource(_PandasDatasource):
         asset_name: Optional[str] = ...,
         batch_metadata: Optional[BatchMetadata] = ...,
         engine: str = "auto",
-        columns: typing.Union[typing.List[str], None] = ...,
+        columns: typing.Union[list[str], None] = ...,
         storage_options: StorageOptions = ...,
         use_nullable_dtypes: bool = ...,
         kwargs: typing.Union[dict, None] = ...,
@@ -823,11 +819,11 @@ class PandasDatasource(_PandasDatasource):
         *,
         asset_name: Optional[str] = ...,
         batch_metadata: Optional[BatchMetadata] = ...,
-        index_col: typing.Union[str, typing.List[str], None] = ...,
+        index_col: typing.Union[str, list[str], None] = ...,
         coerce_float: bool = ...,
         params: typing.Any = ...,
         parse_dates: typing.Any = ...,
-        columns: typing.Union[typing.List[str], None] = ...,
+        columns: typing.Union[list[str], None] = ...,
         chunksize: typing.Union[int, None] = ...,
     ) -> Batch: ...
     def read_sql_query(  # noqa: PLR0913
@@ -837,10 +833,10 @@ class PandasDatasource(_PandasDatasource):
         *,
         asset_name: Optional[str] = ...,
         batch_metadata: Optional[BatchMetadata] = ...,
-        index_col: typing.Union[str, typing.List[str], None] = ...,
+        index_col: typing.Union[str, list[str], None] = ...,
         coerce_float: bool = ...,
-        params: typing.Union[typing.List[str], typing.Dict[str, str], None] = ...,
-        parse_dates: typing.Union[typing.List[str], typing.Dict[str, str], None] = ...,
+        params: typing.Union[list[str], dict[str, str], None] = ...,
+        parse_dates: typing.Union[list[str], dict[str, str], None] = ...,
         chunksize: typing.Union[int, None] = ...,
         dtype: typing.Union[dict, None] = ...,
     ) -> Batch: ...
@@ -852,10 +848,10 @@ class PandasDatasource(_PandasDatasource):
         asset_name: Optional[str] = ...,
         batch_metadata: Optional[BatchMetadata] = ...,
         schema: typing.Union[str, None] = ...,
-        index_col: typing.Union[str, typing.List[str], None] = ...,
+        index_col: typing.Union[str, list[str], None] = ...,
         coerce_float: bool = ...,
-        parse_dates: typing.Union[typing.List[str], typing.Dict[str, str], None] = ...,
-        columns: typing.Union[typing.List[str], None] = ...,
+        parse_dates: typing.Union[list[str], dict[str, str], None] = ...,
+        columns: typing.Union[list[str], None] = ...,
         chunksize: typing.Union[int, None] = ...,
     ) -> Batch: ...
     def read_stata(  # noqa: PLR0913
@@ -941,14 +937,14 @@ class PandasDatasource(_PandasDatasource):
         asset_name: Optional[str] = ...,
         batch_metadata: Optional[BatchMetadata] = ...,
         xpath: str = "./*",
-        namespaces: typing.Union[typing.Dict[str, str], None] = ...,
+        namespaces: typing.Union[dict[str, str], None] = ...,
         elems_only: bool = ...,
         attrs_only: bool = ...,
         names: Union[Sequence[str], None] = ...,
         dtype: typing.Union[dict, None] = ...,
         encoding: typing.Union[str, None] = "utf-8",
         stylesheet: Union[FilePath, None] = ...,
-        iterparse: typing.Union[typing.Dict[str, typing.List[str]], None] = ...,
+        iterparse: typing.Union[dict[str, list[str]], None] = ...,
         compression: CompressionOptions = "infer",
         storage_options: StorageOptions = ...,
     ) -> Batch: ...

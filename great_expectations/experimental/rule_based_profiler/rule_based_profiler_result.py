@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING, Dict, List, Optional
+from typing import TYPE_CHECKING, Optional
 
 from great_expectations.compatibility.typing_extensions import override
 from great_expectations.core import (
@@ -47,15 +47,15 @@ class RuleBasedProfilerResult(SerializableDictDot):
 
     """  # noqa: E501
 
-    fully_qualified_parameter_names_by_domain: Dict[Domain, List[str]]
+    fully_qualified_parameter_names_by_domain: dict[Domain, list[str]]
     parameter_values_for_fully_qualified_parameter_names_by_domain: Optional[
-        Dict[Domain, Dict[str, ParameterNode]]
+        dict[Domain, dict[str, ParameterNode]]
     ]
-    expectation_configurations: List[ExpectationConfiguration]
+    expectation_configurations: list[ExpectationConfiguration]
     citation: dict
-    rule_domain_builder_execution_time: Dict[str, float]
-    rule_execution_time: Dict[str, float]
-    rule_exception_tracebacks: Dict[str, Optional[str]]
+    rule_domain_builder_execution_time: dict[str, float]
+    rule_execution_time: dict[str, float]
+    rule_exception_tracebacks: dict[str, Optional[str]]
     catch_exceptions: bool = field(default=False)
 
     @override
@@ -65,11 +65,11 @@ class RuleBasedProfilerResult(SerializableDictDot):
             This `RuleBasedProfilerResult` as dictionary (JSON-serializable for `RuleBasedProfilerResult` objects).
         """  # noqa: E501
         domain: Domain
-        fully_qualified_parameter_names: List[str]
-        parameter_values_for_fully_qualified_parameter_names: Dict[str, ParameterNode]
+        fully_qualified_parameter_names: list[str]
+        parameter_values_for_fully_qualified_parameter_names: dict[str, ParameterNode]
         expectation_configuration: ExpectationConfiguration
-        parameter_values_for_fully_qualified_parameter_names_by_domain: Dict[
-            Domain, Dict[str, ParameterNode]
+        parameter_values_for_fully_qualified_parameter_names_by_domain: dict[
+            Domain, dict[str, ParameterNode]
         ] = self.parameter_values_for_fully_qualified_parameter_names_by_domain or {}
         return {
             "fully_qualified_parameter_names_by_domain": [

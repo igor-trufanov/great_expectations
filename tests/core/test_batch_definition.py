@@ -23,8 +23,6 @@ from great_expectations.exceptions.exceptions import (
 )
 
 if TYPE_CHECKING:
-    from typing import List
-
     import pytest_mock
 
     from great_expectations.datasource.fluent.batch_request import BatchRequest
@@ -32,7 +30,7 @@ if TYPE_CHECKING:
 
 class DataAssetForTests(DataAsset):
     @override
-    def get_batch_identifiers_list(self, batch_request: BatchRequest) -> List[dict]:
+    def get_batch_identifiers_list(self, batch_request: BatchRequest) -> list[dict]:
         raise NotImplementedError
 
     @override

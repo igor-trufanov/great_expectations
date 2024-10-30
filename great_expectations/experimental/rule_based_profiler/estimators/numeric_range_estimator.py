@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import logging
 from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING, Dict, Optional
+from typing import TYPE_CHECKING, Optional
 
 from great_expectations.compatibility.typing_extensions import override
 from great_expectations.types import SerializableDictDot
@@ -62,7 +62,7 @@ class NumericRangeEstimator(ABC, SerializableDictDot):
         metric_values: np.ndarray,
         domain: Domain,
         variables: Optional[ParameterContainer] = None,
-        parameters: Optional[Dict[str, ParameterContainer]] = None,
+        parameters: Optional[dict[str, ParameterContainer]] = None,
     ) -> NumericRangeEstimationResult:
         """
         Method that invokes implementation of the estimation algorithm that is the subject of the inherited class.
@@ -88,7 +88,7 @@ class NumericRangeEstimator(ABC, SerializableDictDot):
         metric_values: np.ndarray,
         domain: Domain,
         variables: Optional[ParameterContainer] = None,
-        parameters: Optional[Dict[str, ParameterContainer]] = None,
+        parameters: Optional[dict[str, ParameterContainer]] = None,
     ) -> NumericRangeEstimationResult:
         """
         Essentials of the estimation algorithm (all subclasses must implement this method).

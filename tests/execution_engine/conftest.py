@@ -2,7 +2,6 @@ import datetime
 import os
 import random
 from pathlib import Path
-from typing import List
 
 import pandas as pd
 import pytest
@@ -47,7 +46,7 @@ def test_df_small_csv_compressed(test_df_small, tmpdir) -> bytes:
 
 @pytest.fixture
 def test_s3_files_parquet(tmpdir, s3, s3_bucket, test_df_small, test_df_small_csv):
-    keys: List[str] = [
+    keys: list[str] = [
         "path/A-100.csv",
         "path/A-101.csv",
         "directory/B-1.parquet",
@@ -68,7 +67,7 @@ def test_s3_files_parquet(tmpdir, s3, s3_bucket, test_df_small, test_df_small_cs
 
 @pytest.fixture
 def test_s3_files_compressed(s3, s3_bucket, test_df_small_csv_compressed):
-    keys: List[str] = [
+    keys: list[str] = [
         "path/A-100.csv.gz",
         "path/A-101.csv.gz",
         "directory/B-1.csv.gz",
@@ -87,7 +86,7 @@ def test_s3_files_compressed(s3, s3_bucket, test_df_small_csv_compressed):
 @pytest.fixture
 def azure_batch_spec() -> AzureBatchSpec:
     container = "test_container"
-    keys: List[str] = [
+    keys: list[str] = [
         "path/A-100.csv",
         "path/A-101.csv",
         "directory/B-1.csv",
@@ -111,7 +110,7 @@ def azure_batch_spec() -> AzureBatchSpec:
 @pytest.fixture
 def gcs_batch_spec() -> GCSBatchSpec:
     bucket = "test_bucket"
-    keys: List[str] = [
+    keys: list[str] = [
         "path/A-100.csv",
         "path/A-101.csv",
         "directory/B-1.csv",
@@ -134,7 +133,7 @@ def gcs_batch_spec() -> GCSBatchSpec:
 def test_sparkdf(spark_session) -> pyspark.DataFrame:
     def generate_ascending_list_of_datetimes(
         n, start_date=datetime.date(2020, 1, 1), end_date=datetime.date(2020, 12, 31)
-    ) -> List[datetime.datetime]:
+    ) -> list[datetime.datetime]:
         start_time = datetime.datetime(start_date.year, start_date.month, start_date.day)  # noqa: DTZ001
         seconds_between_dates = (end_date - start_date).total_seconds()
         # noinspection PyUnusedLocal
@@ -147,18 +146,18 @@ def test_sparkdf(spark_session) -> pyspark.DataFrame:
 
     k: int = 120
     random.seed(1)
-    timestamp_list: List[datetime.datetime] = generate_ascending_list_of_datetimes(
+    timestamp_list: list[datetime.datetime] = generate_ascending_list_of_datetimes(
         n=k, end_date=datetime.date(2020, 1, 31)
     )
-    date_list: List[datetime.date] = [
+    date_list: list[datetime.date] = [
         datetime.date(ts.year, ts.month, ts.day) for ts in timestamp_list
     ]
 
     # noinspection PyUnusedLocal
-    batch_ids: List[int] = [random.randint(0, 10) for i in range(k)]
+    batch_ids: list[int] = [random.randint(0, 10) for i in range(k)]
     batch_ids.sort()
     # noinspection PyUnusedLocal
-    session_ids: List[int] = [random.randint(2, 60) for i in range(k)]
+    session_ids: list[int] = [random.randint(2, 60) for i in range(k)]
     session_ids = [i - random.randint(0, 2) for i in session_ids]
     session_ids.sort()
 

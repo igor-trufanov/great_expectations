@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import copy
 import logging
-from typing import TYPE_CHECKING, Callable, List, TypeVar
+from typing import TYPE_CHECKING, Callable, TypeVar
 
 if TYPE_CHECKING:
     from typing_extensions import Self
@@ -41,7 +41,7 @@ class DotDict(dict):
     # The following are required to support yaml serialization, since we do not raise
     # AttributeError from __getattr__ in DotDict. We *do* raise that AttributeError when it is possible to know  # noqa: E501
     # a given attribute is not allowed (because it's not in _allowed_keys)
-    _yaml_merge: List = []
+    _yaml_merge: list = []
 
     @classmethod
     def yaml_anchor(cls):

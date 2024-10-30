@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import logging
-from typing import Set, Union
+from typing import Union
 
 from great_expectations.compatibility.typing_extensions import override
 from great_expectations.data_context.data_context_variables import (
@@ -20,7 +20,7 @@ class DataContextStore(ConfigurationStore):
 
     _configuration_class = DataContextConfig
 
-    cloud_exclude_field_names: Set[DataContextVariableSchema] = {
+    cloud_exclude_field_names: set[DataContextVariableSchema] = {
         DataContextVariableSchema.CHECKPOINT_STORE_NAME,
         DataContextVariableSchema.DATASOURCES,
         DataContextVariableSchema.EXPECTATIONS_STORE_NAME,

@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import logging
-from typing import TYPE_CHECKING, Dict, Optional
+from typing import TYPE_CHECKING, Optional
 
 import numpy as np
 
@@ -50,7 +50,7 @@ class ExactNumericRangeEstimator(NumericRangeEstimator):
         metric_values: npt.NDArray,
         domain: Domain,
         variables: Optional[ParameterContainer] = None,
-        parameters: Optional[Dict[str, ParameterContainer]] = None,
+        parameters: Optional[dict[str, ParameterContainer]] = None,
     ) -> NumericRangeEstimationResult:
         datetime_detected: bool = datetime_semantic_domain_type(domain=domain)
         metric_values_converted: npt.NDArray

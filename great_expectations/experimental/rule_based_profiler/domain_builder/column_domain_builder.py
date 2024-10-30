@@ -4,10 +4,7 @@ from typing import (
     TYPE_CHECKING,
     ClassVar,
     Iterable,
-    List,
     Optional,
-    Set,
-    Tuple,
     Union,
     cast,
 )
@@ -42,24 +39,24 @@ class ColumnDomainBuilder(DomainBuilder):
     This DomainBuilder emits "Domain" object for every column in table and can serve as parent of other column-focused DomainBuilder implementations.
     """  # noqa: E501
 
-    exclude_field_names: ClassVar[Set[str]] = DomainBuilder.exclude_field_names | {
+    exclude_field_names: ClassVar[set[str]] = DomainBuilder.exclude_field_names | {
         "table_column_names",
         "semantic_type_filter",
     }
 
     def __init__(  # noqa: PLR0913
         self,
-        include_column_names: Optional[Union[str, Optional[List[str]]]] = None,
-        exclude_column_names: Optional[Union[str, Optional[List[str]]]] = None,
-        include_column_name_suffixes: Optional[Union[str, Iterable, List[str]]] = None,
-        exclude_column_name_suffixes: Optional[Union[str, Iterable, List[str]]] = None,
+        include_column_names: Optional[Union[str, Optional[list[str]]]] = None,
+        exclude_column_names: Optional[Union[str, Optional[list[str]]]] = None,
+        include_column_name_suffixes: Optional[Union[str, Iterable, list[str]]] = None,
+        exclude_column_name_suffixes: Optional[Union[str, Iterable, list[str]]] = None,
         semantic_type_filter_module_name: Optional[str] = None,
         semantic_type_filter_class_name: Optional[str] = None,
         include_semantic_types: Optional[
-            Union[str, SemanticDomainTypes, List[Union[str, SemanticDomainTypes]]]
+            Union[str, SemanticDomainTypes, list[Union[str, SemanticDomainTypes]]]
         ] = None,
         exclude_semantic_types: Optional[
-            Union[str, SemanticDomainTypes, List[Union[str, SemanticDomainTypes]]]
+            Union[str, SemanticDomainTypes, list[Union[str, SemanticDomainTypes]]]
         ] = None,
         data_context: Optional[AbstractDataContext] = None,
     ) -> None:
@@ -99,7 +96,7 @@ class ColumnDomainBuilder(DomainBuilder):
 
         self._semantic_type_filter = None
 
-        self._table_column_names: List[str] = []
+        self._table_column_names: list[str] = []
 
     @property
     @override
@@ -112,42 +109,42 @@ class ColumnDomainBuilder(DomainBuilder):
     """  # noqa: E501
 
     @property
-    def include_column_names(self) -> Optional[Union[str, Optional[List[str]]]]:
+    def include_column_names(self) -> Optional[Union[str, Optional[list[str]]]]:
         return self._include_column_names
 
     @include_column_names.setter
-    def include_column_names(self, value: Optional[Union[str, Optional[List[str]]]]) -> None:
+    def include_column_names(self, value: Optional[Union[str, Optional[list[str]]]]) -> None:
         self._include_column_names = value
 
     @property
-    def exclude_column_names(self) -> Optional[Union[str, Optional[List[str]]]]:
+    def exclude_column_names(self) -> Optional[Union[str, Optional[list[str]]]]:
         return self._exclude_column_names
 
     @exclude_column_names.setter
-    def exclude_column_names(self, value: Optional[Union[str, Optional[List[str]]]]) -> None:
+    def exclude_column_names(self, value: Optional[Union[str, Optional[list[str]]]]) -> None:
         self._exclude_column_names = value
 
     @property
     def include_column_name_suffixes(
         self,
-    ) -> Optional[Union[str, Iterable, List[str]]]:
+    ) -> Optional[Union[str, Iterable, list[str]]]:
         return self._include_column_name_suffixes
 
     @include_column_name_suffixes.setter
     def include_column_name_suffixes(
-        self, value: Optional[Union[str, Iterable, List[str]]]
+        self, value: Optional[Union[str, Iterable, list[str]]]
     ) -> None:
         self._include_column_name_suffixes = value
 
     @property
     def exclude_column_name_suffixes(
         self,
-    ) -> Optional[Union[str, Iterable, List[str]]]:
+    ) -> Optional[Union[str, Iterable, list[str]]]:
         return self._exclude_column_name_suffixes
 
     @exclude_column_name_suffixes.setter
     def exclude_column_name_suffixes(
-        self, value: Optional[Union[str, Iterable, List[str]]]
+        self, value: Optional[Union[str, Iterable, list[str]]]
     ) -> None:
         self._exclude_column_name_suffixes = value
 
@@ -162,26 +159,26 @@ class ColumnDomainBuilder(DomainBuilder):
     @property
     def include_semantic_types(
         self,
-    ) -> Optional[Union[str, SemanticDomainTypes, List[Union[str, SemanticDomainTypes]]]]:
+    ) -> Optional[Union[str, SemanticDomainTypes, list[Union[str, SemanticDomainTypes]]]]:
         return self._include_semantic_types
 
     @include_semantic_types.setter
     def include_semantic_types(
         self,
-        value: Optional[Union[str, SemanticDomainTypes, List[Union[str, SemanticDomainTypes]]]],
+        value: Optional[Union[str, SemanticDomainTypes, list[Union[str, SemanticDomainTypes]]]],
     ) -> None:
         self._include_semantic_types = value
 
     @property
     def exclude_semantic_types(
         self,
-    ) -> Optional[Union[str, SemanticDomainTypes, List[Union[str, SemanticDomainTypes]]]]:
+    ) -> Optional[Union[str, SemanticDomainTypes, list[Union[str, SemanticDomainTypes]]]]:
         return self._exclude_semantic_types
 
     @exclude_semantic_types.setter
     def exclude_semantic_types(
         self,
-        value: Optional[Union[str, SemanticDomainTypes, List[Union[str, SemanticDomainTypes]]]],
+        value: Optional[Union[str, SemanticDomainTypes, list[Union[str, SemanticDomainTypes]]]],
     ) -> None:
         self._exclude_semantic_types = value
 
@@ -191,10 +188,10 @@ class ColumnDomainBuilder(DomainBuilder):
 
     def get_table_column_names(
         self,
-        batch_ids: Optional[List[str]] = None,
+        batch_ids: Optional[list[str]] = None,
         validator: Optional[Validator] = None,
         variables: Optional[ParameterContainer] = None,
-    ) -> List[str]:
+    ) -> list[str]:
         """
         This method returns all column names available (i.e., prior to any inclusions/exclusions filtering is applied).
         """  # noqa: E501
@@ -202,12 +199,12 @@ class ColumnDomainBuilder(DomainBuilder):
             return self._table_column_names
 
         if batch_ids is None:
-            batch_ids: List[str] = self.get_batch_ids(variables=variables)  # type: ignore[no-redef]
+            batch_ids: list[str] = self.get_batch_ids(variables=variables)  # type: ignore[no-redef]
 
         if validator is None:
             validator = self.get_validator(variables=variables)
 
-        table_columns: List[str] = validator.get_metric(  # type: ignore[union-attr] # could be None
+        table_columns: list[str] = validator.get_metric(  # type: ignore[union-attr] # could be None
             metric=MetricConfiguration(
                 metric_name="table.columns",
                 metric_domain_kwargs={
@@ -225,16 +222,16 @@ class ColumnDomainBuilder(DomainBuilder):
 
     def get_filtered_column_names(  # noqa: C901
         self,
-        column_names: List[str],
-        batch_ids: Optional[List[str]] = None,
+        column_names: list[str],
+        batch_ids: Optional[list[str]] = None,
         validator: Optional[Validator] = None,
         variables: Optional[ParameterContainer] = None,
-    ) -> List[str]:
+    ) -> list[str]:
         """
         This method returns list of column names, filtered according to directives supplied via instance attributes.
         """  # noqa: E501
-        include_column_names: List[str] = cast(
-            List[str],
+        include_column_names: list[str] = cast(
+            list[str],
             self._resolve_list_type_property(
                 property_name="include_column_names",
                 property_value_type=list,
@@ -242,10 +239,10 @@ class ColumnDomainBuilder(DomainBuilder):
             ),
         )
 
-        filtered_column_names: List[str] = include_column_names or column_names
+        filtered_column_names: list[str] = include_column_names or column_names
 
-        exclude_column_names: List[str] = cast(
-            List[str],
+        exclude_column_names: list[str] = cast(
+            list[str],
             self._resolve_list_type_property(
                 property_name="exclude_column_names",
                 property_value_type=list,
@@ -267,8 +264,8 @@ class ColumnDomainBuilder(DomainBuilder):
                     message=f'Error: The column "{column_name}" in BatchData does not exist.'
                 )
 
-        include_column_name_suffixes: List[str] = cast(
-            List[str],
+        include_column_name_suffixes: list[str] = cast(
+            list[str],
             self._resolve_list_type_property(
                 property_name="include_column_name_suffixes",
                 property_value_type=(str, Iterable, list),
@@ -285,8 +282,8 @@ class ColumnDomainBuilder(DomainBuilder):
                 )
             )
 
-        exclude_column_name_suffixes: List[str] = cast(
-            List[str],
+        exclude_column_name_suffixes: list[str] = cast(
+            list[str],
             self._resolve_list_type_property(
                 property_name="exclude_column_name_suffixes",
                 property_value_type=(str, Iterable, list),
@@ -343,8 +340,8 @@ class ColumnDomainBuilder(DomainBuilder):
         )
         self._semantic_type_filter = semantic_type_filter  # type: ignore[assignment] # could be None
 
-        include_semantic_types: List[Union[str, SemanticDomainTypes]] = cast(
-            List[Union[str, SemanticDomainTypes]],
+        include_semantic_types: list[Union[str, SemanticDomainTypes]] = cast(
+            list[Union[str, SemanticDomainTypes]],
             self._resolve_list_type_property(
                 property_name="include_semantic_types",
                 property_value_type=(str, SemanticDomainTypes, list),
@@ -366,8 +363,8 @@ class ColumnDomainBuilder(DomainBuilder):
                 )
             )
 
-        exclude_semantic_types: List[Union[str, SemanticDomainTypes]] = cast(
-            List[Union[str, SemanticDomainTypes]],
+        exclude_semantic_types: list[Union[str, SemanticDomainTypes]] = cast(
+            list[Union[str, SemanticDomainTypes]],
             self._resolve_list_type_property(
                 property_name="exclude_semantic_types",
                 property_value_type=(str, SemanticDomainTypes, list),
@@ -393,26 +390,26 @@ class ColumnDomainBuilder(DomainBuilder):
 
     def get_effective_column_names(
         self,
-        batch_ids: Optional[List[str]] = None,
+        batch_ids: Optional[list[str]] = None,
         validator: Optional[Validator] = None,
         variables: Optional[ParameterContainer] = None,
-    ) -> List[str]:
+    ) -> list[str]:
         """
         This method applies multiple directives to obtain columns to be included as part of returned "Domain" objects.
         """  # noqa: E501
         if batch_ids is None:
-            batch_ids: List[str] = self.get_batch_ids(variables=variables)  # type: ignore[no-redef]
+            batch_ids: list[str] = self.get_batch_ids(variables=variables)  # type: ignore[no-redef]
 
         if validator is None:
             validator = self.get_validator(variables=variables)
 
-        table_columns: List[str] = self.get_table_column_names(
+        table_columns: list[str] = self.get_table_column_names(
             batch_ids=batch_ids,
             validator=validator,
             variables=variables,
         )
 
-        effective_column_names: List[str] = self.get_filtered_column_names(
+        effective_column_names: list[str] = self.get_filtered_column_names(
             column_names=table_columns,
             batch_ids=batch_ids,
             validator=validator,
@@ -427,7 +424,7 @@ class ColumnDomainBuilder(DomainBuilder):
         rule_name: str,
         variables: Optional[ParameterContainer] = None,
         runtime_configuration: Optional[dict] = None,
-    ) -> List[Domain]:
+    ) -> list[Domain]:
         """
         Obtains and returns domains for all columns of a table (or for configured columns, if they exist in the table).
 
@@ -439,17 +436,17 @@ class ColumnDomainBuilder(DomainBuilder):
         Returns:
             List of domains that match the desired columns and filtering criteria.
         """  # noqa: E501
-        batch_ids: List[str] = self.get_batch_ids(variables=variables)  # type: ignore[assignment] # could be None
+        batch_ids: list[str] = self.get_batch_ids(variables=variables)  # type: ignore[assignment] # could be None
 
         validator: Validator = self.get_validator(variables=variables)  # type: ignore[assignment] # could be None
 
-        effective_column_names: List[str] = self.get_effective_column_names(
+        effective_column_names: list[str] = self.get_effective_column_names(
             batch_ids=batch_ids,
             validator=validator,
             variables=variables,
         )
 
-        domains: List[Domain] = build_domains_from_column_names(
+        domains: list[Domain] = build_domains_from_column_names(
             rule_name=rule_name,
             column_names=effective_column_names,
             domain_type=self.domain_type,
@@ -461,9 +458,9 @@ class ColumnDomainBuilder(DomainBuilder):
     def _resolve_list_type_property(
         self,
         property_name: str,
-        property_value_type: Union[type, Tuple[type, ...]],
+        property_value_type: Union[type, tuple[type, ...]],
         variables: Optional[ParameterContainer] = None,
-    ) -> List[type]:
+    ) -> list[type]:
         property_value = getattr(self, property_name, [])
         if property_value is None:
             property_value = []

@@ -1,7 +1,7 @@
 import logging
 import string
 from pathlib import Path
-from typing import List, Optional
+from typing import Optional
 
 import pytest
 from marshmallow import INCLUDE, Schema, fields, validates_schema
@@ -70,7 +70,7 @@ class SampleConfigSchema(Schema):
 class SampleConfigurationStore(ConfigurationStore):
     _configuration_class = SampleConfig
 
-    def list_keys(self) -> List[DataContextKey]:
+    def list_keys(self) -> list[DataContextKey]:
         # Mock values to work with self.self_check
         return [ConfigurationIdentifier(f"key{char}") for char in string.ascii_uppercase]
 

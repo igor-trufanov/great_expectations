@@ -1,6 +1,5 @@
 import os
 import shutil
-from typing import Dict
 
 import pytest
 
@@ -21,7 +20,7 @@ pytestmark = pytest.mark.filesystem
 def assert_how_to_buttons(
     context,
     index_page_locator_info: str,
-    index_links_dict: Dict,
+    index_links_dict: dict,
     show_how_to_buttons=True,
 ):
     """Helper function to assert presence or non-presence of how-to buttons and related content in various

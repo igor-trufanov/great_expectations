@@ -4,8 +4,6 @@ import logging
 from typing import (
     TYPE_CHECKING,
     Any,
-    Dict,
-    List,
     Union,
 )
 
@@ -39,7 +37,7 @@ def _pandas_multicolumn_map_condition_values(
     execution_engine: PandasExecutionEngine,
     metric_domain_kwargs: dict,
     metric_value_kwargs: dict,
-    metrics: Dict[str, Any],
+    metrics: dict[str, Any],
     **kwargs,
 ) -> list[dict]:
     """Return values from the specified domain that match the map-style metric in the metrics dictionary."""  # noqa: E501
@@ -68,7 +66,7 @@ def _pandas_multicolumn_map_condition_values(
 """  # noqa: E501
         )
 
-    column_list: List[Union[str, sqlalchemy.quoted_name]] = accessor_domain_kwargs["column_list"]
+    column_list: list[Union[str, sqlalchemy.quoted_name]] = accessor_domain_kwargs["column_list"]
 
     domain_values = df[column_list]
 
@@ -90,7 +88,7 @@ def _pandas_multicolumn_map_condition_filtered_row_count(
     execution_engine: PandasExecutionEngine,
     metric_domain_kwargs: dict,
     metric_value_kwargs: dict,
-    metrics: Dict[str, Any],
+    metrics: dict[str, Any],
     **kwargs,
 ) -> int:
     """Return record counts from the specified domain that match the map-style metric in the metrics dictionary."""  # noqa: E501
@@ -123,7 +121,7 @@ def _sqlalchemy_multicolumn_map_condition_values(
     execution_engine: SqlAlchemyExecutionEngine,
     metric_domain_kwargs: dict,
     metric_value_kwargs: dict,
-    metrics: Dict[str, Any],
+    metrics: dict[str, Any],
     **kwargs,
 ) -> list[dict]:
     """Return values from the specified domain that match the map-style metric in the metrics dictionary."""  # noqa: E501
@@ -152,7 +150,7 @@ def _sqlalchemy_multicolumn_map_condition_values(
 """  # noqa: E501
         )
 
-    column_list: List[Union[str, sqlalchemy.quoted_name]] = accessor_domain_kwargs["column_list"]
+    column_list: list[Union[str, sqlalchemy.quoted_name]] = accessor_domain_kwargs["column_list"]
 
     column_selector = [sa.column(column_name) for column_name in column_list]  # type: ignore[var-annotated]
     query = sa.select(*column_selector).where(boolean_mapped_unexpected_values)
@@ -175,7 +173,7 @@ def _sqlalchemy_multicolumn_map_condition_filtered_row_count(
     execution_engine: SqlAlchemyExecutionEngine,
     metric_domain_kwargs: dict,
     metric_value_kwargs: dict,
-    metrics: Dict[str, Any],
+    metrics: dict[str, Any],
     **kwargs,
 ) -> Any | None:
     """Return record counts from the specified domain that match the map-style metric in the metrics dictionary."""  # noqa: E501
@@ -212,7 +210,7 @@ def _spark_multicolumn_map_condition_values(
     execution_engine: SparkDFExecutionEngine,
     metric_domain_kwargs: dict,
     metric_value_kwargs: dict,
-    metrics: Dict[str, Any],
+    metrics: dict[str, Any],
     **kwargs,
 ) -> list[dict]:
     """Return values from the specified domain that match the map-style metric in the metrics dictionary."""  # noqa: E501
@@ -241,7 +239,7 @@ def _spark_multicolumn_map_condition_values(
 """  # noqa: E501
         )
 
-    column_list: List[Union[str, sqlalchemy.quoted_name]] = accessor_domain_kwargs["column_list"]
+    column_list: list[Union[str, sqlalchemy.quoted_name]] = accessor_domain_kwargs["column_list"]
 
     # withColumn is required to transform window functions returned by some metrics to boolean mask
     data = df.withColumn("__unexpected", unexpected_condition)
@@ -268,7 +266,7 @@ def _spark_multicolumn_map_condition_filtered_row_count(
     execution_engine: SparkDFExecutionEngine,
     metric_domain_kwargs: dict,
     metric_value_kwargs: dict,
-    metrics: Dict[str, Any],
+    metrics: dict[str, Any],
     **kwargs,
 ) -> int:
     """Return record counts from the specified domain that match the map-style metric in the metrics dictionary."""  # noqa: E501

@@ -6,9 +6,7 @@ from typing import (
     TYPE_CHECKING,
     AbstractSet,
     Any,
-    Dict,
     Generic,
-    List,
     Mapping,
     Optional,
     Sequence,
@@ -124,7 +122,7 @@ class Metric(MetricRepositoryBaseModel, Generic[_ValueType]):
         exclude_unset: bool = False,
         exclude_defaults: bool = False,
         exclude_none: bool = False,
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Override the dict function to include @property fields, in pydandic v2 we can use computed_field.
         https://docs.pydantic.dev/latest/usage/computed_fields/
         """  # noqa: E501
@@ -202,8 +200,8 @@ class ColumnMetric(Metric, Generic[_ValueType]):
 #  ColumnQuantileValuesMetric is an example of a metric that has parameters
 
 
-class ColumnQuantileValuesMetric(ColumnMetric[List[float]]):
-    quantiles: List[float] = Field(description="Quantiles to compute")
+class ColumnQuantileValuesMetric(ColumnMetric[list[float]]):
+    quantiles: list[float] = Field(description="Quantiles to compute")
     allow_relative_error: Union[float, str] = Field(
         description="Relative error interpolation type (pandas) or limit (e.g. spark) depending on data source"  # noqa: E501
     )

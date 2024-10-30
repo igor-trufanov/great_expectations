@@ -1,7 +1,7 @@
 import logging
 import os
 import re
-from typing import TYPE_CHECKING, List
+from typing import TYPE_CHECKING
 
 import pandas as pd
 import pytest
@@ -48,7 +48,7 @@ def test_basic_instantiation():
 
     test_df: pd.DataFrame = pd.DataFrame(data={"col1": [1, 2], "col2": [3, 4]})
 
-    keys: List[str] = [
+    keys: list[str] = [
         "alpha-1.csv",
         "alpha-2.csv",
         "alpha-3.csv",
@@ -91,7 +91,7 @@ def test_instantiation_batching_regex_does_not_match_paths():
 
     test_df: pd.DataFrame = pd.DataFrame(data={"col1": [1, 2], "col2": [3, 4]})
 
-    keys: List[str] = [
+    keys: list[str] = [
         "alpha-1.csv",
         "alpha-2.csv",
         "alpha-3.csv",
@@ -130,7 +130,7 @@ def test_return_all_batch_definitions_unsorted():
 
     test_df: pd.DataFrame = pd.DataFrame(data={"col1": [1, 2], "col2": [3, 4]})
 
-    keys: List[str] = [
+    keys: list[str] = [
         "alex_2020-08-09_1000.csv",
         "eugene_2020-08-09_1500.csv",
         "james_2020-08-11_1009.csv",
@@ -163,7 +163,7 @@ def test_return_all_batch_definitions_unsorted():
     partitioner = FileNamePartitionerYearly(regex=batching_regex)
 
     # with empty options
-    unsorted_batch_definition_list: List[LegacyBatchDefinition] = (
+    unsorted_batch_definition_list: list[LegacyBatchDefinition] = (
         my_data_connector.get_batch_definition_list(
             BatchRequest(
                 datasource_name="my_file_path_datasource",
@@ -176,7 +176,7 @@ def test_return_all_batch_definitions_unsorted():
     processed_batching_regex = re.compile(
         "(?P<path>(?P<name>.+)_(?P<year>\\d{4})-(?P<month>\\d{2})-(?P<day>\\d{2})_(?P<price>.*)\\.csv)"
     )
-    expected: List[LegacyBatchDefinition] = [
+    expected: list[LegacyBatchDefinition] = [
         LegacyBatchDefinition(
             datasource_name="my_file_path_datasource",
             data_connector_name="fluent",
@@ -363,7 +363,7 @@ def test_return_only_unique_batch_definitions():
 
     test_df: pd.DataFrame = pd.DataFrame(data={"col1": [1, 2], "col2": [3, 4]})
 
-    keys: List[str] = [
+    keys: list[str] = [
         "A/file_1.csv",
         "A/file_2.csv",
         "A/file_3.csv",
@@ -373,7 +373,7 @@ def test_return_only_unique_batch_definitions():
     for key in keys:
         client.put_object(Bucket=bucket, Body=test_df.to_csv(index=False).encode("utf-8"), Key=key)
     processed_batching_regex = re.compile("(?P<path>B/(?P<filename>.+).*\\.csv)")
-    expected: List[LegacyBatchDefinition] = [
+    expected: list[LegacyBatchDefinition] = [
         LegacyBatchDefinition(
             datasource_name="my_file_path_datasource",
             data_connector_name="fluent",
@@ -400,7 +400,7 @@ def test_return_only_unique_batch_definitions():
     )
 
     batching_regex = re.compile(r"(?P<filename>.+).*\.csv")
-    unsorted_batch_definition_list: List[LegacyBatchDefinition] = (
+    unsorted_batch_definition_list: list[LegacyBatchDefinition] = (
         my_data_connector.get_batch_definition_list(
             BatchRequest(
                 datasource_name="my_file_path_datasource",
@@ -424,7 +424,7 @@ def test_data_reference_count_methods():
 
     test_df: pd.DataFrame = pd.DataFrame(data={"col1": [1, 2], "col2": [3, 4]})
 
-    keys: List[str] = [
+    keys: list[str] = [
         "A/file_1.csv",
         "A/file_2.csv",
         "A/file_3.csv",
@@ -470,7 +470,7 @@ def test_alpha():
 
     test_df: pd.DataFrame = pd.DataFrame(data={"col1": [1, 2], "col2": [3, 4]})
 
-    keys: List[str] = [
+    keys: list[str] = [
         "test_dir_alpha/A.csv",
         "test_dir_alpha/B.csv",
         "test_dir_alpha/C.csv",
@@ -538,7 +538,7 @@ def test_foxtrot():
 
     test_df: pd.DataFrame = pd.DataFrame(data={"col1": [1, 2], "col2": [3, 4]})
 
-    keys: List[str] = [
+    keys: list[str] = [
         "test_dir_foxtrot/A/A-1.csv",
         "test_dir_foxtrot/A/A-2.csv",
         "test_dir_foxtrot/A/A-3.csv",
@@ -652,7 +652,7 @@ def test_foxtrot():
         data_asset_name="my_s3_data_asset",
         options={},
     )
-    my_batch_definition_list: List[LegacyBatchDefinition] = (
+    my_batch_definition_list: list[LegacyBatchDefinition] = (
         my_data_connector.get_batch_definition_list(batch_request=my_batch_request)
     )
     assert len(my_batch_definition_list) == 3

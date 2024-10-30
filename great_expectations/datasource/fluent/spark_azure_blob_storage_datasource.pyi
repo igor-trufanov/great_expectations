@@ -1,5 +1,5 @@
 from logging import Logger
-from typing import Any, ClassVar, Literal, Optional, Type
+from typing import Any, ClassVar, Literal, Optional
 
 from great_expectations.compatibility import azure
 from great_expectations.datasource.fluent import _SparkFilePathDatasource
@@ -23,7 +23,7 @@ class SparkAzureBlobStorageDatasourceError(SparkDatasourceError): ...
 
 class SparkAzureBlobStorageDatasource(_SparkFilePathDatasource):
     # class attributes
-    data_connector_type: ClassVar[Type[S3DataConnector]] = ...
+    data_connector_type: ClassVar[type[S3DataConnector]] = ...
 
     # instance attributes
     type: Literal["spark_abs"] = "spark_abs"

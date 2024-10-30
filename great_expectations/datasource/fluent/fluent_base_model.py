@@ -11,9 +11,7 @@ from typing import (
     AbstractSet,
     Any,
     Callable,
-    Dict,
     Mapping,
-    Type,
     Union,
     overload,
 )
@@ -66,7 +64,7 @@ class FluentBaseModel(pydantic.BaseModel):
         extra = pydantic.Extra.forbid
 
     @classmethod
-    def parse_yaml(cls: Type[Self], f: Union[pathlib.Path, str]) -> Self:
+    def parse_yaml(cls: type[Self], f: Union[pathlib.Path, str]) -> Self:
         loaded = yaml.load(f)
         logger.debug(f"loaded from yaml ->\n{pf(loaded, depth=3)}\n")
         # noinspection PyArgumentList
@@ -277,7 +275,7 @@ class FluentBaseModel(pydantic.BaseModel):
     @staticmethod
     def _include_exclude_to_dict(
         include_exclude: AbstractSetIntStr | MappingIntStrAny | None,
-    ) -> Dict[int | str, Any]:
+    ) -> dict[int | str, Any]:
         """
         Takes the mapping or abstract set passed to pydantic model export include or exclude and makes it a
         mutable dictionary that can be altered for nested include/exclude operations.

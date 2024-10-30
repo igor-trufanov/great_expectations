@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import inspect
 import logging
-from typing import TYPE_CHECKING, Any, ClassVar, Dict, List, Optional, Tuple, Type, Union
+from typing import TYPE_CHECKING, Any, ClassVar, Optional, Union
 
 import numpy as np
 import pandas as pd
@@ -205,11 +205,11 @@ class ExpectColumnValuesToBeInTypeList(ColumnMapExpectation):
                 }}
     """  # noqa: E501
 
-    type_list: Union[List[str], SuiteParameterDict, None] = pydantic.Field(
+    type_list: Union[list[str], SuiteParameterDict, None] = pydantic.Field(
         description=TYPE_LIST_DESCRIPTION
     )
 
-    library_metadata: ClassVar[Dict[str, Union[str, list, bool]]] = {
+    library_metadata: ClassVar[dict[str, Union[str, list, bool]]] = {
         "maturity": "production",
         "tags": ["core expectation", "column map expectation"],
         "contributors": ["@great_expectations"],
@@ -220,7 +220,7 @@ class ExpectColumnValuesToBeInTypeList(ColumnMapExpectation):
     _library_metadata = library_metadata
 
     map_metric = "column_values.in_type_list"
-    domain_keys: ClassVar[Tuple[str, ...]] = (
+    domain_keys: ClassVar[tuple[str, ...]] = (
         "column",
         "row_condition",
         "condition_parser",
@@ -240,7 +240,7 @@ class ExpectColumnValuesToBeInTypeList(ColumnMapExpectation):
 
         @staticmethod
         def schema_extra(
-            schema: Dict[str, Any], model: Type[ExpectColumnValuesToBeInTypeList]
+            schema: dict[str, Any], model: type[ExpectColumnValuesToBeInTypeList]
         ) -> None:
             ColumnMapExpectation.Config.schema_extra(schema, model)
             schema["properties"]["metadata"]["properties"].update(
@@ -616,7 +616,7 @@ class ExpectColumnValuesToBeInTypeList(ColumnMapExpectation):
     @override
     def _validate(
         self,
-        metrics: Dict,
+        metrics: dict,
         runtime_configuration: Optional[dict] = None,
         execution_engine: Optional[ExecutionEngine] = None,
     ):

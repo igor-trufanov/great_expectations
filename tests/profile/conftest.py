@@ -1,6 +1,5 @@
 import os
 import shutil
-from typing import Set, Tuple
 
 import pytest
 
@@ -64,7 +63,7 @@ def possible_expectations_set():
 
 def get_set_of_columns_and_expectations_from_suite(
     suite: ExpectationSuite,
-) -> Tuple[Set[str], Set[str]]:
+) -> tuple[set[str], set[str]]:
     """
     Args:
         suite: An expectation suite
@@ -72,11 +71,11 @@ def get_set_of_columns_and_expectations_from_suite(
     Returns:
         A tuple containing a set of columns and a set of expectations found in a suite
     """
-    columns: Set[str] = {
+    columns: set[str] = {
         i.kwargs.get("column")  # type: ignore[misc]
         for i in suite.expectation_configurations
         if i.kwargs.get("column")
     }
-    expectations: Set[str] = {i.type for i in suite.expectation_configurations}
+    expectations: set[str] = {i.type for i in suite.expectation_configurations}
 
     return columns, expectations

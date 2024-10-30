@@ -1,5 +1,5 @@
 from math import ceil
-from typing import List, Optional, Tuple
+from typing import Optional
 
 import numpy as np
 import pandas as pd
@@ -16,7 +16,7 @@ class HourlyTimeSeriesGenerator(DailyTimeSeriesGenerator):
     def _generate_hourly_seasonality(
         self,
         time_range: np.ndarray,
-        hourly_seasonality_params: List[Tuple[float, float]],
+        hourly_seasonality_params: list[tuple[float, float]],
     ) -> np.ndarray:
         """Generate an annual seasonality component for a time series."""
 
@@ -30,10 +30,10 @@ class HourlyTimeSeriesGenerator(DailyTimeSeriesGenerator):
         self,
         size: int,
         hourly_seasonality: float,
-        hourly_seasonality_params: Optional[List[Tuple[float, float]]] = None,
-        trend_params: Optional[List[TrendParams]] = None,
-        weekday_dummy_params: Optional[List[float]] = None,
-        annual_seasonality_params: Optional[List[Tuple[float, float]]] = None,
+        hourly_seasonality_params: Optional[list[tuple[float, float]]] = None,
+        trend_params: Optional[list[TrendParams]] = None,
+        weekday_dummy_params: Optional[list[float]] = None,
+        annual_seasonality_params: Optional[list[tuple[float, float]]] = None,
         holiday_alpha: float = 3.5,
         outlier_alpha: float = 2.5,
         noise_scale: float = 1.0,
@@ -80,10 +80,10 @@ class HourlyTimeSeriesGenerator(DailyTimeSeriesGenerator):
         size: Optional[int] = 90 * 24,  # 90 days worth of data
         start_date: Optional[str] = "2018-01-01",
         hourly_seasonality: float = 1.0,
-        hourly_seasonality_params: Optional[List[Tuple[float, float]]] = None,
-        trend_params: Optional[List[TrendParams]] = None,
-        weekday_dummy_params: Optional[List[float]] = None,
-        annual_seasonality_params: Optional[List[Tuple[float, float]]] = None,
+        hourly_seasonality_params: Optional[list[tuple[float, float]]] = None,
+        trend_params: Optional[list[TrendParams]] = None,
+        weekday_dummy_params: Optional[list[float]] = None,
+        annual_seasonality_params: Optional[list[tuple[float, float]]] = None,
         holiday_alpha: float = 3.5,
         outlier_alpha: float = 2.5,
         noise_scale: float = 1.0,

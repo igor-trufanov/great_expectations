@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, Dict, Optional
+from typing import TYPE_CHECKING, Any, Optional
 
 import numpy as np
 
@@ -46,7 +46,7 @@ class ColumnMedian(ColumnAggregateMetricProvider):
         execution_engine: SqlAlchemyExecutionEngine,
         metric_domain_kwargs: dict,
         metric_value_kwargs: dict,
-        metrics: Dict[str, Any],
+        metrics: dict[str, Any],
         runtime_configuration: dict,
     ):
         (
@@ -98,7 +98,7 @@ class ColumnMedian(ColumnAggregateMetricProvider):
         execution_engine: SparkDFExecutionEngine,
         metric_domain_kwargs: dict,
         metric_value_kwargs: dict,
-        metrics: Dict[str, Any],
+        metrics: dict[str, Any],
         runtime_configuration: dict,
     ):
         (

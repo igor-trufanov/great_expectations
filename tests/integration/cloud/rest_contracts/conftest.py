@@ -5,7 +5,7 @@ import os
 import pathlib
 import subprocess
 import uuid
-from typing import TYPE_CHECKING, Any, Callable, Dict, Final, List, Union
+from typing import TYPE_CHECKING, Any, Callable, Final, Union
 
 import pact
 import pytest
@@ -30,10 +30,10 @@ PACT_DIR: Final[pathlib.Path] = pathlib.Path(pathlib.Path(__file__, ".."), "pact
 PACT_MOCK_SERVICE_URL: Final[str] = f"http://{PACT_MOCK_HOST}:{PACT_MOCK_PORT}"
 
 
-JsonData: TypeAlias = Union[None, int, str, bool, List[Any], Dict[str, Any]]
+JsonData: TypeAlias = Union[None, int, str, bool, list[Any], dict[str, Any]]
 
 PactBody: TypeAlias = Union[
-    Dict[str, Union[JsonData, pact.matchers.Matcher]], pact.matchers.Matcher, None
+    dict[str, Union[JsonData, pact.matchers.Matcher]], pact.matchers.Matcher, None
 ]
 
 

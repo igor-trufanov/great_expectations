@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, ClassVar, Dict, List, Optional, Set, Union
+from typing import TYPE_CHECKING, ClassVar, Optional, Union
 
 import numpy as np
 
@@ -41,7 +41,7 @@ class MeanUnexpectedMapMetricMultiBatchParameterBuilder(MetricMultiBatchParamete
     Compute mean unexpected count ratio (as a fraction) of specified map-style metric across every Batch of data given.
     """  # noqa: E501
 
-    exclude_field_names: ClassVar[Set[str]] = (
+    exclude_field_names: ClassVar[set[str]] = (
         MetricMultiBatchParameterBuilder.exclude_field_names
         | {
             "metric_name",
@@ -60,7 +60,7 @@ class MeanUnexpectedMapMetricMultiBatchParameterBuilder(MetricMultiBatchParamete
         null_count_parameter_builder_name: Optional[str] = None,
         metric_domain_kwargs: Optional[Union[str, dict]] = None,
         metric_value_kwargs: Optional[Union[str, dict]] = None,
-        suite_parameter_builder_configs: Optional[List[ParameterBuilderConfig]] = None,
+        suite_parameter_builder_configs: Optional[list[ParameterBuilderConfig]] = None,
         data_context: Optional[AbstractDataContext] = None,
     ) -> None:
         """
@@ -111,7 +111,7 @@ class MeanUnexpectedMapMetricMultiBatchParameterBuilder(MetricMultiBatchParamete
         self,
         domain: Domain,
         variables: Optional[ParameterContainer] = None,
-        parameters: Optional[Dict[str, ParameterContainer]] = None,
+        parameters: Optional[dict[str, ParameterContainer]] = None,
         runtime_configuration: Optional[dict] = None,
     ) -> Attributes:
         """
@@ -155,7 +155,7 @@ class MeanUnexpectedMapMetricMultiBatchParameterBuilder(MetricMultiBatchParamete
             )
         )
 
-        batch_ids: Optional[List[str]] = self.get_batch_ids(
+        batch_ids: Optional[list[str]] = self.get_batch_ids(
             domain=domain,
             variables=variables,
             parameters=parameters,

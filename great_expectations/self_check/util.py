@@ -18,12 +18,8 @@ from typing import (
     TYPE_CHECKING,
     Any,
     Callable,
-    Dict,
     Iterable,
-    List,
     Optional,
-    Tuple,
-    Type,
     TypeVar,
     Union,
     cast,
@@ -277,7 +273,7 @@ except (ImportError, KeyError):
     CLICKHOUSE_TYPES = {}
 
 
-TRINO_TYPES: Dict[str, Any] = (
+TRINO_TYPES: dict[str, Any] = (
     {
         "BOOLEAN": trino.trinotypes._type_map["boolean"],
         "TINYINT": trino.trinotypes._type_map["tinyint"],
@@ -300,7 +296,7 @@ TRINO_TYPES: Dict[str, Any] = (
     else {}
 )
 
-REDSHIFT_TYPES: Dict[str, Any] = (
+REDSHIFT_TYPES: dict[str, Any] = (
     {
         "BIGINT": aws.redshiftdialect.BIGINT,
         "BOOLEAN": aws.redshiftdialect.BOOLEAN,
@@ -323,7 +319,7 @@ REDSHIFT_TYPES: Dict[str, Any] = (
     else {}
 )
 
-SNOWFLAKE_TYPES: Dict[str, Any]
+SNOWFLAKE_TYPES: dict[str, Any]
 if snowflake.snowflakesqlalchemy and snowflake.snowflakedialect and snowflake.snowflaketypes:
     # Sometimes "snowflake-sqlalchemy" fails to self-register in certain environments, so we do it explicitly.  # noqa: E501
     # (see https://stackoverflow.com/questions/53284762/nosuchmoduleerror-cant-load-plugin-sqlalchemy-dialectssnowflake)
@@ -352,7 +348,7 @@ if snowflake.snowflakesqlalchemy and snowflake.snowflakedialect and snowflake.sn
 else:
     SNOWFLAKE_TYPES = {}
 
-ATHENA_TYPES: Dict[str, Any] = (
+ATHENA_TYPES: dict[str, Any] = (
     # athenatypes is just `from sqlalchemy import types`
     # https://github.com/laughingman7743/PyAthena/blob/master/pyathena/sqlalchemy_athena.py#L692
     #   - the _get_column_type method of AthenaDialect does some mapping via conditional statements
@@ -456,7 +452,7 @@ def get_test_validator_with_data(  # noqa: PLR0913
 
     # if pk_column is defined in our test, then we add a index column to our test set
     if pk_column:
-        first_column: List[Any] = list(data.values())[0]
+        first_column: list[Any] = list(data.values())[0]
         data["pk_index"] = list(range(len(first_column)))
 
     df = pd.DataFrame(data)
@@ -585,7 +581,7 @@ def _get_test_validator_with_data_spark(  # noqa: C901, PLR0912, PLR0915
     context: AbstractDataContext | None,
     pk_column: bool,
 ) -> Validator:
-    spark_types: Dict[str, Callable] = {
+    spark_types: dict[str, Callable] = {
         "StringType": pyspark.types.StringType,
         "IntegerType": pyspark.types.IntegerType,
         "LongType": pyspark.types.LongType,
@@ -626,7 +622,7 @@ def _get_test_validator_with_data_spark(  # noqa: C901, PLR0912, PLR0915
             for col in schema:
                 type_ = schema[col]
                 # Ints cannot be None...but None can be valid in Spark (as Null)
-                vals: List[Union[str, int, float, None, Decimal]] = []
+                vals: list[Union[str, int, float, None, Decimal]] = []
                 if type_ in ["IntegerType", "LongType"]:
                     for val in data[col]:
                         if val is None:
@@ -730,7 +726,7 @@ def build_sa_validator_with_data(  # noqa: C901, PLR0912, PLR0913, PLR0915
             f"(build_sa_validator_with_data) {x}"
         )
 
-    dialect_classes: Dict[str, Type] = {}
+    dialect_classes: dict[str, type] = {}
     dialect_types = {}
     try:
         dialect_classes["sqlite"] = sqlalchemy.sqlite.dialect
@@ -1056,7 +1052,7 @@ def build_spark_engine(
 
     if isinstance(df, pd.DataFrame):
         if schema is None:
-            data: Union[pd.DataFrame, List[tuple]] = [
+            data: Union[pd.DataFrame, list[tuple]] = [
                 tuple(
                     None if isinstance(x, (float, int)) and np.isnan(x) else x
                     for x in record.tolist()
@@ -1069,8 +1065,8 @@ def build_spark_engine(
 
         df = spark.createDataFrame(data=data, schema=schema)  # type: ignore[type-var,arg-type]
 
-    conf: Iterable[Tuple[str, str]] = spark.sparkContext.getConf().getAll()
-    spark_config: Dict[str, Any] = dict(conf)
+    conf: Iterable[tuple[str, str]] = spark.sparkContext.getConf().getAll()
+    spark_config: dict[str, Any] = dict(conf)
     execution_engine = SparkDFExecutionEngine(
         spark_config=spark_config,
         batch_data_dict={
@@ -1307,7 +1303,7 @@ def build_test_backends_list(  # noqa: C901, PLR0912, PLR0913, PLR0915
     include_athena=False,
     include_snowflake=False,
     raise_exceptions_for_backends: bool = True,
-) -> List[str]:
+) -> list[str]:
     """Attempts to identify supported backends by checking which imports are available."""
 
     test_backends = []
@@ -1532,13 +1528,13 @@ def build_test_backends_list(  # noqa: C901, PLR0912, PLR0913, PLR0915
 
 def generate_expectation_tests(  # noqa: C901, PLR0912, PLR0913, PLR0915
     expectation_type: str,
-    test_data_cases: List[ExpectationTestDataCases],
+    test_data_cases: list[ExpectationTestDataCases],
     execution_engine_diagnostics: ExpectationExecutionEngineDiagnostics,
     raise_exceptions_for_backends: bool = False,
     ignore_suppress: bool = False,
     ignore_only_for: bool = False,
     debug_logger: Optional[logging.Logger] = None,
-    only_consider_these_backends: Optional[List[str]] = None,
+    only_consider_these_backends: Optional[list[str]] = None,
     context: Optional[AbstractDataContext] = None,
 ):
     """Determine tests to run
@@ -1916,7 +1912,7 @@ def sort_unexpected_values(test_value_list, result_value_list):
 def evaluate_json_test_v3_api(  # noqa: C901, PLR0912, PLR0913
     validator: Validator,
     expectation_type: str,
-    test: Dict[str, Any],
+    test: dict[str, Any],
     raise_exception: bool = True,
     debug_logger: Optional[Logger] = None,
     pk_column: bool = False,

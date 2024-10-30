@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Optional
+from typing import Any, Optional
 
 from contrib.experimental.great_expectations_experimental.rule_based_profiler.data_assistant_result import (
     GrowthNumericDataAssistantResult,
@@ -61,14 +61,14 @@ class GrowthNumericDataAssistant(DataAssistant):
             validator=validator,
         )
 
-    def get_variables(self) -> Optional[Dict[str, Any]]:
+    def get_variables(self) -> Optional[dict[str, Any]]:
         """
         Returns:
             Optional "variables" configuration attribute name/value pairs (overrides), commonly-used in Builder objects.
         """
         return None
 
-    def get_rules(self) -> Optional[List[Rule]]:
+    def get_rules(self) -> Optional[list[Rule]]:
         """
         Returns:
             Optional custom list of "Rule" objects implementing particular "DataAssistant" functionality.
@@ -137,7 +137,7 @@ class GrowthNumericDataAssistant(DataAssistant):
 
         # Step-3: Declare "ParameterBuilder" for every "validation" need in "ExpectationConfigurationBuilder" objects.
 
-        suite_parameter_builder_configs: Optional[List[ParameterBuilderConfig]] = [
+        suite_parameter_builder_configs: Optional[list[ParameterBuilderConfig]] = [
             ParameterBuilderConfig(
                 **table_row_count_metric_multi_batch_parameter_builder_for_metrics.to_json_dict()
             ),
@@ -159,7 +159,7 @@ class GrowthNumericDataAssistant(DataAssistant):
 
         # Step-4: Pass "validation" "ParameterBuilderConfig" objects to every "DefaultExpectationConfigurationBuilder", responsible for emitting "ExpectationConfiguration" (with specified "expectation_type").
 
-        validation_parameter_builder_configs: Optional[List[ParameterBuilderConfig]]
+        validation_parameter_builder_configs: Optional[list[ParameterBuilderConfig]]
 
         validation_parameter_builder_configs = [
             ParameterBuilderConfig(
@@ -211,11 +211,11 @@ class GrowthNumericDataAssistant(DataAssistant):
             "exact_match": None,
             "success_ratio": 1.0,
         }
-        parameter_builders: List[ParameterBuilder] = [
+        parameter_builders: list[ParameterBuilder] = [
             table_row_count_metric_multi_batch_parameter_builder_for_metrics,
             table_columns_metric_multi_batch_parameter_builder_for_metrics,
         ]
-        expectation_configuration_builders: List[ExpectationConfigurationBuilder] = [
+        expectation_configuration_builders: list[ExpectationConfigurationBuilder] = [
             expect_table_row_count_to_be_between_expectation_configuration_builder,
             expect_table_columns_to_match_set_expectation_configuration_builder,
         ]
@@ -270,7 +270,7 @@ class GrowthNumericDataAssistant(DataAssistant):
 
         # Step-3: Declare "ParameterBuilder" for every "validation" need in "ExpectationConfigurationBuilder" objects.
 
-        suite_parameter_builder_configs: Optional[List[ParameterBuilderConfig]]
+        suite_parameter_builder_configs: Optional[list[ParameterBuilderConfig]]
 
         suite_parameter_builder_configs = [
             ParameterBuilderConfig(
@@ -343,7 +343,7 @@ class GrowthNumericDataAssistant(DataAssistant):
 
         # Step-4: Pass "validation" "ParameterBuilderConfig" objects to every "DefaultExpectationConfigurationBuilder", responsible for emitting "ExpectationConfiguration" (with specified "expectation_type").
 
-        validation_parameter_builder_configs: Optional[List[ParameterBuilderConfig]]
+        validation_parameter_builder_configs: Optional[list[ParameterBuilderConfig]]
 
         validation_parameter_builder_configs = [
             ParameterBuilderConfig(
@@ -505,7 +505,7 @@ class GrowthNumericDataAssistant(DataAssistant):
             },
             "round_decimals": None,
         }
-        parameter_builders: List[ParameterBuilder] = [
+        parameter_builders: list[ParameterBuilder] = [
             column_histogram_single_batch_parameter_builder_for_metrics,
             column_min_metric_multi_batch_parameter_builder_for_metrics,
             column_max_metric_multi_batch_parameter_builder_for_metrics,
@@ -514,7 +514,7 @@ class GrowthNumericDataAssistant(DataAssistant):
             column_mean_metric_multi_batch_parameter_builder_for_metrics,
             column_standard_deviation_metric_multi_batch_parameter_builder_for_metrics,
         ]
-        expectation_configuration_builders: List[ExpectationConfigurationBuilder] = [
+        expectation_configuration_builders: list[ExpectationConfigurationBuilder] = [
             expect_column_min_to_be_between_expectation_configuration_builder,
             expect_column_max_to_be_between_expectation_configuration_builder,
             expect_column_values_to_be_between_expectation_configuration_builder,
@@ -565,7 +565,7 @@ class GrowthNumericDataAssistant(DataAssistant):
 
         # Step-3: Declare "ParameterBuilder" for every "validation" need in "ExpectationConfigurationBuilder" objects.
 
-        suite_parameter_builder_configs: Optional[List[ParameterBuilderConfig]]
+        suite_parameter_builder_configs: Optional[list[ParameterBuilderConfig]]
 
         suite_parameter_builder_configs = [
             ParameterBuilderConfig(
@@ -585,9 +585,9 @@ class GrowthNumericDataAssistant(DataAssistant):
 
         # Step-4: Pass "validation" "ParameterBuilderConfig" objects to every "DefaultExpectationConfigurationBuilder", responsible for emitting "ExpectationConfiguration" (with specified "expectation_type").
 
-        validation_parameter_builder_configs: Optional[List[ParameterBuilderConfig]]
+        validation_parameter_builder_configs: Optional[list[ParameterBuilderConfig]]
 
-        validation_parameter_builder_configs: Optional[List[ParameterBuilderConfig]] = [
+        validation_parameter_builder_configs: Optional[list[ParameterBuilderConfig]] = [
             ParameterBuilderConfig(
                 **column_distinct_values_count_range_parameter_builder_for_validations.to_json_dict(),
             ),
@@ -644,7 +644,7 @@ class GrowthNumericDataAssistant(DataAssistant):
             },
             "round_decimals": None,
         }
-        expectation_configuration_builders: List[ExpectationConfigurationBuilder] = [
+        expectation_configuration_builders: list[ExpectationConfigurationBuilder] = [
             expect_column_unique_value_count_to_be_between_expectation_configuration_builder,
             expect_column_proportion_of_unique_values_to_be_between_expectation_configuration_builder,
         ]

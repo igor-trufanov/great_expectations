@@ -1,5 +1,4 @@
 import os
-from typing import Tuple
 
 from great_expectations.data_context.cloud_constants import GXCloudRESTResource
 from great_expectations.data_context.types.base import DataContextConfig
@@ -57,7 +56,7 @@ def store_set(self, key, value, **kwargs):
     )
 
 
-def list_keys(self, prefix: Tuple = ()):
+def list_keys(self, prefix: tuple = ()):
     type_ = self._ge_cloud_resource_type
     if type_ == GXCloudRESTResource.EXPECTATION_SUITE:
         return [

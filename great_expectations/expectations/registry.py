@@ -4,12 +4,8 @@ import logging
 from typing import (
     TYPE_CHECKING,
     Callable,
-    Dict,
-    List,
     NamedTuple,
     Optional,
-    Tuple,
-    Type,
     Union,
 )
 
@@ -61,7 +57,7 @@ class RendererImpl(NamedTuple):
 
 def register_renderer(
     object_name: str,
-    parent_class: Union[Type[Expectation], Type[MetricProvider]],
+    parent_class: type[Union[Expectation, MetricProvider]],
     renderer_fn: Callable[..., Union[RenderedAtomicContent, RenderedContent]],
 ):
     # noinspection PyUnresolvedReferences
@@ -97,7 +93,7 @@ def register_renderer(
         return
 
 
-def get_renderer_names(expectation_or_metric_type: str) -> List[str]:
+def get_renderer_names(expectation_or_metric_type: str) -> list[str]:
     """Gets renderer names for a given Expectation or Metric.
 
     Args:
@@ -111,8 +107,8 @@ def get_renderer_names(expectation_or_metric_type: str) -> List[str]:
 
 def get_renderer_names_with_renderer_types(
     expectation_or_metric_type: str,
-    renderer_types: List[AtomicRendererType],
-) -> List[Union[str, AtomicDiagnosticRendererType, AtomicPrescriptiveRendererType]]:
+    renderer_types: list[AtomicRendererType],
+) -> list[Union[str, AtomicDiagnosticRendererType, AtomicPrescriptiveRendererType]]:
     """Gets renderer names of a given type, for a given Expectation or Metric.
 
     Args:
@@ -131,7 +127,7 @@ def get_renderer_names_with_renderer_types(
     ]
 
 
-def get_renderer_impls(object_name: str) -> List[str]:
+def get_renderer_impls(object_name: str) -> list[str]:
     return list(_registered_renderers.get(object_name, {}).values())
 
 
@@ -143,7 +139,7 @@ def get_renderer_impl(object_name: str, renderer_type: str) -> Optional[Renderer
     return renderer_impl
 
 
-def register_expectation(expectation: Type[Expectation]) -> None:
+def register_expectation(expectation: type[Expectation]) -> None:
     expectation_type = expectation.expectation_type
     # TODO: add version to key
     if expectation_type in _registered_expectations:
@@ -218,10 +214,10 @@ def _add_response_key(res, key, value):
 
 def register_metric(  # noqa: PLR0913
     metric_name: str,
-    metric_domain_keys: Tuple[str, ...],
-    metric_value_keys: Tuple[str, ...],
-    execution_engine: Type[ExecutionEngine],
-    metric_class: Type[MetricProvider],
+    metric_domain_keys: tuple[str, ...],
+    metric_value_keys: tuple[str, ...],
+    execution_engine: type[ExecutionEngine],
+    metric_class: type[MetricProvider],
     metric_provider: Optional[Callable],
     metric_fn_type: Optional[Union[MetricFunctionTypes, MetricPartialFunctionTypes]] = None,
 ) -> dict:
@@ -309,7 +305,7 @@ def register_metric(  # noqa: PLR0913
 
 def get_metric_provider(
     metric_name: str, execution_engine: ExecutionEngine
-) -> Tuple[MetricProvider, Callable]:
+) -> tuple[MetricProvider, Callable]:
     try:
         metric_definition = _registered_metrics[metric_name]
         return metric_definition["providers"][type(execution_engine).__name__]
@@ -381,7 +377,7 @@ def get_metric_kwargs(
 
 
 def get_domain_metrics_dict_by_name(
-    metrics: Dict[Tuple[str, str, str], MetricValue], metric_domain_kwargs: IDDict
+    metrics: dict[tuple[str, str, str], MetricValue], metric_domain_kwargs: IDDict
 ):
     return {
         metric_edge_key_id_tuple[0]: metric_value
@@ -390,8 +386,8 @@ def get_domain_metrics_dict_by_name(
     }
 
 
-def get_expectation_impl(expectation_name: str) -> Type[Expectation]:
-    expectation: Type[Expectation] | None = _registered_expectations.get(expectation_name)
+def get_expectation_impl(expectation_name: str) -> type[Expectation]:
+    expectation: type[Expectation] | None = _registered_expectations.get(expectation_name)
     if not expectation:
         raise gx_exceptions.ExpectationNotFoundError(f"{expectation_name} not found")  # noqa: TRY003
 
@@ -399,8 +395,8 @@ def get_expectation_impl(expectation_name: str) -> Type[Expectation]:
 
 
 def list_registered_expectation_implementations(
-    expectation_root: Optional[Type[Expectation]] = None,
-) -> List[str]:
+    expectation_root: Optional[type[Expectation]] = None,
+) -> list[str]:
     registered_expectation_implementations = []
     for (
         expectation_name,

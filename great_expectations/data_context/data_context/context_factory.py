@@ -9,7 +9,6 @@ from typing import (
     Literal,
     Mapping,
     Optional,
-    Type,
     overload,
 )
 
@@ -206,10 +205,7 @@ class ProjectManager:
 
         expected_ctx_types: dict[
             ContextModes | None,
-            Type[CloudDataContext]
-            | Type[EphemeralDataContext]
-            | Type[FileDataContext]
-            | Type[AbstractDataContext],
+            type[CloudDataContext | EphemeralDataContext | FileDataContext | AbstractDataContext],
         ] = {
             "ephemeral": EphemeralDataContext,
             "file": FileDataContext,

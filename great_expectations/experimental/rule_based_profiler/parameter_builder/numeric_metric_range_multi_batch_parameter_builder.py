@@ -10,10 +10,7 @@ from typing import (
     Any,
     Callable,
     ClassVar,
-    Dict,
-    List,
     Optional,
-    Set,
     Union,
 )
 
@@ -116,7 +113,7 @@ class NumericMetricRangeMultiBatchParameterBuilder(MetricMultiBatchParameterBuil
         "column.unique_proportion",
     }
 
-    exclude_field_names: ClassVar[Set[str]] = (
+    exclude_field_names: ClassVar[set[str]] = (
         MetricMultiBatchParameterBuilder.exclude_field_names
         | {
             "single_batch_mode",
@@ -143,10 +140,10 @@ class NumericMetricRangeMultiBatchParameterBuilder(MetricMultiBatchParameterBuil
         bw_method: Optional[Union[str, float, Callable]] = None,
         include_estimator_samples_histogram_in_details: Union[str, bool] = False,
         truncate_values: Optional[
-            Union[str, Dict[str, Union[Optional[int], Optional[float]]]]
+            Union[str, dict[str, Union[Optional[int], Optional[float]]]]
         ] = None,
         round_decimals: Optional[Union[str, int]] = None,
-        suite_parameter_builder_configs: Optional[List[ParameterBuilderConfig]] = None,
+        suite_parameter_builder_configs: Optional[list[ParameterBuilderConfig]] = None,
         data_context: Optional[AbstractDataContext] = None,
     ) -> None:
         """
@@ -297,7 +294,7 @@ detected.
     @property
     def truncate_values(
         self,
-    ) -> Optional[Union[str, Dict[str, Union[Optional[int], Optional[float]]]]]:
+    ) -> Optional[Union[str, dict[str, Union[Optional[int], Optional[float]]]]]:
         return self._truncate_values
 
     @property
@@ -308,7 +305,7 @@ detected.
         self,
         domain: Domain,
         variables: Optional[ParameterContainer] = None,
-        parameters: Optional[Dict[str, ParameterContainer]] = None,
+        parameters: Optional[dict[str, ParameterContainer]] = None,
         runtime_configuration: Optional[dict] = None,
     ) -> Attributes:
         """
@@ -397,7 +394,7 @@ detected.
         )
 
         value_range: np.ndarray = numeric_range_estimation_result.value_range
-        details: Dict[str, Any] = copy.deepcopy(
+        details: dict[str, Any] = copy.deepcopy(
             parameter_node[FULLY_QUALIFIED_PARAMETER_NAME_METADATA_KEY]
         )
 
@@ -427,7 +424,7 @@ detected.
         round_decimals: int,
         domain: Domain,
         variables: Optional[ParameterContainer] = None,
-        parameters: Optional[Dict[str, ParameterContainer]] = None,
+        parameters: Optional[dict[str, ParameterContainer]] = None,
     ) -> NumericRangeEstimator:
         """
         Determines "estimator" name and returns appropriate configured "NumericRangeEstimator" subclass instance.
@@ -517,7 +514,7 @@ detected.
         round_decimals: int,
         domain: Optional[Domain] = None,
         variables: Optional[ParameterContainer] = None,
-        parameters: Optional[Dict[str, ParameterContainer]] = None,
+        parameters: Optional[dict[str, ParameterContainer]] = None,
     ) -> NumericRangeEstimationResult:
         """
         This method accepts "NumericRangeEstimator" and data samples in format "N x R^m", where "N" (most significant
@@ -526,7 +523,7 @@ detected.
         vector of sample measurements is constructed and given to the estimator to apply its specific algorithm for
         computing the range of values in this vector.  Estimator algorithms differ based on their use of data samples.
         """  # noqa: E501
-        truncate_values: Dict[str, Number] = self._get_truncate_values_using_heuristics(
+        truncate_values: dict[str, Number] = self._get_truncate_values_using_heuristics(
             metric_values=metric_values,
             domain=domain,
             variables=variables,
@@ -543,16 +540,16 @@ detected.
 
         # Generate all permutations of indexes for accessing every element of the multi-dimensional metric.  # noqa: E501
         metric_value_shape_idx: int
-        axes: List[np.ndarray] = [
+        axes: list[np.ndarray] = [
             np.indices(dimensions=(metric_value_shape_idx,))[0]
             for metric_value_shape_idx in metric_value_shape
         ]
-        metric_value_indices: List[tuple] = list(itertools.product(*tuple(axes)))
+        metric_value_indices: list[tuple] = list(itertools.product(*tuple(axes)))
 
         # Generate all permutations of indexes for accessing estimates of every element of the multi-dimensional metric.  # noqa: E501
         # Prefixing multi-dimensional index with "(slice(None, None, None),)" is equivalent to "[:,]" access.  # noqa: E501
         metric_value_idx: tuple
-        metric_value_vector_indices: List[tuple] = [
+        metric_value_vector_indices: list[tuple] = [
             (slice(None, None, None),) + metric_value_idx
             for metric_value_idx in metric_value_indices
         ]
@@ -681,7 +678,7 @@ detected.
     @staticmethod
     def _is_metric_values_ndarray_datetime_dtype(
         metric_values: np.ndarray,
-        metric_value_vector_indices: List[tuple],
+        metric_value_vector_indices: list[tuple],
     ) -> bool:
         metric_value_vector: np.ndarray
         for metric_value_idx in metric_value_vector_indices:
@@ -698,7 +695,7 @@ detected.
     @staticmethod
     def _is_metric_values_ndarray_decimal_dtype(
         metric_values: np.ndarray,
-        metric_value_vector_indices: List[tuple],
+        metric_value_vector_indices: list[tuple],
     ) -> bool:
         metric_value_vector: np.ndarray
         for metric_value_idx in metric_value_vector_indices:
@@ -714,10 +711,10 @@ detected.
         domain: Domain,
         *,
         variables: Optional[ParameterContainer] = None,
-        parameters: Optional[Dict[str, ParameterContainer]] = None,
-    ) -> Dict[str, Union[Optional[int], Optional[float]]]:
+        parameters: Optional[dict[str, ParameterContainer]] = None,
+    ) -> dict[str, Union[Optional[int], Optional[float]]]:
         # Obtain truncate_values directive from "rule state" (i.e., variables and parameters); from instance variable otherwise.  # noqa: E501
-        truncate_values: Dict[str, Optional[Number]] = get_parameter_value_and_validate_return_type(
+        truncate_values: dict[str, Optional[Number]] = get_parameter_value_and_validate_return_type(
             domain=domain,
             parameter_reference=self.truncate_values,
             expected_return_type=dict,
@@ -760,7 +757,7 @@ detected.
         metric_values: np.ndarray,
         domain: Domain,
         variables: Optional[ParameterContainer] = None,
-        parameters: Optional[Dict[str, ParameterContainer]] = None,
+        parameters: Optional[dict[str, ParameterContainer]] = None,
     ) -> int:
         # Obtain round_decimals directive from "rule state" (i.e., variables and parameters); from instance variable otherwise.  # noqa: E501
         round_decimals: Optional[int] = get_parameter_value_and_validate_return_type(

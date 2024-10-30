@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, List, Union
+from typing import TYPE_CHECKING, Union
 
 from great_expectations.checkpoint.actions import ValidationAction
 from great_expectations.compatibility.typing_extensions import override
@@ -21,7 +21,7 @@ class DocsAction(ValidationAction):
     def __init__(
         self,
         data_context: AbstractDataContext,
-        site_names: Union[List[str], str, None] = None,
+        site_names: Union[list[str], str, None] = None,
     ) -> None:
         """
         :param data_context: Data Context

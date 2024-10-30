@@ -4,8 +4,6 @@ For detailed instructions on how to use it, please see:
     https://docs.greatexpectations.io/docs/guides/expectations/creating_custom_expectations/how_to_create_custom_column_aggregate_expectations
 """
 
-from typing import Dict
-
 from great_expectations.execution_engine import ExecutionEngine
 from great_expectations.expectations.expectation import ColumnAggregateExpectation
 
@@ -50,7 +48,7 @@ class ExpectColumnSumToBe(ColumnAggregateExpectation):
     # This method performs a validation of your metrics against your success keys, returning a dict indicating the success or failure of the Expectation.
     def _validate(
         self,
-        metrics: Dict,
+        metrics: dict,
         runtime_configuration: dict = None,
         execution_engine: ExecutionEngine = None,
     ):

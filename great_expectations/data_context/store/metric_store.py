@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import json
-from typing import ClassVar, Type
+from typing import ClassVar
 
 from great_expectations.data_context.store.database_store_backend import (
     DatabaseStoreBackend,
@@ -21,7 +21,7 @@ class MetricStore(Store):
     A MetricStore stores ValidationMetric information to be used between runs.
     """
 
-    _key_class: ClassVar[Type] = ValidationMetricIdentifier
+    _key_class: ClassVar[type] = ValidationMetricIdentifier
 
     def __init__(self, store_backend=None, store_name=None) -> None:
         if store_backend is not None:

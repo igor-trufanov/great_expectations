@@ -22,7 +22,6 @@ import pathlib
 import shutil
 import subprocess
 import sys
-from typing import Set
 
 IGNORED_VIOLATIONS = [
     # TODO: Add IntegrationTestFixture for these tests or remove them if no longer needed
@@ -73,7 +72,7 @@ def check_dependencies(*deps: str) -> None:
             raise Exception(f"Must have `{dep}` installed in PATH to run {__file__}")  # noqa: TRY002, TRY003
 
 
-def get_test_files(target_dir: pathlib.Path) -> Set[str]:
+def get_test_files(target_dir: pathlib.Path) -> set[str]:
     try:
         res_snippets = subprocess.run(  # noqa: PLW1510
             [
@@ -103,7 +102,7 @@ def get_test_files(target_dir: pathlib.Path) -> Set[str]:
         ) from e
 
 
-def get_test_files_in_test_suite(target_dir: pathlib.Path) -> Set[str]:
+def get_test_files_in_test_suite(target_dir: pathlib.Path) -> set[str]:
     try:
         res_test_fixtures = subprocess.run(  # noqa: PLW1510
             [

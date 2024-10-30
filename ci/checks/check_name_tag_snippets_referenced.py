@@ -23,7 +23,6 @@ import pathlib
 import shutil
 import subprocess
 import sys
-from typing import List
 
 # TODO: address ignored snippets by deleting snippet or test file, or adding documentation that references them  # noqa: E501
 IGNORED_VIOLATIONS = [
@@ -164,7 +163,7 @@ def check_dependencies(*deps: str) -> None:
             raise Exception(f"Must have `{dep}` installed in PATH to run {__file__}")  # noqa: TRY002, TRY003
 
 
-def get_snippet_definitions(target_dir: pathlib.Path) -> List[str]:
+def get_snippet_definitions(target_dir: pathlib.Path) -> list[str]:
     try:
         res_snippets = subprocess.run(  # noqa: PLW1510
             [
@@ -194,7 +193,7 @@ def get_snippet_definitions(target_dir: pathlib.Path) -> List[str]:
         ) from e
 
 
-def get_snippets_used(target_dir: pathlib.Path) -> List[str]:
+def get_snippets_used(target_dir: pathlib.Path) -> list[str]:
     try:
         res_snippet_usages = subprocess.run(  # noqa: PLW1510
             [

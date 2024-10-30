@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import datetime
 import os
-from typing import List
 
 import pandas as pd
 import pytest
@@ -284,7 +283,7 @@ def test_sqlite_sample_using_limit(sa):
         .fetchall()
     )
 
-    row_dates: List[datetime.datetime] = [parse(row["pickup_datetime"]) for row in rows]
+    row_dates: list[datetime.datetime] = [parse(row["pickup_datetime"]) for row in rows]
     for row_date in row_dates:
         assert row_date.month == 1
         assert row_date.year == 2018
@@ -300,8 +299,8 @@ def test_sample_using_random(sqlite_view_engine, test_df):
     batch_spec: SqlAlchemyDatasourceBatchSpec
     batch_data: SqlAlchemyBatchData
     num_rows: int
-    rows_0: List[tuple]
-    rows_1: List[tuple]
+    rows_0: list[tuple]
+    rows_1: list[tuple]
 
     # First, make sure that degenerative case never passes.
 
@@ -322,7 +321,7 @@ def test_sample_using_random(sqlite_view_engine, test_df):
     ).scalar()
     assert num_rows == round(p * test_df_0.shape[0])
 
-    rows_0: List[tuple] = batch_data.execution_engine.execute_query(
+    rows_0: list[tuple] = batch_data.execution_engine.execute_query(
         sqlalchemy.select(sqlalchemy.text("*")).select_from(batch_data.selectable)
     ).fetchall()
 
@@ -332,7 +331,7 @@ def test_sample_using_random(sqlite_view_engine, test_df):
     ).scalar()
     assert num_rows == round(p * test_df_0.shape[0])
 
-    rows_1: List[tuple] = batch_data.execution_engine.execute_query(
+    rows_1: list[tuple] = batch_data.execution_engine.execute_query(
         sqlalchemy.select(sqlalchemy.text("*")).select_from(batch_data.selectable)
     ).fetchall()
 

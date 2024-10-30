@@ -6,11 +6,7 @@ from typing import (
     TYPE_CHECKING,
     Any,
     ClassVar,
-    Dict,
-    List,
     Optional,
-    Tuple,
-    Type,
 )
 
 from marshmallow import ValidationError as MarshmallowValidationError
@@ -74,7 +70,7 @@ class Store:
     All keys must have a to_tuple() method.
     """
 
-    _key_class: ClassVar[Type] = DataContextKey
+    _key_class: ClassVar[type] = DataContextKey
 
     def __init__(
         self,
@@ -123,7 +119,7 @@ class Store:
         return load_class(store_backend_class_name, store_backend_module_name)
 
     @classmethod
-    def gx_cloud_response_json_to_object_dict(cls, response_json: Dict) -> Dict:
+    def gx_cloud_response_json_to_object_dict(cls, response_json: dict) -> dict:
         """
         This method takes full json response from GX cloud and outputs a dict appropriate for
         deserialization into a GX object
@@ -131,7 +127,7 @@ class Store:
         return response_json
 
     @classmethod
-    def gx_cloud_response_json_to_object_collection(cls, response_json: Dict) -> List[Dict]:
+    def gx_cloud_response_json_to_object_collection(cls, response_json: dict) -> list[dict]:
         """
         This method takes full json response from GX cloud and outputs a list of dicts appropriate for
         deserialization into a collection of GX objects
@@ -187,7 +183,7 @@ class Store:
         return self._store_backend.store_backend_id
 
     @property
-    def key_class(self) -> Type[DataContextKey]:
+    def key_class(self) -> type[DataContextKey]:
         if self.cloud_mode:
             return GXCloudIdentifier
         return self._key_class
@@ -210,12 +206,12 @@ class Store:
         return value
 
     # noinspection PyMethodMayBeStatic
-    def key_to_tuple(self, key: DataContextKey) -> Tuple[str, ...]:
+    def key_to_tuple(self, key: DataContextKey) -> tuple[str, ...]:
         if self._use_fixed_length_key:
             return key.to_fixed_length_tuple()
         return key.to_tuple()
 
-    def tuple_to_key(self, tuple_: Tuple[str, ...]) -> DataContextKey:
+    def tuple_to_key(self, tuple_: tuple[str, ...]) -> DataContextKey:
         if tuple_ == StoreBackend.STORE_BACKEND_ID_KEY:
             return StoreBackend.STORE_BACKEND_ID_KEY[0]  # type: ignore[return-value]
         if self._use_fixed_length_key:
@@ -327,7 +323,7 @@ class Store:
             self.key_to_tuple(key), self.serialize(value), **kwargs
         )
 
-    def list_keys(self) -> List[DataContextKey]:
+    def list_keys(self) -> list[DataContextKey]:
         keys_without_store_backend_id = [
             key
             for key in self._store_backend.list_keys()

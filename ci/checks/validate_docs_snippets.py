@@ -10,7 +10,6 @@ import shutil
 import subprocess
 import sys
 import tempfile
-from typing import List
 
 
 def check_dependencies(*deps: str) -> None:
@@ -32,7 +31,7 @@ def run_docusaurus_build(target_dir: str) -> None:
     )
 
 
-def run_grep(target_dir: str) -> List[str]:
+def run_grep(target_dir: str) -> list[str]:
     try:
         res = subprocess.run(  # noqa: PLW1510
             [

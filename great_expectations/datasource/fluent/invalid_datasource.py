@@ -6,9 +6,7 @@ from typing import (
     Any,
     ClassVar,
     Final,
-    List,
     NoReturn,
-    Type,
     Union,
     overload,
 )
@@ -93,7 +91,7 @@ class InvalidAsset(DataAsset):
         self._raise_type_error()
 
     @override
-    def get_batch_identifiers_list(self, batch_request: BatchRequest) -> List[dict]:
+    def get_batch_identifiers_list(self, batch_request: BatchRequest) -> list[dict]:
         self._raise_type_error()
 
     @override
@@ -102,8 +100,8 @@ class InvalidAsset(DataAsset):
 
     @override
     def sort_batches(
-        self, batch_list: List[Batch], partitioner: PartitionerSortingProtocol
-    ) -> List[Batch]:
+        self, batch_list: list[Batch], partitioner: PartitionerSortingProtocol
+    ) -> list[Batch]:
         self._raise_type_error()
 
     @override
@@ -115,10 +113,10 @@ class InvalidAssetTypeLookup(TypeLookup):
     """A TypeLookup that always returns InvalidAsset for any type."""
 
     @overload
-    def __getitem__(self, key: str) -> Type: ...
+    def __getitem__(self, key: str) -> type: ...
 
     @overload
-    def __getitem__(self, key: Type) -> str: ...
+    def __getitem__(self, key: type) -> str: ...
 
     @override
     def __getitem__(self, key: ValidTypes) -> ValidTypes:
@@ -145,14 +143,14 @@ class InvalidDatasource(Datasource):
     """  # noqa: E501
 
     # class var definitions
-    asset_types: ClassVar[List[Type[DataAsset]]] = [InvalidAsset]
+    asset_types: ClassVar[list[type[DataAsset]]] = [InvalidAsset]
     _type_lookup: ClassVar[TypeLookup] = InvalidAssetTypeLookup()
 
     type: str = "invalid"
     config_error: Union[pydantic.ValidationError, LookupError] = Field(
         ..., description="The error that caused the Datasource to be invalid."
     )
-    assets: List[InvalidAsset] = []
+    assets: list[InvalidAsset] = []
 
     class Config:
         extra = "ignore"

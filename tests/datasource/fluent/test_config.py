@@ -13,7 +13,6 @@ from typing import (  # TODO: revert use of cast
     TYPE_CHECKING,
     Callable,
     Final,
-    List,
     cast,
 )
 
@@ -429,7 +428,7 @@ def test_batch_definitions_are_assigned_data_assets(
     loaded: GxConfig = load_method(input_)
     assert loaded
 
-    batch_definitions: List[BatchDefinition] = []
+    batch_definitions: list[BatchDefinition] = []
     assert loaded.datasources
     for datasource in loaded.datasources:
         for data_asset in datasource.assets:

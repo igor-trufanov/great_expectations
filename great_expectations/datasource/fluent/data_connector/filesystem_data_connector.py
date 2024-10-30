@@ -3,7 +3,7 @@ from __future__ import annotations
 import logging
 import os
 import pathlib
-from typing import TYPE_CHECKING, Callable, ClassVar, List, Optional, Type, Union
+from typing import TYPE_CHECKING, Callable, ClassVar, Optional, Union
 
 from great_expectations.compatibility import pydantic
 from great_expectations.compatibility.typing_extensions import override
@@ -34,7 +34,7 @@ class FilesystemDataConnector(FilePathDataConnector):
     """  # noqa: E501
 
     asset_level_option_keys: ClassVar[tuple[str, ...]] = ("glob_directive",)
-    asset_options_type: ClassVar[Type[FilesystemOptions]] = FilesystemOptions
+    asset_options_type: ClassVar[type[FilesystemOptions]] = FilesystemOptions
 
     def __init__(  # noqa: PLR0913
         self,
@@ -134,10 +134,10 @@ class FilesystemDataConnector(FilePathDataConnector):
 
     # Interface Method
     @override
-    def get_data_references(self) -> List[str]:
+    def get_data_references(self) -> list[str]:
         base_directory: pathlib.Path = self.base_directory
         glob_directive: str = self._glob_directive
-        path_list: List[str] = get_filesystem_one_level_directory_glob_path_list(
+        path_list: list[str] = get_filesystem_one_level_directory_glob_path_list(
             base_directory_path=base_directory, glob_directive=glob_directive
         )
         return sorted(path_list)
@@ -165,7 +165,7 @@ def normalize_directory_path(
 
 def get_filesystem_one_level_directory_glob_path_list(
     base_directory_path: Union[PathStr], glob_directive: str
-) -> List[str]:
+) -> list[str]:
     """
     List file names, relative to base_directory_path one level deep, with expansion specified by glob_directive.
     :param base_directory_path -- base directory path, relative to which file paths will be collected
@@ -177,7 +177,7 @@ def get_filesystem_one_level_directory_glob_path_list(
 
     globbed_paths = base_directory_path.glob(glob_directive)
 
-    path_list: List[str] = [
+    path_list: list[str] = [
         os.path.relpath(str(posix_path), base_directory_path) for posix_path in globbed_paths
     ]
 

@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import logging
 from string import Template
-from typing import ClassVar, Type
+from typing import ClassVar
 
 import great_expectations.exceptions as gx_exceptions
 from great_expectations.compatibility import sqlalchemy
@@ -27,7 +27,7 @@ class SqlAlchemyQueryStore(Store):
     """SqlAlchemyQueryStore stores queries by name, and makes it possible to retrieve the resulting value by query
     name."""  # noqa: E501
 
-    _key_class: ClassVar[Type] = StringKey
+    _key_class: ClassVar[type] = StringKey
 
     def __init__(
         self,

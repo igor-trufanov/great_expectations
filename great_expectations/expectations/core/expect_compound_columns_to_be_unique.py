@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, ClassVar, Dict, Optional, Sequence, Type, Union
+from typing import TYPE_CHECKING, Any, ClassVar, Optional, Sequence, Union
 
 from great_expectations.compatibility import pydantic
 from great_expectations.expectations.expectation import (
@@ -174,7 +174,7 @@ class ExpectCompoundColumnsToBeUnique(MulticolumnMapExpectation):
     column_list: Sequence[str] = pydantic.Field(description=COLUMN_LIST_DESCRIPTION)
 
     # This dictionary contains metadata for display in the public gallery
-    library_metadata: ClassVar[Dict[str, Union[str, list, bool]]] = {
+    library_metadata: ClassVar[dict[str, Union[str, list, bool]]] = {
         "maturity": "production",
         "tags": [
             "core expectation",
@@ -197,7 +197,7 @@ class ExpectCompoundColumnsToBeUnique(MulticolumnMapExpectation):
 
         @staticmethod
         def schema_extra(
-            schema: Dict[str, Any], model: Type[ExpectCompoundColumnsToBeUnique]
+            schema: dict[str, Any], model: type[ExpectCompoundColumnsToBeUnique]
         ) -> None:
             MulticolumnMapExpectation.Config.schema_extra(schema, model)
             schema["properties"]["metadata"]["properties"].update(

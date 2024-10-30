@@ -8,12 +8,8 @@ from typing import (
     TYPE_CHECKING,
     Any,
     Callable,
-    Dict,
     Iterable,
-    List,
     Optional,
-    Set,
-    Tuple,
     Union,
 )
 
@@ -136,7 +132,7 @@ class ExecutionEngine(ABC):
         validator: Validator object (optional) -- not utilized in V3 and later versions
     """  # noqa: E501
 
-    recognized_batch_spec_defaults: Set[str] = set()
+    recognized_batch_spec_defaults: set[str] = set()
 
     def __init__(
         self,
@@ -154,7 +150,7 @@ class ExecutionEngine(ABC):
         self._caching = caching
         # NOTE: 20200918 - this is a naive cache; update.
         if self._caching:
-            self._metric_cache: Union[Dict, NoOpDict] = {}
+            self._metric_cache: Union[dict, NoOpDict] = {}
         else:
             self._metric_cache = NoOpDict()
 
@@ -214,7 +210,7 @@ class ExecutionEngine(ABC):
         """Getter for batch_manager"""
         return self._batch_manager
 
-    def _load_batch_data_from_dict(self, batch_data_dict: Dict[str, BatchDataType]) -> None:
+    def _load_batch_data_from_dict(self, batch_data_dict: dict[str, BatchDataType]) -> None:
         """
         Loads all data in batch_data_dict using cache_batch_data
         """
@@ -243,15 +239,15 @@ class ExecutionEngine(ABC):
         return batch_data
 
     @abstractmethod
-    def get_batch_data_and_markers(self, batch_spec) -> Tuple[BatchData, BatchMarkers]:
+    def get_batch_data_and_markers(self, batch_spec) -> tuple[BatchData, BatchMarkers]:
         raise NotImplementedError
 
     def resolve_metrics(
         self,
         metrics_to_resolve: Iterable[MetricConfiguration],
-        metrics: Optional[Dict[Tuple[str, str, str], MetricValue]] = None,
+        metrics: Optional[dict[tuple[str, str, str], MetricValue]] = None,
         runtime_configuration: Optional[dict] = None,
-    ) -> Dict[Tuple[str, str, str], MetricValue]:
+    ) -> dict[tuple[str, str, str], MetricValue]:
         """resolve_metrics is the main entrypoint for an execution engine. The execution engine will compute the value
         of the provided metrics.
 
@@ -266,8 +262,8 @@ class ExecutionEngine(ABC):
         if not metrics_to_resolve:
             return metrics or {}
 
-        metric_fn_direct_configurations: List[MetricComputationConfiguration]
-        metric_fn_bundle_configurations: List[MetricComputationConfiguration]
+        metric_fn_direct_configurations: list[MetricComputationConfiguration]
+        metric_fn_bundle_configurations: list[MetricComputationConfiguration]
         (
             metric_fn_direct_configurations,
             metric_fn_bundle_configurations,
@@ -281,7 +277,7 @@ class ExecutionEngine(ABC):
             metric_fn_bundle_configurations=metric_fn_bundle_configurations,
         )
 
-    def resolve_metric_bundle(self, metric_fn_bundle) -> Dict[Tuple[str, str, str], MetricValue]:
+    def resolve_metric_bundle(self, metric_fn_bundle) -> dict[tuple[str, str, str], MetricValue]:
         """Resolve a bundle of metrics with the same compute Domain as part of a single trip to the compute engine."""  # noqa: E501
         raise NotImplementedError
 
@@ -305,7 +301,7 @@ class ExecutionEngine(ABC):
         domain_kwargs: dict,
         domain_type: Union[str, MetricDomainTypes],
         accessor_keys: Optional[Iterable[str]] = None,
-    ) -> Tuple[Any, dict, dict]:
+    ) -> tuple[Any, dict, dict]:
         """get_compute_domain() is an interface method, which computes the optimal domain_kwargs for computing metrics based on the given domain_kwargs and specific engine semantics.
 
         Args:
@@ -372,11 +368,11 @@ class ExecutionEngine(ABC):
     def _build_direct_and_bundled_metric_computation_configurations(
         self,
         metrics_to_resolve: Iterable[MetricConfiguration],
-        metrics: Optional[Dict[Tuple[str, str, str], MetricValue]] = None,
+        metrics: Optional[dict[tuple[str, str, str], MetricValue]] = None,
         runtime_configuration: Optional[dict] = None,
-    ) -> Tuple[
-        List[MetricComputationConfiguration],
-        List[MetricComputationConfiguration],
+    ) -> tuple[
+        list[MetricComputationConfiguration],
+        list[MetricComputationConfiguration],
     ]:
         """
         This method organizes "metrics_to_resolve" ("MetricConfiguration" objects) into two lists: direct and bundled.
@@ -393,8 +389,8 @@ class ExecutionEngine(ABC):
         Returns:
             Tuple with two elements: directly-computable and bundled "MetricComputationConfiguration" objects
         """  # noqa: E501
-        metric_fn_direct_configurations: List[MetricComputationConfiguration] = []
-        metric_fn_bundle_configurations: List[MetricComputationConfiguration] = []
+        metric_fn_direct_configurations: list[MetricComputationConfiguration] = []
+        metric_fn_bundle_configurations: list[MetricComputationConfiguration] = []
 
         if not metrics_to_resolve:
             return (
@@ -405,8 +401,8 @@ class ExecutionEngine(ABC):
         if metrics is None:
             metrics = {}
 
-        resolved_metric_dependencies_by_metric_name: Dict[
-            str, Union[MetricValue, Tuple[Any, dict, dict]]
+        resolved_metric_dependencies_by_metric_name: dict[
+            str, Union[MetricValue, tuple[Any, dict, dict]]
         ]
         metric_class: MetricProvider
         metric_fn: Union[Callable, None]
@@ -471,8 +467,8 @@ class ExecutionEngine(ABC):
     def _get_computed_metric_evaluation_dependencies_by_metric_name(
         self,
         metric_to_resolve: MetricConfiguration,
-        metrics: Dict[Tuple[str, str, str], MetricValue],
-    ) -> Dict[str, Union[MetricValue, Tuple[Any, dict, dict]]]:
+        metrics: dict[tuple[str, str, str], MetricValue],
+    ) -> dict[str, Union[MetricValue, tuple[Any, dict, dict]]]:
         """
         Gathers resolved (already computed) evaluation dependencies of metric-to-resolve (not yet computed)
         "MetricConfiguration" object by "metric_name" property of resolved "MetricConfiguration" objects.
@@ -484,8 +480,8 @@ class ExecutionEngine(ABC):
         Returns:
             Dictionary keyed by "metric_name" with values as computed metric or partial bundling information tuple
         """  # noqa: E501
-        metric_dependencies_by_metric_name: Dict[
-            str, Union[MetricValue, Tuple[Any, dict, dict]]
+        metric_dependencies_by_metric_name: dict[
+            str, Union[MetricValue, tuple[Any, dict, dict]]
         ] = {}
 
         metric_name: str
@@ -509,9 +505,9 @@ class ExecutionEngine(ABC):
 
     def _process_direct_and_bundled_metric_computation_configurations(
         self,
-        metric_fn_direct_configurations: List[MetricComputationConfiguration],
-        metric_fn_bundle_configurations: List[MetricComputationConfiguration],
-    ) -> Dict[Tuple[str, str, str], MetricValue]:
+        metric_fn_direct_configurations: list[MetricComputationConfiguration],
+        metric_fn_bundle_configurations: list[MetricComputationConfiguration],
+    ) -> dict[tuple[str, str, str], MetricValue]:
         """
         This method processes directly-computable and bundled "MetricComputationConfiguration" objects.
 
@@ -522,7 +518,7 @@ class ExecutionEngine(ABC):
         Returns:
             resolved_metrics (Dict): a dictionary with the values for the metrics that have just been resolved.
         """  # noqa: E501
-        resolved_metrics: Dict[Tuple[str, str, str], MetricValue] = {}
+        resolved_metrics: dict[tuple[str, str, str], MetricValue] = {}
 
         metric_computation_configuration: MetricComputationConfiguration
 
@@ -541,7 +537,7 @@ class ExecutionEngine(ABC):
 
         try:
             # an engine-specific way of computing metrics together
-            resolved_metric_bundle: Dict[Tuple[str, str, str], MetricValue] = (
+            resolved_metric_bundle: dict[tuple[str, str, str], MetricValue] = (
                 self.resolve_metric_bundle(metric_fn_bundle=metric_fn_bundle_configurations)
             )
             resolved_metrics.update(resolved_metric_bundle)
@@ -561,7 +557,7 @@ class ExecutionEngine(ABC):
 
     def _partition_domain_kwargs(
         self,
-        domain_kwargs: Dict[str, Any],
+        domain_kwargs: dict[str, Any],
         domain_type: Union[str, MetricDomainTypes],
         accessor_keys: Optional[Iterable[str]] = None,
     ) -> PartitionDomainKwargs:
@@ -616,7 +612,7 @@ class ExecutionEngine(ABC):
             )
         else:
             compute_domain_kwargs = copy.deepcopy(domain_kwargs)
-            accessor_domain_kwargs: Dict[str, Any] = {}
+            accessor_domain_kwargs: dict[str, Any] = {}
             partition_domain_kwargs = PartitionDomainKwargs(
                 compute_domain_kwargs, accessor_domain_kwargs
             )
@@ -646,8 +642,8 @@ class ExecutionEngine(ABC):
             domain_type == MetricDomainTypes.TABLE
         ), "This method only supports MetricDomainTypes.TABLE"
 
-        compute_domain_kwargs: Dict = copy.deepcopy(domain_kwargs)
-        accessor_domain_kwargs: Dict = {}
+        compute_domain_kwargs: dict = copy.deepcopy(domain_kwargs)
+        accessor_domain_kwargs: dict = {}
 
         if accessor_keys is not None and len(list(accessor_keys)) > 0:
             for key in accessor_keys:
@@ -692,8 +688,8 @@ class ExecutionEngine(ABC):
             domain_type == MetricDomainTypes.COLUMN
         ), "This method only supports MetricDomainTypes.COLUMN"
 
-        compute_domain_kwargs: Dict = copy.deepcopy(domain_kwargs)
-        accessor_domain_kwargs: Dict = {}
+        compute_domain_kwargs: dict = copy.deepcopy(domain_kwargs)
+        accessor_domain_kwargs: dict = {}
 
         if "column" not in compute_domain_kwargs:
             raise gx_exceptions.GreatExpectationsError(  # noqa: TRY003
@@ -724,8 +720,8 @@ class ExecutionEngine(ABC):
             domain_type == MetricDomainTypes.COLUMN_PAIR
         ), "This method only supports MetricDomainTypes.COLUMN_PAIR"
 
-        compute_domain_kwargs: Dict = copy.deepcopy(domain_kwargs)
-        accessor_domain_kwargs: Dict = {}
+        compute_domain_kwargs: dict = copy.deepcopy(domain_kwargs)
+        accessor_domain_kwargs: dict = {}
 
         if not ("column_A" in domain_kwargs and "column_B" in domain_kwargs):
             raise gx_exceptions.GreatExpectationsError(  # noqa: TRY003
@@ -757,8 +753,8 @@ class ExecutionEngine(ABC):
             domain_type == MetricDomainTypes.MULTICOLUMN
         ), "This method only supports MetricDomainTypes.MULTICOLUMN"
 
-        compute_domain_kwargs: Dict = copy.deepcopy(domain_kwargs)
-        accessor_domain_kwargs: Dict = {}
+        compute_domain_kwargs: dict = copy.deepcopy(domain_kwargs)
+        accessor_domain_kwargs: dict = {}
 
         if "column_list" not in domain_kwargs:
             raise gx_exceptions.GreatExpectationsError("column_list not found within domain_kwargs")  # noqa: TRY003

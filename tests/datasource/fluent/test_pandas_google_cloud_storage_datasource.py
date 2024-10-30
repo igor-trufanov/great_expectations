@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import logging
 import os
-from typing import Any, Dict, Iterator, List, cast
+from typing import Any, Iterator, cast
 from unittest import mock
 
 import pytest
@@ -47,7 +47,7 @@ class MockGCSClient:
 
 
 def _build_pandas_gcs_datasource(
-    gcs_options: Dict[str, Any] | None = None,
+    gcs_options: dict[str, Any] | None = None,
 ) -> PandasGoogleCloudStorageDatasource:
     gcs_client: google.Client = cast(google.Client, MockGCSClient())
     pandas_gcs_datasource = PandasGoogleCloudStorageDatasource(
@@ -66,7 +66,7 @@ def pandas_gcs_datasource() -> PandasGoogleCloudStorageDatasource:
 
 
 @pytest.fixture
-def object_keys() -> List[str]:
+def object_keys() -> list[str]:
     return [
         "alex_20200809_1000.csv",
         "eugene_20200809_1500.csv",
@@ -147,7 +147,7 @@ def test_construct_pandas_gcs_datasource_with_info_in_gcs_options(
 def test_add_csv_asset_to_datasource(
     mock_gcs_client,
     mock_list_keys,
-    object_keys: List[str],
+    object_keys: list[str],
     pandas_gcs_datasource: PandasGoogleCloudStorageDatasource,
 ):
     mock_list_keys.return_value = object_keys
@@ -162,7 +162,7 @@ def test_add_csv_asset_to_datasource(
     "great_expectations.datasource.fluent.data_asset.data_connector.google_cloud_storage_data_connector.list_gcs_keys"
 )
 @mock.patch("google.cloud.storage.Client")
-def test_construct_csv_asset_directly(mock_gcs_client, mock_list_keys, object_keys: List[str]):
+def test_construct_csv_asset_directly(mock_gcs_client, mock_list_keys, object_keys: list[str]):
     mock_list_keys.return_value = object_keys
     asset = CSVAsset(  # type: ignore[call-arg]
         name="csv_asset",
@@ -178,7 +178,7 @@ def test_construct_csv_asset_directly(mock_gcs_client, mock_list_keys, object_ke
 def test_csv_asset_with_batching_regex_named_parameters(
     mock_gcs_client,
     mock_list_keys,
-    object_keys: List[str],
+    object_keys: list[str],
     pandas_gcs_datasource: PandasGoogleCloudStorageDatasource,
 ):
     mock_list_keys.return_value = object_keys
@@ -200,7 +200,7 @@ def test_csv_asset_with_batching_regex_named_parameters(
 def test_csv_asset_with_non_string_batching_regex_named_parameters(
     mock_gcs_client,
     mock_list_keys,
-    object_keys: List[str],
+    object_keys: list[str],
     pandas_gcs_datasource: PandasGoogleCloudStorageDatasource,
 ):
     mock_list_keys.return_value = object_keys
@@ -220,7 +220,7 @@ def test_csv_asset_with_non_string_batching_regex_named_parameters(
 def test_add_csv_asset_with_recursive_file_discovery_to_datasource(
     mock_gcs_client,
     mock_list_keys,
-    object_keys: List[str],
+    object_keys: list[str],
     pandas_gcs_datasource: PandasGoogleCloudStorageDatasource,
 ):
     """

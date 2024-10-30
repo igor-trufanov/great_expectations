@@ -1,4 +1,4 @@
-from typing import Dict, Optional
+from typing import Optional
 
 from great_expectations.compatibility.pyspark import functions as F
 from great_expectations.compatibility.sqlalchemy import sqlalchemy as sa
@@ -214,7 +214,7 @@ class ExpectColumnMaxToBeBetweenCustom(ColumnAggregateExpectation):
     # <snippet name="docs/docusaurus/docs/snippets/expect_column_max_to_be_between_custom.py _validate">
     def _validate(
         self,
-        metrics: Dict,
+        metrics: dict,
         runtime_configuration: Optional[dict] = None,
         execution_engine: ExecutionEngine = None,
     ):

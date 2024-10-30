@@ -6,7 +6,7 @@ import pathlib
 import traceback
 import urllib
 from collections import OrderedDict
-from typing import TYPE_CHECKING, Any, List, Optional, Tuple
+from typing import TYPE_CHECKING, Any, Optional
 
 from great_expectations import exceptions
 from great_expectations.core import ExpectationSuite
@@ -709,7 +709,7 @@ class DefaultSiteIndexBuilder:
     # TODO: deprecate dual batch api support
     def build(
         self, skip_and_clean_missing=True, build_index: bool = True
-    ) -> Tuple[Any, Optional[OrderedDict]]:
+    ) -> tuple[Any, Optional[OrderedDict]]:
         """
         :param skip_and_clean_missing: if True, target html store keys without corresponding source store keys will
         be skipped and removed from the target store
@@ -796,7 +796,7 @@ diagnose and repair the underlying issue.  Detailed information follows:
 
     def _build_validation_and_profiling_result_site_keys(
         self, skip_and_clean_missing: bool
-    ) -> List[ValidationResultIdentifier]:
+    ) -> list[ValidationResultIdentifier]:
         validation_and_profiling_result_site_keys = []
         validations = self.site_section_builders_config.get("validations", "None")
         profiling = self.site_section_builders_config.get("profiling", "None")
@@ -838,7 +838,7 @@ diagnose and repair the underlying issue.  Detailed information follows:
     def _add_profiling_to_index_links(
         self,
         index_links_dict: OrderedDict,
-        validation_and_profiling_result_site_keys: List[ValidationResultIdentifier],
+        validation_and_profiling_result_site_keys: list[ValidationResultIdentifier],
     ) -> None:
         profiling = self.site_section_builders_config.get("profiling", "None")
         if profiling and profiling not in FALSEY_YAML_STRINGS:
@@ -883,7 +883,7 @@ diagnose and repair the underlying issue.  Detailed information follows:
     def _add_validations_to_index_links(
         self,
         index_links_dict: OrderedDict,
-        validation_and_profiling_result_site_keys: List[ValidationResultIdentifier],
+        validation_and_profiling_result_site_keys: list[ValidationResultIdentifier],
     ) -> None:
         validations = self.site_section_builders_config.get("validations", "None")
         if validations and validations not in FALSEY_YAML_STRINGS:

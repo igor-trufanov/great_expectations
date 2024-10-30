@@ -7,7 +7,7 @@ Suites also assert that we only get the expected number of rows (they should all
 """
 
 import re
-from typing import Dict, Optional
+from typing import Optional
 
 import pytest
 
@@ -303,7 +303,7 @@ def test_get_batch_identifiers_list__no_batches(
 def test_batch_validate_expectation(
     expectation: gxe.Expectation,
     batch_definition_fixture_name: str,
-    batch_parameters: Optional[Dict],
+    batch_parameters: Optional[dict],
     request: pytest.FixtureRequest,
 ) -> None:
     """Ensure Batch::validate(Epectation) works"""
@@ -324,7 +324,7 @@ def test_batch_validate_expectation(
 def test_batch_validate_expectation_suite(
     expectation: gxe.Expectation,
     batch_definition_fixture_name: str,
-    batch_parameters: Optional[Dict],
+    batch_parameters: Optional[dict],
     request: pytest.FixtureRequest,
     expect_10_rows: gxe.Expectation,
 ) -> None:
@@ -345,7 +345,7 @@ def test_batch_validate_expectation_suite(
 def test_validation_definition_run(
     expectation: gxe.Expectation,
     batch_definition_fixture_name: str,
-    batch_parameters: Optional[Dict],
+    batch_parameters: Optional[dict],
     context: AbstractDataContext,
     request: pytest.FixtureRequest,
     expect_10_rows: gxe.Expectation,
@@ -371,7 +371,7 @@ def test_validation_definition_run(
 def test_checkpoint_run(
     expectation: gxe.Expectation,
     batch_definition_fixture_name: str,
-    batch_parameters: Optional[Dict],
+    batch_parameters: Optional[dict],
     context: AbstractDataContext,
     request: pytest.FixtureRequest,
     expect_10_rows: gxe.Expectation,

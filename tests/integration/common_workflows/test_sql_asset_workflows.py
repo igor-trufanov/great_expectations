@@ -4,7 +4,7 @@ NOTE: assertions here take the form of asserting that expectations pass
 based on knowledge of the data in the test set.
 """
 
-from typing import Dict, Optional
+from typing import Optional
 
 import pytest
 
@@ -165,7 +165,7 @@ def test_get_batch_identifiers_list__no_batches(
 def test_batch_validate_expectation(
     expectation: gxe.Expectation,
     batch_definition_fixture_name: str,
-    batch_parameters: Optional[Dict],
+    batch_parameters: Optional[dict],
     request: pytest.FixtureRequest,
 ) -> None:
     """Ensure Batch::validate(Epectation) works"""
@@ -184,7 +184,7 @@ def test_batch_validate_expectation(
 def test_batch_validate_expectation_suite(
     expectation: gxe.Expectation,
     batch_definition_fixture_name: str,
-    batch_parameters: Optional[Dict],
+    batch_parameters: Optional[dict],
     request: pytest.FixtureRequest,
 ) -> None:
     """Ensure Batch::validate(EpectationSuite) works"""
@@ -204,7 +204,7 @@ def test_batch_validate_expectation_suite(
 def test_validation_definition_run(
     expectation: gxe.Expectation,
     batch_definition_fixture_name: str,
-    batch_parameters: Optional[Dict],
+    batch_parameters: Optional[dict],
     context: AbstractDataContext,
     request: pytest.FixtureRequest,
 ) -> None:
@@ -227,7 +227,7 @@ def test_validation_definition_run(
 def test_checkpoint_run(
     expectation: gxe.Expectation,
     batch_definition_fixture_name: str,
-    batch_parameters: Optional[Dict],
+    batch_parameters: Optional[dict],
     context: AbstractDataContext,
     request: pytest.FixtureRequest,
 ) -> None:

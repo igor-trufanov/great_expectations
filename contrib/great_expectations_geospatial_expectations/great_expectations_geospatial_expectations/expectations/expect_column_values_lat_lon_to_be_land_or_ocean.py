@@ -1,4 +1,4 @@
-from typing import Any, List, Union
+from typing import Any, Union
 
 from global_land_mask import globe
 
@@ -155,7 +155,7 @@ class ExpectColumnValuesLatLonToBeLandOrOcean(ColumnMapExpectation):
         result: ExpectationValidationResult = None,
         runtime_configuration: dict = None,
         **kwargs,
-    ) -> List[
+    ) -> list[
         Union[
             dict,
             str,

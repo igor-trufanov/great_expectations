@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import List, Optional, Tuple
+from typing import Optional
 
 from tests.integration.backend_dependencies import BackendDependencies
 
@@ -25,8 +25,8 @@ class IntegrationTestFixture:
 
     name: str
     user_flow_script: str
-    backend_dependencies: List[BackendDependencies]
+    backend_dependencies: list[BackendDependencies]
     data_context_dir: Optional[str] = None
     data_dir: Optional[str] = None
-    other_files: Optional[Tuple[Tuple[str, str]]] = None
+    other_files: Optional[tuple[tuple[str, str]]] = None
     util_script: Optional[str] = None

@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import ClassVar, List
+from typing import ClassVar
 
 from great_expectations.analytics.actions import (
     CHECKPOINT_CREATED,
@@ -23,7 +23,7 @@ from great_expectations.compatibility.typing_extensions import override
 
 @dataclass
 class DataContextInitializedEvent(Event):
-    _allowed_actions: ClassVar[List[Action]] = [DATA_CONTEXT_INITIALIZED]
+    _allowed_actions: ClassVar[list[Action]] = [DATA_CONTEXT_INITIALIZED]
 
     def __init__(self):
         super().__init__(action=DATA_CONTEXT_INITIALIZED)
@@ -47,7 +47,7 @@ class ExpectationSuiteExpectationCreatedEvent(_ExpectationSuiteExpectationEvent)
     expectation_type: str = "UNKNOWN"
     custom_exp_type: bool = False
 
-    _allowed_actions: ClassVar[List[Action]] = [
+    _allowed_actions: ClassVar[list[Action]] = [
         EXPECTATION_SUITE_EXPECTATION_CREATED,
     ]
 
@@ -77,7 +77,7 @@ class ExpectationSuiteExpectationCreatedEvent(_ExpectationSuiteExpectationEvent)
 
 @dataclass
 class ExpectationSuiteExpectationUpdatedEvent(_ExpectationSuiteExpectationEvent):
-    _allowed_actions: ClassVar[List[Action]] = [
+    _allowed_actions: ClassVar[list[Action]] = [
         EXPECTATION_SUITE_EXPECTATION_UPDATED,
     ]
 
@@ -95,7 +95,7 @@ class ExpectationSuiteExpectationUpdatedEvent(_ExpectationSuiteExpectationEvent)
 
 @dataclass
 class ExpectationSuiteExpectationDeletedEvent(_ExpectationSuiteExpectationEvent):
-    _allowed_actions: ClassVar[List[Action]] = [
+    _allowed_actions: ClassVar[list[Action]] = [
         EXPECTATION_SUITE_EXPECTATION_DELETED,
     ]
 
@@ -124,7 +124,7 @@ class _ExpectationSuiteEvent(Event):
 
 @dataclass
 class ExpectationSuiteCreatedEvent(_ExpectationSuiteEvent):
-    _allowed_actions: ClassVar[List[Action]] = [EXPECTATION_SUITE_CREATED]
+    _allowed_actions: ClassVar[list[Action]] = [EXPECTATION_SUITE_CREATED]
 
     def __init__(self, expectation_suite_id: str | None = None):
         super().__init__(
@@ -135,7 +135,7 @@ class ExpectationSuiteCreatedEvent(_ExpectationSuiteEvent):
 
 @dataclass
 class ExpectationSuiteDeletedEvent(_ExpectationSuiteEvent):
-    _allowed_actions: ClassVar[List[Action]] = [EXPECTATION_SUITE_DELETED]
+    _allowed_actions: ClassVar[list[Action]] = [EXPECTATION_SUITE_DELETED]
 
     def __init__(self, expectation_suite_id: str | None = None):
         super().__init__(
@@ -157,7 +157,7 @@ class _CheckpointEvent(Event):
 
 @dataclass
 class CheckpointCreatedEvent(_CheckpointEvent):
-    _allowed_actions: ClassVar[List[Action]] = [CHECKPOINT_CREATED]
+    _allowed_actions: ClassVar[list[Action]] = [CHECKPOINT_CREATED]
 
     def __init__(
         self,
@@ -180,7 +180,7 @@ class CheckpointCreatedEvent(_CheckpointEvent):
 
 @dataclass
 class CheckpointDeletedEvent(_CheckpointEvent):
-    _allowed_actions: ClassVar[List[Action]] = [CHECKPOINT_DELETED]
+    _allowed_actions: ClassVar[list[Action]] = [CHECKPOINT_DELETED]
 
     def __init__(self, checkpoint_id: str | None = None):
         super().__init__(
@@ -191,7 +191,7 @@ class CheckpointDeletedEvent(_CheckpointEvent):
 
 @dataclass
 class CheckpointRanEvent(_CheckpointEvent):
-    _allowed_actions: ClassVar[List[Action]] = [CHECKPOINT_RAN]
+    _allowed_actions: ClassVar[list[Action]] = [CHECKPOINT_RAN]
 
     def __init__(
         self,
@@ -225,7 +225,7 @@ class _ValidationDefinitionEvent(Event):
 
 @dataclass
 class ValidationDefinitionCreatedEvent(_ValidationDefinitionEvent):
-    _allowed_actions: ClassVar[List[Action]] = [VALIDATION_DEFINITION_CREATED]
+    _allowed_actions: ClassVar[list[Action]] = [VALIDATION_DEFINITION_CREATED]
 
     def __init__(self, validation_definition_id: str | None = None):
         super().__init__(
@@ -236,7 +236,7 @@ class ValidationDefinitionCreatedEvent(_ValidationDefinitionEvent):
 
 @dataclass
 class ValidationDefinitionDeletedEvent(_ValidationDefinitionEvent):
-    _allowed_actions: ClassVar[List[Action]] = [VALIDATION_DEFINITION_DELETED]
+    _allowed_actions: ClassVar[list[Action]] = [VALIDATION_DEFINITION_DELETED]
 
     def __init__(self, validation_definition_id: str | None = None):
         super().__init__(
@@ -247,7 +247,7 @@ class ValidationDefinitionDeletedEvent(_ValidationDefinitionEvent):
 
 @dataclass
 class DomainObjectAllDeserializationEvent(Event):
-    _allowed_actions: ClassVar[List[Action]] = [DOMAIN_OBJECT_ALL_DESERIALIZE_ERROR]
+    _allowed_actions: ClassVar[list[Action]] = [DOMAIN_OBJECT_ALL_DESERIALIZE_ERROR]
 
     store_name: str
     error_type: str

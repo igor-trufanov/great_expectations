@@ -1,6 +1,7 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, ClassVar, List, Literal, Type, Union, overload
+import builtins
+from typing import TYPE_CHECKING, ClassVar, Literal, Union, overload
 from urllib import parse
 
 from great_expectations._docs_decorators import public_api
@@ -187,14 +188,14 @@ class DatabricksSQLDatasource(SQLDatasource):
     """  # noqa: E501
 
     # class var definitions
-    asset_types: ClassVar[List[Type[DataAsset]]] = [DatabricksTableAsset, SqlQueryAsset]
+    asset_types: ClassVar[list[builtins.type[DataAsset]]] = [DatabricksTableAsset, SqlQueryAsset]
 
     type: Literal["databricks_sql"] = "databricks_sql"  # type: ignore[assignment]
     connection_string: Union[ConfigStr, DatabricksDsn]
 
     # These are instance var because ClassVars can't contain Type variables. See
     # https://peps.python.org/pep-0526/#class-and-instance-variable-annotations
-    _TableAsset: Type[SqlTableAsset] = pydantic.PrivateAttr(DatabricksTableAsset)
+    _TableAsset: builtins.type[SqlTableAsset] = pydantic.PrivateAttr(DatabricksTableAsset)
 
     @override
     def test_connection(self, test_assets: bool = True) -> None:

@@ -3,7 +3,6 @@ from __future__ import annotations
 import logging
 from typing import (
     TYPE_CHECKING,
-    Set,
 )
 
 if TYPE_CHECKING:
@@ -11,7 +10,7 @@ if TYPE_CHECKING:
 
 logger = logging.getLogger(__name__)
 
-SQLALCHEMY_SELECTABLE_METRICS: Set[str] = {
+SQLALCHEMY_SELECTABLE_METRICS: set[str] = {
     "compound_columns.count",
     "compound_columns.unique",
 }

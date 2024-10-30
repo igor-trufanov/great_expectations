@@ -1,6 +1,6 @@
 import ast
 import pathlib
-from typing import List, Union
+from typing import Union
 
 import pytest
 
@@ -399,7 +399,7 @@ class TestPublicAPIChecker:
 
     def _class_and_function_definitions(
         self, tree: ast.AST
-    ) -> List[Union[ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef]]:
+    ) -> list[Union[ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef]]:
         """Helper function to find class and function definitions from ast tree for tests."""
         definitions = []
         for node in ast.walk(tree):
@@ -884,7 +884,7 @@ class TestPublicAPIReport:
         assert isinstance(public_api_report, PublicAPIReport)
 
     def test_generate_printable_definitions(self, public_api_report: PublicAPIReport):
-        expected: List[str] = [
+        expected: list[str] = [
             "File: great_expectations/sample_with_definitions_python_file_string.py Name: "
             "ExampleClass",
             "File: great_expectations/sample_with_definitions_python_file_string.py Name: "
@@ -904,7 +904,7 @@ class TestPublicAPIReport:
     def test_generate_printable_definitions_exclude_by_file(
         self, public_api_report_filter_out_file: PublicAPIReport
     ):
-        expected: List[str] = []
+        expected: list[str] = []
         observed = public_api_report_filter_out_file.generate_printable_definitions()
         assert observed == expected
 

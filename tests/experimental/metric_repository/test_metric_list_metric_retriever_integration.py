@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-from typing import List
-
 import pandas as pd
 import pytest
 from pandas import Timestamp
@@ -52,7 +50,7 @@ def test_get_metrics_table_metrics_only(
     cloud_context_and_batch_request_with_simple_dataframe: tuple[CloudDataContext, BatchRequest],
 ):
     context, batch_request = cloud_context_and_batch_request_with_simple_dataframe
-    table_metrics_list: List[MetricTypes] = [
+    table_metrics_list: list[MetricTypes] = [
         MetricTypes.TABLE_ROW_COUNT,
         MetricTypes.TABLE_COLUMNS,
         MetricTypes.TABLE_COLUMN_TYPES,
@@ -71,7 +69,7 @@ def test_get_metrics_table_metrics_only(
             value=3,
             exception=None,
         ),
-        TableMetric[List[str]](
+        TableMetric[list[str]](
             batch_id=batch_id,
             metric_name="table.columns",
             value=[
@@ -84,7 +82,7 @@ def test_get_metrics_table_metrics_only(
             ],
             exception=None,
         ),
-        TableMetric[List[str]](
+        TableMetric[list[str]](
             batch_id=batch_id,
             metric_name="table.column_types",
             value=[
@@ -110,7 +108,7 @@ def test_get_metrics_full_cdm(
     cloud_context_and_batch_request_with_simple_dataframe: tuple[CloudDataContext, BatchRequest],
 ):
     context, batch_request = cloud_context_and_batch_request_with_simple_dataframe
-    cdm_metrics_list: List[MetricTypes] = [
+    cdm_metrics_list: list[MetricTypes] = [
         MetricTypes.TABLE_ROW_COUNT,
         MetricTypes.TABLE_COLUMNS,
         MetricTypes.TABLE_COLUMN_TYPES,
@@ -134,7 +132,7 @@ def test_get_metrics_full_cdm(
             value=3,
             exception=None,
         ),
-        TableMetric[List[str]](
+        TableMetric[list[str]](
             batch_id=batch_id,
             metric_name="table.columns",
             value=[
@@ -203,7 +201,7 @@ def test_get_metrics_full_cdm(
             value=3.5,
             exception=None,
         ),
-        TableMetric[List[str]](
+        TableMetric[list[str]](
             batch_id=batch_id,
             metric_name="table.column_types",
             value=[

@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import logging
-from typing import TYPE_CHECKING, Dict, Iterable, List, Optional, Set, Union
+from typing import TYPE_CHECKING, Iterable, Optional, Union
 
 import pandas as pd
 
@@ -51,7 +51,7 @@ class RegexPatternStringParameterBuilder(ParameterBuilder):
     # list of candidate strings that are most commonly used
     # source: https://regexland.com/most-common-regular-expressions/
     # source for UUID: https://stackoverflow.com/questions/7905929/how-to-test-valid-uuid-guid/13653180#13653180
-    CANDIDATE_REGEX: Set[str] = {
+    CANDIDATE_REGEX: set[str] = {
         r"\d+",  # whole number with 1 or more digits
         r"-?\d+",  # negative whole numbers
         r"-?\d+(?:\.\d*)?",  # decimal numbers with . (period) separator
@@ -71,7 +71,7 @@ class RegexPatternStringParameterBuilder(ParameterBuilder):
         metric_value_kwargs: Optional[Union[str, dict]] = None,
         threshold: Union[str, float] = 1.0,
         candidate_regexes: Optional[Union[str, Iterable[str]]] = None,
-        suite_parameter_builder_configs: Optional[List[ParameterBuilderConfig]] = None,
+        suite_parameter_builder_configs: Optional[list[ParameterBuilderConfig]] = None,
         data_context: Optional[AbstractDataContext] = None,
     ) -> None:
         """
@@ -119,14 +119,14 @@ class RegexPatternStringParameterBuilder(ParameterBuilder):
     @property
     def candidate_regexes(
         self,
-    ) -> Union[str, Union[List[str], Set[str]]]:
+    ) -> Union[str, Union[list[str], set[str]]]:
         return self._candidate_regexes
 
     def _build_parameters(  # noqa: C901
         self,
         domain: Domain,
         variables: Optional[ParameterContainer] = None,
-        parameters: Optional[Dict[str, ParameterContainer]] = None,
+        parameters: Optional[dict[str, ParameterContainer]] = None,
         runtime_configuration: Optional[dict] = None,
     ) -> Attributes:
         """
@@ -182,8 +182,8 @@ class RegexPatternStringParameterBuilder(ParameterBuilder):
 
         # Obtain candidate_regexes from "rule state" (i.e, variables and parameters); from instance variable otherwise.  # noqa: E501
         candidate_regexes: Union[
-            List[str],
-            Set[str],
+            list[str],
+            set[str],
         ] = get_parameter_value_and_validate_return_type(
             domain=domain,
             parameter_reference=self.candidate_regexes,
@@ -198,7 +198,7 @@ class RegexPatternStringParameterBuilder(ParameterBuilder):
 
         # Gather "metric_value_kwargs" for all candidate "regex" strings.
         regex_string: str
-        match_regex_metric_value_kwargs_list: List[dict] = []
+        match_regex_metric_value_kwargs_list: list[dict] = []
         match_regex_metric_value_kwargs: dict
         for regex_string in candidate_regexes:
             if self.metric_value_kwargs:

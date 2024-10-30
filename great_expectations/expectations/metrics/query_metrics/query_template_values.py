@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import numbers
-from typing import TYPE_CHECKING, Any, Dict, List, Union
+from typing import TYPE_CHECKING, Any, Union
 
 from great_expectations.compatibility.sqlalchemy import (
     sqlalchemy as sa,
@@ -45,9 +45,9 @@ class QueryTemplateValues(QueryMetricProvider):
         execution_engine: SqlAlchemyExecutionEngine,
         metric_domain_kwargs: dict,
         metric_value_kwargs: dict,
-        metrics: Dict[str, Any],
+        metrics: dict[str, Any],
         runtime_configuration: dict,
-    ) -> List[dict]:
+    ) -> list[dict]:
         query = cls._get_query_from_metric_value_kwargs(metric_value_kwargs)
 
         selectable: Union[sa.sql.Selectable, str]
@@ -86,7 +86,7 @@ class QueryTemplateValues(QueryMetricProvider):
             query = cls.get_query(query, template_dict, f"({selectable})")
 
         try:
-            result: List[sqlalchemy.Row] = execution_engine.execute_query(sa.text(query)).fetchall()  # type: ignore[assignment,arg-type]
+            result: list[sqlalchemy.Row] = execution_engine.execute_query(sa.text(query)).fetchall()  # type: ignore[assignment,arg-type]
         except Exception as e:
             if hasattr(e, "_query_id"):
                 # query_id removed because it duplicates the validation_results
@@ -101,9 +101,9 @@ class QueryTemplateValues(QueryMetricProvider):
         execution_engine: SparkDFExecutionEngine,
         metric_domain_kwargs: dict,
         metric_value_kwargs: dict,
-        metrics: Dict[str, Any],
+        metrics: dict[str, Any],
         runtime_configuration: dict,
-    ) -> List[dict]:
+    ) -> list[dict]:
         query = cls._get_query_from_metric_value_kwargs(metric_value_kwargs)
 
         df: pyspark.DataFrame
@@ -121,6 +121,6 @@ class QueryTemplateValues(QueryMetricProvider):
         query = query.format(**template_dict, batch="tmp_view")
 
         engine: pyspark.SparkSession = execution_engine.spark
-        result: List[pyspark.Row] = engine.sql(query).collect()
+        result: list[pyspark.Row] = engine.sql(query).collect()
 
         return [element.asDict() for element in result]

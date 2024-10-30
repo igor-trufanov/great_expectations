@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Dict, List, Literal, Union
+from typing import TYPE_CHECKING, Literal, Union
 
 from great_expectations.compatibility.typing_extensions import override
 from great_expectations.datasource.fluent.fluent_base_model import FluentBaseModel
@@ -21,9 +21,9 @@ class _PartitionerDatetime(FluentBaseModel):
 
     def batch_parameters_to_batch_spec_kwarg_identifiers(
         self, parameters: BatchParameters
-    ) -> Dict[str, Dict[str, str]]:
+    ) -> dict[str, dict[str, str]]:
         """Validates all the datetime parameters for this partitioner exist in `parameters`."""
-        identifiers: Dict = {}
+        identifiers: dict = {}
         for part in self.param_names:
             if part in parameters:
                 identifiers[part] = parameters[part]
@@ -36,7 +36,7 @@ class _PartitionerDatetime(FluentBaseModel):
     def param_names(self) -> list[str]:
         raise NotImplementedError
 
-    def partitioner_method_kwargs(self) -> Dict[str, str]:
+    def partitioner_method_kwargs(self) -> dict[str, str]:
         raise NotImplementedError
 
 
@@ -47,11 +47,11 @@ class DataframePartitionerYearly(_PartitionerDatetime):
 
     @property
     @override
-    def param_names(self) -> List[str]:
+    def param_names(self) -> list[str]:
         return ["year"]
 
     @override
-    def partitioner_method_kwargs(self) -> Dict[str, str]:
+    def partitioner_method_kwargs(self) -> dict[str, str]:
         return {"column_name": self.column_name}
 
 
@@ -62,11 +62,11 @@ class DataframePartitionerMonthly(_PartitionerDatetime):
 
     @property
     @override
-    def param_names(self) -> List[str]:
+    def param_names(self) -> list[str]:
         return ["year", "month"]
 
     @override
-    def partitioner_method_kwargs(self) -> Dict[str, str]:
+    def partitioner_method_kwargs(self) -> dict[str, str]:
         return {"column_name": self.column_name}
 
 
@@ -79,11 +79,11 @@ class DataframePartitionerDaily(_PartitionerDatetime):
 
     @property
     @override
-    def param_names(self) -> List[str]:
+    def param_names(self) -> list[str]:
         return ["year", "month", "day"]
 
     @override
-    def partitioner_method_kwargs(self) -> Dict[str, str]:
+    def partitioner_method_kwargs(self) -> dict[str, str]:
         return {"column_name": self.column_name}
 
 

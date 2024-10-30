@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import logging
-from typing import Dict, Tuple
 
 import pytest
 
@@ -135,10 +134,10 @@ def run_batch_head(  # noqa: C901
         execution_engine: ExecutionEngine = batch.data.execution_engine
         execution_engine.batch_manager.load_batch_list(batch_list=[batch])
 
-        metrics: Dict[Tuple[str, str, str], MetricValue] = {}
+        metrics: dict[tuple[str, str, str], MetricValue] = {}
 
         table_columns_metric: MetricConfiguration
-        results: Dict[Tuple[str, str, str], MetricValue]
+        results: dict[tuple[str, str, str], MetricValue]
 
         table_columns_metric, results = get_table_columns_metric(execution_engine=execution_engine)
         metrics.update(results)

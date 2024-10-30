@@ -3,7 +3,7 @@ from __future__ import annotations
 import logging
 import os
 import re
-from typing import TYPE_CHECKING, Callable, ClassVar, List, Optional, Type
+from typing import TYPE_CHECKING, Callable, ClassVar, Optional
 
 from great_expectations.compatibility import azure, pydantic
 from great_expectations.compatibility.typing_extensions import override
@@ -48,7 +48,7 @@ class AzureBlobStorageDataConnector(FilePathDataConnector):
         "abs_delimiter",
         "abs_recursive_file_discovery",
     )
-    asset_options_type: ClassVar[Type[_AzureOptions]] = _AzureOptions
+    asset_options_type: ClassVar[type[_AzureOptions]] = _AzureOptions
 
     def __init__(  # noqa: PLR0913
         self,
@@ -172,13 +172,13 @@ class AzureBlobStorageDataConnector(FilePathDataConnector):
 
     # Interface Method
     @override
-    def get_data_references(self) -> List[str]:
+    def get_data_references(self) -> list[str]:
         query_options: dict = {
             "container": self._container,
             "name_starts_with": self._sanitized_prefix,
             "delimiter": self._delimiter,
         }
-        path_list: List[str] = list_azure_keys(
+        path_list: list[str] = list_azure_keys(
             azure_client=self._azure_client,
             query_options=query_options,
             recursive=self._recursive_file_discovery,
@@ -227,7 +227,7 @@ def list_azure_keys(
     azure_client: azure.BlobServiceClient,
     query_options: dict,
     recursive: bool = False,
-) -> List[str]:
+) -> list[str]:
     """
     Utilizes the Azure Blob Storage connection object to retrieve blob names based on user-provided criteria.
 
@@ -250,7 +250,7 @@ def list_azure_keys(
     container: str = query_options["container"]
     container_client: azure.ContainerClient = azure_client.get_container_client(container=container)
 
-    path_list: List[str] = []
+    path_list: list[str] = []
 
     def _walk_blob_hierarchy(name_starts_with: str) -> None:
         for item in container_client.walk_blobs(name_starts_with=name_starts_with):

@@ -16,7 +16,7 @@ not by itself.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, List, Union
+from typing import TYPE_CHECKING, Union
 
 import great_expectations.exceptions as gx_exceptions
 from great_expectations.compatibility.sqlalchemy import (
@@ -136,7 +136,7 @@ class SqlAlchemyDataPartitioner(DataPartitioner):
         self,
         column_name: str,
         batch_identifiers: dict,
-        date_parts: Union[List[DatePart], List[str]],
+        date_parts: Union[list[DatePart], list[str]],
     ) -> Union[sqlalchemy.BinaryExpression, sqlalchemy.BooleanClauseList]:
         """Partition on date_part values in column_name.
 
@@ -279,7 +279,7 @@ class SqlAlchemyDataPartitioner(DataPartitioner):
 
     @staticmethod
     def partition_on_multi_column_values(
-        column_names: List[str],
+        column_names: list[str],
         batch_identifiers: dict,
     ) -> bool:
         """Partition on the joint values in the named columns"""
@@ -314,7 +314,7 @@ class SqlAlchemyDataPartitioner(DataPartitioner):
         selectable: sqlalchemy.Selectable,
         partitioner_method_name: str,
         partitioner_kwargs: dict,
-    ) -> List[dict]:
+    ) -> list[dict]:
         """Build data used to construct batch identifiers for the input table using the provided partitioner config.
 
         Sql partitioner configurations yield the unique values that comprise a batch by introspecting your data.
@@ -331,7 +331,7 @@ class SqlAlchemyDataPartitioner(DataPartitioner):
         processed_partitioner_method_name: str = self._get_partitioner_method_name(
             partitioner_method_name
         )
-        batch_identifiers_list: List[dict]
+        batch_identifiers_list: list[dict]
         if self._is_datetime_partitioner(processed_partitioner_method_name):
             partitioner_fn_name: str = (
                 self.DATETIME_PARTITIONER_METHOD_TO_GET_UNIQUE_BATCH_IDENTIFIERS_METHOD_MAPPING[
@@ -371,7 +371,7 @@ class SqlAlchemyDataPartitioner(DataPartitioner):
         execution_engine: SqlAlchemyExecutionEngine,
         selectable: sqlalchemy.Selectable,
         column_name: str,
-    ) -> List[dict]:
+    ) -> list[dict]:
         """Build batch_identifiers from a column partition on year.
 
         This method builds a query to select the unique date_parts from the
@@ -397,7 +397,7 @@ class SqlAlchemyDataPartitioner(DataPartitioner):
         execution_engine: SqlAlchemyExecutionEngine,
         selectable: sqlalchemy.Selectable,
         column_name: str,
-    ) -> List[dict]:
+    ) -> list[dict]:
         """Build batch_identifiers from a column partition on year and month.
 
         This method builds a query to select the unique date_parts from the
@@ -423,7 +423,7 @@ class SqlAlchemyDataPartitioner(DataPartitioner):
         execution_engine: SqlAlchemyExecutionEngine,
         selectable: sqlalchemy.Selectable,
         column_name: str,
-    ) -> List[dict]:
+    ) -> list[dict]:
         """Build batch_identifiers from a column partition on year and month and day.
 
         This method builds a query to select the unique date_parts from the
@@ -448,7 +448,7 @@ class SqlAlchemyDataPartitioner(DataPartitioner):
         self,
         selectable: sqlalchemy.Selectable,
         column_name: str,
-        date_parts: Union[List[DatePart], List[str]],
+        date_parts: Union[list[DatePart], list[str]],
     ) -> sqlalchemy.Selectable:
         """Build a partition query to retrieve batch_identifiers info from a column partition on a list of date parts.
 
@@ -541,8 +541,8 @@ class SqlAlchemyDataPartitioner(DataPartitioner):
         execution_engine: SqlAlchemyExecutionEngine,
         selectable: sqlalchemy.Selectable,
         column_name: str,
-        date_parts: Union[List[DatePart], List[str]],
-    ) -> List[dict]:
+        date_parts: Union[list[DatePart], list[str]],
+    ) -> list[dict]:
         """Build batch_identifiers from a column partition on a list of date parts.
 
         This method builds a query to select the unique date_parts from the
@@ -565,7 +565,7 @@ class SqlAlchemyDataPartitioner(DataPartitioner):
             )
         )
 
-        result: List[sqlalchemy.Row | sqlalchemy.LegacyRow] = self._execute_partitioned_query(
+        result: list[sqlalchemy.Row | sqlalchemy.LegacyRow] = self._execute_partitioned_query(
             execution_engine, partitioned_query
         )
 
@@ -577,7 +577,7 @@ class SqlAlchemyDataPartitioner(DataPartitioner):
     def _execute_partitioned_query(
         execution_engine: SqlAlchemyExecutionEngine,
         partitioned_query: sqlalchemy.Selectable,
-    ) -> List[sqlalchemy.Row | sqlalchemy.LegacyRow]:
+    ) -> list[sqlalchemy.Row | sqlalchemy.LegacyRow]:
         """Use the provided execution engine to run the partition query and fetch all of the results.
 
         Args:
@@ -592,9 +592,9 @@ class SqlAlchemyDataPartitioner(DataPartitioner):
     def _get_params_for_batch_identifiers_from_date_part_partitioner(
         self,
         column_name: str,
-        result: List[sqlalchemy.LegacyRow],
-        date_parts: List[DatePart] | List[str],
-    ) -> List[dict]:
+        result: list[sqlalchemy.LegacyRow],
+        date_parts: list[DatePart] | list[str],
+    ) -> list[dict]:
         """Get parameters used to build BatchIdentifiers from the results of a get_data_for_batch_identifiers_for_partition_on_date_parts
 
         Args:
@@ -608,7 +608,7 @@ class SqlAlchemyDataPartitioner(DataPartitioner):
         """  # noqa: E501
         date_parts = self._convert_date_parts(date_parts)
 
-        data_for_batch_identifiers: List[dict] = [
+        data_for_batch_identifiers: list[dict] = [
             {
                 column_name: {
                     date_part.value: getattr(row, date_part.value) for date_part in date_parts
@@ -619,8 +619,8 @@ class SqlAlchemyDataPartitioner(DataPartitioner):
         return data_for_batch_identifiers
 
     @staticmethod
-    def _get_column_names_from_partitioner_kwargs(partitioner_kwargs) -> List[str]:
-        column_names: List[str] = []
+    def _get_column_names_from_partitioner_kwargs(partitioner_kwargs) -> list[str]:
+        column_names: list[str] = []
 
         if "column_names" in partitioner_kwargs:
             column_names = partitioner_kwargs["column_names"]
@@ -635,7 +635,7 @@ class SqlAlchemyDataPartitioner(DataPartitioner):
         selectable: sqlalchemy.Selectable,
         partitioner_method_name: str,
         partitioner_kwargs: dict,
-    ) -> List[dict]:
+    ) -> list[dict]:
         """Build data used to construct batch identifiers for the input table using the provided partitioner config.
 
         Sql partitioner configurations yield the unique values that comprise a batch by introspecting your data.
@@ -656,10 +656,10 @@ class SqlAlchemyDataPartitioner(DataPartitioner):
         partitioned_query: sqlalchemy.Selectable = getattr(self, get_partition_query_method_name)(
             selectable=selectable, **partitioner_kwargs
         )
-        rows: List[sqlalchemy.LegacyRow] = self._execute_partitioned_query(
+        rows: list[sqlalchemy.LegacyRow] = self._execute_partitioned_query(
             execution_engine, partitioned_query
         )
-        column_names: List[str] = self._get_column_names_from_partitioner_kwargs(partitioner_kwargs)
+        column_names: list[str] = self._get_column_names_from_partitioner_kwargs(partitioner_kwargs)
         return self._get_params_for_batch_identifiers_from_non_date_part_partitioners(
             column_names, rows
         )
@@ -689,9 +689,9 @@ class SqlAlchemyDataPartitioner(DataPartitioner):
 
     @staticmethod
     def _get_params_for_batch_identifiers_from_non_date_part_partitioners(
-        column_names: List[str],
-        rows: List[sqlalchemy.LegacyRow],
-    ) -> List[dict]:
+        column_names: list[str],
+        rows: list[sqlalchemy.LegacyRow],
+    ) -> list[dict]:
         """Get params used in batch identifiers from output of executing query for non date part partitioners.
 
         Args:
@@ -832,7 +832,7 @@ class SqlAlchemyDataPartitioner(DataPartitioner):
     @staticmethod
     def get_partition_query_for_data_for_batch_identifiers_for_partition_on_multi_column_values(
         selectable: sqlalchemy.Selectable,
-        column_names: List[str],
+        column_names: list[str],
     ) -> sqlalchemy.Selectable:
         """Partition on the joint values in the named columns"""
         return (

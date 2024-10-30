@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, Dict, Optional
+from typing import TYPE_CHECKING, Any, Optional
 
 from great_expectations.compatibility.typing_extensions import override
 from great_expectations.execution_engine import (
@@ -36,7 +36,7 @@ class ColumnMostCommonValue(ColumnAggregateMetricProvider):
         execution_engine: SqlAlchemyExecutionEngine,
         metric_domain_kwargs: dict,
         metric_value_kwargs: dict,
-        metrics: Dict[str, Any],
+        metrics: dict[str, Any],
         runtime_configuration: dict,
     ):
         column_value_counts = metrics["column.value_counts"]
@@ -48,7 +48,7 @@ class ColumnMostCommonValue(ColumnAggregateMetricProvider):
         execution_engine: SqlAlchemyExecutionEngine,
         metric_domain_kwargs: dict,
         metric_value_kwargs: dict,
-        metrics: Dict[str, Any],
+        metrics: dict[str, Any],
         runtime_configuration: dict,
     ):
         column_value_counts = metrics["column.value_counts"]
@@ -61,7 +61,7 @@ class ColumnMostCommonValue(ColumnAggregateMetricProvider):
         metric: MetricConfiguration,
         configuration: Optional[ExpectationConfiguration] = None,
         execution_engine: Optional[ExecutionEngine] = None,
-        runtime_configuration: Optional[Dict] = None,
+        runtime_configuration: Optional[dict] = None,
     ):
         """Returns a dictionary of given metric names and their corresponding configuration,
         specifying the metric types and their respective domains"""

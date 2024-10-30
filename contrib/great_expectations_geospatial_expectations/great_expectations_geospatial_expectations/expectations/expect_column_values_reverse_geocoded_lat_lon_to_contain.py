@@ -1,4 +1,4 @@
-from typing import Any, List, Optional, Union
+from typing import Any, Optional, Union
 
 import geopandas
 from shapely.geometry import Point
@@ -172,7 +172,7 @@ class ExpectColumnValuesReverseGeocodedLatLonToContain(ColumnMapExpectation):
         result: ExpectationValidationResult = None,
         runtime_configuration: dict = None,
         **kwargs,
-    ) -> List[
+    ) -> list[
         Union[
             dict,
             str,

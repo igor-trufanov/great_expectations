@@ -4,7 +4,7 @@ For detailed information on QueryExpectations, please see:
     https://docs.greatexpectations.io/docs/guides/expectations/creating_custom_expectations/how_to_create_custom_query_expectations
 """
 
-from typing import ClassVar, List, Tuple, Union
+from typing import ClassVar, Union
 
 from great_expectations.execution_engine import ExecutionEngine
 from great_expectations.expectations.expectation import (
@@ -46,20 +46,20 @@ class ExpectQueriedTableRowCountToBe(QueryExpectation):
             FROM {batch}
             """
 
-    metric_dependencies: ClassVar[Tuple[str, ...]] = ("query.table",)
+    metric_dependencies: ClassVar[tuple[str, ...]] = ("query.table",)
 
-    success_keys: ClassVar[Tuple[str, ...]] = (
+    success_keys: ClassVar[tuple[str, ...]] = (
         "value",
         "query",
     )
 
-    domain_keys: ClassVar[Tuple[str, ...]] = (
+    domain_keys: ClassVar[tuple[str, ...]] = (
         "batch_id",
         "row_condition",
         "condition_parser",
     )
 
-    examples: ClassVar[List[dict]] = [
+    examples: ClassVar[list[dict]] = [
         {
             "data": [
                 {

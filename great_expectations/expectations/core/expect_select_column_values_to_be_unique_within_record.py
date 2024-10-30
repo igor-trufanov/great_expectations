@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, ClassVar, Dict, Optional, Sequence, Type, Union
+from typing import TYPE_CHECKING, Any, ClassVar, Optional, Sequence, Union
 
 from great_expectations.compatibility import pydantic
 from great_expectations.expectations.expectation import (
@@ -182,7 +182,7 @@ class ExpectSelectColumnValuesToBeUniqueWithinRecord(MulticolumnMapExpectation):
         default="all_values_are_missing", description=IGNORE_ROW_IF_DESCRIPTION
     )
 
-    library_metadata: ClassVar[Dict[str, Union[str, list, bool]]] = {
+    library_metadata: ClassVar[dict[str, Union[str, list, bool]]] = {
         "maturity": "production",
         "tags": [
             "core expectation",
@@ -205,7 +205,7 @@ class ExpectSelectColumnValuesToBeUniqueWithinRecord(MulticolumnMapExpectation):
 
         @staticmethod
         def schema_extra(
-            schema: Dict[str, Any], model: Type[ExpectSelectColumnValuesToBeUniqueWithinRecord]
+            schema: dict[str, Any], model: type[ExpectSelectColumnValuesToBeUniqueWithinRecord]
         ) -> None:
             MulticolumnMapExpectation.Config.schema_extra(schema, model)
             schema["properties"]["metadata"]["properties"].update(

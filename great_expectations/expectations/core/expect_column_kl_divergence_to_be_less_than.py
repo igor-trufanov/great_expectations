@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import logging
-from typing import TYPE_CHECKING, Any, ClassVar, Dict, Optional, Type, Union
+from typing import TYPE_CHECKING, Any, ClassVar, Optional, Union
 
 import altair as alt
 import numpy as np
@@ -332,7 +332,7 @@ class ExpectColumnKLDivergenceToBeLessThan(ColumnAggregateExpectation):
     max_value: Optional[Comparable] = pydantic.Field(None, description=MAX_VALUE_DESCRIPTION)
 
     # This dictionary contains metadata for display in the public gallery
-    library_metadata: ClassVar[Dict[str, Union[str, list, bool]]] = {
+    library_metadata: ClassVar[dict[str, Union[str, list, bool]]] = {
         "maturity": "production",
         "tags": [
             "core expectation",
@@ -365,7 +365,7 @@ class ExpectColumnKLDivergenceToBeLessThan(ColumnAggregateExpectation):
 
         @staticmethod
         def schema_extra(
-            schema: Dict[str, Any], model: Type[ExpectColumnKLDivergenceToBeLessThan]
+            schema: dict[str, Any], model: type[ExpectColumnKLDivergenceToBeLessThan]
         ) -> None:
             ColumnAggregateExpectation.Config.schema_extra(schema, model)
             schema["properties"]["metadata"]["properties"].update(
@@ -556,7 +556,7 @@ class ExpectColumnKLDivergenceToBeLessThan(ColumnAggregateExpectation):
 
     def _validate(  # noqa: C901, PLR0912, PLR0915
         self,
-        metrics: Dict,
+        metrics: dict,
         runtime_configuration: Optional[dict] = None,
         execution_engine: Optional[ExecutionEngine] = None,
     ):

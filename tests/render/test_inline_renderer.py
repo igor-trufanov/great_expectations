@@ -1,5 +1,3 @@
-from typing import List
-
 import pytest
 
 from great_expectations.core.expectation_suite import ExpectationSuite
@@ -23,8 +21,8 @@ pytestmark = pytest.mark.unit
 
 
 def clean_serialized_rendered_atomic_content_graphs(
-    serialized_rendered_atomic_content: List[dict],
-) -> List[dict]:
+    serialized_rendered_atomic_content: list[dict],
+) -> list[dict]:
     for content_block in serialized_rendered_atomic_content:
         if content_block["value_type"] == "GraphType":
             content_block["value"]["graph"].pop("$schema")
@@ -392,11 +390,11 @@ def test_inline_renderer_expectation_validation_result_serialization(
 
     inline_renderer: InlineRenderer = InlineRenderer(render_object=expectation_validation_result)
 
-    expectation_validation_result_rendered_atomic_content: List[RenderedAtomicContent] = (
+    expectation_validation_result_rendered_atomic_content: list[RenderedAtomicContent] = (
         inline_renderer.get_rendered_content()
     )
 
-    actual_serialized_expectation_validation_result_rendered_atomic_content: List[dict] = (
+    actual_serialized_expectation_validation_result_rendered_atomic_content: list[dict] = (
         clean_serialized_rendered_atomic_content_graphs(
             serialized_rendered_atomic_content=[
                 rendered_atomic_content.to_json_dict()
@@ -726,11 +724,11 @@ def test_inline_renderer_expectation_configuration_serialization(
 ):
     inline_renderer: InlineRenderer = InlineRenderer(render_object=expectation_configuration)
 
-    expectation_configuration_rendered_atomic_content: List[RenderedAtomicContent] = (
+    expectation_configuration_rendered_atomic_content: list[RenderedAtomicContent] = (
         inline_renderer.get_rendered_content()
     )
 
-    actual_serialized_expectation_configuration_rendered_atomic_content: List[dict] = (
+    actual_serialized_expectation_configuration_rendered_atomic_content: list[dict] = (
         clean_serialized_rendered_atomic_content_graphs(
             serialized_rendered_atomic_content=[
                 rendered_atomic_content.to_json_dict()

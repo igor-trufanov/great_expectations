@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import uuid
-from typing import TYPE_CHECKING, List, Optional
+from typing import TYPE_CHECKING, Optional
 
 from great_expectations.experimental.metric_repository.metrics import (
     Metric,
@@ -31,7 +31,7 @@ class BatchInspector:
         self,
         data_asset_id: uuid.UUID,
         batch_request: BatchRequest,
-        metric_list: Optional[List[MetricTypes]],
+        metric_list: Optional[list[MetricTypes]],
     ) -> MetricRun:
         """Method that computes a MetricRun for a list of metrics.
         Called by GX Agent to compute a MetricRun as part of a RunMetricsEvent.

@@ -1,5 +1,5 @@
 import logging
-from typing import Callable, Dict, Optional
+from typing import Callable, Optional
 
 import numpy as np
 
@@ -191,7 +191,7 @@ class ExpectColumnValuesToBeStringIntegersIncreasing(ColumnAggregateExpectation)
         param: str,
         required: bool,
         configuration: Optional[ExpectationConfiguration],
-        validation_rules: Dict[Callable, str],
+        validation_rules: dict[Callable, str],
     ) -> None:
         """"""
         if param not in configuration.kwargs:
@@ -238,7 +238,7 @@ class ExpectColumnValuesToBeStringIntegersIncreasing(ColumnAggregateExpectation)
 
     def _validate(
         self,
-        metrics: Dict,
+        metrics: dict,
         runtime_configuration: dict = None,
         execution_engine: ExecutionEngine = None,
     ) -> ExpectationValidationResult:

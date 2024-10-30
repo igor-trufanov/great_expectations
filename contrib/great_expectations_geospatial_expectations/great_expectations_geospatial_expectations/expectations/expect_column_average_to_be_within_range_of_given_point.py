@@ -6,7 +6,7 @@ For detailed instructions on how to use it, please see:
 
 from math import cos, sqrt
 from statistics import mean
-from typing import Any, Dict, List, Union
+from typing import Any, Union
 
 from great_expectations.core import ExpectationValidationResult
 from great_expectations.execution_engine import ExecutionEngine, PandasExecutionEngine
@@ -127,7 +127,7 @@ class ExpectColumnAverageToBeWithinRangeOfGivenPoint(ColumnAggregateExpectation)
     # This method performs a validation of your metrics against your success keys, returning a dict indicating the success or failure of the Expectation.
     def _validate(
         self,
-        metrics: Dict,
+        metrics: dict,
         runtime_configuration: dict = None,
         execution_engine: ExecutionEngine = None,
     ):
@@ -159,7 +159,7 @@ class ExpectColumnAverageToBeWithinRangeOfGivenPoint(ColumnAggregateExpectation)
         result: ExpectationValidationResult = None,
         runtime_configuration: dict = None,
         **kwargs,
-    ) -> List[
+    ) -> list[
         Union[
             dict,
             str,

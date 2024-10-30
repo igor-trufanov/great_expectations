@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, Dict, Literal, Optional
+from typing import TYPE_CHECKING, Any, Literal, Optional
 
 import numpy as np
 
@@ -41,7 +41,7 @@ class ColumnPartition(ColumnAggregateMetricProvider):
         execution_engine: PandasExecutionEngine,
         metric_domain_kwargs: dict,
         metric_value_kwargs: dict,
-        metrics: Dict[str, Any],
+        metrics: dict[str, Any],
         runtime_configuration: dict,
     ):
         bins = metric_value_kwargs.get("bins", cls.default_kwarg_values["bins"])
@@ -54,7 +54,7 @@ class ColumnPartition(ColumnAggregateMetricProvider):
         execution_engine: PandasExecutionEngine,
         metric_domain_kwargs: dict,
         metric_value_kwargs: dict,
-        metrics: Dict[str, Any],
+        metrics: dict[str, Any],
         runtime_configuration: dict,
     ):
         bins = metric_value_kwargs.get("bins", cls.default_kwarg_values["bins"])
@@ -67,7 +67,7 @@ class ColumnPartition(ColumnAggregateMetricProvider):
         execution_engine: PandasExecutionEngine,
         metric_domain_kwargs: dict,
         metric_value_kwargs: dict,
-        metrics: Dict[str, Any],
+        metrics: dict[str, Any],
         runtime_configuration: dict,
     ):
         bins = metric_value_kwargs.get("bins", cls.default_kwarg_values["bins"])

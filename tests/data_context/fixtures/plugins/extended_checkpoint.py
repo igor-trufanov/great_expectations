@@ -1,5 +1,5 @@
 import logging
-from typing import List, Optional
+from typing import Optional
 
 from great_expectations.checkpoint import Checkpoint, LegacyCheckpoint
 
@@ -12,7 +12,7 @@ class ExtendedCheckpoint(Checkpoint):
         name: str,
         data_context,
         expectation_suite_name: Optional[str] = None,
-        action_list: Optional[List[dict]] = None,
+        action_list: Optional[list[dict]] = None,
     ):
         super().__init__(
             name=name,
@@ -28,7 +28,7 @@ class ExtendedLegacyCheckpoint(LegacyCheckpoint):
         name: str,
         data_context,
         expectation_suite_name: Optional[str] = None,
-        action_list: Optional[List[dict]] = None,
+        action_list: Optional[list[dict]] = None,
     ):
         super().__init__(
             name=name,
@@ -44,7 +44,7 @@ class ExtendedCheckpointIllegalBaseClass:
         name: str,
         data_context,
         expectation_suite_name: Optional[str] = None,
-        action_list: Optional[List[dict]] = None,
+        action_list: Optional[list[dict]] = None,
     ):
         super().__init__(
             name=name,

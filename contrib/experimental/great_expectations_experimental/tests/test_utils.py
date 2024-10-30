@@ -1,5 +1,4 @@
 import os
-from typing import List
 
 # noinspection PyUnresolvedReferences
 from great_expectations.data_context.util import file_relative_path
@@ -20,7 +19,7 @@ def load_data_into_postgres_database(sa):
     from tests.test_utils import load_data_into_test_database
 
     file_name: str
-    data_paths: List[str] = [
+    data_paths: list[str] = [
         file_relative_path(
             __file__,
             os.path.join(  # noqa: PTH118
@@ -71,7 +70,7 @@ def load_data_into_postgres_database(sa):
 
     # 2020 data
     file_name = "yellow_tripdata_sample_2020-01.csv"
-    data_paths: List[str] = [
+    data_paths: list[str] = [
         file_relative_path(
             __file__,
             os.path.join(  # noqa: PTH118

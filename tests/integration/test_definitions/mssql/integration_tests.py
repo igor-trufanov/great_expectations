@@ -1,5 +1,3 @@
-from typing import List
-
 from tests.integration.backend_dependencies import BackendDependencies
 from tests.integration.integration_test_fixture import IntegrationTestFixture
 
@@ -36,7 +34,7 @@ partition_data = [
     ),
 ]
 
-sample_data: List[IntegrationTestFixture] = []
+sample_data: list[IntegrationTestFixture] = []
 
 mssql_integration_tests += partition_data
 mssql_integration_tests += sample_data

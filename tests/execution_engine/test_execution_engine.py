@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from typing import Dict, Tuple
-
 import pandas as pd
 import pytest
 
@@ -33,7 +31,7 @@ def test_execution_engine():
     """
 
     class TestExecutionEngine(ExecutionEngine):
-        def get_batch_data_and_markers(self, batch_spec) -> Tuple[BatchData, BatchMarkers]:  # type: ignore[explicit-override] # FIXME
+        def get_batch_data_and_markers(self, batch_spec) -> tuple[BatchData, BatchMarkers]:  # type: ignore[explicit-override] # FIXME
             raise NotImplementedError
 
     return TestExecutionEngine()
@@ -172,10 +170,10 @@ def test_resolve_metrics_with_aggregates_and_column_map():
     df = pd.DataFrame({"a": [1, 2, 3, None]})
     engine = PandasExecutionEngine(batch_data_dict={"my_id": df})
 
-    metrics: Dict[Tuple[str, str, str], MetricValue] = {}
+    metrics: dict[tuple[str, str, str], MetricValue] = {}
 
     table_columns_metric: MetricConfiguration
-    results: Dict[Tuple[str, str, str], MetricValue]
+    results: dict[tuple[str, str, str], MetricValue]
 
     table_columns_metric, results = get_table_columns_metric(execution_engine=engine)
 
@@ -251,10 +249,10 @@ def test_resolve_metrics_with_extraneous_value_key():
     df = pd.DataFrame({"a": [1, 2, 3, None]})
     engine = PandasExecutionEngine(batch_data_dict={"my_id": df})
 
-    metrics: Dict[Tuple[str, str, str], MetricValue] = {}
+    metrics: dict[tuple[str, str, str], MetricValue] = {}
 
     table_columns_metric: MetricConfiguration
-    results: Dict[Tuple[str, str, str], MetricValue]
+    results: dict[tuple[str, str, str], MetricValue]
 
     table_columns_metric, results = get_table_columns_metric(execution_engine=engine)
 

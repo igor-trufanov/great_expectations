@@ -1,5 +1,5 @@
 from logging import Logger
-from typing import Any, ClassVar, Literal, Optional, Type
+from typing import Any, ClassVar, Literal, Optional
 
 from great_expectations.datasource.fluent import BatchMetadata, _SparkFilePathDatasource
 from great_expectations.datasource.fluent.config_str import (
@@ -14,7 +14,7 @@ logger: Logger
 
 class SparkS3Datasource(_SparkFilePathDatasource):
     # class attributes
-    data_connector_type: ClassVar[Type[S3DataConnector]] = ...
+    data_connector_type: ClassVar[type[S3DataConnector]] = ...
 
     # instance attributes
     type: Literal["spark_s3"] = "spark_s3"

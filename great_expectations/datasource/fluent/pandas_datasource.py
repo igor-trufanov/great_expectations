@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import builtins
 import logging
 import sqlite3
 import uuid
@@ -11,15 +12,11 @@ from typing import (
     Callable,
     ClassVar,
     Generic,
-    List,
     Literal,
     Mapping,
     MutableSequence,
     Optional,
     Sequence,
-    Set,
-    Tuple,
-    Type,
     Union,
 )
 
@@ -54,7 +51,7 @@ from great_expectations.datasource.fluent.signatures import _merge_signatures
 from great_expectations.datasource.fluent.sources import DEFAULT_PANDAS_DATA_ASSET_NAME
 from great_expectations.exceptions.exceptions import BuildBatchRequestError
 
-_EXCLUDE_TYPES_FROM_JSON: list[Type] = [sqlite3.Connection]
+_EXCLUDE_TYPES_FROM_JSON: list[type] = [sqlite3.Connection]
 
 if sa:
     _EXCLUDE_TYPES_FROM_JSON = _EXCLUDE_TYPES_FROM_JSON + [sqlalchemy.Engine]
@@ -85,7 +82,7 @@ class PandasDatasourceError(Exception):
 
 @public_api
 class _PandasDataAsset(DataAsset):
-    _EXCLUDE_FROM_READER_OPTIONS: ClassVar[Set[str]] = {
+    _EXCLUDE_FROM_READER_OPTIONS: ClassVar[set[str]] = {
         "batch_definitions",
         "batch_metadata",
         "name",
@@ -116,13 +113,13 @@ work-around, until "type" naming convention and method for obtaining 'reader_met
     @override
     def get_batch_parameters_keys(
         self, partitioner: Optional[ColumnPartitioner] = None
-    ) -> Tuple[str, ...]:
+    ) -> tuple[str, ...]:
         return tuple(
             "dataframe",
         )
 
     @override
-    def get_batch_identifiers_list(self, batch_request: BatchRequest) -> List[dict]:
+    def get_batch_identifiers_list(self, batch_request: BatchRequest) -> list[dict]:
         return [IDDict(batch_request.options)]
 
     @override
@@ -322,26 +319,26 @@ _PANDAS_ASSET_MODELS = _generate_pandas_data_asset_models(
 )
 
 
-ClipboardAsset: Type[_PandasDataAsset] = _PANDAS_ASSET_MODELS.get("clipboard", _PandasDataAsset)
-CSVAsset: Type[_PandasDataAsset] = _PANDAS_ASSET_MODELS.get("csv", _PandasDataAsset)
-ExcelAsset: Type[_PandasDataAsset] = _PANDAS_ASSET_MODELS.get("excel", _PandasDataAsset)
-FeatherAsset: Type[_PandasDataAsset] = _PANDAS_ASSET_MODELS.get("feather", _PandasDataAsset)
-FWFAsset: Type[_PandasDataAsset] = _PANDAS_ASSET_MODELS.get("fwf", _PandasDataAsset)
-GBQAsset: Type[_PandasDataAsset] = _PANDAS_ASSET_MODELS.get("gbq", _PandasDataAsset)
-HDFAsset: Type[_PandasDataAsset] = _PANDAS_ASSET_MODELS.get("hdf", _PandasDataAsset)
-HTMLAsset: Type[_PandasDataAsset] = _PANDAS_ASSET_MODELS.get("html", _PandasDataAsset)
-JSONAsset: Type[_PandasDataAsset] = _PANDAS_ASSET_MODELS.get("json", _PandasDataAsset)
-ORCAsset: Type[_PandasDataAsset] = _PANDAS_ASSET_MODELS.get("orc", _PandasDataAsset)
-ParquetAsset: Type[_PandasDataAsset] = _PANDAS_ASSET_MODELS.get("parquet", _PandasDataAsset)
-PickleAsset: Type[_PandasDataAsset] = _PANDAS_ASSET_MODELS.get("pickle", _PandasDataAsset)
-SQLAsset: Type[_PandasDataAsset] = _PANDAS_ASSET_MODELS.get("sql", _PandasDataAsset)
-SQLQueryAsset: Type[_PandasDataAsset] = _PANDAS_ASSET_MODELS.get("sql_query", _PandasDataAsset)
-SQLTableAsset: Type[_PandasDataAsset] = _PANDAS_ASSET_MODELS.get("sql_table", _PandasDataAsset)
-SASAsset: Type[_PandasDataAsset] = _PANDAS_ASSET_MODELS.get("sas", _PandasDataAsset)
-SPSSAsset: Type[_PandasDataAsset] = _PANDAS_ASSET_MODELS.get("spss", _PandasDataAsset)
-StataAsset: Type[_PandasDataAsset] = _PANDAS_ASSET_MODELS.get("stata", _PandasDataAsset)
-TableAsset: Type[_PandasDataAsset] = _PANDAS_ASSET_MODELS.get("table", _PandasDataAsset)
-XMLAsset: Type[_PandasDataAsset] = _PANDAS_ASSET_MODELS.get(
+ClipboardAsset: type[_PandasDataAsset] = _PANDAS_ASSET_MODELS.get("clipboard", _PandasDataAsset)
+CSVAsset: type[_PandasDataAsset] = _PANDAS_ASSET_MODELS.get("csv", _PandasDataAsset)
+ExcelAsset: type[_PandasDataAsset] = _PANDAS_ASSET_MODELS.get("excel", _PandasDataAsset)
+FeatherAsset: type[_PandasDataAsset] = _PANDAS_ASSET_MODELS.get("feather", _PandasDataAsset)
+FWFAsset: type[_PandasDataAsset] = _PANDAS_ASSET_MODELS.get("fwf", _PandasDataAsset)
+GBQAsset: type[_PandasDataAsset] = _PANDAS_ASSET_MODELS.get("gbq", _PandasDataAsset)
+HDFAsset: type[_PandasDataAsset] = _PANDAS_ASSET_MODELS.get("hdf", _PandasDataAsset)
+HTMLAsset: type[_PandasDataAsset] = _PANDAS_ASSET_MODELS.get("html", _PandasDataAsset)
+JSONAsset: type[_PandasDataAsset] = _PANDAS_ASSET_MODELS.get("json", _PandasDataAsset)
+ORCAsset: type[_PandasDataAsset] = _PANDAS_ASSET_MODELS.get("orc", _PandasDataAsset)
+ParquetAsset: type[_PandasDataAsset] = _PANDAS_ASSET_MODELS.get("parquet", _PandasDataAsset)
+PickleAsset: type[_PandasDataAsset] = _PANDAS_ASSET_MODELS.get("pickle", _PandasDataAsset)
+SQLAsset: type[_PandasDataAsset] = _PANDAS_ASSET_MODELS.get("sql", _PandasDataAsset)
+SQLQueryAsset: type[_PandasDataAsset] = _PANDAS_ASSET_MODELS.get("sql_query", _PandasDataAsset)
+SQLTableAsset: type[_PandasDataAsset] = _PANDAS_ASSET_MODELS.get("sql_table", _PandasDataAsset)
+SASAsset: type[_PandasDataAsset] = _PANDAS_ASSET_MODELS.get("sas", _PandasDataAsset)
+SPSSAsset: type[_PandasDataAsset] = _PANDAS_ASSET_MODELS.get("spss", _PandasDataAsset)
+StataAsset: type[_PandasDataAsset] = _PANDAS_ASSET_MODELS.get("stata", _PandasDataAsset)
+TableAsset: type[_PandasDataAsset] = _PANDAS_ASSET_MODELS.get("table", _PandasDataAsset)
+XMLAsset: type[_PandasDataAsset] = _PANDAS_ASSET_MODELS.get(
     "xml", _PandasDataAsset
 )  # read_xml doesn't exist for pandas < 1.3
 
@@ -445,7 +442,7 @@ class DataFrameAsset(_PandasDataAsset):
             )
 
     @override
-    def get_batch_identifiers_list(self, batch_request: BatchRequest) -> List[dict]:
+    def get_batch_identifiers_list(self, batch_request: BatchRequest) -> list[dict]:
         return [IDDict(batch_request.options)]
 
     @override
@@ -485,7 +482,7 @@ class DataFrameAsset(_PandasDataAsset):
 
 class _PandasDatasource(Datasource, Generic[_DataAssetT]):
     # class attributes
-    asset_types: ClassVar[Sequence[Type[DataAsset]]] = []
+    asset_types: ClassVar[Sequence[type[DataAsset]]] = []
 
     # instance attributes
     assets: MutableSequence[_DataAssetT] = []
@@ -493,7 +490,7 @@ class _PandasDatasource(Datasource, Generic[_DataAssetT]):
     # Abstract Methods
     @property
     @override
-    def execution_engine_type(self) -> Type[PandasExecutionEngine]:
+    def execution_engine_type(self) -> type[PandasExecutionEngine]:
         """Return the PandasExecutionEngine unless the override is set"""
         from great_expectations.execution_engine.pandas_execution_engine import (
             PandasExecutionEngine,
@@ -583,7 +580,7 @@ class _PandasDatasource(Datasource, Generic[_DataAssetT]):
         """  # noqa: E501
         asset_name: str = asset.name
 
-        asset_names: Set[str] = self.get_asset_names()
+        asset_names: set[str] = self.get_asset_names()
 
         in_cloud_context: bool = False
         if self._data_context:
@@ -620,11 +617,13 @@ class PandasDatasource(_PandasDatasource):
     ADD_READER_METHODS: ClassVar[bool] = True
 
     # class attributes
-    asset_types: ClassVar[Sequence[Type[DataAsset]]] = _DYNAMIC_ASSET_TYPES + [DataFrameAsset]
+    asset_types: ClassVar[Sequence[builtins.type[DataAsset]]] = _DYNAMIC_ASSET_TYPES + [
+        DataFrameAsset
+    ]
 
     # instance attributes
     type: Literal["pandas"] = "pandas"
-    assets: List[_PandasDataAsset] = []
+    assets: list[_PandasDataAsset] = []
 
     @override
     def dict(self, _exclude_default_asset_names: bool = True, **kwargs):

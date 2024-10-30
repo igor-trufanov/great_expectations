@@ -1,5 +1,3 @@
-from typing import List
-
 import py
 import pytest
 from great_expectations_contrib.package import (
@@ -23,7 +21,7 @@ def package() -> GreatExpectationsContribPackageManifest:
 
 
 @pytest.fixture
-def diagnostics() -> List[ExpectationDiagnostics]:
+def diagnostics() -> list[ExpectationDiagnostics]:
     expectations = [
         gxe.ExpectColumnMinToBeBetween,
         gxe.ExpectColumnMostCommonValueToBeInSet,
@@ -40,7 +38,7 @@ def diagnostics() -> List[ExpectationDiagnostics]:
 
 def test_update_expectations(
     package: GreatExpectationsContribPackageManifest,
-    diagnostics: List[ExpectationDiagnostics],
+    diagnostics: list[ExpectationDiagnostics],
 ):
     package._update_expectations(diagnostics)
 

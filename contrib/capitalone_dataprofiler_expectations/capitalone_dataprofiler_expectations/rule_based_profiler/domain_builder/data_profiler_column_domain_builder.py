@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Iterable, List, Optional, Union
+from typing import TYPE_CHECKING, Iterable, Optional, Union
 
 from great_expectations.core.domain import (
     Domain,
@@ -33,17 +33,17 @@ class DataProfilerColumnDomainBuilder(ColumnDomainBuilder):
 
     def __init__(
         self,
-        include_column_names: Optional[Union[str, Optional[List[str]]]] = None,
-        exclude_column_names: Optional[Union[str, Optional[List[str]]]] = None,
-        include_column_name_suffixes: Optional[Union[str, Iterable, List[str]]] = None,
-        exclude_column_name_suffixes: Optional[Union[str, Iterable, List[str]]] = None,
+        include_column_names: Optional[Union[str, Optional[list[str]]]] = None,
+        exclude_column_names: Optional[Union[str, Optional[list[str]]]] = None,
+        include_column_name_suffixes: Optional[Union[str, Iterable, list[str]]] = None,
+        exclude_column_name_suffixes: Optional[Union[str, Iterable, list[str]]] = None,
         semantic_type_filter_module_name: Optional[str] = None,
         semantic_type_filter_class_name: Optional[str] = None,
         include_semantic_types: Optional[
-            Union[str, SemanticDomainTypes, List[Union[str, SemanticDomainTypes]]]
+            Union[str, SemanticDomainTypes, list[Union[str, SemanticDomainTypes]]]
         ] = None,
         exclude_semantic_types: Optional[
-            Union[str, SemanticDomainTypes, List[Union[str, SemanticDomainTypes]]]
+            Union[str, SemanticDomainTypes, list[Union[str, SemanticDomainTypes]]]
         ] = None,
         data_context: Optional[AbstractDataContext] = None,
     ) -> None:
@@ -79,7 +79,7 @@ class DataProfilerColumnDomainBuilder(ColumnDomainBuilder):
         rule_name: str,
         variables: Optional[ParameterContainer] = None,
         runtime_configuration: Optional[dict] = None,
-    ) -> List[Domain]:
+    ) -> list[Domain]:
         """Return domains matching the specified tolerance limits.
 
         Args:
@@ -90,11 +90,11 @@ class DataProfilerColumnDomainBuilder(ColumnDomainBuilder):
         Returns:
             List of domains that match the desired tolerance limits.
         """
-        batch_ids: List[str] = self.get_batch_ids(variables=variables)  # type: ignore[assignment] # could be None
+        batch_ids: list[str] = self.get_batch_ids(variables=variables)  # type: ignore[assignment] # could be None
 
         validator: Validator = self.get_validator(variables=variables)  # type: ignore[assignment] # could be None
 
-        table_column_names: List[str] = self.get_table_column_names(
+        table_column_names: list[str] = self.get_table_column_names(
             batch_ids=batch_ids,
             validator=validator,
             variables=variables,
@@ -128,7 +128,7 @@ class DataProfilerColumnDomainBuilder(ColumnDomainBuilder):
         )
 
         # get metrics and profile path from variables and then pass them into here
-        profile_report_column_names: List[str] = validator.get_metric(  # type: ignore[assignment] # could be None
+        profile_report_column_names: list[str] = validator.get_metric(  # type: ignore[assignment] # could be None
             metric=MetricConfiguration(
                 metric_name="data_profiler.table_column_list",
                 metric_domain_kwargs={},
@@ -152,14 +152,14 @@ class DataProfilerColumnDomainBuilder(ColumnDomainBuilder):
                 message=f"Error: Some of profiled columns in {self.__class__.__name__} are not found in Batch table."
             )
 
-        effective_column_names: List[str] = self.get_filtered_column_names(
+        effective_column_names: list[str] = self.get_filtered_column_names(
             column_names=profile_report_column_names,
             batch_ids=batch_ids,
             validator=validator,
             variables=variables,
         )
 
-        domains: List[Domain] = build_domains_from_column_names(
+        domains: list[Domain] = build_domains_from_column_names(
             rule_name=rule_name,
             column_names=effective_column_names,
             domain_type=self.domain_type,

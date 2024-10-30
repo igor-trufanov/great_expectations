@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from inspect import Parameter, Signature
-from typing import TYPE_CHECKING, Callable, ForwardRef, Protocol, Type
+from typing import TYPE_CHECKING, Callable, ForwardRef, Protocol
 
 from great_expectations.datasource.fluent import Datasource, PandasFilesystemDatasource
 from great_expectations.datasource.fluent.sources import DataSourceManager
@@ -64,7 +64,7 @@ def _print_method(  # noqa: C901, PLR0912
 
 
 def print_add_asset_method_signatures(
-    datasource_class: Type[Datasource],
+    datasource_class: type[Datasource],
     method_name_template_str: str = "add_{0}_asset",
     default_override: str = "...",
 ):

@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from enum import Enum
-from typing import Any, Final, List, Literal, Mapping, Union, overload
+from typing import Any, Final, Literal, Mapping, Union, overload
 
 from great_expectations.compatibility.sqlalchemy import quoted_name
 from great_expectations.compatibility.typing_extensions import override
@@ -53,12 +53,12 @@ class GXSqlDialect(Enum):
             return super()._missing_(value)
 
     @classmethod
-    def get_all_dialect_names(cls) -> List[str]:
+    def get_all_dialect_names(cls) -> list[str]:
         """Get dialect names for all SQL dialects."""
         return [dialect_name.value for dialect_name in cls if dialect_name != GXSqlDialect.OTHER]
 
     @classmethod
-    def get_all_dialects(cls) -> List[GXSqlDialect]:
+    def get_all_dialects(cls) -> list[GXSqlDialect]:
         """Get all dialects."""
         return [dialect for dialect in cls if dialect != GXSqlDialect.OTHER]
 

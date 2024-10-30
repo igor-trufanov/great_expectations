@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, ClassVar, Dict, List, Literal, Optional, Type, Union
+from typing import TYPE_CHECKING, Any, ClassVar, Literal, Optional, Union
 
 from great_expectations.compatibility import pydantic
 from great_expectations.core.suite_parameters import (
@@ -178,14 +178,14 @@ class ExpectColumnValuesToMatchRegexList(ColumnMapExpectation):
                 }}
     """  # noqa: E501
 
-    regex_list: Union[List[str], SuiteParameterDict] = pydantic.Field(
+    regex_list: Union[list[str], SuiteParameterDict] = pydantic.Field(
         description=REGEX_LIST_DESCRIPTION
     )
     match_on: Literal["any", "all"] = pydantic.Field(
         default="any", description=MATCH_ON_DESCRIPTION
     )
 
-    library_metadata: ClassVar[Dict[str, Union[str, list, bool]]] = {
+    library_metadata: ClassVar[dict[str, Union[str, list, bool]]] = {
         "maturity": "production",
         "tags": ["core expectation", "column map expectation"],
         "contributors": [
@@ -213,7 +213,7 @@ class ExpectColumnValuesToMatchRegexList(ColumnMapExpectation):
 
         @staticmethod
         def schema_extra(
-            schema: Dict[str, Any], model: Type[ExpectColumnValuesToMatchRegexList]
+            schema: dict[str, Any], model: type[ExpectColumnValuesToMatchRegexList]
         ) -> None:
             ColumnMapExpectation.Config.schema_extra(schema, model)
             schema["properties"]["metadata"]["properties"].update(

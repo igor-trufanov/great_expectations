@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Dict, Optional
+from typing import Optional
 
 from scipy import stats
 
@@ -280,7 +280,7 @@ class ExpectColumnWassersteinDistanceToBeLessThan(ColumnAggregateExpectation):
 
     def _validate(
         self,
-        metrics: Dict,
+        metrics: dict,
         runtime_configuration: dict = None,
         execution_engine: ExecutionEngine = None,
     ):

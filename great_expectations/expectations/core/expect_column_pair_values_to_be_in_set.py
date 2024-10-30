@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Any, ClassVar, Dict, List, Literal, Tuple, Type, Union
+from typing import Any, ClassVar, Literal, Union
 
 from great_expectations.expectations.expectation import (
     ColumnPairMapExpectation,
@@ -163,13 +163,13 @@ class ExpectColumnPairValuesToBeInSet(ColumnPairMapExpectation):
                 }}
     """  # noqa: E501
 
-    value_pairs_set: List[Tuple[Any, Any]]
+    value_pairs_set: list[tuple[Any, Any]]
     ignore_row_if: Literal["both_values_are_missing", "either_value_is_missing", "neither"] = (
         "both_values_are_missing"
     )
 
     # This dictionary contains metadata for display in the public gallery
-    library_metadata: ClassVar[Dict[str, Union[str, list, bool]]] = {
+    library_metadata: ClassVar[dict[str, Union[str, list, bool]]] = {
         "maturity": "production",
         "tags": [
             "core expectation",
@@ -183,7 +183,7 @@ class ExpectColumnPairValuesToBeInSet(ColumnPairMapExpectation):
     _library_metadata = library_metadata
 
     map_metric = "column_pair_values.in_set"
-    success_keys: ClassVar[Tuple[str, ...]] = (
+    success_keys: ClassVar[tuple[str, ...]] = (
         "value_pairs_set",
         "ignore_row_if",
         "mostly",
@@ -199,7 +199,7 @@ class ExpectColumnPairValuesToBeInSet(ColumnPairMapExpectation):
 
         @staticmethod
         def schema_extra(
-            schema: Dict[str, Any], model: Type[ExpectColumnPairValuesToBeInSet]
+            schema: dict[str, Any], model: type[ExpectColumnPairValuesToBeInSet]
         ) -> None:
             ColumnPairMapExpectation.Config.schema_extra(schema, model)
             schema["properties"]["metadata"]["properties"].update(

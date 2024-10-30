@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import logging
-from typing import Literal, Optional, Tuple, overload
+from typing import Literal, Optional, overload
 
 from great_expectations.compatibility import sqlalchemy
 from great_expectations.compatibility.sqlalchemy import Selectable
@@ -203,7 +203,7 @@ class SqlAlchemyBatchData(BatchData):
         dialect: GXSqlDialect,
         query: str,
         temp_table_schema_name: str | None = None,
-    ) -> Tuple[str, str]:
+    ) -> tuple[str, str]:
         """
         Create Temporary table based on sql query. This will be used as a basis for executing expectations.
         :param query:

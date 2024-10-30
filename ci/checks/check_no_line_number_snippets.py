@@ -8,7 +8,6 @@ import re
 import shutil
 import subprocess
 import sys
-from typing import List
 
 ITEMS_IGNORED_FROM_LINE_NUMBER_SNIPPET_CHECKER = {
     "docs/prepare_to_build_docs.sh",
@@ -22,7 +21,7 @@ def check_dependencies(*deps: str) -> None:
             raise Exception(f"Must have `{dep}` installed in PATH to run {__file__}")  # noqa: TRY002, TRY003
 
 
-def run_grep(target_dir: pathlib.Path) -> List[str]:
+def run_grep(target_dir: pathlib.Path) -> list[str]:
     try:
         res = subprocess.run(  # noqa: PLW1510
             [

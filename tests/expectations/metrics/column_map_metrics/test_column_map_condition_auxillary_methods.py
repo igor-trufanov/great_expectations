@@ -1,4 +1,4 @@
-from typing import Any, Dict, List
+from typing import Any
 
 import numpy as np
 import pandas as pd
@@ -72,8 +72,8 @@ def sql_execution_engine_with_mini_taxi_loaded(sa, mini_taxi_df):
 
 @pytest.fixture
 def spark_execution_engine_with_mini_taxi_loaded(spark_session, mini_taxi_df):
-    conf: List[tuple] = spark_session.sparkContext.getConf().getAll()
-    spark_config: Dict[str, Any] = dict(conf)
+    conf: list[tuple] = spark_session.sparkContext.getConf().getAll()
+    spark_config: dict[str, Any] = dict(conf)
 
     pandas_df = mini_taxi_df
     spark_df = spark_session.createDataFrame(

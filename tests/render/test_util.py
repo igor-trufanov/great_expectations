@@ -1,5 +1,5 @@
 import sys
-from typing import List, Union
+from typing import Union
 
 import pytest
 
@@ -356,14 +356,14 @@ def test_convert_unexpected_indices_to_df_actual_values():
 
 
 def test_truncate_list_of_indices():
-    int_indices: List[Union[int, str]] = [4, 5, 6, 7]
+    int_indices: list[Union[int, str]] = [4, 5, 6, 7]
     result: str = truncate_list_of_indices(indices=int_indices)
     assert result == "4, 5, 6, 7"
 
     result: str = truncate_list_of_indices(indices=int_indices, max_index=2)
     assert result == "4, 5, ..."
 
-    str_indices: List[Union[int, str]] = ["four", "five", "six", "seven"]
+    str_indices: list[Union[int, str]] = ["four", "five", "six", "seven"]
     result: str = truncate_list_of_indices(indices=str_indices)
     assert result == "four, five, six, seven"
 

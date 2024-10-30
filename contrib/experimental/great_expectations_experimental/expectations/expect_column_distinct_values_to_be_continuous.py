@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta
-from typing import Any, Dict
+from typing import Any
 
 from great_expectations.execution_engine import ExecutionEngine
 from great_expectations.expectations.expectation import (
@@ -254,7 +254,7 @@ class ExpectColumnDistinctValuesToBeContinuous(ColumnAggregateExpectation):
 
     def _validate(
         self,
-        metrics: Dict,
+        metrics: dict,
         runtime_configuration: dict = None,
         execution_engine: ExecutionEngine = None,
     ):

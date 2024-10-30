@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import logging
 import threading
-from typing import Dict
 
 from great_expectations.compatibility import sqlalchemy
 from great_expectations.compatibility.sqlalchemy import (
@@ -18,7 +17,7 @@ SQLAlchemyError = sqlalchemy.SQLAlchemyError
 class SqlAlchemyConnectionManager:
     def __init__(self) -> None:
         self.lock = threading.Lock()
-        self._connections: Dict[str, sqlalchemy.Connection] = {}
+        self._connections: dict[str, sqlalchemy.Connection] = {}
 
     def get_connection(self, connection_string):
         if sa is not None:

@@ -5,7 +5,7 @@ import logging
 from contextlib import contextmanager
 from datetime import datetime, timezone
 from types import ModuleType
-from typing import TYPE_CHECKING, Iterator, Type
+from typing import TYPE_CHECKING, Iterator
 from unittest import mock
 
 import pytest
@@ -220,7 +220,7 @@ class TestActionSerialization:
     def test_action_serialization_and_deserialization(
         self,
         mock_context,
-        action_class: Type[ValidationAction],
+        action_class: type[ValidationAction],
         init_params: dict,
     ):
         expected = self.SERIALIZED_ACTIONS[action_class]
@@ -238,7 +238,7 @@ class TestActionSerialization:
     )
     @pytest.mark.unit
     def test_action_deserialization(
-        self, action_class: Type[ValidationAction], serialized_action: dict
+        self, action_class: type[ValidationAction], serialized_action: dict
     ):
         actual = action_class.parse_obj(serialized_action)
         assert isinstance(actual, action_class)

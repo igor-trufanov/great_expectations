@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Any, Dict
+from typing import Any
 
 from great_expectations.compatibility.not_imported import NotImported
 
@@ -18,7 +18,7 @@ try:
 except (ImportError, AttributeError):
     sqlalchemy_bigquery = SQLALCHEMY_BIGQUERY_NOT_IMPORTED
 
-BIGQUERY_TYPES: Dict[str, Any] = (
+BIGQUERY_TYPES: dict[str, Any] = (
     {
         "INTEGER": sqlalchemy_bigquery.INTEGER,
         "NUMERIC": sqlalchemy_bigquery.NUMERIC,

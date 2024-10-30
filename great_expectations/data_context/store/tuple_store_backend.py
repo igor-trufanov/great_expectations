@@ -9,7 +9,7 @@ import random
 import re
 import shutil
 from abc import ABCMeta
-from typing import Any, List, Tuple
+from typing import Any
 
 from great_expectations.compatibility import aws
 from great_expectations.compatibility.typing_extensions import override
@@ -346,7 +346,7 @@ class TupleFilesystemStoreBackend(TupleStoreBackend):
         return False
 
     @override
-    def list_keys(self, prefix: Tuple = ()) -> List[Tuple]:
+    def list_keys(self, prefix: tuple = ()) -> list[tuple]:
         key_list = []
         for root, dirs, files in os.walk(
             os.path.join(self.full_base_directory, *prefix)  # noqa: PTH118
@@ -616,7 +616,7 @@ class TupleS3StoreBackend(TupleStoreBackend):
         s3.Object(self.bucket, source_filepath).delete()
 
     @override
-    def list_keys(self, prefix: Tuple = ()) -> List[Tuple]:  # noqa: C901 - too complex
+    def list_keys(self, prefix: tuple = ()) -> list[tuple]:  # noqa: C901 - too complex
         # Note that the prefix arg is only included to maintain consistency with the parent class signature  # noqa: E501
         s3r = self._create_resource()
         bucket = s3r.Bucket(self.bucket)
@@ -897,7 +897,7 @@ class TupleGCSStoreBackend(TupleStoreBackend):
         _ = bucket.rename_blob(blob, dest_filepath)
 
     @override
-    def list_keys(self, prefix: Tuple = ()) -> List[Tuple]:
+    def list_keys(self, prefix: tuple = ()) -> list[tuple]:
         # Note that the prefix arg is only included to maintain consistency with the parent class signature  # noqa: E501
         key_list = []
 
@@ -1106,7 +1106,7 @@ class TupleAzureBlobStoreBackend(TupleStoreBackend):
         return az_blob_key
 
     @override
-    def list_keys(self, prefix: Tuple = ()) -> List[Tuple]:
+    def list_keys(self, prefix: tuple = ()) -> list[tuple]:
         # Note that the prefix arg is only included to maintain consistency with the parent class signature  # noqa: E501
         key_list = []
 

@@ -5,10 +5,7 @@ from typing import (
     TYPE_CHECKING,
     ClassVar,
     Collection,
-    Dict,
-    List,
     Optional,
-    Set,
     TypeVar,
     Union,
 )
@@ -68,7 +65,7 @@ class ValueSetMultiBatchParameterBuilder(MetricMultiBatchParameterBuilder):
         2. This ParameterBuilder filters null values out from the unique value_set.
     """
 
-    exclude_field_names: ClassVar[Set[str]] = (
+    exclude_field_names: ClassVar[set[str]] = (
         MetricMultiBatchParameterBuilder.exclude_field_names
         | {
             "metric_name",
@@ -84,7 +81,7 @@ class ValueSetMultiBatchParameterBuilder(MetricMultiBatchParameterBuilder):
         name: str,
         metric_domain_kwargs: Optional[Union[str, dict]] = None,
         metric_value_kwargs: Optional[Union[str, dict]] = None,
-        suite_parameter_builder_configs: Optional[List[ParameterBuilderConfig]] = None,
+        suite_parameter_builder_configs: Optional[list[ParameterBuilderConfig]] = None,
         data_context: Optional[AbstractDataContext] = None,
     ) -> None:
         """
@@ -116,7 +113,7 @@ class ValueSetMultiBatchParameterBuilder(MetricMultiBatchParameterBuilder):
         self,
         domain: Domain,
         variables: Optional[ParameterContainer] = None,
-        parameters: Optional[Dict[str, ParameterContainer]] = None,
+        parameters: Optional[dict[str, ParameterContainer]] = None,
         runtime_configuration: Optional[dict] = None,
     ) -> Attributes:
         """
@@ -179,8 +176,8 @@ V = TypeVar("V")
 
 
 def _get_unique_values_from_nested_collection_of_sets(
-    collection: Collection[Collection[Set[V]]],
-) -> Set[V]:
+    collection: Collection[Collection[set[V]]],
+) -> set[V]:
     """Get unique values from a collection of sets e.g. a list of sets.
 
     Args:
@@ -191,7 +188,7 @@ def _get_unique_values_from_nested_collection_of_sets(
         Single flattened set containing unique values.
     """
 
-    flattened: Union[List[Set[V]], Set[V]] = list(itertools.chain.from_iterable(collection))
+    flattened: Union[list[set[V]], set[V]] = list(itertools.chain.from_iterable(collection))
     element: V
     if all(isinstance(element, set) for element in flattened):
         flattened = set().union(*flattened)
@@ -201,7 +198,7 @@ def _get_unique_values_from_nested_collection_of_sets(
     reliance on "np.ndarray", "None" gets converted to "numpy.Inf", whereas "numpy.Inf == numpy.Inf" returns False,
     resulting in numerous "None" elements in final set.  For this reason, all "None" elements must be filtered out.
     """  # noqa: E501
-    unique_values: Set[V] = set(
+    unique_values: set[V] = set(
         sorted(  # type: ignore[type-var,arg-type] # lambda destroys type info?
             filter(
                 lambda element: not (

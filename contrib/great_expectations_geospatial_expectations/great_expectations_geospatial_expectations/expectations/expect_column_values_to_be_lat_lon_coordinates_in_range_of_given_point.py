@@ -5,7 +5,7 @@ For detailed instructions on how to use it, please see:
 """
 
 from math import cos, pi, sqrt
-from typing import Any, List, Optional, Union
+from typing import Any, Optional, Union
 
 from great_expectations.compatibility import pyspark
 from great_expectations.compatibility.pyspark import functions as F
@@ -428,7 +428,7 @@ class ExpectColumnValuesToBeLatLonCoordinatesInRangeOfGivenPoint(ColumnMapExpect
         result: ExpectationValidationResult = None,
         runtime_configuration: dict = None,
         **kwargs,
-    ) -> List[
+    ) -> list[
         Union[
             dict,
             str,

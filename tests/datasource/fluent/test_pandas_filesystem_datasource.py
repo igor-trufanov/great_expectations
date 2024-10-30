@@ -7,7 +7,7 @@ import pathlib
 import re
 from dataclasses import dataclass
 from pprint import pformat as pf
-from typing import TYPE_CHECKING, Any, Optional, Type
+from typing import TYPE_CHECKING, Any, Optional
 
 import pytest
 from pytest import MonkeyPatch, param
@@ -145,7 +145,7 @@ class TestDynamicPandasAssets:
         assert type_name in asset_class_names
 
     @pytest.mark.parametrize("asset_class", PandasFilesystemDatasource.asset_types)
-    def test_add_asset_method_exists_and_is_functional(self, asset_class: Type[PathDataAsset]):
+    def test_add_asset_method_exists_and_is_functional(self, asset_class: type[PathDataAsset]):
         type_name: str = _get_field_details(asset_class, "type").default_value
         method_name: str = f"add_{type_name}_asset"
 
@@ -169,7 +169,7 @@ class TestDynamicPandasAssets:
         assert exc_info.value.model == asset_class
 
     @pytest.mark.parametrize("asset_class", PandasFilesystemDatasource.asset_types)
-    def test_add_asset_method_signature(self, asset_class: Type[PathDataAsset]):
+    def test_add_asset_method_signature(self, asset_class: type[PathDataAsset]):
         type_name: str = _get_field_details(asset_class, "type").default_value
         method_name: str = f"add_{type_name}_asset"
 
@@ -207,7 +207,7 @@ class TestDynamicPandasAssets:
     )
     def test_data_asset_defaults(
         self,
-        asset_model: Type[PathDataAsset],
+        asset_model: type[PathDataAsset],
         extra_kwargs: dict,
     ):
         """
@@ -324,7 +324,7 @@ def test_invalid_connect_options(
 def test_invalid_connect_options_value(
     pandas_filesystem_datasource: PandasFilesystemDatasource,
     glob_directive,
-    expected_error: Type[Exception],
+    expected_error: type[Exception],
 ):
     with pytest.raises(expected_error) as exc_info:
         pandas_filesystem_datasource.add_csv_asset(

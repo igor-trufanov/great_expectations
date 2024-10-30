@@ -11,10 +11,8 @@ import logging
 from typing import (
     TYPE_CHECKING,
     Any,
-    List,
     Literal,
     Optional,
-    Type,
     Union,
 )
 
@@ -98,7 +96,7 @@ class ActionContext:
     def update(self, action: ValidationAction, action_result: dict) -> None:
         self._data.append((action, action_result))
 
-    def filter_results(self, class_: Type[ValidationAction]) -> list[dict]:
+    def filter_results(self, class_: type[ValidationAction]) -> list[dict]:
         return [action_result for action, action_result in self._data if isinstance(action, class_)]
 
 
@@ -219,7 +217,7 @@ class SlackNotificationAction(DataDocsAction):
     slack_token: Optional[Union[ConfigStr, str]] = None
     slack_channel: Optional[Union[ConfigStr, str]] = None
     notify_on: Literal["all", "failure", "success"] = "all"
-    notify_with: Optional[List[str]] = None
+    notify_with: Optional[list[str]] = None
     show_failed_expectations: bool = False
     renderer: SlackRenderer = Field(default_factory=SlackRenderer)
 
@@ -508,7 +506,7 @@ class OpsgenieAlertAction(ValidationAction):
     region: Optional[str] = None
     priority: Literal["P1", "P2", "P3", "P4", "P5"] = "P3"
     notify_on: Literal["all", "failure", "success"] = "failure"
-    tags: Optional[List[str]] = None
+    tags: Optional[list[str]] = None
     renderer: OpsgenieRenderer = Field(default_factory=OpsgenieRenderer)
 
     @validator("renderer", pre=True)
@@ -613,7 +611,7 @@ class EmailAction(ValidationAction):
     use_tls: Optional[bool] = None
     use_ssl: Optional[bool] = None
     notify_on: Literal["all", "failure", "success"] = "all"
-    notify_with: Optional[List[str]] = None
+    notify_with: Optional[list[str]] = None
     renderer: EmailRenderer = Field(default_factory=EmailRenderer)
 
     @validator("renderer", pre=True)
@@ -705,7 +703,7 @@ class UpdateDataDocsAction(DataDocsAction):
 
     type: Literal["update_data_docs"] = "update_data_docs"
 
-    site_names: List[str] = []
+    site_names: list[str] = []
 
     @override
     def run(

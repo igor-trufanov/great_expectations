@@ -1,4 +1,4 @@
-from typing import ClassVar, List, Literal, Tuple
+from typing import ClassVar, Literal
 
 import geohash as gh
 import pandas as pd
@@ -67,7 +67,7 @@ class ExpectColumnPairValuesLatLngMatchesGeohash(ColumnPairMapExpectation):
         "both_values_are_missing"
     )
 
-    examples: ClassVar[List[dict]] = [
+    examples: ClassVar[list[dict]] = [
         {
             "data": {
                 "latlngs": [
@@ -112,7 +112,7 @@ class ExpectColumnPairValuesLatLngMatchesGeohash(ColumnPairMapExpectation):
     ]
 
     map_metric: ClassVar[str] = "column_pair_values.lat_lng_matches_geohash"
-    success_keys: ClassVar[Tuple[str, ...]] = (
+    success_keys: ClassVar[tuple[str, ...]] = (
         "column_A",
         "column_B",
         "ignore_row_if",

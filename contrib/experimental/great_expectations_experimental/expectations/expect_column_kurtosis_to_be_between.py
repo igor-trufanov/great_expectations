@@ -1,5 +1,3 @@
-from typing import Dict
-
 from scipy import stats
 
 from great_expectations.compatibility.pyspark import functions as F
@@ -319,7 +317,7 @@ class ExpectColumnKurtosisToBeBetween(ColumnAggregateExpectation):
 
     def _validate(
         self,
-        metrics: Dict,
+        metrics: dict,
         runtime_configuration: dict = None,
         execution_engine: ExecutionEngine = None,
     ):

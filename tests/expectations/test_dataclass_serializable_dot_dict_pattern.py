@@ -6,7 +6,7 @@ This file is intended to
 
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import List, Optional, Tuple
+from typing import Optional
 
 import pytest
 from pytest import raises
@@ -22,7 +22,7 @@ class MyClassA(SerializableDictDot):
 
 @dataclass
 class MyClassB(MyClassA):
-    baz: List[str]
+    baz: list[str]
     qux: Optional[int] = None
     quux: int = 42
 
@@ -41,10 +41,10 @@ class MyEnum(Enum):
 class MyClassC(SerializableDictDot):
     alpha_var: int
     beta_var: MyEnum
-    A_list: List[MyClassA]
-    B_list: List[MyClassB]
-    enum_list: List[MyEnum] = field(default_factory=list)
-    some_tuple: Optional[Tuple[MyClassA, MyClassB]] = None
+    A_list: list[MyClassA]
+    B_list: list[MyClassB]
+    enum_list: list[MyEnum] = field(default_factory=list)
+    some_tuple: Optional[tuple[MyClassA, MyClassB]] = None
 
     @property
     def num_As(self):

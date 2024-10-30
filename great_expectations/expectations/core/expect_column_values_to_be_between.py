@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, ClassVar, Dict, Optional, Type, Union
+from typing import TYPE_CHECKING, Any, ClassVar, Optional, Union
 
 from great_expectations.compatibility import pydantic
 from great_expectations.compatibility.pydantic import root_validator
@@ -211,7 +211,7 @@ class ExpectColumnValuesToBeBetween(ColumnMapExpectation):
         return values
 
     # This dictionary contains metadata for display in the public gallery
-    library_metadata: ClassVar[Dict[str, Union[str, list, bool]]] = {
+    library_metadata: ClassVar[dict[str, Union[str, list, bool]]] = {
         "maturity": "production",
         "tags": ["core expectation", "column map expectation"],
         "contributors": ["@great_expectations"],
@@ -243,7 +243,7 @@ class ExpectColumnValuesToBeBetween(ColumnMapExpectation):
 
         @staticmethod
         def schema_extra(
-            schema: Dict[str, Any], model: Type[ExpectColumnValuesToBeBetween]
+            schema: dict[str, Any], model: type[ExpectColumnValuesToBeBetween]
         ) -> None:
             ColumnMapExpectation.Config.schema_extra(schema, model)
             schema["properties"]["metadata"]["properties"].update(

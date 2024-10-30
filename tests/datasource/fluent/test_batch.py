@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import pathlib
-from typing import Tuple
 
 import pytest
 
@@ -17,7 +16,7 @@ ASSET_NAME = "my_csv"
 
 
 @pytest.fixture
-def pandas_setup(csv_path: pathlib.Path) -> Tuple[AbstractDataContext, Batch]:
+def pandas_setup(csv_path: pathlib.Path) -> tuple[AbstractDataContext, Batch]:
     context = gx.get_context(mode="ephemeral")
     source = context.data_sources.add_pandas(DATASOURCE_NAME)
     filepath = (
@@ -31,7 +30,7 @@ def pandas_setup(csv_path: pathlib.Path) -> Tuple[AbstractDataContext, Batch]:
 
 
 @pytest.mark.filesystem
-def test_batch_validate_expectation(pandas_setup: Tuple[AbstractDataContext, Batch]):
+def test_batch_validate_expectation(pandas_setup: tuple[AbstractDataContext, Batch]):
     _, batch = pandas_setup
 
     # Make Expectation
@@ -47,7 +46,7 @@ def test_batch_validate_expectation(pandas_setup: Tuple[AbstractDataContext, Bat
 
 @pytest.mark.filesystem
 def test_batch_validate_expectation_suite(
-    pandas_setup: Tuple[AbstractDataContext, Batch],
+    pandas_setup: tuple[AbstractDataContext, Batch],
 ):
     context, batch = pandas_setup
 
@@ -67,7 +66,7 @@ def test_batch_validate_expectation_suite(
 
 @pytest.mark.filesystem
 def test_batch_validate_expectation_with_expectation_params(
-    pandas_setup: Tuple[AbstractDataContext, Batch],
+    pandas_setup: tuple[AbstractDataContext, Batch],
 ):
     _, batch = pandas_setup
 
@@ -89,7 +88,7 @@ def test_batch_validate_expectation_with_expectation_params(
 
 @pytest.mark.filesystem
 def test_batch_validate_expectation_suite_with_expectation_params(
-    pandas_setup: Tuple[AbstractDataContext, Batch],
+    pandas_setup: tuple[AbstractDataContext, Batch],
 ):
     context, batch = pandas_setup
 
@@ -116,7 +115,7 @@ def test_batch_validate_expectation_suite_with_expectation_params(
 
 @pytest.mark.filesystem
 def test_batch_validate_with_updated_expectation(
-    pandas_setup: Tuple[AbstractDataContext, Batch],
+    pandas_setup: tuple[AbstractDataContext, Batch],
 ):
     _, batch = pandas_setup
 
@@ -136,7 +135,7 @@ def test_batch_validate_with_updated_expectation(
 
 @pytest.mark.filesystem
 def test_batch_validate_expectation_suite_with_updated_expectation(
-    pandas_setup: Tuple[AbstractDataContext, Batch],
+    pandas_setup: tuple[AbstractDataContext, Batch],
 ):
     context, batch = pandas_setup
 
@@ -170,7 +169,7 @@ class TestBatchValidateExpectation:
     @pytest.mark.filesystem
     def test_boolean_validation_result(
         self,
-        pandas_setup: Tuple[AbstractDataContext, Batch],
+        pandas_setup: tuple[AbstractDataContext, Batch],
         expectation: Expectation,
     ):
         _, batch = pandas_setup
@@ -182,7 +181,7 @@ class TestBatchValidateExpectation:
     @pytest.mark.filesystem
     def test_summary_validation_result(
         self,
-        pandas_setup: Tuple[AbstractDataContext, Batch],
+        pandas_setup: tuple[AbstractDataContext, Batch],
         expectation: Expectation,
     ):
         _, batch = pandas_setup
@@ -194,7 +193,7 @@ class TestBatchValidateExpectation:
     @pytest.mark.filesystem
     def test_complete_validation_result(
         self,
-        pandas_setup: Tuple[AbstractDataContext, Batch],
+        pandas_setup: tuple[AbstractDataContext, Batch],
         expectation: Expectation,
     ):
         _, batch = pandas_setup
@@ -215,7 +214,7 @@ class TestBatchValidateExpectationSuite:
     @pytest.mark.filesystem
     def test_boolean_validation_result(
         self,
-        pandas_setup: Tuple[AbstractDataContext, Batch],
+        pandas_setup: tuple[AbstractDataContext, Batch],
         suite: ExpectationSuite,
     ):
         _, batch = pandas_setup
@@ -227,7 +226,7 @@ class TestBatchValidateExpectationSuite:
     @pytest.mark.filesystem
     def test_summary_validation_result(
         self,
-        pandas_setup: Tuple[AbstractDataContext, Batch],
+        pandas_setup: tuple[AbstractDataContext, Batch],
         suite: ExpectationSuite,
     ):
         _, batch = pandas_setup
@@ -239,7 +238,7 @@ class TestBatchValidateExpectationSuite:
     @pytest.mark.filesystem
     def test_complete_validation_result(
         self,
-        pandas_setup: Tuple[AbstractDataContext, Batch],
+        pandas_setup: tuple[AbstractDataContext, Batch],
         suite: ExpectationSuite,
     ):
         _, batch = pandas_setup
@@ -251,7 +250,7 @@ class TestBatchValidateExpectationSuite:
 
 @pytest.mark.filesystem
 def test_batch_validate_expectation_does_not_persist_a_batch_definition(
-    pandas_setup: Tuple[AbstractDataContext, Batch],
+    pandas_setup: tuple[AbstractDataContext, Batch],
 ):
     context, batch = pandas_setup
     datasource = context.data_sources.get(DATASOURCE_NAME)
@@ -270,7 +269,7 @@ def test_batch_validate_expectation_does_not_persist_a_batch_definition(
 
 @pytest.mark.filesystem
 def test_batch_validate_expectation_suite_does_not_persist_a_batch_definition(
-    pandas_setup: Tuple[AbstractDataContext, Batch],
+    pandas_setup: tuple[AbstractDataContext, Batch],
 ):
     context, batch = pandas_setup
     datasource = context.data_sources.get(DATASOURCE_NAME)

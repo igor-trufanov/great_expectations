@@ -12,12 +12,9 @@ from typing import (
     Any,
     Callable,
     ContextManager,
-    Dict,
     Final,
     Generator,
-    List,
     Optional,
-    Type,
     Union,
 )
 
@@ -81,7 +78,7 @@ CNF_TEST_LOGGER: Final[logging.Logger] = logging.getLogger(__name__)
 def sqlachemy_execution_engine_mock_cls(
     validate_batch_spec: Callable[[SqlAlchemyDatasourceBatchSpec], None],
     dialect: str,
-    partitioner_query_response: Optional[Union[List[Dict[str, Any]], List[Any]]] = None,
+    partitioner_query_response: Optional[Union[list[dict[str, Any]], list[Any]]] = None,
 ):
     """Creates a mock gx sql alchemy engine class
 
@@ -139,13 +136,13 @@ class ExecutionEngineDouble(ExecutionEngine):
 @pytest.fixture
 def inject_engine_lookup_double(
     monkeypatch: MonkeyPatch,
-) -> Generator[Type[ExecutionEngineDouble], None, None]:
+) -> Generator[type[ExecutionEngineDouble], None, None]:
     """
     Inject an execution engine test double into the _SourcesFactory.engine_lookup
     so that all Datasources use the execution engine double.
     Dynamically create a new subclass so that runtime type validation does not fail.
     """
-    original_engine_override: dict[Type[Datasource], Type[ExecutionEngine]] = {}
+    original_engine_override: dict[type[Datasource], type[ExecutionEngine]] = {}
     for key in DataSourceManager.type_lookup:
         if issubclass(type(key), Datasource):
             original_engine_override[key] = key.execution_engine_override
@@ -447,7 +444,7 @@ def _source(
     dialect: str,
     connection_string: str = "postgresql+psycopg2://postgres:@localhost/test_ci",
     data_context: Optional[AbstractDataContext] = None,
-    partitioner_query_response: Optional[List[Dict[str, Any]]] = None,
+    partitioner_query_response: Optional[list[dict[str, Any]]] = None,
     create_temp_table: bool = True,
 ) -> Generator[PostgresDatasource, None, None]:
     partitioner_response = partitioner_query_response or (

@@ -15,14 +15,9 @@ from typing import (
     Any,
     Callable,
     ClassVar,
-    Dict,
-    List,
     Literal,
     Optional,
     Sequence,
-    Set,
-    Tuple,
-    Type,
     TypeVar,
     Union,
 )
@@ -117,7 +112,7 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 P = ParamSpec("P")
-T = TypeVar("T", List[RenderedStringTemplateContent], RenderedAtomicContent)
+T = TypeVar("T", list[RenderedStringTemplateContent], RenderedAtomicContent)
 
 
 def render_suite_parameter_string(render_func: Callable[P, T]) -> Callable[P, T]:  # noqa: C901
@@ -203,7 +198,7 @@ def param_method(param_name: str) -> Callable:
             renderer_configuration: RendererConfiguration,
         ) -> Optional[Any]:
             try:
-                return_type: Type = param_func.__annotations__["return"]
+                return_type: type = param_func.__annotations__["return"]
             except KeyError:
                 method_name: str = getattr(param_func, "__name__", repr(param_func))
                 raise RendererConfigurationError(  # noqa: TRY003
@@ -294,7 +289,7 @@ class Expectation(pydantic.BaseModel, metaclass=MetaExpectation):
         json_encoders = {RenderedAtomicContent: lambda data: data.to_json_dict()}
 
         @staticmethod
-        def schema_extra(schema: Dict[str, Any], model: Type[Expectation]) -> None:
+        def schema_extra(schema: dict[str, Any], model: type[Expectation]) -> None:
             # Add metadata to the schema
             schema["properties"]["metadata"] = {
                 "type": "object",
@@ -322,27 +317,27 @@ class Expectation(pydantic.BaseModel, metaclass=MetaExpectation):
 
     id: Union[str, None] = None
     meta: Union[dict, None] = None
-    notes: Union[str, List[str], None] = None
+    notes: Union[str, list[str], None] = None
     result_format: Union[ResultFormat, dict] = ResultFormat.BASIC
     description: Union[str, None] = pydantic.Field(
         default=None, description="A short description of your Expectation"
     )
 
     catch_exceptions: bool = False
-    rendered_content: Optional[List[RenderedAtomicContent]] = None
+    rendered_content: Optional[list[RenderedAtomicContent]] = None
 
     version: ClassVar[str] = ge_version
-    domain_keys: ClassVar[Tuple[str, ...]] = ()
-    success_keys: ClassVar[Tuple[str, ...]] = ()
-    runtime_keys: ClassVar[Tuple[str, ...]] = (
+    domain_keys: ClassVar[tuple[str, ...]] = ()
+    success_keys: ClassVar[tuple[str, ...]] = ()
+    runtime_keys: ClassVar[tuple[str, ...]] = (
         "catch_exceptions",
         "result_format",
     )
-    args_keys: ClassVar[Tuple[str, ...]] = ()
+    args_keys: ClassVar[tuple[str, ...]] = ()
 
     expectation_type: ClassVar[str]
-    windows: Optional[List[Window]] = pydantic.Field(default=None, description=WINDOWS_DESCRIPTION)
-    examples: ClassVar[List[dict]] = []
+    windows: Optional[list[Window]] = pydantic.Field(default=None, description=WINDOWS_DESCRIPTION)
+    examples: ClassVar[list[dict]] = []
 
     _save_callback: Union[Callable[[Expectation], Expectation], None] = pydantic.PrivateAttr(
         default=None
@@ -526,7 +521,7 @@ class Expectation(pydantic.BaseModel, metaclass=MetaExpectation):
         configuration: Optional[ExpectationConfiguration] = None,
         result: Optional[ExpectationValidationResult] = None,
         runtime_configuration: Optional[dict] = None,
-    ) -> Tuple[Optional[str], dict, MetaNotes, Optional[dict]]:
+    ) -> tuple[Optional[str], dict, MetaNotes, Optional[dict]]:
         """
         Template function that contains the logic that is shared by AtomicPrescriptiveRendererType.SUMMARY and
         LegacyRendererType.PRESCRIPTIVE.
@@ -593,7 +588,7 @@ class Expectation(pydantic.BaseModel, metaclass=MetaExpectation):
         configuration: Optional[ExpectationConfiguration] = None,
         result: Optional[ExpectationValidationResult] = None,
         runtime_configuration: Optional[dict] = None,
-    ) -> List[RenderedStringTemplateContent]:
+    ) -> list[RenderedStringTemplateContent]:
         renderer_configuration: RendererConfiguration = RendererConfiguration(
             configuration=configuration,
             result=result,
@@ -627,7 +622,7 @@ class Expectation(pydantic.BaseModel, metaclass=MetaExpectation):
     def _diagnostic_meta_properties_renderer(  # noqa: C901
         cls,
         result: Optional[ExpectationValidationResult] = None,
-    ) -> Union[list, List[str], List[list]]:
+    ) -> Union[list, list[str], list[list]]:
         """
             Render function used to add custom meta to Data Docs
             It gets a column set in the `properties_to_render` dictionary within `meta` and adds columns in Data Docs with the values that were set.
@@ -769,7 +764,7 @@ class Expectation(pydantic.BaseModel, metaclass=MetaExpectation):
         configuration: Optional[ExpectationConfiguration] = None,
         result: Optional[ExpectationValidationResult] = None,
         runtime_configuration: Optional[dict] = None,
-    ) -> List[Union[RenderedStringTemplateContent, CollapseContent]]:
+    ) -> list[Union[RenderedStringTemplateContent, CollapseContent]]:
         assert result, "Must provide a result object."
         success: Optional[bool] = result.success
         result_dict: dict = result.result
@@ -881,7 +876,7 @@ class Expectation(pydantic.BaseModel, metaclass=MetaExpectation):
         configuration: Optional[ExpectationConfiguration] = None,
         result: Optional[ExpectationValidationResult] = None,
         runtime_configuration: Optional[dict] = None,
-    ) -> Optional[List[Union[RenderedTableContent, CollapseContent]]]:
+    ) -> Optional[list[Union[RenderedTableContent, CollapseContent]]]:
         if result is None:
             return None
 
@@ -894,21 +889,21 @@ class Expectation(pydantic.BaseModel, metaclass=MetaExpectation):
             "partial_unexpected_counts"
         ):
             return None
-        table_rows: List[Any] = []
+        table_rows: list[Any] = []
 
-        partial_unexpected_counts: Optional[List[dict]] = result_dict.get(
+        partial_unexpected_counts: Optional[list[dict]] = result_dict.get(
             "partial_unexpected_counts"
         )
         # this means the result_format is COMPLETE and we have the full set of unexpected indices
-        unexpected_index_list: Optional[List[dict]] = result_dict.get("unexpected_index_list")
+        unexpected_index_list: Optional[list[dict]] = result_dict.get("unexpected_index_list")
         unexpected_count: int = result_dict["unexpected_count"]
         if partial_unexpected_counts:
             # We will check to see whether we have *all* of the unexpected values
             # accounted for in our count, and include counts if we do. If we do not,
             # we will use this as simply a better (non-repeating) source of
             # "sampled" unexpected values
-            unexpected_list: Optional[List[dict]] = result_dict.get("unexpected_list")
-            unexpected_index_column_names: Optional[List[str]] = result_dict.get(
+            unexpected_list: Optional[list[dict]] = result_dict.get("unexpected_list")
+            unexpected_index_column_names: Optional[list[str]] = result_dict.get(
                 "unexpected_index_column_names"
             )
             if unexpected_index_list:
@@ -928,7 +923,7 @@ class Expectation(pydantic.BaseModel, metaclass=MetaExpectation):
         else:
             header_row = ["Sampled Unexpected Values"]
             sampled_values_set = set()
-            partial_unexpected_list: Optional[List[Any]] = result_dict.get(
+            partial_unexpected_list: Optional[list[Any]] = result_dict.get(
                 "partial_unexpected_list"
             )
             if partial_unexpected_list:
@@ -1076,8 +1071,8 @@ class Expectation(pydantic.BaseModel, metaclass=MetaExpectation):
         return cls._get_observed_value_from_evr(result=result)
 
     @classmethod
-    def get_allowed_config_keys(cls) -> Union[Tuple[str, ...], Tuple[str]]:
-        key_list: Union[list, List[str]] = []
+    def get_allowed_config_keys(cls) -> Union[tuple[str, ...], tuple[str]]:
+        key_list: Union[list, list[str]] = []
         if len(cls.domain_keys) > 0:
             key_list.extend(list(cls.domain_keys))
         if len(cls.success_keys) > 0:
@@ -1103,7 +1098,7 @@ class Expectation(pydantic.BaseModel, metaclass=MetaExpectation):
         )
         runtime_configuration["result_format"] = validation_dependencies.result_format
 
-        validation_dependencies_metric_configurations: List[MetricConfiguration] = (
+        validation_dependencies_metric_configurations: list[MetricConfiguration] = (
             validation_dependencies.get_metric_configurations()
         )
 
@@ -1114,7 +1109,7 @@ class Expectation(pydantic.BaseModel, metaclass=MetaExpectation):
 
         metric_name: str
         metric_configuration: MetricConfiguration
-        provided_metrics: Dict[str, MetricValue] = {
+        provided_metrics: dict[str, MetricValue] = {
             metric_name: metrics[metric_configuration.id]
             for metric_name, metric_configuration in validation_dependencies.metric_configurations.items()  # noqa: E501
         }
@@ -1183,19 +1178,19 @@ class Expectation(pydantic.BaseModel, metaclass=MetaExpectation):
             logger.info(f'_get_default_value called with key "{key}", but it is not a known field')
             return None
 
-    def _get_domain_kwargs(self) -> Dict[str, Optional[str]]:
-        domain_kwargs: Dict[str, Optional[str]] = {
+    def _get_domain_kwargs(self) -> dict[str, Optional[str]]:
+        domain_kwargs: dict[str, Optional[str]] = {
             key: self.configuration.kwargs.get(key, self._get_default_value(key))
             for key in self.domain_keys
         }
-        missing_kwargs: Union[set, Set[str]] = set(self.domain_keys) - set(domain_kwargs.keys())
+        missing_kwargs: Union[set, set[str]] = set(self.domain_keys) - set(domain_kwargs.keys())
         if missing_kwargs:
             raise InvalidExpectationKwargsError(f"Missing domain kwargs: {list(missing_kwargs)}")  # noqa: TRY003
         return domain_kwargs
 
-    def _get_success_kwargs(self) -> Dict[str, Any]:
-        domain_kwargs: Dict[str, Optional[str]] = self._get_domain_kwargs()
-        success_kwargs: Dict[str, Any] = {
+    def _get_success_kwargs(self) -> dict[str, Any]:
+        domain_kwargs: dict[str, Optional[str]] = self._get_domain_kwargs()
+        success_kwargs: dict[str, Any] = {
             key: self.configuration.kwargs.get(key, self._get_default_value(key))
             for key in self.success_keys
         }
@@ -1225,12 +1220,12 @@ class Expectation(pydantic.BaseModel, metaclass=MetaExpectation):
     def _get_result_format(
         self,
         runtime_configuration: Optional[dict] = None,
-    ) -> Union[Dict[str, Union[str, int, bool, List[str], None]], str]:
+    ) -> Union[dict[str, Union[str, int, bool, list[str], None]], str]:
         default_result_format: Optional[Any] = self._get_default_value("result_format")
         configuration_result_format: Union[
-            Dict[str, Union[str, int, bool, List[str], None]], str
+            dict[str, Union[str, int, bool, list[str], None]], str
         ] = self.configuration.kwargs.get("result_format", default_result_format)
-        result_format: Union[Dict[str, Union[str, int, bool, List[str], None]], str]
+        result_format: Union[dict[str, Union[str, int, bool, list[str], None]], str]
         if runtime_configuration:
             result_format = runtime_configuration.get(
                 "result_format",
@@ -1337,7 +1332,7 @@ class Expectation(pydantic.BaseModel, metaclass=MetaExpectation):
         ignore_only_for: bool = False,
         for_gallery: bool = False,
         debug_logger: Optional[logging.Logger] = None,
-        only_consider_these_backends: Optional[List[str]] = None,
+        only_consider_these_backends: Optional[list[str]] = None,
         context: Optional[AbstractDataContext] = None,
     ) -> ExpectationDiagnostics:
         """Produce a diagnostic report about this Expectation.
@@ -1391,7 +1386,7 @@ class Expectation(pydantic.BaseModel, metaclass=MetaExpectation):
         self,
         diagnostics: Optional[ExpectationDiagnostics] = None,
         show_failed_tests: bool = False,
-        backends: Optional[List[str]] = None,
+        backends: Optional[list[str]] = None,
         show_debug_messages: bool = False,
     ) -> str:
         """Runs self.run_diagnostics and generates a diagnostic checklist.
@@ -1553,17 +1548,17 @@ class BatchExpectation(Expectation, ABC):
 
     batch_id: Union[str, None] = None
 
-    domain_keys: ClassVar[Tuple[str, ...]] = (
+    domain_keys: ClassVar[tuple[str, ...]] = (
         "batch_id",
         "table",
     )
-    metric_dependencies: ClassVar[Tuple[str, ...]] = ()
+    metric_dependencies: ClassVar[tuple[str, ...]] = ()
     domain_type: ClassVar[MetricDomainTypes] = MetricDomainTypes.TABLE
-    args_keys: ClassVar[Tuple[str, ...]] = ()
+    args_keys: ClassVar[tuple[str, ...]] = ()
 
     class Config:
         @staticmethod
-        def schema_extra(schema: Dict[str, Any], model: Type[BatchExpectation]) -> None:
+        def schema_extra(schema: dict[str, Any], model: type[BatchExpectation]) -> None:
             Expectation.Config.schema_extra(schema, model)
             schema["properties"]["metadata"]["properties"].update(
                 {
@@ -1608,10 +1603,10 @@ class BatchExpectation(Expectation, ABC):
     def _validate_metric_value_between(  # noqa: C901, PLR0912
         self,
         metric_name,
-        metrics: Dict,
+        metrics: dict,
         runtime_configuration: Optional[dict] = None,
         execution_engine: Optional[ExecutionEngine] = None,
-    ) -> Dict[str, Union[bool, Dict[str, Any]]]:
+    ) -> dict[str, Union[bool, dict[str, Any]]]:
         metric_value: Optional[Any] = metrics.get(metric_name)
 
         if metric_value is None:
@@ -1709,7 +1704,7 @@ class QueryExpectation(BatchExpectation, ABC):
         - https://docs.greatexpectations.io/docs/guides/expectations/creating_custom_expectations/how_to_create_custom_query_expectations
     """  # noqa: E501
 
-    domain_keys: ClassVar[Tuple] = ("batch_id",)
+    domain_keys: ClassVar[tuple] = ("batch_id",)
 
     @override
     def validate_configuration(
@@ -1739,7 +1734,7 @@ class QueryExpectation(BatchExpectation, ABC):
         try:
             if not isinstance(query, str):
                 raise TypeError(f"'query' must be a string, but your query is type: {type(query)}")  # noqa: TRY003, TRY301
-            parsed_query: Set[str] = {
+            parsed_query: set[str] = {
                 x
                 for x in re.split(", |\\(|\n|\\)| |/", query)
                 if x.upper() and x.upper() not in valid_sql_tokens_and_types
@@ -1783,7 +1778,7 @@ class ColumnAggregateExpectation(BatchExpectation, ABC):
     row_condition: Union[str, None] = None
     condition_parser: Union[ConditionParser, None] = None
 
-    domain_keys: ClassVar[Tuple[str, ...]] = (
+    domain_keys: ClassVar[tuple[str, ...]] = (
         "batch_id",
         "table",
         "column",
@@ -1794,7 +1789,7 @@ class ColumnAggregateExpectation(BatchExpectation, ABC):
 
     class Config:
         @staticmethod
-        def schema_extra(schema: Dict[str, Any], model: Type[ColumnAggregateExpectation]) -> None:
+        def schema_extra(schema: dict[str, Any], model: type[ColumnAggregateExpectation]) -> None:
             BatchExpectation.Config.schema_extra(schema, model)
             schema["properties"]["metadata"]["properties"].update(
                 {
@@ -1839,7 +1834,7 @@ class ColumnMapExpectation(BatchExpectation, ABC):
     catch_exceptions: bool = True
 
     map_metric: ClassVar[Optional[str]] = None
-    domain_keys: ClassVar[Tuple[str, ...]] = (
+    domain_keys: ClassVar[tuple[str, ...]] = (
         "batch_id",
         "table",
         "column",
@@ -1847,11 +1842,11 @@ class ColumnMapExpectation(BatchExpectation, ABC):
         "condition_parser",
     )
     domain_type: ClassVar[MetricDomainTypes] = MetricDomainTypes.COLUMN
-    success_keys: ClassVar[Tuple[str, ...]] = ("mostly",)
+    success_keys: ClassVar[tuple[str, ...]] = ("mostly",)
 
     class Config:
         @staticmethod
-        def schema_extra(schema: Dict[str, Any], model: Type[ColumnMapExpectation]) -> None:
+        def schema_extra(schema: dict[str, Any], model: type[ColumnMapExpectation]) -> None:
             BatchExpectation.Config.schema_extra(schema, model)
             schema["properties"]["metadata"]["properties"].update(
                 {
@@ -2005,7 +2000,7 @@ class ColumnMapExpectation(BatchExpectation, ABC):
     @override
     def _validate(
         self,
-        metrics: Dict,
+        metrics: dict,
         runtime_configuration: Optional[dict] = None,
         execution_engine: Optional[ExecutionEngine] = None,
     ):
@@ -2029,10 +2024,10 @@ class ColumnMapExpectation(BatchExpectation, ABC):
         unexpected_count: Optional[int] = metrics.get(
             f"{self.map_metric}.{SummarizationMetricNameSuffixes.UNEXPECTED_COUNT.value}"
         )
-        unexpected_values: Optional[List[Any]] = metrics.get(
+        unexpected_values: Optional[list[Any]] = metrics.get(
             f"{self.map_metric}.{SummarizationMetricNameSuffixes.UNEXPECTED_VALUES.value}"
         )
-        unexpected_index_list: Optional[List[int]] = metrics.get(
+        unexpected_index_list: Optional[list[int]] = metrics.get(
             f"{self.map_metric}.{SummarizationMetricNameSuffixes.UNEXPECTED_INDEX_LIST.value}"
         )
         unexpected_index_query: Optional[str] = metrics.get(
@@ -2116,11 +2111,11 @@ class ColumnPairMapExpectation(BatchExpectation, ABC):
         "condition_parser",
     )
     domain_type: ClassVar[MetricDomainTypes] = MetricDomainTypes.COLUMN_PAIR
-    success_keys: ClassVar[Tuple[str, ...]] = ("mostly",)
+    success_keys: ClassVar[tuple[str, ...]] = ("mostly",)
 
     class Config:
         @staticmethod
-        def schema_extra(schema: Dict[str, Any], model: Type[ColumnPairMapExpectation]) -> None:
+        def schema_extra(schema: dict[str, Any], model: type[ColumnPairMapExpectation]) -> None:
             BatchExpectation.Config.schema_extra(schema, model)
             schema["properties"]["metadata"]["properties"].update(
                 {
@@ -2273,11 +2268,11 @@ class ColumnPairMapExpectation(BatchExpectation, ABC):
     @override
     def _validate(
         self,
-        metrics: Dict,
+        metrics: dict,
         runtime_configuration: Optional[dict] = None,
         execution_engine: Optional[ExecutionEngine] = None,
     ):
-        result_format: Union[Dict[str, Union[int, str, bool, List[str], None]], str] = (
+        result_format: Union[dict[str, Union[int, str, bool, list[str], None]], str] = (
             self._get_result_format(runtime_configuration=runtime_configuration)
         )
 
@@ -2291,7 +2286,7 @@ class ColumnPairMapExpectation(BatchExpectation, ABC):
         unexpected_values: Optional[Any] = metrics.get(
             f"{self.map_metric}.{SummarizationMetricNameSuffixes.UNEXPECTED_VALUES.value}"
         )
-        unexpected_index_list: Optional[List[int]] = metrics.get(
+        unexpected_index_list: Optional[list[int]] = metrics.get(
             f"{self.map_metric}.{SummarizationMetricNameSuffixes.UNEXPECTED_INDEX_LIST.value}"
         )
         unexpected_index_query: Optional[str] = metrics.get(
@@ -2355,7 +2350,7 @@ class MulticolumnMapExpectation(BatchExpectation, ABC):
             the expectation.
     """  # noqa: E501
 
-    column_list: List[StrictStr] = pydantic.Field(description=COLUMN_LIST_DESCRIPTION)
+    column_list: list[StrictStr] = pydantic.Field(description=COLUMN_LIST_DESCRIPTION)
     mostly: MostlyField = 1
     row_condition: Union[str, None] = None
     condition_parser: Union[ConditionParser, None] = None
@@ -2378,7 +2373,7 @@ class MulticolumnMapExpectation(BatchExpectation, ABC):
 
     class Config:
         @staticmethod
-        def schema_extra(schema: Dict[str, Any], model: Type[MulticolumnMapExpectation]) -> None:
+        def schema_extra(schema: dict[str, Any], model: type[MulticolumnMapExpectation]) -> None:
             BatchExpectation.Config.schema_extra(schema, model)
             schema["properties"]["metadata"]["properties"].update(
                 {
@@ -2542,7 +2537,7 @@ class MulticolumnMapExpectation(BatchExpectation, ABC):
     @override
     def _validate(
         self,
-        metrics: Dict,
+        metrics: dict,
         runtime_configuration: Optional[dict] = None,
         execution_engine: Optional[ExecutionEngine] = None,
     ):
@@ -2558,7 +2553,7 @@ class MulticolumnMapExpectation(BatchExpectation, ABC):
         unexpected_values: Optional[Any] = metrics.get(
             f"{self.map_metric}.{SummarizationMetricNameSuffixes.UNEXPECTED_VALUES.value}"
         )
-        unexpected_index_list: Optional[List[int]] = metrics.get(
+        unexpected_index_list: Optional[list[int]] = metrics.get(
             f"{self.map_metric}.{SummarizationMetricNameSuffixes.UNEXPECTED_INDEX_LIST.value}"
         )
         filtered_row_count: Optional[int] = metrics.get(
@@ -2629,13 +2624,13 @@ def _format_map_output(  # noqa: C901, PLR0912, PLR0913, PLR0915
     element_count: Optional[int] = None,
     nonnull_count: Optional[int] = None,
     unexpected_count: Optional[int] = None,
-    unexpected_list: Optional[List[Any]] = None,
-    unexpected_index_list: Optional[List[int]] = None,
+    unexpected_list: Optional[list[Any]] = None,
+    unexpected_index_list: Optional[list[int]] = None,
     unexpected_index_query: Optional[str] = None,
     # Actually Optional[List[str]], but this is necessary to keep the typechecker happy
-    unexpected_index_column_names: Optional[Union[int, str, List[str]]] = None,
+    unexpected_index_column_names: Optional[Union[int, str, list[str]]] = None,
     unexpected_rows: pd.DataFrame | None = None,
-) -> Dict:
+) -> dict:
     """Helper function to construct expectation result objects for map_expectations (such as column_map_expectation
     and file_lines_map_expectation).
 
@@ -2650,7 +2645,7 @@ def _format_map_output(  # noqa: C901, PLR0912, PLR0913, PLR0915
 
     # NB: unexpected_count parameter is explicit some implementing classes may limit the length of unexpected_list  # noqa: E501
     # Incrementally add to result and return when all values for the specified level are present
-    return_obj: Dict[str, Any] = {"success": success}
+    return_obj: dict[str, Any] = {"success": success}
 
     if result_format["result_format"] == ResultFormat.BOOLEAN_ONLY:
         return return_obj
@@ -2728,7 +2723,7 @@ def _format_map_output(  # noqa: C901, PLR0912, PLR0913, PLR0915
 
     # Try to return the most common values, if possible.
     partial_unexpected_count: Optional[int] = result_format.get("partial_unexpected_count")
-    partial_unexpected_counts: Optional[List[Dict[str, Any]]] = None
+    partial_unexpected_counts: Optional[list[dict[str, Any]]] = None
     if partial_unexpected_count is not None and partial_unexpected_count > 0:
         try:
             if not exclude_unexpected_values:
@@ -2774,7 +2769,7 @@ def _format_map_output(  # noqa: C901, PLR0912, PLR0913, PLR0915
 
 
 def _validate_dependencies_against_available_metrics(
-    validation_dependencies: List[MetricConfiguration],
+    validation_dependencies: list[MetricConfiguration],
     metrics: dict,
 ) -> None:
     """Check that validation_dependencies for current Expectations are available as Metrics.

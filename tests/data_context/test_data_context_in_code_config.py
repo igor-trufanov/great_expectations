@@ -1,5 +1,5 @@
 import uuid
-from typing import Dict, Optional, Set
+from typing import Optional
 
 import boto3
 import pyparsing as pp
@@ -17,7 +17,7 @@ def build_in_code_data_context_project_config(
     checkpoint_store_prefix: str = "checkpoint_store_prefix",
     validation_results_store_prefix: str = "validation_results_store_prefix",
     data_docs_store_prefix: str = "data_docs_store_prefix",
-    stores: Optional[Dict] = None,
+    stores: Optional[dict] = None,
 ) -> DataContextConfig:
     """
     Create a project config for an in-code data context.
@@ -101,7 +101,7 @@ def get_store_backend_id_from_s3(bucket: str, prefix: str, key: str) -> uuid.UUI
     return uuid.UUID(parsed_store_backend_id[1])
 
 
-def list_s3_bucket_contents(bucket: str, prefix: str) -> Set[str]:
+def list_s3_bucket_contents(bucket: str, prefix: str) -> set[str]:
     """
     List the contents of an s3 bucket as a set of strings given bucket name and prefix
     Args:

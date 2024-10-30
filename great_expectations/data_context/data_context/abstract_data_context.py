@@ -15,12 +15,9 @@ from typing import (
     TYPE_CHECKING,
     Any,
     Callable,
-    Dict,
-    List,
     Mapping,
     Optional,
     Sequence,
-    Tuple,
     TypeVar,
     Union,
     overload,
@@ -122,8 +119,8 @@ if TYPE_CHECKING:
     from great_expectations.execution_engine import ExecutionEngine
     from great_expectations.render.renderer.site_builder import SiteBuilder
 
-BlockConfigDataAssetNames: TypeAlias = Dict[str, List[str]]
-FluentDataAssetNames: TypeAlias = List[str]
+BlockConfigDataAssetNames: TypeAlias = dict[str, list[str]]
+FluentDataAssetNames: TypeAlias = list[str]
 
 logger = logging.getLogger(__name__)
 yaml = YAMLHandler()
@@ -373,7 +370,7 @@ class AbstractDataContext(ConfigPeer, ABC):
         return instance_id
 
     @property
-    def config_variables(self) -> Dict:
+    def config_variables(self) -> dict:
         """Loads config variables into cache, by calling _load_config_variables()
 
         Returns: A dictionary containing config_variables from file or empty dictionary.
@@ -800,7 +797,7 @@ class AbstractDataContext(ConfigPeer, ABC):
 
         return return_datasource
 
-    def get_site_names(self) -> List[str]:
+    def get_site_names(self) -> list[str]:
         """Get a list of configured site names."""
         return list(self.variables.data_docs_sites.keys())  # type: ignore[union-attr]
 
@@ -817,7 +814,7 @@ class AbstractDataContext(ConfigPeer, ABC):
             config = self._project_config
         return DataContextConfig(**self.config_provider.substitute_config(config))
 
-    def list_stores(self) -> List[Store]:
+    def list_stores(self) -> list[Store]:
         """List currently-configured Stores on this context"""
         stores = []
         for (
@@ -830,14 +827,14 @@ class AbstractDataContext(ConfigPeer, ABC):
             stores.append(masked_config)
         return stores  # type: ignore[return-value]
 
-    def list_active_stores(self) -> List[Store]:
+    def list_active_stores(self) -> list[Store]:
         """
         List active Stores on this context. Active stores are identified by setting the following parameters:
             expectations_store_name,
             validation_results_store_name,
             checkpoint_store_name
         """  # noqa: E501
-        active_store_names: List[str] = [
+        active_store_names: list[str] = [
             self.expectations_store_name,  # type: ignore[list-item]
             self.validation_results_store_name,  # type: ignore[list-item]
         ]
@@ -993,7 +990,7 @@ class AbstractDataContext(ConfigPeer, ABC):
 
         self._save_project_config()
 
-    def list_datasources(self) -> List[dict]:
+    def list_datasources(self) -> list[dict]:
         """List the configurations of the datasources associated with this context.
 
         Note that any sensitive values are obfuscated before being returned.
@@ -1028,9 +1025,9 @@ class AbstractDataContext(ConfigPeer, ABC):
         data_connector_name: Optional[str] = None,
         data_asset_name: Optional[str] = None,
         batch: Optional[Batch] = None,
-        batch_list: Optional[List[Batch]] = None,
+        batch_list: Optional[list[Batch]] = None,
         batch_request: Optional[Union[BatchRequestBase, FluentBatchRequest]] = None,
-        batch_request_list: Optional[List[BatchRequestBase]] = None,
+        batch_request_list: Optional[list[BatchRequestBase]] = None,
         batch_data: Optional[Any] = None,
         data_connector_query: Optional[Union[IDDict, dict]] = None,
         batch_identifiers: Optional[dict] = None,
@@ -1147,9 +1144,9 @@ class AbstractDataContext(ConfigPeer, ABC):
         data_connector_name: str | None,
         data_asset_name: str | None,
         batch: Batch | None,
-        batch_list: List[Batch] | None,
+        batch_list: list[Batch] | None,
         batch_request: BatchRequestBase | FluentBatchRequest | None,
-        batch_request_list: List[BatchRequestBase] | None,
+        batch_request_list: list[BatchRequestBase] | None,
         batch_data: Any,
         data_connector_query: Union[IDDict, dict] | None,
         batch_identifiers: dict | None,
@@ -1166,7 +1163,7 @@ class AbstractDataContext(ConfigPeer, ABC):
         batch_filter_parameters: dict | None,
         batch_spec_passthrough: dict | None,
         **kwargs,
-    ) -> List[Batch]:
+    ) -> list[Batch]:
         if (
             sum(
                 bool(x)
@@ -1189,7 +1186,7 @@ class AbstractDataContext(ConfigPeer, ABC):
         if batch:
             return [batch]
 
-        computed_batch_list: List[Batch] = []
+        computed_batch_list: list[Batch] = []
         if not batch_request_list:
             # batch_request could actually be None here since we do explicit None checks in the
             # sum check above while here we do a truthy check.
@@ -1621,8 +1618,8 @@ class AbstractDataContext(ConfigPeer, ABC):
         | None = None,
         site_name: Optional[str] = None,
         only_if_exists: bool = True,
-        site_names: Optional[List[str]] = None,
-    ) -> List[Dict[str, Optional[str]]]:
+        site_names: Optional[list[str]] = None,
+    ) -> list[dict[str, Optional[str]]]:
         """
         Get URLs for a resource for all data docs sites.
 
@@ -1669,7 +1666,7 @@ class AbstractDataContext(ConfigPeer, ABC):
             )
             return [{"site_name": site_name, "site_url": url}]
 
-        site_urls: List[Dict[str, Optional[str]]] = []
+        site_urls: list[dict[str, Optional[str]]] = []
         for _site_name, site_config in sites.items():
             site_builder = self._load_site_builder_from_site_config(site_config)
             url = site_builder.get_resource_url(
@@ -1782,7 +1779,7 @@ class AbstractDataContext(ConfigPeer, ABC):
     @staticmethod
     def _get_metric_configuration_tuples(  # noqa: C901
         metric_configuration: Union[str, dict], base_kwargs: Optional[dict] = None
-    ) -> List[Tuple[str, Union[dict, Any]]]:
+    ) -> list[tuple[str, Union[dict, Any]]]:
         if base_kwargs is None:
             base_kwargs = {}
 
@@ -1871,7 +1868,7 @@ class AbstractDataContext(ConfigPeer, ABC):
         else:
             return os.path.join(self.root_directory, path)  # type: ignore[arg-type]  # noqa: PTH118
 
-    def _load_config_variables(self) -> Dict:
+    def _load_config_variables(self) -> dict:
         config_var_provider = self.config_provider.get_provider(
             _ConfigurationVariablesConfigurationProvider
         )
@@ -1921,7 +1918,7 @@ class AbstractDataContext(ConfigPeer, ABC):
 
     # TODO: All datasources should now be fluent so we should be able to delete this
     @property
-    def fluent_datasources(self) -> Dict[str, FluentDatasource]:
+    def fluent_datasources(self) -> dict[str, FluentDatasource]:
         return {
             name: ds
             for (name, ds) in self.data_sources.all().items()
@@ -1932,7 +1929,7 @@ class AbstractDataContext(ConfigPeer, ABC):
     def data_context_id(self) -> uuid.UUID | None:
         return self.variables.data_context_id
 
-    def _init_primary_stores(self, store_configs: Dict[str, StoreConfigTypedDict]) -> None:
+    def _init_primary_stores(self, store_configs: dict[str, StoreConfigTypedDict]) -> None:
         """Initialize all Stores for this DataContext.
 
         Stores are a good fit for reading/writing objects that:
@@ -2432,7 +2429,7 @@ class AbstractDataContext(ConfigPeer, ABC):
             # since we are loading the datasource from existing config, we do not need to save it
             self._add_fluent_datasource(datasource=datasource, save_changes=False)
 
-    def _synchronize_fluent_datasources(self) -> Dict[str, FluentDatasource]:
+    def _synchronize_fluent_datasources(self) -> dict[str, FluentDatasource]:
         """
         Update `self.fluent_config.fluent_datasources` with any newly added datasources.
         Should be called before serializing `fluent_config`.

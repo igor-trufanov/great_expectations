@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import warnings
 from contextlib import contextmanager
-from typing import TYPE_CHECKING, List
+from typing import TYPE_CHECKING
 
 import sqlalchemy as sa
 
@@ -36,7 +36,7 @@ def _load_data(
     table_name: str = TAXI_DATA_TABLE_NAME,
     random_table_suffix: bool = True,
 ) -> LoadedTable:
-    dialects_supporting_multiple_values_in_single_insert_clause: List[str] = ["redshift"]
+    dialects_supporting_multiple_values_in_single_insert_clause: list[str] = ["redshift"]
     to_sql_method: str = (
         "multi" if dialect in dialects_supporting_multiple_values_in_single_insert_clause else None
     )
@@ -97,7 +97,7 @@ def _execute_taxi_partitioning_test_cases(
     connection_string: str,
     table_name: str,
 ) -> None:
-    test_cases: List[TaxiPartitioningTestCase] = taxi_partitioning_test_cases.test_cases()
+    test_cases: list[TaxiPartitioningTestCase] = taxi_partitioning_test_cases.test_cases()
 
     test_case: TaxiPartitioningTestCase
     for test_case in test_cases:
@@ -112,7 +112,7 @@ def _execute_taxi_partitioning_test_cases(
         data_asset_name: str = table_name  # Read from generated table name
 
         column_name: str = taxi_partitioning_test_cases.test_column_name
-        column_names: List[str] = taxi_partitioning_test_cases.test_column_names
+        column_names: list[str] = taxi_partitioning_test_cases.test_column_names
 
         # 2. Set partitioner in DataConnector config
         datasource = add_datasource(
@@ -150,7 +150,7 @@ def _execute_taxi_partitioning_test_cases(
             f"but expected {test_case.num_expected_batch_definitions}"
         )
 
-        expected_batch_metadata: List[dict]
+        expected_batch_metadata: list[dict]
 
         if test_case.table_domain_test_case:
             expected_batch_metadata = [{}]

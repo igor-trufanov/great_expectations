@@ -1,11 +1,9 @@
-from typing import List
-
 from tests.integration.backend_dependencies import BackendDependencies
 from tests.integration.integration_test_fixture import IntegrationTestFixture
 
 bigquery_integration_tests = []
 
-connecting_to_your_data: List[IntegrationTestFixture] = []
+connecting_to_your_data: list[IntegrationTestFixture] = []
 
 partition_data = [
     IntegrationTestFixture(
@@ -38,7 +36,7 @@ partition_data = [
     ),
 ]
 
-sample_data: List[IntegrationTestFixture] = []
+sample_data: list[IntegrationTestFixture] = []
 
 deployment_patterns = [
     IntegrationTestFixture(
@@ -49,7 +47,7 @@ deployment_patterns = [
     ),
 ]
 
-runtime_parameters: List[IntegrationTestFixture] = []
+runtime_parameters: list[IntegrationTestFixture] = []
 
 bigquery_integration_tests += connecting_to_your_data
 bigquery_integration_tests += partition_data

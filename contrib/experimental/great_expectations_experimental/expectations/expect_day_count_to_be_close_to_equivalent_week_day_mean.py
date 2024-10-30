@@ -1,5 +1,4 @@
 from datetime import datetime, timedelta
-from typing import Dict, List
 
 from great_expectations.compatibility.sqlalchemy import sqlalchemy as sa
 from great_expectations.core.metric_domain_types import MetricDomainTypes
@@ -217,7 +216,7 @@ class ExpectDayCountToBeCloseToEquivalentWeekDayMean(ColumnAggregateExpectation)
 
     def _validate(
         self,
-        metrics: Dict,
+        metrics: dict,
         runtime_configuration: dict = None,
         execution_engine: ExecutionEngine = None,
     ):
@@ -229,7 +228,7 @@ class ExpectDayCountToBeCloseToEquivalentWeekDayMean(ColumnAggregateExpectation)
 
         days_ago_dict = get_days_ago_dict(run_date)
 
-        equivalent_previous_days: List[datetime] = [days_ago_dict[i] for i in FOUR_PREVIOUS_WEEKS]
+        equivalent_previous_days: list[datetime] = [days_ago_dict[i] for i in FOUR_PREVIOUS_WEEKS]
 
         assert min(equivalent_previous_days) > (
             datetime.today() - timedelta(METRIC_SAMPLE_LIMIT)
@@ -263,7 +262,7 @@ class ExpectDayCountToBeCloseToEquivalentWeekDayMean(ColumnAggregateExpectation)
 def get_counts_per_day_as_dict(
     metrics: dict, run_date: str, equivalent_previous_days: list
 ) -> dict:
-    equivalent_previous_days_str: List[str] = [
+    equivalent_previous_days_str: list[str] = [
         datetime.strftime(i, date_format) for i in equivalent_previous_days
     ]
     all_days_list = equivalent_previous_days_str + [run_date]
@@ -287,11 +286,11 @@ def get_diff_fraction(
     Added +1 to both nuemrator and denominator, to account for cases when previous average is 0.
     """
 
-    equivalent_previous_days_str: List[str] = [
+    equivalent_previous_days_str: list[str] = [
         datetime.strftime(i, date_format) for i in equivalent_previous_days
     ]
 
-    previous_days_counts: List[int] = [
+    previous_days_counts: list[int] = [
         day_counts_dict[i] for i in day_counts_dict if i in equivalent_previous_days_str
     ]
 

@@ -2,14 +2,14 @@ from __future__ import annotations
 
 import inspect
 from inspect import Parameter, Signature
-from typing import Callable, Type
+from typing import Callable
 
 
 def _merge_signatures(
     target: Callable,
     source: Callable,
     exclude: set[str] | None = None,
-    return_type: Type | None = None,
+    return_type: type | None = None,
 ) -> Signature:
     """
     Merge 2 method or function signatures.

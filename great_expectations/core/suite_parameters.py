@@ -7,7 +7,7 @@ import math
 import operator
 import traceback
 from collections import namedtuple
-from typing import TYPE_CHECKING, Any, Dict, Optional, Tuple, Union
+from typing import TYPE_CHECKING, Any, Optional, Union
 
 import dateutil
 from pyparsing import (
@@ -239,7 +239,7 @@ def build_suite_parameters(
     suite_parameters: Optional[dict] = None,
     interactive_evaluation: bool = True,
     data_context=None,
-) -> Tuple[dict, dict]:
+) -> tuple[dict, dict]:
     """Build a dictionary of parameters to evaluate, using the provided suite_parameters,
     AND mutate expectation_args by removing any parameter values passed in as temporary values during
     exploratory work.
@@ -283,7 +283,7 @@ EXPR = SuiteParameterParser()
 
 def parse_suite_parameter(  # noqa: C901
     parameter_expression: str,
-    suite_parameters: Optional[Dict[str, Any]] = None,
+    suite_parameters: Optional[dict[str, Any]] = None,
     data_context: Optional[AbstractDataContext] = None,
 ) -> Any:
     """Use the provided suite_parameters dict to parse a given parameter expression.

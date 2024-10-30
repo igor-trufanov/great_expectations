@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, ClassVar, Dict, Optional, Type, Union
+from typing import TYPE_CHECKING, Any, ClassVar, Optional, Union
 
 from great_expectations.compatibility.pydantic import Field, StrictStr
 from great_expectations.compatibility.typing_extensions import override
@@ -141,7 +141,7 @@ class ExpectColumnToExist(BatchExpectation):
     )
 
     # This dictionary contains metadata for display in the public gallery
-    library_metadata: ClassVar[Dict[str, Union[str, list, bool]]] = {
+    library_metadata: ClassVar[dict[str, Union[str, list, bool]]] = {
         "maturity": "production",
         "tags": ["core expectation", "table expectation"],
         "contributors": ["@great_expectations"],
@@ -166,7 +166,7 @@ class ExpectColumnToExist(BatchExpectation):
         title = "Expect column to exist"
 
         @staticmethod
-        def schema_extra(schema: Dict[str, Any], model: Type[ExpectColumnToExist]) -> None:
+        def schema_extra(schema: dict[str, Any], model: type[ExpectColumnToExist]) -> None:
             BatchExpectation.Config.schema_extra(schema, model)
             schema["properties"]["metadata"]["properties"].update(
                 {
@@ -273,7 +273,7 @@ class ExpectColumnToExist(BatchExpectation):
     @override
     def _validate(
         self,
-        metrics: Dict,
+        metrics: dict,
         runtime_configuration: Optional[dict] = None,
         execution_engine: Optional[ExecutionEngine] = None,
     ):

@@ -2,7 +2,7 @@
 # For most Expectations, the main business logic for calculation will live here.
 # To learn about the relationship between Metrics and Expectations, please visit
 # https://docs.greatexpectations.io/en/latest/reference/core_concepts.html#expectations-and-metrics.
-from typing import Any, Dict, Optional, Tuple
+from typing import Any, Optional
 
 from sklearn.inspection import permutation_importance
 from sklearn.linear_model import LinearRegression
@@ -32,10 +32,10 @@ class TableModelingRidgeFeatureImportances(TableMetricProvider):
     def _pandas(
         cls,
         execution_engine: PandasExecutionEngine,
-        metric_domain_kwargs: Dict,
-        metric_value_kwargs: Dict,
-        metrics: Dict[Tuple, Any],
-        runtime_configuration: Dict,
+        metric_domain_kwargs: dict,
+        metric_value_kwargs: dict,
+        metrics: dict[tuple, Any],
+        runtime_configuration: dict,
     ):
         df, _, _ = execution_engine.get_compute_domain(
             metric_domain_kwargs, domain_type=MetricDomainTypes.TABLE

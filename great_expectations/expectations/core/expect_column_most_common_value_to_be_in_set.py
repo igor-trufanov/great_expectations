@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, ClassVar, Dict, Optional, Type, Union
+from typing import TYPE_CHECKING, Any, ClassVar, Optional, Union
 
 from great_expectations.compatibility import pydantic
 from great_expectations.expectations.expectation import (
@@ -174,7 +174,7 @@ class ExpectColumnMostCommonValueToBeInSet(ColumnAggregateExpectation):
     )
 
     # This dictionary contains metadata for display in the public gallery
-    library_metadata: ClassVar[Dict[str, Union[str, list, bool]]] = {
+    library_metadata: ClassVar[dict[str, Union[str, list, bool]]] = {
         "maturity": "production",
         "tags": ["core expectation", "column aggregate expectation"],
         "contributors": ["@great_expectations"],
@@ -201,7 +201,7 @@ class ExpectColumnMostCommonValueToBeInSet(ColumnAggregateExpectation):
 
         @staticmethod
         def schema_extra(
-            schema: Dict[str, Any], model: Type[ExpectColumnMostCommonValueToBeInSet]
+            schema: dict[str, Any], model: type[ExpectColumnMostCommonValueToBeInSet]
         ) -> None:
             ColumnAggregateExpectation.Config.schema_extra(schema, model)
             schema["properties"]["metadata"]["properties"].update(
@@ -331,7 +331,7 @@ class ExpectColumnMostCommonValueToBeInSet(ColumnAggregateExpectation):
 
     def _validate(
         self,
-        metrics: Dict,
+        metrics: dict,
         runtime_configuration: Optional[dict] = None,
         execution_engine: Optional[ExecutionEngine] = None,
     ):

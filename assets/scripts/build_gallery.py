@@ -12,7 +12,7 @@ import traceback
 from glob import glob
 from io import StringIO
 from subprocess import CalledProcessError, CompletedProcess, check_output, run
-from typing import TYPE_CHECKING, Dict, Final, List, Optional, Tuple
+from typing import TYPE_CHECKING, Final, Optional
 
 import click
 import pkg_resources  # noqa: TID251 # TODO: switch to importlib.metadata or importlib.resources
@@ -441,7 +441,7 @@ def combine_backend_results(  # noqa: C901 - too complex
             json.dump(expectations_info, outfile, indent=4)
 
 
-def get_contrib_requirements(filepath: str) -> Dict:
+def get_contrib_requirements(filepath: str) -> dict:
     """
     Parse the python file from filepath to identify a "library_metadata" dictionary in any defined classes, and return a requirements_info object that includes a list of pip-installable requirements for each class that defines them.
 
@@ -491,8 +491,8 @@ def build_gallery(  # noqa: C901 - 17
     ignore_suppress: bool = False,
     ignore_only_for: bool = False,
     outfile_name: str = "",
-    only_these_expectations: List[str] | None = None,
-    only_consider_these_backends: List[str] | None = None,
+    only_these_expectations: list[str] | None = None,
+    only_consider_these_backends: list[str] | None = None,
     context: Optional[FileDataContext] = None,
 ) -> None:
     """
@@ -704,7 +704,7 @@ def format_docstring_to_markdown(docstr: str) -> str:  # noqa: C901 - too comple
     return clean_docstr
 
 
-def _disable_progress_bars() -> Tuple[str, FileDataContext]:
+def _disable_progress_bars() -> tuple[str, FileDataContext]:
     """Return context_dir and context that was created"""
     context_dir = os.path.join(  # noqa: PTH118
         os.path.sep, "tmp", f"gx-context-{os.getpid()}"

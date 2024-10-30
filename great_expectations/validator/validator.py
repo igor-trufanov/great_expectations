@@ -14,12 +14,8 @@ from typing import (
     TYPE_CHECKING,
     Any,
     Callable,
-    Dict,
-    List,
     Optional,
     Sequence,
-    Set,
-    Tuple,
     Union,
 )
 
@@ -91,8 +87,8 @@ if TYPE_CHECKING:
 @dataclass
 class ValidationDependencies:
     # Note: Dependent "metric_name" (key) is different from "metric_name" in dependency "MetricConfiguration" (value).  # noqa: E501
-    metric_configurations: Dict[str, MetricConfiguration] = field(default_factory=dict)
-    result_format: Dict[str, Any] = field(default_factory=dict)
+    metric_configurations: dict[str, MetricConfiguration] = field(default_factory=dict)
+    result_format: dict[str, Any] = field(default_factory=dict)
 
     def set_metric_configuration(
         self, metric_name: str, metric_configuration: MetricConfiguration
@@ -114,13 +110,13 @@ class ValidationDependencies:
         """  # noqa: E501
         del self.metric_configurations[metric_name]
 
-    def get_metric_names(self) -> List[str]:
+    def get_metric_names(self) -> list[str]:
         """
         Returns "metric_name" keys, for which "MetricConfiguration" dependency objects have been specified.
         """  # noqa: E501
         return list(self.metric_configurations.keys())
 
-    def get_metric_configurations(self) -> List[MetricConfiguration]:
+    def get_metric_configurations(self) -> list[MetricConfiguration]:
         """
         Returns "MetricConfiguration" dependency objects specified.
         """
@@ -155,7 +151,7 @@ class Validator:
         expectation_suite: ExpectationSuite | None = None,
         expectation_suite_name: Optional[str] = None,
         data_context: Optional[AbstractDataContext] = None,
-        batches: List[Batch] | Sequence[Batch | FluentBatch] = tuple(),
+        batches: list[Batch] | Sequence[Batch | FluentBatch] = tuple(),
         **kwargs,
     ) -> None:
         self._data_context: Optional[AbstractDataContext] = data_context
@@ -177,7 +173,7 @@ class Validator:
             expectation_suite=expectation_suite,
             expectation_suite_name=expectation_suite_name,
         )
-        self._default_expectation_args: Dict[str, Union[bool, str]] = copy.deepcopy(
+        self._default_expectation_args: dict[str, Union[bool, str]] = copy.deepcopy(
             Validator.DEFAULT_RUNTIME_CONFIGURATION  # type: ignore[arg-type]
         )
 
@@ -215,7 +211,7 @@ class Validator:
         self._expose_dataframe_methods = value
 
     @property
-    def loaded_batch_ids(self) -> List[str]:
+    def loaded_batch_ids(self) -> list[str]:
         """Getter for IDs of loaded Batch objects (convenience property)"""
         return self._execution_engine.batch_manager.loaded_batch_ids
 
@@ -225,12 +221,12 @@ class Validator:
         return self._execution_engine.batch_manager.active_batch_data
 
     @property
-    def batch_cache(self) -> Dict[str, AnyBatch]:
+    def batch_cache(self) -> dict[str, AnyBatch]:
         """Getter for dictionary of Batch objects (convenience property)"""
         return self._execution_engine.batch_manager.batch_cache
 
     @property
-    def batches(self) -> Dict[str, AnyBatch]:
+    def batches(self) -> dict[str, AnyBatch]:
         """Getter for dictionary of Batch objects (alias convenience property, to be deprecated)"""
         return self.batch_cache
 
@@ -299,8 +295,8 @@ class Validator:
 
     def get_metrics(
         self,
-        metrics: Dict[str, MetricConfiguration],
-    ) -> Dict[str, Any]:
+        metrics: dict[str, MetricConfiguration],
+    ) -> dict[str, Any]:
         """
         Convenience method that resolves requested metrics (specified as dictionary, keyed by MetricConfiguration ID).
 
@@ -314,7 +310,7 @@ class Validator:
 
     def compute_metrics(
         self,
-        metric_configurations: List[MetricConfiguration],
+        metric_configurations: list[MetricConfiguration],
         runtime_configuration: Optional[dict] = None,
         min_graph_edges_pbar_enable: int = 0,
         # Set to low number (e.g., 3) to suppress progress bar for small graphs.
@@ -338,7 +334,7 @@ class Validator:
             min_graph_edges_pbar_enable=min_graph_edges_pbar_enable,
         )
 
-    def columns(self, domain_kwargs: Optional[Dict[str, Any]] = None) -> List[str]:
+    def columns(self, domain_kwargs: Optional[dict[str, Any]] = None) -> list[str]:
         """Convenience method to obtain Batch columns.
 
         Arguments:
@@ -352,7 +348,7 @@ class Validator:
     def head(
         self,
         n_rows: int = 5,
-        domain_kwargs: Optional[Dict[str, Any]] = None,
+        domain_kwargs: Optional[dict[str, Any]] = None,
         fetch_all: bool = False,
     ) -> pd.DataFrame:
         """Convenience method to return the first several rows or records from a Batch of data.
@@ -370,7 +366,7 @@ class Validator:
         )
 
     @override
-    def __dir__(self) -> List[str]:
+    def __dir__(self) -> list[str]:
         """
         This custom magic method is used to enable expectation tab completion on Validator objects.
         It also allows users to call Pandas.DataFrame methods on Validator objects
@@ -460,9 +456,9 @@ class Validator:
                 {k: v for k, v in kwargs.items() if k in Validator.RUNTIME_KEYS}
             )
 
-            allowed_config_keys: Tuple[str, ...] = expectation_impl.get_allowed_config_keys()
+            allowed_config_keys: tuple[str, ...] = expectation_impl.get_allowed_config_keys()
 
-            args_keys: Tuple[str, ...] = expectation_impl.args_keys or tuple()
+            args_keys: tuple[str, ...] = expectation_impl.args_keys or tuple()
 
             arg_name: str
 
@@ -557,16 +553,16 @@ class Validator:
 
         return inst_expectation
 
-    def list_available_expectation_types(self) -> List[str]:
+    def list_available_expectation_types(self) -> list[str]:
         """Returns a list of all expectations available to the validator"""
         keys = dir(self)
         return [expectation for expectation in keys if expectation.startswith("expect_")]
 
     def graph_validate(
         self,
-        configurations: List[ExpectationConfiguration],
+        configurations: list[ExpectationConfiguration],
         runtime_configuration: Optional[dict] = None,
-    ) -> List[ExpectationValidationResult]:
+    ) -> list[ExpectationValidationResult]:
         """Obtains validation dependencies for each metric using the implementation of their
         associated expectation, then proceeds to add these dependencies to the validation graph,
         supply readily available metric implementations to fulfill current metric requirements,
@@ -589,11 +585,11 @@ class Validator:
         else:
             catch_exceptions = False
 
-        expectation_validation_graphs: List[ExpectationValidationGraph]
+        expectation_validation_graphs: list[ExpectationValidationGraph]
 
-        evrs: List[ExpectationValidationResult]
+        evrs: list[ExpectationValidationResult]
 
-        processed_configurations: List[ExpectationConfiguration] = []
+        processed_configurations: list[ExpectationConfiguration] = []
 
         (
             expectation_validation_graphs,
@@ -669,19 +665,19 @@ class Validator:
 
     def _generate_metric_dependency_subgraphs_for_each_expectation_configuration(
         self,
-        expectation_configurations: List[ExpectationConfiguration],
-        processed_configurations: List[ExpectationConfiguration],
+        expectation_configurations: list[ExpectationConfiguration],
+        processed_configurations: list[ExpectationConfiguration],
         catch_exceptions: bool,
         runtime_configuration: Optional[dict] = None,
-    ) -> Tuple[
-        List[ExpectationValidationGraph],
-        List[ExpectationValidationResult],
-        List[ExpectationConfiguration],
+    ) -> tuple[
+        list[ExpectationValidationGraph],
+        list[ExpectationValidationResult],
+        list[ExpectationConfiguration],
     ]:
         # While evaluating expectation configurations, create sub-graph for every metric dependency and incorporate  # noqa: E501
         # these sub-graphs under corresponding expectation-level sub-graph (state of ExpectationValidationGraph object).  # noqa: E501
-        expectation_validation_graphs: List[ExpectationValidationGraph] = []
-        evrs: List[ExpectationValidationResult] = []
+        expectation_validation_graphs: list[ExpectationValidationGraph] = []
+        evrs: list[ExpectationValidationResult] = []
         configuration: ExpectationConfiguration
         evaluated_config: ExpectationConfiguration
         metric_configuration: MetricConfiguration
@@ -739,11 +735,11 @@ class Validator:
 
     def _generate_suite_level_graph_from_expectation_level_sub_graphs(
         self,
-        expectation_validation_graphs: List[ExpectationValidationGraph],
+        expectation_validation_graphs: list[ExpectationValidationGraph],
     ) -> ValidationGraph:
         # Collect edges from all expectation-level sub-graphs and incorporate them under common suite-level graph.  # noqa: E501
         expectation_validation_graph: ExpectationValidationGraph
-        edges: List[MetricEdge] = list(
+        edges: list[MetricEdge] = list(
             itertools.chain.from_iterable(
                 [
                     expectation_validation_graph.graph.edges
@@ -758,14 +754,14 @@ class Validator:
         self,
         graph: ValidationGraph,
         runtime_configuration: dict,
-        expectation_validation_graphs: List[ExpectationValidationGraph],
-        evrs: List[ExpectationValidationResult],
-        processed_configurations: List[ExpectationConfiguration],
+        expectation_validation_graphs: list[ExpectationValidationGraph],
+        evrs: list[ExpectationValidationResult],
+        processed_configurations: list[ExpectationConfiguration],
         show_progress_bars: bool,
-    ) -> Tuple[
+    ) -> tuple[
         _MetricsDict,
-        List[ExpectationValidationResult],
-        List[ExpectationConfiguration],
+        list[ExpectationValidationResult],
+        list[ExpectationConfiguration],
     ]:
         # Resolve overall suite-level graph and process any MetricResolutionError type exceptions that might occur.  # noqa: E501
         resolved_metrics: _MetricsDict
@@ -780,9 +776,9 @@ class Validator:
         )
 
         # Trace MetricResolutionError occurrences to expectations relying on corresponding malfunctioning metrics.  # noqa: E501
-        rejected_configurations: List[ExpectationConfiguration] = []
+        rejected_configurations: list[ExpectationConfiguration] = []
         for expectation_validation_graph in expectation_validation_graphs:
-            metric_exception_info: Dict[str, Union[MetricConfiguration, ExceptionInfo, int]] = (
+            metric_exception_info: dict[str, Union[MetricConfiguration, ExceptionInfo, int]] = (
                 expectation_validation_graph.get_exception_info(metric_info=aborted_metrics_info)
             )
             # Report all MetricResolutionError occurrences impacting expectation and append it to rejected list.  # noqa: E501
@@ -808,9 +804,9 @@ class Validator:
     def _catch_exceptions_in_failing_expectation_validations(
         exception_traceback: str,
         exception: Exception,
-        failing_expectation_configurations: List[ExpectationConfiguration],
-        evrs: List[ExpectationValidationResult],
-    ) -> List[ExpectationValidationResult]:
+        failing_expectation_configurations: list[ExpectationConfiguration],
+        evrs: list[ExpectationValidationResult],
+    ) -> list[ExpectationValidationResult]:
         """
         Catch exceptions in failing Expectation validations and convert to unsuccessful ExpectationValidationResult
         Args:
@@ -846,7 +842,7 @@ class Validator:
         match_type: str = "domain",
         remove_multiple_matches: bool = False,
         id: Optional[str] = None,
-    ) -> List[ExpectationConfiguration]:
+    ) -> list[ExpectationConfiguration]:
         """Remove an ExpectationConfiguration from the ExpectationSuite associated with the Validator.
 
         Args:
@@ -1091,7 +1087,7 @@ class Validator:
     def validate(  # noqa: C901, PLR0912, PLR0913
         self,
         expectation_suite: str | ExpectationSuite | None = None,
-        run_id: str | RunIdentifier | Dict[str, str] | None = None,
+        run_id: str | RunIdentifier | dict[str, str] | None = None,
         data_context: Optional[Any] = None,  # Cannot type DataContext due to circular import
         suite_parameters: Optional[dict] = None,
         catch_exceptions: bool = True,
@@ -1342,7 +1338,7 @@ class Validator:
     def _parse_validation_graph(
         validation_graph: ValidationGraph,
         metrics: _MetricsDict,
-    ) -> Tuple[Set[MetricConfiguration], Set[MetricConfiguration]]:
+    ) -> tuple[set[MetricConfiguration], set[MetricConfiguration]]:
         """Given validation graph, returns the ready and needed metrics necessary for validation using a traversal of
         validation graph (a graph structure of metric ids) edges"""  # noqa: E501
         unmet_dependency_ids = set()

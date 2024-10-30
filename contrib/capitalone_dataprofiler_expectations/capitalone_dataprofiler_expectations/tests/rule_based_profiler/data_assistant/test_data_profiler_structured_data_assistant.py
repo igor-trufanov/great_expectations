@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import os
-from typing import TYPE_CHECKING, Dict, Optional, cast
+from typing import TYPE_CHECKING, Optional, cast
 
 import pytest
 from capitalone_dataprofiler_expectations.metrics import *  # noqa: F403
@@ -150,7 +150,7 @@ def test_profile_data_profiler_structured_data_assistant_metrics_count(
     bobby_profile_data_profiler_structured_data_assistant_result: DataProfilerStructuredDataAssistantResult,
 ) -> None:
     domain: Domain
-    parameter_values_for_fully_qualified_parameter_names: Dict[str, ParameterNode]
+    parameter_values_for_fully_qualified_parameter_names: dict[str, ParameterNode]
     num_metrics: int
 
     domain_key = Domain(
@@ -182,11 +182,11 @@ def test_profile_data_profiler_structured_data_assistant_metrics_count(
 def test_profile_data_profiler_structured_data_assistant_result_batch_id_to_batch_identifier_display_name_map_coverage(
     bobby_profile_data_profiler_structured_data_assistant_result: DataProfilerStructuredDataAssistantResult,
 ):
-    metrics_by_domain: Optional[Dict[Domain, Dict[str, ParameterNode]]] = (
+    metrics_by_domain: Optional[dict[Domain, dict[str, ParameterNode]]] = (
         bobby_profile_data_profiler_structured_data_assistant_result.metrics_by_domain
     )
 
-    parameter_values_for_fully_qualified_parameter_names: Dict[str, ParameterNode]
+    parameter_values_for_fully_qualified_parameter_names: dict[str, ParameterNode]
     parameter_node: ParameterNode
     batch_id: str
     assert all(

@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import logging
-from typing import Dict, List, cast
+from typing import cast
 
 import pandas as pd
 import pytest
@@ -336,7 +336,7 @@ def test_table_column_reflection_fallback(test_backends, sa):
     if not sa.create_engine:
         pytest.skip("Unable to import sqlalchemy.create_engine() -- skipping.")
 
-    test_backend_names: List[str] = build_test_backends_list_v3(
+    test_backend_names: list[str] = build_test_backends_list_v3(
         include_pandas=False,
         include_spark=False,
         include_sqlalchemy=include_sqlalchemy,
@@ -356,7 +356,7 @@ def test_table_column_reflection_fallback(test_backends, sa):
         }
     )
 
-    validators_config: Dict[str, Validator] = {}
+    validators_config: dict[str, Validator] = {}
     validator: Validator
     backend_name: str
     table_name: str
@@ -381,8 +381,8 @@ def test_table_column_reflection_fallback(test_backends, sa):
     table_columns_metric: MetricConfiguration
     results: dict
 
-    reflected_columns_list: List[Dict[str, str]]
-    reflected_column_config: Dict[str, str]
+    reflected_columns_list: list[dict[str, str]]
+    reflected_column_config: dict[str, str]
     column_name: str
 
     validation_result: ExpectationValidationResult

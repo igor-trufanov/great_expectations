@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import Optional
 
 from capitalone_dataprofiler_expectations.metrics.data_profiler_metrics.data_profiler_profile_metric_provider import (
     DataProfilerProfileMetricProvider,
@@ -38,7 +38,7 @@ class DataProfilerTableColumnList(DataProfilerProfileMetricProvider):
             "profile_report_accepted_filtering_values"
         ]
         profile_report_column_data_stats: dict = metrics["data_profiler.table_column_infos"]
-        profile_report_column_names: List[str] = list(profile_report_column_data_stats.keys())
+        profile_report_column_names: list[str] = list(profile_report_column_data_stats.keys())
         profile_report_column_names = get_dbms_compatible_column_names(
             column_names=profile_report_column_names,
             batch_columns_list=metrics["table.columns"],

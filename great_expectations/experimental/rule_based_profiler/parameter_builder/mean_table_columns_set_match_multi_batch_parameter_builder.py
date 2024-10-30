@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, ClassVar, Dict, List, Optional, Set, Union
+from typing import TYPE_CHECKING, ClassVar, Optional, Union
 
 import numpy as np
 
@@ -43,7 +43,7 @@ class MeanTableColumnsSetMatchMultiBatchParameterBuilder(MetricMultiBatchParamet
     Step-4: Compute mean value of match scores as "success_ratio" (divide sum of scores by number of Batch objects).
     """  # noqa: E501
 
-    exclude_field_names: ClassVar[Set[str]] = (
+    exclude_field_names: ClassVar[set[str]] = (
         MetricMultiBatchParameterBuilder.exclude_field_names
         | {
             "metric_name",
@@ -59,7 +59,7 @@ class MeanTableColumnsSetMatchMultiBatchParameterBuilder(MetricMultiBatchParamet
         name: str,
         metric_domain_kwargs: Optional[Union[str, dict]] = None,
         metric_value_kwargs: Optional[Union[str, dict]] = None,
-        suite_parameter_builder_configs: Optional[List[ParameterBuilderConfig]] = None,
+        suite_parameter_builder_configs: Optional[list[ParameterBuilderConfig]] = None,
         data_context: Optional[AbstractDataContext] = None,
     ) -> None:
         """
@@ -91,7 +91,7 @@ class MeanTableColumnsSetMatchMultiBatchParameterBuilder(MetricMultiBatchParamet
         self,
         domain: Domain,
         variables: Optional[ParameterContainer] = None,
-        parameters: Optional[Dict[str, ParameterContainer]] = None,
+        parameters: Optional[dict[str, ParameterContainer]] = None,
         runtime_configuration: Optional[dict] = None,
     ) -> Attributes:
         """
@@ -122,16 +122,16 @@ class MeanTableColumnsSetMatchMultiBatchParameterBuilder(MetricMultiBatchParamet
         ]
 
         one_batch_table_columns_names_value: MetricValue
-        multi_batch_table_columns_names_sets_as_list: List[Set[str]] = [
+        multi_batch_table_columns_names_sets_as_list: list[set[str]] = [
             set(one_batch_table_columns_names_value)  # type: ignore[arg-type] # could be dict
             for one_batch_table_columns_names_value in table_columns_names_multi_batch_value  # type: ignore[union-attr] # not all iterable
         ]
 
-        multi_batch_table_columns_names_as_set: Set[str] = set().union(
+        multi_batch_table_columns_names_as_set: set[str] = set().union(
             *multi_batch_table_columns_names_sets_as_list
         )
 
-        one_batch_table_columns_names_set: Set[str]
+        one_batch_table_columns_names_set: set[str]
         mean_table_columns_set_match: np.float64 = np.mean(
             np.asarray(
                 [

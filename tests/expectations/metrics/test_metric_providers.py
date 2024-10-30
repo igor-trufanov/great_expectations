@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import copy
-from typing import Any, Dict, List
+from typing import Any
 from unittest import mock
 
 import pytest
@@ -105,7 +105,7 @@ def test__base_metric_provider__registration(mock_registry):
             execution_engine: PandasExecutionEngine,
             metric_domain_kwargs: dict,
             metric_value_kwargs: dict,
-            metrics: Dict[str, Any],
+            metrics: dict[str, Any],
             runtime_configuration: dict,
         ):
             raise NotImplementedError
@@ -116,7 +116,7 @@ def test__base_metric_provider__registration(mock_registry):
             execution_engine: SqlAlchemyExecutionEngine,
             metric_domain_kwargs: dict,
             metric_value_kwargs: dict,
-            metrics: Dict[str, Any],
+            metrics: dict[str, Any],
             runtime_configuration: dict,
         ):
             raise NotImplementedError
@@ -127,7 +127,7 @@ def test__base_metric_provider__registration(mock_registry):
             execution_engine: SparkDFExecutionEngine,
             metric_domain_kwargs: dict,
             metric_value_kwargs: dict,
-            metrics: Dict[str, Any],
+            metrics: dict[str, Any],
             runtime_configuration: dict,
         ):
             raise NotImplementedError
@@ -155,7 +155,7 @@ def test__table_metric_provider__registration(mock_registry):
             execution_engine: PandasExecutionEngine,
             metric_domain_kwargs: dict,
             metric_value_kwargs: dict,
-            metrics: Dict[str, Any],
+            metrics: dict[str, Any],
             runtime_configuration: dict,
         ):
             raise NotImplementedError
@@ -166,7 +166,7 @@ def test__table_metric_provider__registration(mock_registry):
             execution_engine: SqlAlchemyExecutionEngine,
             metric_domain_kwargs: dict,
             metric_value_kwargs: dict,
-            metrics: Dict[str, Any],
+            metrics: dict[str, Any],
             runtime_configuration: dict,
         ):
             raise NotImplementedError
@@ -177,7 +177,7 @@ def test__table_metric_provider__registration(mock_registry):
             execution_engine: SparkDFExecutionEngine,
             metric_domain_kwargs: dict,
             metric_value_kwargs: dict,
-            metrics: Dict[str, Any],
+            metrics: dict[str, Any],
             runtime_configuration: dict,
         ):
             raise NotImplementedError
@@ -346,9 +346,9 @@ def test__query_metric_provider__registration(mock_registry):
             execution_engine: SqlAlchemyExecutionEngine,
             metric_domain_kwargs: dict,
             metric_value_kwargs: dict,
-            metrics: Dict[str, Any],
+            metrics: dict[str, Any],
             runtime_configuration: dict,
-        ) -> List[dict]:
+        ) -> list[dict]:
             raise NotImplementedError
 
         @metric_value(engine=SparkDFExecutionEngine)
@@ -357,9 +357,9 @@ def test__query_metric_provider__registration(mock_registry):
             execution_engine: SparkDFExecutionEngine,
             metric_domain_kwargs: dict,
             metric_value_kwargs: dict,
-            metrics: Dict[str, Any],
+            metrics: dict[str, Any],
             runtime_configuration: dict,
-        ) -> List[dict]:
+        ) -> list[dict]:
             raise NotImplementedError
 
     CustomQueryMetricProvider()

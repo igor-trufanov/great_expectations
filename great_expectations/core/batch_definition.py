@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, Dict, Generic, List, Optional, TypeVar
+from typing import TYPE_CHECKING, Any, Generic, Optional, TypeVar
 
 from great_expectations._docs_decorators import public_api
 from great_expectations.compatibility import pydantic
@@ -84,7 +84,7 @@ class BatchDefinition(pydantic.GenericModel, Generic[PartitionerT]):
     @public_api
     def get_batch_identifiers_list(
         self, batch_parameters: Optional[BatchParameters] = None
-    ) -> List[Dict]:
+    ) -> list[dict]:
         """
         Retrieves a list of available batch identifiers.
         These identifiers can be used to fetch specific batches via batch_options.

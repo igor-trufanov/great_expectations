@@ -1,5 +1,4 @@
 import datetime
-from typing import List
 
 import pytest
 
@@ -8,7 +7,7 @@ from great_expectations.execution_engine.partition_and_sample.data_partitioner i
     DatePart,
 )
 
-SINGLE_DATE_PART_BATCH_IDENTIFIERS: List[pytest.param] = [
+SINGLE_DATE_PART_BATCH_IDENTIFIERS: list[pytest.param] = [
     pytest.param({"month": 10}, id="month_dict"),
     pytest.param("10-31-2018", id="dateutil parseable date string"),
     pytest.param(
@@ -37,7 +36,7 @@ SINGLE_DATE_PART_BATCH_IDENTIFIERS: List[pytest.param] = [
     ),
 ]
 
-SINGLE_DATE_PART_DATE_PARTS: List[pytest.param] = [
+SINGLE_DATE_PART_DATE_PARTS: list[pytest.param] = [
     pytest.param(
         [DatePart.MONTH],
         id="month_with_DatePart",
@@ -71,7 +70,7 @@ SINGLE_DATE_PART_DATE_PARTS: List[pytest.param] = [
 ]
 
 
-MULTIPLE_DATE_PART_BATCH_IDENTIFIERS: List[pytest.param] = [
+MULTIPLE_DATE_PART_BATCH_IDENTIFIERS: list[pytest.param] = [
     pytest.param({"year": 2018, "month": 10}, id="year_and_month_dict"),
     pytest.param("10-31-2018", id="dateutil parseable date string"),
     pytest.param(
@@ -105,7 +104,7 @@ MULTIPLE_DATE_PART_BATCH_IDENTIFIERS: List[pytest.param] = [
     ),
 ]
 
-MULTIPLE_DATE_PART_DATE_PARTS: List[pytest.param] = [
+MULTIPLE_DATE_PART_DATE_PARTS: list[pytest.param] = [
     pytest.param(
         [DatePart.YEAR, DatePart.MONTH],
         id="year_month_with_DatePart",

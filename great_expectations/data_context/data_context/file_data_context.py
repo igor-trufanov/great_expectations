@@ -196,13 +196,7 @@ class FileDataContext(SerializableDataContext):
         except OSError:
             raise gx_exceptions.ConfigNotFoundError()
 
-        try:
-            return DataContextConfig.from_commented_map(
-                commented_map=config_commented_map_from_yaml
-            )
-        except gx_exceptions.InvalidDataContextConfigError:  # noqa: TRY203
-            # Just to be explicit about what we intended to catch
-            raise
+        return DataContextConfig.from_commented_map(commented_map=config_commented_map_from_yaml)
 
     @override
     def _load_fluent_config(self, config_provider: _ConfigurationProvider) -> GxConfig:

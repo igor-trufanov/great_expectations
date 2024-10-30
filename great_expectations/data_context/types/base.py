@@ -13,12 +13,8 @@ from typing import (
     TYPE_CHECKING,
     Any,
     ClassVar,
-    Dict,
-    List,
     Mapping,
     Optional,
-    Set,
-    Type,
     TypeVar,
     Union,
 )
@@ -85,9 +81,9 @@ BYC = TypeVar("BYC", bound="BaseYamlConfig")
 
 
 class BaseYamlConfig(SerializableDictDot):
-    _config_schema_class: ClassVar[Optional[Type[Schema]]] = None
+    _config_schema_class: ClassVar[Optional[type[Schema]]] = None
 
-    exclude_field_names: ClassVar[Set[str]] = {
+    exclude_field_names: ClassVar[set[str]] = {
         "commented_map",
     }
 
@@ -97,7 +93,7 @@ class BaseYamlConfig(SerializableDictDot):
         self._commented_map = commented_map
 
     @classmethod
-    def _get_schema_instance(cls: Type[BYC]) -> Schema:
+    def _get_schema_instance(cls: type[BYC]) -> Schema:
         if not issubclass(cls.get_schema_class(), Schema):
             raise gx_exceptions.InvalidConfigError(  # noqa: TRY003
                 "Invalid type: A configuration schema class needs to inherit from the Marshmallow Schema class."  # noqa: E501
@@ -121,7 +117,7 @@ class BaseYamlConfig(SerializableDictDot):
             return cls.get_config_class().schema_instance
 
     @classmethod
-    def from_commented_map(cls: Type[BYC], commented_map: Union[CommentedMap, Dict]) -> BYC:
+    def from_commented_map(cls: type[BYC], commented_map: Union[CommentedMap, dict]) -> BYC:
         try:
             schema_instance: Schema = cls._get_schema_instance()
             config: Union[dict, BYC] = schema_instance.load(commented_map)
@@ -168,11 +164,11 @@ class BaseYamlConfig(SerializableDictDot):
         return self._get_schema_validated_updated_commented_map()
 
     @classmethod
-    def get_config_class(cls: Type) -> Type:
+    def get_config_class(cls: type) -> type:
         raise NotImplementedError
 
     @classmethod
-    def get_schema_class(cls) -> Type[Schema]:
+    def get_schema_class(cls) -> type[Schema]:
         raise NotImplementedError
 
 
@@ -305,14 +301,14 @@ class AssetConfig(SerializableDictDot):
         delimiter: Optional[str] = None,
         max_keys: Optional[int] = None,
         schema_name: Optional[str] = None,
-        batch_spec_passthrough: Optional[Dict[str, Any]] = None,
-        batch_identifiers: Optional[List[str]] = None,
+        batch_spec_passthrough: Optional[dict[str, Any]] = None,
+        batch_identifiers: Optional[list[str]] = None,
         partitioner_method: Optional[str] = None,
-        partitioner_kwargs: Optional[Dict[str, str]] = None,
+        partitioner_kwargs: Optional[dict[str, str]] = None,
         sorters: Optional[dict] = None,
         sampling_method: Optional[str] = None,
-        sampling_kwargs: Optional[Dict[str, str]] = None,
-        reader_options: Optional[Dict[str, Any]] = None,
+        sampling_kwargs: Optional[dict[str, str]] = None,
+        reader_options: Optional[dict[str, Any]] = None,
         **kwargs: Optional[dict],
     ) -> None:
         if name is not None:
@@ -357,7 +353,7 @@ class AssetConfig(SerializableDictDot):
         return self._module_name
 
     @override
-    def to_json_dict(self) -> Dict[str, JSONValues]:
+    def to_json_dict(self) -> dict[str, JSONValues]:
         """Returns a JSON-serializable dict representation of this AssetConfig.
 
         Returns:
@@ -590,7 +586,7 @@ class DataConnectorConfig(AbstractConfig):
         return self._module_name
 
     @override
-    def to_json_dict(self) -> Dict[str, JSONValues]:
+    def to_json_dict(self) -> dict[str, JSONValues]:
         """Returns a JSON-serializable dict representation of this DataConnectorConfig.
 
         Returns:
@@ -1075,7 +1071,7 @@ class GXCloudConfig(DictDot):
         self.organization_id = organization_id
         self.access_token = access_token
 
-    def to_json_dict(self) -> Dict[str, JSONValues]:
+    def to_json_dict(self) -> dict[str, JSONValues]:
         """Returns a JSON-serializable dict representation of this GXCloudConfig.
 
         Returns:
@@ -1659,11 +1655,11 @@ class DatabaseStoreBackendDefaults(BaseStoreBackendDefaults):
 
     def __init__(  # noqa: PLR0913
         self,
-        default_credentials: Optional[Dict] = None,
-        expectations_store_credentials: Optional[Dict] = None,
-        validation_results_store_credentials: Optional[Dict] = None,
-        validation_definition_store_credentials: Optional[Dict] = None,
-        checkpoint_store_credentials: Optional[Dict] = None,
+        default_credentials: Optional[dict] = None,
+        expectations_store_credentials: Optional[dict] = None,
+        validation_results_store_credentials: Optional[dict] = None,
+        validation_definition_store_credentials: Optional[dict] = None,
+        checkpoint_store_credentials: Optional[dict] = None,
         expectations_store_name: str = "expectations_database_store",
         validation_results_store_name: str = "validation_results_database_store",
         checkpoint_store_name: str = "checkpoint_database_store",
@@ -1758,8 +1754,8 @@ class DataContextConfig(BaseYamlConfig):
         validation_results_store_name: Optional[str] = None,
         checkpoint_store_name: Optional[str] = None,
         plugins_directory: Optional[str] = None,
-        stores: Optional[Dict] = None,
-        data_docs_sites: Optional[Dict] = None,
+        stores: Optional[dict] = None,
+        data_docs_sites: Optional[dict] = None,
         config_variables_file_path: Optional[str] = None,
         analytics_enabled: Optional[bool] = None,
         data_context_id: Optional[uuid.UUID] = None,
@@ -1837,7 +1833,7 @@ class DataContextConfig(BaseYamlConfig):
 
     @public_api
     @override
-    def to_json_dict(self) -> Dict[str, JSONValues]:
+    def to_json_dict(self) -> dict[str, JSONValues]:
         """Returns a JSON-serializable dict representation of this DataContextConfig.
 
         Returns:
@@ -1881,7 +1877,7 @@ class DataContextConfig(BaseYamlConfig):
             inplace=True,
         )
 
-        keys: List[str] = sorted(list(json_dict.keys()))
+        keys: list[str] = sorted(list(json_dict.keys()))
 
         key: str
         sorted_json_dict: dict = {key: json_dict[key] for key in keys}

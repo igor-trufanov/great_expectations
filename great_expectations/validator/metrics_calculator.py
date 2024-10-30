@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import logging
 from collections.abc import Hashable
-from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple, Union
+from typing import TYPE_CHECKING, Any, Optional, Union
 
 from great_expectations.validator.computed_metric import MetricValue
 from great_expectations.validator.exception_info import ExceptionInfo
@@ -19,11 +19,11 @@ logger = logging.getLogger(__name__)
 logging.captureWarnings(True)
 
 
-_MetricKey: TypeAlias = Union[Tuple[str, Hashable, Hashable], Tuple[str, str, str]]
-_MetricsDict: TypeAlias = Dict[_MetricKey, MetricValue]
-_AbortedMetricsInfoDict: TypeAlias = Dict[
+_MetricKey: TypeAlias = Union[tuple[str, Hashable, Hashable], tuple[str, str, str]]
+_MetricsDict: TypeAlias = dict[_MetricKey, MetricValue]
+_AbortedMetricsInfoDict: TypeAlias = dict[
     _MetricKey,
-    Dict[str, Union[MetricConfiguration, ExceptionInfo, int]],
+    dict[str, Union[MetricConfiguration, ExceptionInfo, int]],
 ]
 
 
@@ -51,7 +51,7 @@ class MetricsCalculator:
     def show_progress_bars(self, enable: bool) -> None:
         self._show_progress_bars = enable
 
-    def columns(self, domain_kwargs: Optional[Dict[str, Any]] = None) -> List[str]:
+    def columns(self, domain_kwargs: Optional[dict[str, Any]] = None) -> list[str]:
         """
         Convenience method to run "table.columns" metric.
 
@@ -67,7 +67,7 @@ class MetricsCalculator:
         if domain_kwargs.get("batch_id") is None:
             domain_kwargs["batch_id"] = self._execution_engine.batch_manager.active_batch_id
 
-        columns: List[str] = self.get_metric(
+        columns: list[str] = self.get_metric(
             metric=MetricConfiguration(
                 metric_name="table.columns",
                 metric_domain_kwargs=domain_kwargs,
@@ -79,7 +79,7 @@ class MetricsCalculator:
     def head(
         self,
         n_rows: int = 5,
-        domain_kwargs: Optional[Dict[str, Any]] = None,
+        domain_kwargs: Optional[dict[str, Any]] = None,
         fetch_all: bool = False,
     ) -> pd.DataFrame:
         """Convenience method to return the first several rows or records from a Batch of data.
@@ -122,8 +122,8 @@ class MetricsCalculator:
 
     def get_metrics(
         self,
-        metrics: Dict[str, MetricConfiguration],
-    ) -> Dict[str, Any]:
+        metrics: dict[str, MetricConfiguration],
+    ) -> dict[str, Any]:
         """
         Args:
             metrics: Dictionary of desired metrics to be resolved; metric_name is key and MetricConfiguration is value.
@@ -144,7 +144,7 @@ class MetricsCalculator:
 
     def compute_metrics(
         self,
-        metric_configurations: List[MetricConfiguration],
+        metric_configurations: list[MetricConfiguration],
         runtime_configuration: Optional[dict] = None,
         min_graph_edges_pbar_enable: int = 0,
         # Set to low number (e.g., 3) to suppress progress bar for small graphs.
@@ -178,7 +178,7 @@ class MetricsCalculator:
 
     def build_metric_dependency_graph(
         self,
-        metric_configurations: List[MetricConfiguration],
+        metric_configurations: list[MetricConfiguration],
         runtime_configuration: Optional[dict] = None,
     ) -> ValidationGraph:
         """
@@ -209,7 +209,7 @@ class MetricsCalculator:
         runtime_configuration: Optional[dict] = None,
         min_graph_edges_pbar_enable: int = 0,
         # Set to low number (e.g., 3) to suppress progress bar for small graphs.
-    ) -> Tuple[_MetricsDict, _AbortedMetricsInfoDict]:
+    ) -> tuple[_MetricsDict, _AbortedMetricsInfoDict]:
         """
         Args:
             graph: "ValidationGraph" object, containing "metric_edge" structures with "MetricConfiguration" objects.
@@ -247,7 +247,7 @@ class MetricsCalculator:
         runtime_configuration: Optional[dict] = None,
         min_graph_edges_pbar_enable: int = 0,
         # Set to low number (e.g., 3) to suppress progress bar for small graphs.
-    ) -> Tuple[_MetricsDict, _AbortedMetricsInfoDict]:
+    ) -> tuple[_MetricsDict, _AbortedMetricsInfoDict]:
         """
         Calls "ValidationGraph.resolve()" method with supplied arguments.
 

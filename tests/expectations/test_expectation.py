@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import itertools
 import logging
-from typing import Any, Dict, List, Optional, Sequence, Union
+from typing import Any, Optional, Sequence, Union
 
 import pytest
 
@@ -59,8 +59,8 @@ def metrics_dict():
 
 
 def fake_metrics_config_list(
-    metric_name: str, metric_domain_kwargs: Dict[str, Any]
-) -> List[MetricConfiguration]:
+    metric_name: str, metric_domain_kwargs: dict[str, Any]
+) -> list[MetricConfiguration]:
     """
     Helper method to generate list of MetricConfiguration objects for tests.
     """
@@ -74,7 +74,7 @@ def fake_metrics_config_list(
 
 
 def fake_expectation_config(
-    expectation_type: str, config_kwargs: Dict[str, Any]
+    expectation_type: str, config_kwargs: dict[str, Any]
 ) -> ExpectationConfiguration:
     """
     Helper method to generate of ExpectationConfiguration objects for tests.
@@ -191,7 +191,7 @@ def test_multicolumn_expectation_validation_errors_with_bad_mostly(fake_expectat
 
 @pytest.mark.unit
 def test_validate_dependencies_against_available_metrics_success(metrics_dict):
-    metric_config_list: List[MetricConfiguration] = fake_metrics_config_list(
+    metric_config_list: list[MetricConfiguration] = fake_metrics_config_list(
         metric_name="column_values.nonnull.unexpected_count",
         metric_domain_kwargs={
             "batch_id": "projects-projects",
@@ -206,7 +206,7 @@ def test_validate_dependencies_against_available_metrics_success(metrics_dict):
 
 @pytest.mark.unit
 def test_validate_dependencies_against_available_metrics_failure(metrics_dict):
-    metric_config_list: List[MetricConfiguration] = fake_metrics_config_list(
+    metric_config_list: list[MetricConfiguration] = fake_metrics_config_list(
         metric_name="column_values.nonnull.unexpected_count",
         metric_domain_kwargs={
             "batch_id": "projects-projects",

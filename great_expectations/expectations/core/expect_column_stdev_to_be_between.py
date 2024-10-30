@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, ClassVar, Dict, Optional, Type, Union
+from typing import TYPE_CHECKING, Any, ClassVar, Optional, Union
 
 from great_expectations.compatibility import pydantic
 from great_expectations.core.types import Comparable  # noqa: TCH001
@@ -181,7 +181,7 @@ class ExpectColumnStdevToBeBetween(ColumnAggregateExpectation):
     strict_max: bool = pydantic.Field(False, description=STRICT_MAX_DESCRIPTION)
 
     # This dictionary contains metadata for display in the public gallery
-    library_metadata: ClassVar[Dict[str, Union[str, list, bool]]] = {
+    library_metadata: ClassVar[dict[str, Union[str, list, bool]]] = {
         "maturity": "production",
         "tags": ["core expectation", "column aggregate expectation"],
         "contributors": ["@great_expectations"],
@@ -212,7 +212,7 @@ class ExpectColumnStdevToBeBetween(ColumnAggregateExpectation):
         title = "Expect column standard deviation to be between"
 
         @staticmethod
-        def schema_extra(schema: Dict[str, Any], model: Type[ExpectColumnStdevToBeBetween]) -> None:
+        def schema_extra(schema: dict[str, Any], model: type[ExpectColumnStdevToBeBetween]) -> None:
             ColumnAggregateExpectation.Config.schema_extra(schema, model)
             schema["properties"]["metadata"]["properties"].update(
                 {
@@ -350,7 +350,7 @@ class ExpectColumnStdevToBeBetween(ColumnAggregateExpectation):
 
     def _validate(
         self,
-        metrics: Dict,
+        metrics: dict,
         runtime_configuration: Optional[dict] = None,
         execution_engine: Optional[ExecutionEngine] = None,
     ):

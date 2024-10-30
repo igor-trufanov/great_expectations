@@ -1,11 +1,12 @@
 from __future__ import annotations
 
+import builtins
 import copy
 import inspect
 import logging
 import pathlib
 from pprint import pformat as pf
-from typing import TYPE_CHECKING, ClassVar, Dict, Generator, List, Optional, Tuple, Type, Union
+from typing import TYPE_CHECKING, ClassVar, Generator, Optional, Union
 
 import pytest
 
@@ -57,7 +58,7 @@ class DataContext:
     _context: ClassVar[Optional[DataContext]] = None
     _config: ClassVar[Optional[GxConfig]] = None  # (kilo59) should this live  here?
 
-    _datasources: Dict[str, Datasource]
+    _datasources: dict[str, Datasource]
     root_directory: Union[DirectoryPath, str, None]
 
     @classmethod
@@ -76,7 +77,7 @@ class DataContext:
     def __init__(self, context_root_dir: Optional[DirectoryPath] = None) -> None:
         self.root_directory = context_root_dir
         self._data_sources: DataSourceManager = DataSourceManager(self)  # type: ignore[arg-type]
-        self._datasources: Dict[str, Datasource] = {}
+        self._datasources: dict[str, Datasource] = {}
         self.config_provider: _ConfigurationProvider | None = None
         logger.info(f"Available Factories - {self._data_sources.factories}")
         logger.debug(f"`type_lookup` mapping ->\n{pf(self._data_sources.type_lookup)}")
@@ -120,7 +121,7 @@ class DummyDataAsset(DataAsset):
         return BatchRequest("datasource_name", "data_asset_name", options or {})
 
     @override
-    def get_batch_identifiers_list(self, batch_request: BatchRequest) -> List[dict]:
+    def get_batch_identifiers_list(self, batch_request: BatchRequest) -> list[dict]:
         raise NotImplementedError
 
     @override
@@ -169,12 +170,12 @@ class TestMetaDatasource:
         assert len(empty_sources.type_lookup) == 0
 
         class MyTestDatasource(Datasource):
-            asset_types: ClassVar[List[Type[DataAsset]]] = []
+            asset_types: ClassVar[list[builtins.type[DataAsset]]] = []
             type: str = "my_test"
 
             @property
             @override
-            def execution_engine_type(self) -> Type[ExecutionEngine]:
+            def execution_engine_type(self) -> type[ExecutionEngine]:
                 return DummyExecutionEngine
 
         # One for each crud method: add, update, add_or_update, delete
@@ -192,12 +193,12 @@ class TestMetaDatasource:
         assert ds_factory_method_initial is None, "Check test cleanup"
 
         class MyTestDatasource(Datasource):
-            asset_types: ClassVar[List[Type[DataAsset]]] = []
+            asset_types: ClassVar[list[builtins.type[DataAsset]]] = []
             type: str = "my_test"
 
             @property
             @override
-            def execution_engine_type(self) -> Type[ExecutionEngine]:
+            def execution_engine_type(self) -> type[ExecutionEngine]:
                 return DummyExecutionEngine
 
         ds_factory_method_final = getattr(context_sources_cleanup, expected_method_name, None)
@@ -212,13 +213,13 @@ class TestMetaDatasource:
         expected_method_name = "add_my_test"
 
         class MyTestDatasource(Datasource):
-            asset_types: ClassVar[List[Type[DataAsset]]] = []
+            asset_types: ClassVar[list[builtins.type[DataAsset]]] = []
             type: str = "my_test"
             extra_field: str
 
             @property
             @override
-            def execution_engine_type(self) -> Type[ExecutionEngine]:
+            def execution_engine_type(self) -> type[ExecutionEngine]:
                 return DummyExecutionEngine
 
         ds_factory_method = getattr(context_sources_cleanup, expected_method_name)
@@ -249,12 +250,12 @@ class TestMetaDatasource:
             type: str = "bar"
 
         class FooBarDatasource(Datasource):
-            asset_types: ClassVar[List[Type[DataAsset]]] = [FooAsset, BarAsset]
+            asset_types: ClassVar[list[builtins.type[DataAsset]]] = [FooAsset, BarAsset]
             type: str = "foo_bar"
 
             @property
             @override
-            def execution_engine_type(self) -> Type[ExecutionEngine]:
+            def execution_engine_type(self) -> type[ExecutionEngine]:
                 return DummyExecutionEngine
 
         print(f" type_lookup ->\n{pf(FooBarDatasource._type_lookup)}\n")
@@ -280,7 +281,7 @@ class TestMisconfiguredMetaDatasource:
             class MissingTypeDatasource(Datasource):
                 @property
                 @override
-                def execution_engine_type(self) -> Type[ExecutionEngine]:
+                def execution_engine_type(self) -> type[ExecutionEngine]:
                     return DummyExecutionEngine
 
                 @override
@@ -307,7 +308,7 @@ class TestMisconfiguredMetaDatasource:
 
             class MissingTypeAsset(DataAsset):
                 @override
-                def get_batch_identifiers_list(self, batch_request: BatchRequest) -> List[dict]:
+                def get_batch_identifiers_list(self, batch_request: BatchRequest) -> list[dict]:
                     raise NotImplementedError
 
                 @override
@@ -316,11 +317,11 @@ class TestMisconfiguredMetaDatasource:
 
             class BadAssetDatasource(Datasource):
                 type: str = "valid"
-                asset_types: ClassVar[List[Type[DataAsset]]] = [MissingTypeAsset]
+                asset_types: ClassVar[list[builtins.type[DataAsset]]] = [MissingTypeAsset]
 
                 @property
                 @override
-                def execution_engine_type(self) -> Type[ExecutionEngine]:
+                def execution_engine_type(self) -> type[ExecutionEngine]:
                     return DummyExecutionEngine
 
                 @override
@@ -335,7 +336,7 @@ class TestMisconfiguredMetaDatasource:
 
             @property
             @override
-            def execution_engine_type(self) -> Type[ExecutionEngine]:
+            def execution_engine_type(self) -> type[ExecutionEngine]:
                 return DummyExecutionEngine
 
         with pytest.raises(NotImplementedError):
@@ -348,7 +349,7 @@ def test_minimal_ds_to_asset_flow(context_sources_cleanup):
 
     class SampleAsset(DataAsset):
         @override
-        def get_batch_identifiers_list(self, batch_request: BatchRequest) -> List[dict]:
+        def get_batch_identifiers_list(self, batch_request: BatchRequest) -> list[dict]:
             raise NotImplementedError
 
         @override
@@ -372,7 +373,7 @@ def test_minimal_ds_to_asset_flow(context_sources_cleanup):
 
         @property
         @override
-        def execution_engine_type(self) -> Type[ExecutionEngine]:
+        def execution_engine_type(self) -> type[ExecutionEngine]:
             return DummyExecutionEngine
 
         def test_connection(self): ...  # type: ignore[explicit-override] # FIXME
@@ -403,7 +404,7 @@ DEFAULT_CRUD_DATASOURCE_NAME = "pandas_datasource"
 @pytest.fixture
 def context_config_data(
     file_dc_config_dir_init: pathlib.Path,
-) -> Tuple[AbstractDataContext, pathlib.Path, pathlib.Path]:
+) -> tuple[AbstractDataContext, pathlib.Path, pathlib.Path]:
     config_file_path = file_dc_config_dir_init / FileDataContext.GX_YML
     assert config_file_path.exists() is True
     context = get_gx_context(context_root_dir=file_dc_config_dir_init)
@@ -436,8 +437,8 @@ def _remove_ids(config: dict) -> dict:
 
 @pytest.fixture
 def context_with_fluent_datasource(
-    context_config_data: Tuple[AbstractDataContext, pathlib.Path, pathlib.Path],
-) -> Tuple[AbstractDataContext, pathlib.Path, pathlib.Path]:
+    context_config_data: tuple[AbstractDataContext, pathlib.Path, pathlib.Path],
+) -> tuple[AbstractDataContext, pathlib.Path, pathlib.Path]:
     context, config_file_path, data_dir = context_config_data
     assert len(context.data_sources.all()) == 0
     context.data_sources.add_pandas_filesystem(

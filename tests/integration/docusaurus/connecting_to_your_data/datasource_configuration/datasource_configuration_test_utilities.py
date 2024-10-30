@@ -2,13 +2,12 @@ from __future__ import annotations
 
 import operator
 from functools import reduce
-from typing import List, Tuple
 
 # The following method is used to ensure that the dictionary used to verify universal configuration elements
 # remains the same in all the configuration tests.  Users may disregard it.
 
 
-def _get_items_by_path(root_dictionary: dict, keys: Tuple[str]) -> Tuple:
+def _get_items_by_path(root_dictionary: dict, keys: tuple[str]) -> tuple:
     try:
         return "/".join(keys), reduce(operator.getitem, keys, root_dictionary)
     except Exception:
@@ -16,10 +15,10 @@ def _get_items_by_path(root_dictionary: dict, keys: Tuple[str]) -> Tuple:
 
 
 def _gather_key_paths_from_dict(
-    target_dict: dict, current_path: List[str] | None = None
-) -> Tuple[List[Tuple[str]], List[str]]:
-    key_paths: List[Tuple[str]] = []
-    full_paths: List[Tuple[str]] = []
+    target_dict: dict, current_path: list[str] | None = None
+) -> tuple[list[tuple[str]], list[str]]:
+    key_paths: list[tuple[str]] = []
+    full_paths: list[tuple[str]] = []
     for key, value in target_dict.items():
         if isinstance(value, dict):
             if current_path:

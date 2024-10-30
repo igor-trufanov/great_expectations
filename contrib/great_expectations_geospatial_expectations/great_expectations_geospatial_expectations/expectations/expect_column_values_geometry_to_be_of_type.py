@@ -1,4 +1,4 @@
-from typing import Any, List, Union
+from typing import Any, Union
 
 from shapely.geometry import LineString, MultiPolygon, Point, Polygon, mapping, shape
 
@@ -149,7 +149,7 @@ class ExpectColumnValuesGeometryToBeOfType(ColumnMapExpectation):
         result: ExpectationValidationResult = None,
         runtime_configuration: dict = None,
         **kwargs,
-    ) -> List[
+    ) -> list[
         Union[
             dict,
             str,

@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import logging
-from typing import TYPE_CHECKING, Any, ClassVar, Dict, Literal, Type, Union
+from typing import TYPE_CHECKING, Any, ClassVar, Literal, Union
 
 from great_expectations._docs_decorators import public_api
 from great_expectations.compatibility import google, pydantic
@@ -34,7 +34,7 @@ class SparkGoogleCloudStorageDatasourceError(SparkDatasourceError):
 @public_api
 class SparkGoogleCloudStorageDatasource(_SparkFilePathDatasource):
     # class attributes
-    data_connector_type: ClassVar[Type[GoogleCloudStorageDataConnector]] = (
+    data_connector_type: ClassVar[type[GoogleCloudStorageDataConnector]] = (
         GoogleCloudStorageDataConnector
     )
     # these fields should not be passed to the execution engine
@@ -49,7 +49,7 @@ class SparkGoogleCloudStorageDatasource(_SparkFilePathDatasource):
 
     # Google Cloud Storage specific attributes
     bucket_or_name: str
-    gcs_options: Dict[str, Union[ConfigStr, Any]] = {}
+    gcs_options: dict[str, Union[ConfigStr, Any]] = {}
 
     # on 3.11 the annotation must be type-checking import otherwise it will fail at import time
     _gcs_client: Union[Client, None] = pydantic.PrivateAttr(default=None)

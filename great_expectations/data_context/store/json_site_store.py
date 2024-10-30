@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from json import loads
-from typing import Dict
 
 from great_expectations.compatibility.typing_extensions import override
 from great_expectations.data_context.store.store import Store
@@ -48,7 +47,7 @@ class JsonSiteStore(Store):
 
     @override
     @staticmethod
-    def gx_cloud_response_json_to_object_dict(response_json: Dict) -> Dict:
+    def gx_cloud_response_json_to_object_dict(response_json: dict) -> dict:
         """
         This method takes full json response from GX cloud and outputs a dict appropriate for
         deserialization into a GX object

@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, Dict, Optional
+from typing import TYPE_CHECKING, Any, Optional
 
 from great_expectations.compatibility.typing_extensions import override
 from great_expectations.execution_engine import (
@@ -30,7 +30,7 @@ class TableColumnCount(TableMetricProvider):
         execution_engine: ExecutionEngine,
         metric_domain_kwargs: dict,
         metric_value_kwargs: dict,
-        metrics: Dict[str, Any],
+        metrics: dict[str, Any],
         runtime_configuration: dict,
     ):
         columns = metrics.get("table.columns")
@@ -42,7 +42,7 @@ class TableColumnCount(TableMetricProvider):
         execution_engine: ExecutionEngine,
         metric_domain_kwargs: dict,
         metric_value_kwargs: dict,
-        metrics: Dict[str, Any],
+        metrics: dict[str, Any],
         runtime_configuration: dict,
     ):
         columns = metrics.get("table.columns")
@@ -54,7 +54,7 @@ class TableColumnCount(TableMetricProvider):
         execution_engine: ExecutionEngine,
         metric_domain_kwargs: dict,
         metric_value_kwargs: dict,
-        metrics: Dict[str, Any],
+        metrics: dict[str, Any],
         runtime_configuration: dict,
     ):
         columns = metrics.get("table.columns")

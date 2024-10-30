@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import json
 import uuid
-from typing import TYPE_CHECKING, Type
+from typing import TYPE_CHECKING
 from unittest import mock
 
 import pandas as pd
@@ -889,7 +889,7 @@ def test_is_fresh(
     has_id: bool,
     has_suite_id: bool,
     has_batch_def_id: bool,
-    error_list: list[Type[ResourceFreshnessError]],
+    error_list: list[type[ResourceFreshnessError]],
 ):
     context = in_memory_runtime_context
 

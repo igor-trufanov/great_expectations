@@ -1,5 +1,3 @@
-from typing import Tuple
-
 from moneyed import list_all_currencies
 
 from great_expectations.compatibility.pyspark import functions as F
@@ -15,11 +13,11 @@ from great_expectations.expectations.metrics import (
 )
 
 
-def generate_all_currency_codes() -> Tuple[str]:
+def generate_all_currency_codes() -> tuple[str]:
     return [str(currency_code) for currency_code in list_all_currencies()]
 
 
-def is_valid_currency_code(code: str, currency_codes: Tuple[str]) -> bool:
+def is_valid_currency_code(code: str, currency_codes: tuple[str]) -> bool:
     return code in currency_codes
 
 
@@ -32,7 +30,7 @@ class ColumnValuesCurrencyCode(ColumnMapMetricProvider):
     # This method implements the core logic for the PandasExecutionEngine
     @column_condition_partial(engine=PandasExecutionEngine)
     def _pandas(cls, column, **kwargs):
-        currency_codes: Tuple[str] = generate_all_currency_codes()
+        currency_codes: tuple[str] = generate_all_currency_codes()
 
         return column.apply(lambda x: is_valid_currency_code(x, currency_codes))
 
@@ -44,7 +42,7 @@ class ColumnValuesCurrencyCode(ColumnMapMetricProvider):
     # This method defines the business logic for evaluating your metric when using a SparkDFExecutionEngine
     @column_condition_partial(engine=SparkDFExecutionEngine)
     def _spark(cls, column, **kwargs):
-        currency_codes: Tuple[str] = generate_all_currency_codes()
+        currency_codes: tuple[str] = generate_all_currency_codes()
 
         # Register the UDF
         is_valid_currency_code_udf = F.udf(is_valid_currency_code, types.BooleanType())

@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import logging
 from string import Formatter
-from typing import TYPE_CHECKING, Any, ClassVar, Dict, Tuple, Type, Union
+from typing import TYPE_CHECKING, Any, ClassVar, Union
 
 from great_expectations.compatibility import pydantic
 from great_expectations.compatibility.typing_extensions import override
@@ -65,9 +65,9 @@ class UnexpectedRowsExpectation(BatchExpectation):
 
     unexpected_rows_query: str = pydantic.Field(description=UNEXPECTED_ROWS_QUERY_DESCRIPTION)
 
-    metric_dependencies: ClassVar[Tuple[str, ...]] = ("unexpected_rows_query.table",)
-    success_keys: ClassVar[Tuple[str, ...]] = ("unexpected_rows_query",)
-    domain_keys: ClassVar[Tuple[str, ...]] = (
+    metric_dependencies: ClassVar[tuple[str, ...]] = ("unexpected_rows_query.table",)
+    success_keys: ClassVar[tuple[str, ...]] = ("unexpected_rows_query",)
+    domain_keys: ClassVar[tuple[str, ...]] = (
         "batch_id",
         "row_condition",
         "condition_parser",
@@ -93,7 +93,7 @@ class UnexpectedRowsExpectation(BatchExpectation):
         title = "Custom Expectation with SQL"
 
         @staticmethod
-        def schema_extra(schema: Dict[str, Any], model: Type[UnexpectedRowsExpectation]) -> None:
+        def schema_extra(schema: dict[str, Any], model: type[UnexpectedRowsExpectation]) -> None:
             BatchExpectation.Config.schema_extra(schema, model)
             schema["properties"]["metadata"]["properties"].update(
                 {

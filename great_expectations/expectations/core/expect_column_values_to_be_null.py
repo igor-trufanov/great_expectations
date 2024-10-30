@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, ClassVar, Dict, Optional, Tuple, Type, Union
+from typing import TYPE_CHECKING, Any, ClassVar, Optional, Union
 
 from great_expectations.core.metric_function_types import (
     SummarizationMetricNameSuffixes,
@@ -170,13 +170,13 @@ class ExpectColumnValuesToBeNull(ColumnMapExpectation):
                 }}
     """  # noqa: E501
 
-    domain_keys: ClassVar[Tuple[str, ...]] = (
+    domain_keys: ClassVar[tuple[str, ...]] = (
         "column",
         "row_condition",
         "condition_parser",
     )
 
-    library_metadata: ClassVar[Dict[str, Union[str, list, bool]]] = {
+    library_metadata: ClassVar[dict[str, Union[str, list, bool]]] = {
         "maturity": "production",
         "tags": ["core expectation", "column map expectation"],
         "contributors": ["@great_expectations"],
@@ -193,7 +193,7 @@ class ExpectColumnValuesToBeNull(ColumnMapExpectation):
         title = "Expect column values to be null"
 
         @staticmethod
-        def schema_extra(schema: Dict[str, Any], model: Type[ExpectColumnValuesToBeNull]) -> None:
+        def schema_extra(schema: dict[str, Any], model: type[ExpectColumnValuesToBeNull]) -> None:
             ColumnMapExpectation.Config.schema_extra(schema, model)
             schema["properties"]["metadata"]["properties"].update(
                 {
@@ -336,7 +336,7 @@ class ExpectColumnValuesToBeNull(ColumnMapExpectation):
 
     def _validate(
         self,
-        metrics: Dict,
+        metrics: dict,
         runtime_configuration: Optional[dict] = None,
         execution_engine: Optional[ExecutionEngine] = None,
     ):

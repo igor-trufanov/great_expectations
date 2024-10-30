@@ -19,7 +19,7 @@ import logging
 import pathlib
 import re
 import sys
-from typing import List, Optional
+from typing import Optional
 
 import click
 import requests
@@ -309,7 +309,7 @@ class LinkChecker:
 
         return result
 
-    def check_file(self, file: pathlib.Path) -> List[LinkReport]:
+    def check_file(self, file: pathlib.Path) -> list[LinkReport]:
         """Looks for all the links in a file and checks them.
 
         Returns:
@@ -320,7 +320,7 @@ class LinkChecker:
 
         matches = self._markdown_link_pattern.finditer(contents)
 
-        result: List[LinkReport] = []
+        result: list[LinkReport] = []
 
         for match in matches:
             report = self._check_link(match, file)
@@ -403,7 +403,7 @@ def scan_docs(  # noqa: C901, PLR0913
         return 1, f"Docs root path: {docs_root} is not a directory"
 
     # prepare our return value
-    result: List[LinkReport] = list()
+    result: list[LinkReport] = list()
     checker = LinkChecker(
         path, docs_root, static_root, site_prefix, static_prefix, skip_external
     )

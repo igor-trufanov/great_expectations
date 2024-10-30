@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import ClassVar, Tuple, Type
+from typing import ClassVar
 
 from great_expectations.compatibility.typing_extensions import override
 from great_expectations.exceptions import (
@@ -31,7 +31,7 @@ class FreshnessDiagnostics:
     unexpected behavior.
     """
 
-    raise_for_error_class: ClassVar[Type[ResourceFreshnessAggregateError]] = (
+    raise_for_error_class: ClassVar[type[ResourceFreshnessAggregateError]] = (
         ResourceFreshnessAggregateError
     )
     errors: list[GreatExpectationsError]
@@ -68,8 +68,8 @@ class _ParentFreshnessDiagnostics(FreshnessDiagnostics):
     All errors throughout the hierarchy should be collected in the parent diagnostics object.
     """
 
-    parent_error_class: ClassVar[Type[GreatExpectationsError]]
-    children_error_classes: ClassVar[Tuple[Type[GreatExpectationsError], ...]]
+    parent_error_class: ClassVar[type[GreatExpectationsError]]
+    children_error_classes: ClassVar[tuple[type[GreatExpectationsError], ...]]
 
     def update_with_children(self, *children_diagnostics: FreshnessDiagnostics) -> None:
         for diagnostics in children_diagnostics:
@@ -92,22 +92,22 @@ class _ParentFreshnessDiagnostics(FreshnessDiagnostics):
 
 @dataclass
 class ValidationDefinitionFreshnessDiagnostics(_ParentFreshnessDiagnostics):
-    parent_error_class: ClassVar[Type[GreatExpectationsError]] = ValidationDefinitionNotAddedError
-    children_error_classes: ClassVar[Tuple[Type[GreatExpectationsError], ...]] = (
+    parent_error_class: ClassVar[type[GreatExpectationsError]] = ValidationDefinitionNotAddedError
+    children_error_classes: ClassVar[tuple[type[GreatExpectationsError], ...]] = (
         ExpectationSuiteNotAddedError,
         BatchDefinitionNotAddedError,
     )
-    raise_for_error_class: ClassVar[Type[ResourceFreshnessAggregateError]] = (
+    raise_for_error_class: ClassVar[type[ResourceFreshnessAggregateError]] = (
         ValidationDefinitionRelatedResourcesFreshnessError
     )
 
 
 @dataclass
 class CheckpointFreshnessDiagnostics(_ParentFreshnessDiagnostics):
-    parent_error_class: ClassVar[Type[GreatExpectationsError]] = CheckpointNotAddedError
-    children_error_classes: ClassVar[Tuple[Type[GreatExpectationsError], ...]] = (
+    parent_error_class: ClassVar[type[GreatExpectationsError]] = CheckpointNotAddedError
+    children_error_classes: ClassVar[tuple[type[GreatExpectationsError], ...]] = (
         ValidationDefinitionNotAddedError,
     )
-    raise_for_error_class: ClassVar[Type[ResourceFreshnessAggregateError]] = (
+    raise_for_error_class: ClassVar[type[ResourceFreshnessAggregateError]] = (
         CheckpointRelatedResourcesFreshnessError
     )

@@ -1,4 +1,4 @@
-from typing import Any, Dict, Generic, Optional
+from typing import Any, Generic, Optional
 
 from typing_extensions import TypeAlias
 
@@ -7,7 +7,7 @@ from great_expectations.compatibility.pydantic import StrictStr
 from great_expectations.core.batch_definition import PartitionerT
 from great_expectations.datasource.fluent.data_connector.batch_filter import BatchSlice
 
-BatchParameters: TypeAlias = Dict[StrictStr, Any]
+BatchParameters: TypeAlias = dict[StrictStr, Any]
 
 class BatchRequest(pydantic.GenericModel, Generic[PartitionerT]):
     datasource_name: StrictStr

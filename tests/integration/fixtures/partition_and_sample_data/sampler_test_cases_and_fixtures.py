@@ -1,7 +1,6 @@
 """Test cases and fixtures for sampler integration test configurations."""
 
 from dataclasses import dataclass
-from typing import List
 
 import pandas as pd
 
@@ -55,7 +54,7 @@ class TaxiSamplingTestCases:
     def test_column_name(self) -> str:
         return self._taxi_test_data.test_column_name
 
-    def test_cases(self) -> List[TaxiSamplingTestCase]:
+    def test_cases(self) -> list[TaxiSamplingTestCase]:
         return [
             TaxiSamplingTestCase(
                 sampling_method_name="sample_using_limit",

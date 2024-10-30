@@ -1,5 +1,3 @@
-from typing import Dict
-
 from dateutil.relativedelta import relativedelta
 
 from great_expectations.compatibility.sqlalchemy import sqlalchemy as sa
@@ -141,7 +139,7 @@ class ExpectColumnToHaveNoMonthsMissing(ColumnAggregateExpectation):
 
     def _validate(
         self,
-        metrics: Dict,
+        metrics: dict,
         runtime_configuration: dict = None,
         execution_engine: ExecutionEngine = None,
     ):

@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import logging
 from collections import OrderedDict
-from typing import TYPE_CHECKING, Dict, List, Optional, Sequence
+from typing import TYPE_CHECKING, Optional, Sequence
 
 from great_expectations.core.batch import (
     Batch,
@@ -25,7 +25,7 @@ class BatchManager:
     def __init__(
         self,
         execution_engine: ExecutionEngine,
-        batch_list: Optional[List[Batch]] = None,
+        batch_list: Optional[list[Batch]] = None,
     ) -> None:
         """
         Args:
@@ -37,19 +37,19 @@ class BatchManager:
         self._active_batch_id: Optional[str] = None
         self._active_batch_data_id: Optional[str] = None
 
-        self._batch_cache: Dict[str, AnyBatch] = OrderedDict()
-        self._batch_data_cache: Dict[str, BatchDataUnion] = {}
+        self._batch_cache: dict[str, AnyBatch] = OrderedDict()
+        self._batch_data_cache: dict[str, BatchDataUnion] = {}
 
         if batch_list:
             self.load_batch_list(batch_list=batch_list)
 
     @property
-    def batch_data_cache(self) -> Dict[str, BatchDataUnion]:
+    def batch_data_cache(self) -> dict[str, BatchDataUnion]:
         """Dictionary of loaded BatchData objects."""
         return self._batch_data_cache
 
     @property
-    def loaded_batch_ids(self) -> List[str]:
+    def loaded_batch_ids(self) -> list[str]:
         """IDs of loaded BatchData objects."""
         return list(self._batch_data_cache.keys())
 
@@ -82,7 +82,7 @@ class BatchManager:
         return self._batch_data_cache.get(self.active_batch_data_id)
 
     @property
-    def batch_cache(self) -> Dict[str, AnyBatch]:
+    def batch_cache(self) -> dict[str, AnyBatch]:
         """Getter for ordered dictionary (cache) of "Batch" objects in use (with batch_id as key)."""  # noqa: E501
         return self._batch_cache
 

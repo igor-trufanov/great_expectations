@@ -3,7 +3,7 @@ from __future__ import annotations
 import urllib.parse
 import uuid
 import weakref
-from typing import TYPE_CHECKING, Any, Dict, TypeVar
+from typing import TYPE_CHECKING, Any, TypeVar
 
 from great_expectations.compatibility.pydantic import BaseModel
 from great_expectations.compatibility.typing_extensions import override
@@ -41,7 +41,7 @@ def orjson_loads(v, *args, **kwargs):
 
 
 class Payload(BaseModel):
-    data: Dict[str, Any]
+    data: dict[str, Any]
 
     class Config:
         extra = "forbid"

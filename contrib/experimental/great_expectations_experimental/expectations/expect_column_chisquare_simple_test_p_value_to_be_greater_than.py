@@ -1,4 +1,4 @@
-from typing import Dict, Optional
+from typing import Optional
 
 import scipy.stats as stats
 
@@ -113,7 +113,7 @@ class ExpectColumnChisquareSimpleTestPValueToBeGreaterThan(BatchExpectation):
     # This method performs a validation of your metrics against your success keys, returning a dict indicating the success or failure of the Expectation.
     def _validate(
         self,
-        metrics: Dict,
+        metrics: dict,
         runtime_configuration: dict = None,
         execution_engine: ExecutionEngine = None,
     ):

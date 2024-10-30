@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import logging
 from itertools import chain
-from typing import TYPE_CHECKING, List, Optional, Sequence
+from typing import TYPE_CHECKING, Optional, Sequence
 
 from great_expectations.compatibility.typing_extensions import override
 from great_expectations.experimental.metric_repository.metric_retriever import (
@@ -33,9 +33,9 @@ class MetricListMetricRetriever(MetricRetriever):
     def get_metrics(
         self,
         batch_request: BatchRequest,
-        metric_list: Optional[List[MetricTypes]] = None,
+        metric_list: Optional[list[MetricTypes]] = None,
     ) -> Sequence[Metric]:
-        metrics_result: List[Metric] = []
+        metrics_result: list[Metric] = []
 
         if not metric_list:
             raise ValueError("metric_list cannot be empty")  # noqa: TRY003
@@ -79,7 +79,7 @@ class MetricListMetricRetriever(MetricRetriever):
         timestamp_column_metrics = self._get_timestamp_column_metrics(
             metric_list, batch_request, timestamp_column_names
         )
-        all_column_names: List[str] = self._get_all_column_names(table_metrics)
+        all_column_names: list[str] = self._get_all_column_names(table_metrics)
         non_numeric_column_metrics = self._get_non_numeric_column_metrics(
             metric_list, batch_request, all_column_names
         )
@@ -97,9 +97,9 @@ class MetricListMetricRetriever(MetricRetriever):
 
     def _get_non_numeric_column_metrics(
         self,
-        metrics_list: List[MetricTypes],
+        metrics_list: list[MetricTypes],
         batch_request: BatchRequest,
-        column_list: List[str],
+        column_list: list[str],
     ) -> Sequence[Metric]:
         """Calculate column metrics for non-numeric columns.
 
@@ -129,9 +129,9 @@ class MetricListMetricRetriever(MetricRetriever):
 
     def _get_numeric_column_metrics(
         self,
-        metrics_list: List[MetricTypes],
+        metrics_list: list[MetricTypes],
         batch_request: BatchRequest,
-        column_list: List[str],
+        column_list: list[str],
     ) -> Sequence[Metric]:
         """Calculate column metrics for numeric columns.
 
@@ -164,9 +164,9 @@ class MetricListMetricRetriever(MetricRetriever):
 
     def _get_timestamp_column_metrics(
         self,
-        metrics_list: List[MetricTypes],
+        metrics_list: list[MetricTypes],
         batch_request: BatchRequest,
-        column_list: List[str],
+        column_list: list[str],
     ) -> Sequence[Metric]:
         """Calculate column metrics for timestamp columns.
 
@@ -200,8 +200,8 @@ class MetricListMetricRetriever(MetricRetriever):
         )
 
     def _calculate_table_metrics(
-        self, batch_request: BatchRequest, metric_list: List[MetricTypes]
-    ) -> List[Metric]:
+        self, batch_request: BatchRequest, metric_list: list[MetricTypes]
+    ) -> list[Metric]:
         """Calculate table metrics, which include row_count, column names and types.
 
         Args:
@@ -211,7 +211,7 @@ class MetricListMetricRetriever(MetricRetriever):
         Returns:
             Sequence[Metric]: List of table metrics.
         """
-        metrics: List[Metric] = []
+        metrics: list[Metric] = []
         if MetricTypes.TABLE_ROW_COUNT in metric_list:
             metrics.append(self._get_table_row_count(batch_request=batch_request))
         if MetricTypes.TABLE_COLUMNS in metric_list:
@@ -220,7 +220,7 @@ class MetricListMetricRetriever(MetricRetriever):
             metrics.append(self._get_table_column_types(batch_request=batch_request))
         return metrics
 
-    def _check_valid_metric_types(self, metric_list: List[MetricTypes]) -> bool:
+    def _check_valid_metric_types(self, metric_list: list[MetricTypes]) -> bool:
         """Check whether all the metric types in the list are valid.
 
         Args:
@@ -231,7 +231,7 @@ class MetricListMetricRetriever(MetricRetriever):
         """  # noqa: E501
         return all(metric in MetricTypes for metric in metric_list)
 
-    def _column_metrics_in_metric_list(self, metric_list: List[MetricTypes]) -> bool:
+    def _column_metrics_in_metric_list(self, metric_list: list[MetricTypes]) -> bool:
         """Helper method to check whether any column metrics are present in the metric list.
 
         Args:
@@ -240,7 +240,7 @@ class MetricListMetricRetriever(MetricRetriever):
         Returns:
             bool: True if any column metrics are present in the metric list, False otherwise.
         """  # noqa: E501
-        column_metrics: List[MetricTypes] = [
+        column_metrics: list[MetricTypes] = [
             MetricTypes.COLUMN_MIN,
             MetricTypes.COLUMN_MAX,
             MetricTypes.COLUMN_MEDIAN,

@@ -1,6 +1,5 @@
 import datetime
 import os
-from typing import List
 from unittest import mock
 
 import pandas as pd
@@ -69,7 +68,7 @@ def simple_multi_year_pandas_df():
 
 @pytest.fixture
 def test_s3_files(s3, s3_bucket, test_df_small_csv):
-    keys: List[str] = [
+    keys: list[str] = [
         "path/A-100.csv",
         "path/A-101.csv",
         "directory/B-1.csv",
@@ -239,7 +238,7 @@ def test_partition_on_date_parts_multiple_date_parts(
 def test_named_date_part_methods(
     mock_partition_on_date_parts: mock.MagicMock,  # noqa: TID251
     partitioner_method_name: str,
-    called_with_date_parts: List[DatePart],
+    called_with_date_parts: list[DatePart],
     simple_multi_year_pandas_df: pd.DataFrame,
 ):
     """Test that a partially pre-filled version of partition_on_date_parts() was called with the appropriate params.

@@ -7,8 +7,6 @@ from typing import (
     AbstractSet,
     Any,
     Callable,
-    Dict,
-    List,
     Mapping,
     Optional,
     TypedDict,
@@ -84,8 +82,8 @@ class Checkpoint(BaseModel):
     """  # noqa: E501
 
     name: str
-    validation_definitions: List[ValidationDefinition]
-    actions: List[CheckpointAction] = Field(default_factory=list)
+    validation_definitions: list[ValidationDefinition]
+    actions: list[CheckpointAction] = Field(default_factory=list)
     result_format: ResultFormatUnion = DEFAULT_RESULT_FORMAT
     id: Union[str, None] = None
 
@@ -180,7 +178,7 @@ class Checkpoint(BaseModel):
         exclude_unset: bool = False,
         exclude_defaults: bool = False,
         exclude_none: bool = False,
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """
         Override the default dict method to enable proper diagnostics around validation_definitions.
 
@@ -212,7 +210,7 @@ class Checkpoint(BaseModel):
 
         return exclude
 
-    def _serialize_validation_definitions(self, data: Dict[str, Any]) -> Dict[str, Any]:
+    def _serialize_validation_definitions(self, data: dict[str, Any]) -> dict[str, Any]:
         """
         Manually serialize the validation_definitions field to avoid Pydantic's default
         serialization.
@@ -235,9 +233,9 @@ class Checkpoint(BaseModel):
 
     @validator("validation_definitions", pre=True)
     def _validate_validation_definitions(
-        cls, validation_definitions: list[ValidationDefinition] | list[Dict[str, Any]]
+        cls, validation_definitions: list[ValidationDefinition] | list[dict[str, Any]]
     ) -> list[ValidationDefinition]:
-        if validation_definitions and isinstance(validation_definitions[0], Dict):
+        if validation_definitions and isinstance(validation_definitions[0], dict):
             validation_definition_store = project_manager.get_validation_definition_store()
             identifier_bundles = [
                 _IdentifierBundle(**v)  # type: ignore[arg-type] # All validation configs are dicts if the first one is
@@ -247,7 +245,7 @@ class Checkpoint(BaseModel):
                 identifier_bundles=identifier_bundles, store=validation_definition_store
             )
 
-        return cast(List[ValidationDefinition], validation_definitions)
+        return cast(list[ValidationDefinition], validation_definitions)
 
     @classmethod
     def _deserialize_identifier_bundles_to_validation_definitions(
@@ -273,7 +271,7 @@ class Checkpoint(BaseModel):
     @public_api
     def run(
         self,
-        batch_parameters: Dict[str, Any] | None = None,
+        batch_parameters: dict[str, Any] | None = None,
         expectation_parameters: SuiteParameterDict | None = None,
         run_id: RunIdentifier | None = None,
     ) -> CheckpointResult:
@@ -312,12 +310,12 @@ class Checkpoint(BaseModel):
 
     def _run_validation_definitions(
         self,
-        batch_parameters: Dict[str, Any] | None,
+        batch_parameters: dict[str, Any] | None,
         expectation_parameters: SuiteParameterDict | None,
         result_format: ResultFormatUnion,
         run_id: RunIdentifier,
-    ) -> Dict[ValidationResultIdentifier, ExpectationSuiteValidationResult]:
-        run_results: Dict[ValidationResultIdentifier, ExpectationSuiteValidationResult] = {}
+    ) -> dict[ValidationResultIdentifier, ExpectationSuiteValidationResult]:
+        run_results: dict[ValidationResultIdentifier, ExpectationSuiteValidationResult] = {}
         for validation_definition in self.validation_definitions:
             validation_result = validation_definition.run(
                 checkpoint_id=self.id,
@@ -352,7 +350,7 @@ class Checkpoint(BaseModel):
     def _construct_result(
         self,
         run_id: RunIdentifier,
-        run_results: Dict[ValidationResultIdentifier, ExpectationSuiteValidationResult],
+        run_results: dict[ValidationResultIdentifier, ExpectationSuiteValidationResult],
     ) -> CheckpointResult:
         for result in run_results.values():
             result.meta["checkpoint_id"] = self.id
@@ -376,15 +374,15 @@ class Checkpoint(BaseModel):
             )
             action_context.update(action=action, action_result=action_result)
 
-    def _sort_actions(self) -> List[CheckpointAction]:
+    def _sort_actions(self) -> list[CheckpointAction]:
         """
         UpdateDataDocsActions are prioritized to run first, followed by all other actions.
 
         This is due to the fact that certain actions reference data docs sites,
         which must be updated first.
         """
-        priority_actions: List[CheckpointAction] = []
-        secondary_actions: List[CheckpointAction] = []
+        priority_actions: list[CheckpointAction] = []
+        secondary_actions: list[CheckpointAction] = []
         for action in self.actions:
             if isinstance(action, UpdateDataDocsAction):
                 priority_actions.append(action)
@@ -440,7 +438,7 @@ class Checkpoint(BaseModel):
 @public_api
 class CheckpointResult(BaseModel):
     run_id: RunIdentifier
-    run_results: Dict[ValidationResultIdentifier, ExpectationSuiteValidationResult]
+    run_results: dict[ValidationResultIdentifier, ExpectationSuiteValidationResult]
     checkpoint_config: Checkpoint
     success: Optional[bool] = None
 
@@ -491,7 +489,7 @@ CheckpointResult.update_forward_refs()
 class CheckpointDescriptionDict(TypedDict):
     success: bool
     statistics: CheckpointDescriptionStatistics
-    validation_results: List[Dict[str, Any]]
+    validation_results: list[dict[str, Any]]
 
 
 class CheckpointDescriptionStatistics(TypedDict):

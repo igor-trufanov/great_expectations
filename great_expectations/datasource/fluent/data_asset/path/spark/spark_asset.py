@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Sequence, Type, Union
+from typing import TYPE_CHECKING, Sequence, Union
 
 from great_expectations.datasource.fluent.data_asset.path.spark.csv_asset import (
     CSVAsset,
@@ -35,7 +35,7 @@ if TYPE_CHECKING:
 # so that the schemas are generated and the assets are registered.
 
 
-SPARK_PATH_ASSET_TYPES: Sequence[Type[DataAsset]] = (
+SPARK_PATH_ASSET_TYPES: Sequence[type[DataAsset]] = (
     CSVAsset,
     DirectoryCSVAsset,
     ParquetAsset,

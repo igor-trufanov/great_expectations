@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, ClassVar, Dict, Optional, Type, Union
+from typing import TYPE_CHECKING, Any, ClassVar, Optional, Union
 
 import numpy as np
 import pandas as pd
@@ -175,7 +175,7 @@ class ExpectColumnValuesToNotBeInSet(ColumnMapExpectation):
 
     value_set: ValueSetField
 
-    library_metadata: ClassVar[Dict[str, Union[str, list, bool]]] = {
+    library_metadata: ClassVar[dict[str, Union[str, list, bool]]] = {
         "maturity": "production",
         "tags": ["core expectation", "column map expectation"],
         "contributors": [
@@ -202,7 +202,7 @@ class ExpectColumnValuesToNotBeInSet(ColumnMapExpectation):
 
         @staticmethod
         def schema_extra(
-            schema: Dict[str, Any], model: Type[ExpectColumnValuesToNotBeInSet]
+            schema: dict[str, Any], model: type[ExpectColumnValuesToNotBeInSet]
         ) -> None:
             ColumnMapExpectation.Config.schema_extra(schema, model)
             schema["properties"]["metadata"]["properties"].update(
@@ -347,7 +347,7 @@ class ExpectColumnValuesToNotBeInSet(ColumnMapExpectation):
     def _pandas_column_values_not_in_set(  # noqa: PLR0913
         self,
         series: pd.Series,
-        metrics: Dict,
+        metrics: dict,
         metric_domain_kwargs: dict,
         metric_value_kwargs: dict,
         runtime_configuration: Optional[dict] = None,

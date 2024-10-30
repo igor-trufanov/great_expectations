@@ -1,5 +1,5 @@
 import logging
-from typing import Any, Dict, List
+from typing import Any
 
 import pytest
 from packaging.version import Version
@@ -48,7 +48,7 @@ def test_spark_config_datasource(spark_session_v012):
     assert not sc_stopped
 
     # Test that our values were set
-    conf: List[tuple] = spark_session.sparkContext.getConf().getAll()
+    conf: list[tuple] = spark_session.sparkContext.getConf().getAll()
     assert ("spark.app.name", name) in conf
     assert ("spark.sql.catalogImplementation", "hive") in conf
     assert ("spark.executor.memory", "768m") in conf
@@ -56,7 +56,7 @@ def test_spark_config_datasource(spark_session_v012):
 
 
 def test_spark_config_execution_engine_block_config(spark_session):
-    new_spark_config: Dict[str, Any] = {
+    new_spark_config: dict[str, Any] = {
         "spark.app.name": "great_expectations-ee-config",
         "spark.sql.catalogImplementation": "hive",
         "spark.executor.memory": "512m",
@@ -70,7 +70,7 @@ def test_spark_config_execution_engine_block_config(spark_session):
 
     assert not sc_stopped
 
-    current_spark_config: List[tuple] = execution_engine.spark.sparkContext.getConf().getAll()
+    current_spark_config: list[tuple] = execution_engine.spark.sparkContext.getConf().getAll()
     assert ("spark.sql.catalogImplementation", "hive") in current_spark_config
     assert (
         "spark.app.name",

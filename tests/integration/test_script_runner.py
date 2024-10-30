@@ -10,7 +10,6 @@ import logging
 import os
 import pathlib
 import shutil
-from typing import List
 
 import pkg_resources
 import pytest
@@ -90,7 +89,7 @@ def delay_rerun(*args):
 
 
 # to be populated by the smaller lists below
-docs_test_matrix: List[IntegrationTestFixture] = []
+docs_test_matrix: list[IntegrationTestFixture] = []
 
 local_tests = [
     # IntegrationTestFixture(
@@ -340,10 +339,10 @@ docs_test_matrix += aws_glue_integration_tests
 docs_test_matrix += multiple_backend
 docs_test_matrix += failed_rows_tests
 
-pandas_integration_tests: List[IntegrationTestFixture] = []
+pandas_integration_tests: list[IntegrationTestFixture] = []
 
 # populate integration_test_matrix with sub-lists
-integration_test_matrix: List[IntegrationTestFixture] = []
+integration_test_matrix: list[IntegrationTestFixture] = []
 integration_test_matrix += pandas_integration_tests
 
 

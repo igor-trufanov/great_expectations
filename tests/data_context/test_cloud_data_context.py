@@ -1,5 +1,5 @@
 import uuid
-from typing import Any, Dict
+from typing import Any
 
 import pytest
 import responses
@@ -18,7 +18,7 @@ def _create_cloud_config_response(
     expectation_suite_store_name_key: str,
     validation_results_store_name_key: str,
     validation_results_store_class_name: str,
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     return {
         "anonymous_usage_statistics": {
             "data_context_id": "6a52bdfa-e182-455b-a825-e69f076e67d6",

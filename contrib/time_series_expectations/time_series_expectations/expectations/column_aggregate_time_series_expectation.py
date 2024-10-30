@@ -1,5 +1,4 @@
 from abc import ABC
-from typing import Dict
 
 import pandas as pd
 
@@ -39,7 +38,7 @@ class ColumnAggregateTimeSeriesExpectation(ColumnAggregateExpectation, ABC):
 
     def _validate(
         self,
-        metrics: Dict,
+        metrics: dict,
         runtime_configuration: dict = None,
         execution_engine: ExecutionEngine = None,
     ):

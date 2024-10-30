@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import logging
 from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING, Any, ClassVar, List, Type
+from typing import TYPE_CHECKING, Any, ClassVar
 
 from great_expectations.core.id_dict import BatchSpec
 
@@ -42,7 +42,7 @@ class DataConnector(ABC):
 
     # needed to select the asset level kwargs needed to build the DataConnector
     asset_level_option_keys: ClassVar[tuple[str, ...]] = ()
-    asset_options_type: ClassVar[Type] = dict
+    asset_options_type: ClassVar[type] = dict
 
     def __init__(
         self,
@@ -61,7 +61,7 @@ class DataConnector(ABC):
         return self._datasource_name
 
     @abstractmethod
-    def get_batch_definition_list(self, batch_request: BatchRequest) -> List[LegacyBatchDefinition]:
+    def get_batch_definition_list(self, batch_request: BatchRequest) -> list[LegacyBatchDefinition]:
         """
         This interface method, implemented by subclasses, examines "BatchRequest" and converts it to one or more
         "BatchDefinition" objects, each of which can be later converted to ExecutionEngine-specific "BatchSpec" object
@@ -99,7 +99,7 @@ class DataConnector(ABC):
         return self.get_unmatched_data_reference_count() < self.get_data_reference_count()
 
     @abstractmethod
-    def get_data_references(self) -> List[Any]:
+    def get_data_references(self) -> list[Any]:
         """
         This interface method lists objects in the underlying data store used to create a list of data_references (type depends on cloud storage environment, SQL DBMS, etc.).
         """  # noqa: E501
@@ -116,7 +116,7 @@ class DataConnector(ABC):
         pass
 
     @abstractmethod
-    def get_matched_data_references(self) -> List[Any]:
+    def get_matched_data_references(self) -> list[Any]:
         """
         This interface method returns (e.g., cached) data references that were successfully matched based on "BatchRequest" options.
 
@@ -136,7 +136,7 @@ class DataConnector(ABC):
         pass
 
     @abstractmethod
-    def get_unmatched_data_references(self) -> List[Any]:
+    def get_unmatched_data_references(self) -> list[Any]:
         """
         This interface method returns (e.g., cached) data references that could not be matched based on "BatchRequest" options.
 

@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, ClassVar, Dict, List, Optional, Set
+from typing import TYPE_CHECKING, ClassVar, Optional
 
 import numpy as np
 
@@ -35,7 +35,7 @@ class ValueCountsSingleBatchParameterBuilder(MetricSingleBatchParameterBuilder):
     Compute value counts using specified metric for one Batch of data.
     """
 
-    exclude_field_names: ClassVar[Set[str]] = (
+    exclude_field_names: ClassVar[set[str]] = (
         MetricSingleBatchParameterBuilder.exclude_field_names
         | {
             "column_value_counts_metric_single_batch_parameter_builder_config",
@@ -52,7 +52,7 @@ class ValueCountsSingleBatchParameterBuilder(MetricSingleBatchParameterBuilder):
     def __init__(
         self,
         name: str,
-        suite_parameter_builder_configs: Optional[List[ParameterBuilderConfig]] = None,
+        suite_parameter_builder_configs: Optional[list[ParameterBuilderConfig]] = None,
         data_context: Optional[AbstractDataContext] = None,
     ) -> None:
         """
@@ -119,7 +119,7 @@ class ValueCountsSingleBatchParameterBuilder(MetricSingleBatchParameterBuilder):
         self,
         domain: Domain,
         variables: Optional[ParameterContainer] = None,
-        parameters: Optional[Dict[str, ParameterContainer]] = None,
+        parameters: Optional[dict[str, ParameterContainer]] = None,
         runtime_configuration: Optional[dict] = None,
     ) -> Attributes:
         """

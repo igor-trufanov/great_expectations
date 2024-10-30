@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import datetime
 import os
-from typing import List
 from unittest import mock
 
 import pandas as pd
@@ -77,7 +76,7 @@ pytestmark = [
 def test_named_date_part_methods(
     mock_partition_on_date_parts: mock.MagicMock,  # noqa: TID251
     partitioner_method_name: str,
-    called_with_date_parts: List[DatePart],
+    called_with_date_parts: list[DatePart],
 ):
     """Test that a partially pre-filled version of partition_on_date_parts() was called with the appropriate params.
     For example, partition_on_year.
@@ -450,7 +449,7 @@ def test_sqlite_partition(
     """
     engine: SqlAlchemyExecutionEngine = build_sa_execution_engine(taxi_test_cases.test_df, sa)
 
-    test_cases: List[TaxiPartitioningTestCase] = taxi_test_cases.test_cases()
+    test_cases: list[TaxiPartitioningTestCase] = taxi_test_cases.test_cases()
     test_case: TaxiPartitioningTestCase
     batch_spec: SqlAlchemyDatasourceBatchSpec
     for test_case in test_cases:
@@ -533,7 +532,7 @@ def test_sqlite_partition_on_year(sa, in_memory_sqlite_taxi_ten_trips_per_month_
         .fetchall()
     )
 
-    row_dates: List[datetime.datetime] = [parse(row["pickup_datetime"]) for row in rows]
+    row_dates: list[datetime.datetime] = [parse(row["pickup_datetime"]) for row in rows]
     for row_date in row_dates:
         assert row_date.month >= 1
         assert row_date.month <= 12
@@ -577,7 +576,7 @@ def test_sqlite_partition_and_sample_using_limit(
         .fetchall()
     )
 
-    row_dates: List[datetime.datetime] = [parse(row["pickup_datetime"]) for row in rows]
+    row_dates: list[datetime.datetime] = [parse(row["pickup_datetime"]) for row in rows]
     for row_date in row_dates:
         assert row_date.month == 1
         assert row_date.year == 2018

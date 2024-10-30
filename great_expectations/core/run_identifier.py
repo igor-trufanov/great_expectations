@@ -4,7 +4,7 @@ import datetime
 import json
 import warnings
 from copy import deepcopy
-from typing import Dict, Optional, Union
+from typing import Optional, Union
 
 from dateutil.parser import parse
 from marshmallow import Schema, fields, post_load, pre_dump
@@ -88,7 +88,7 @@ class RunIdentifier(DataContextKey):
         return json.dumps(self.to_json_dict(), indent=2)
 
     @public_api
-    def to_json_dict(self) -> Dict[str, JSONValues]:
+    def to_json_dict(self) -> dict[str, JSONValues]:
         """Returns a JSON-serializable dict representation of this RunIdentifier.
 
         Returns:

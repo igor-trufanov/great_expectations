@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import logging
 from dataclasses import asdict, dataclass
-from typing import TYPE_CHECKING, Any, Dict, List, Optional
+from typing import TYPE_CHECKING, Any, Optional
 
 from great_expectations.compatibility.typing_extensions import override
 from great_expectations.core.metric_domain_types import MetricDomainTypes
@@ -22,7 +22,7 @@ logger.setLevel(logging.INFO)
 @dataclass
 class RuntimeEnvironmentVariablesDirectives(SerializableDictDot):
     rule_name: str
-    variables: Optional[Dict[str, Any]] = None
+    variables: Optional[dict[str, Any]] = None
 
     @override
     def to_dict(self) -> dict:
@@ -42,7 +42,7 @@ class RuntimeEnvironmentVariablesDirectives(SerializableDictDot):
 @dataclass
 class RuntimeEnvironmentDomainTypeDirectives(SerializableDictDot):
     domain_type: MetricDomainTypes
-    directives: Dict[str, Any]
+    directives: dict[str, Any]
 
     @override
     def to_dict(self) -> dict:
@@ -61,21 +61,21 @@ class RuntimeEnvironmentDomainTypeDirectives(SerializableDictDot):
 
 def build_variables_directives(
     exact_estimation: bool,
-    rules: List[Rule],
+    rules: list[Rule],
     **kwargs: dict,
-) -> List[RuntimeEnvironmentVariablesDirectives]:
+) -> list[RuntimeEnvironmentVariablesDirectives]:
     """
     This method makes best-effort attempt to identify directives, supplied in "kwargs", as "variables", referenced by
     components of "Rule" objects, identified by respective "rule_name" property as indicated, and return each of these
     directives as part of dedicated "RuntimeEnvironmentVariablesDirectives" typed object for every "rule_name" (string).
     """  # noqa: E501
     # Implementation relies on assumption that "kwargs" contains "variables"-level arguments/directives only.  # noqa: E501
-    directives: Dict[
-        str, Dict[str, Any]
+    directives: dict[
+        str, dict[str, Any]
     ]  # key is "rule_name"; value is "variables" in corresponding "Rule" object
     if exact_estimation:
         directives = {}
-        rule_variables_configs: Optional[Dict[str, Any]]
+        rule_variables_configs: Optional[dict[str, Any]]
         rule: Rule
         for rule in rules:
             rule_variables_configs = convert_variables_to_dict(variables=rule.variables)
@@ -106,7 +106,7 @@ def build_variables_directives(
 
 def build_domain_type_directives(
     **kwargs: dict,
-) -> List[RuntimeEnvironmentDomainTypeDirectives]:
+) -> list[RuntimeEnvironmentDomainTypeDirectives]:
     """
     This method makes best-effort attempt to identify directives, supplied in "kwargs", as supported properties,
     corresponnding to "DomainBuilder" classes, associated with every "MetricDomainTypes", and return each of these
@@ -119,7 +119,7 @@ def build_domain_type_directives(
     "domain_type_directives_list" is declared as "List" and a single "RuntimeEnvironmentDomainTypeDirectives" element
     is appended, instead of setting "domain_type_directives_list" to contain that element explicitly.
     """  # noqa: E501
-    domain_type_directives_list: List[RuntimeEnvironmentDomainTypeDirectives] = []
+    domain_type_directives_list: list[RuntimeEnvironmentDomainTypeDirectives] = []
 
     column_domain_type_directives: RuntimeEnvironmentDomainTypeDirectives = (
         RuntimeEnvironmentDomainTypeDirectives(

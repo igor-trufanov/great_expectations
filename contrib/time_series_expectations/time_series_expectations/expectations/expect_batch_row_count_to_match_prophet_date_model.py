@@ -1,5 +1,3 @@
-from typing import Dict
-
 import pandas as pd
 
 from great_expectations.data_context.util import file_relative_path
@@ -98,7 +96,7 @@ class ExpectBatchRowCountToMatchProphetDateModel(BatchExpectation):
 
     def _validate(
         self,
-        metrics: Dict,
+        metrics: dict,
         runtime_configuration: dict = None,
         execution_engine: ExecutionEngine = None,
     ):

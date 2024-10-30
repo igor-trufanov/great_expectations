@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import logging
-from typing import Tuple
 
 from great_expectations.expectations.metrics.metric_provider import MetricProvider
 
@@ -27,7 +26,7 @@ class TableMetricProvider(MetricProvider):
         - https://docs.greatexpectations.io/docs/guides/expectations/custom_expectations_lp
     """  # noqa: E501
 
-    domain_keys: Tuple[str, ...] = (
+    domain_keys: tuple[str, ...] = (
         "batch_id",
         "table",
         "row_condition",

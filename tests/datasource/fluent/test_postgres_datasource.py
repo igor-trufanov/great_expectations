@@ -8,7 +8,6 @@ from typing import (
     Generator,
     Literal,
     Optional,
-    Tuple,
 )
 from unittest.mock import ANY
 
@@ -189,7 +188,7 @@ def create_and_add_table_asset_without_testing_connection(
     source: PostgresDatasource,
     name: str,
     table_name: str,
-) -> Tuple[PostgresDatasource, TableAsset]:
+) -> tuple[PostgresDatasource, TableAsset]:
     table_asset = TableAsset(
         name=name,
         table_name=table_name,

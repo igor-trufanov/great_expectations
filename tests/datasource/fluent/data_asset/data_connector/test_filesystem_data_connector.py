@@ -1,6 +1,6 @@
 import pathlib
 import re
-from typing import TYPE_CHECKING, List, Union
+from typing import TYPE_CHECKING, Union
 
 import pytest
 
@@ -98,7 +98,7 @@ def test_return_all_batch_definitions_unsorted(tmp_path_factory):
         my_data_connector.get_batch_definition_list()
 
     # with empty options
-    unsorted_batch_definition_list: List[LegacyBatchDefinition] = (
+    unsorted_batch_definition_list: list[LegacyBatchDefinition] = (
         my_data_connector.get_batch_definition_list(
             BatchRequest(
                 datasource_name="my_file_path_datasource",
@@ -111,7 +111,7 @@ def test_return_all_batch_definitions_unsorted(tmp_path_factory):
     processed_batching_regex = re.compile(
         "(?P<path>(?P<name>.+)_(?P<timestamp>.+)_(?P<price>.+)\\.csv)"
     )
-    expected: List[LegacyBatchDefinition] = [
+    expected: list[LegacyBatchDefinition] = [
         LegacyBatchDefinition(
             datasource_name="my_file_path_datasource",
             data_connector_name="fluent",
@@ -307,7 +307,7 @@ def test_return_only_unique_batch_definitions(tmp_path_factory):
     ]
 
     processed_batching_regex = re.compile("(?P<path>(?P<directory>.+)/(?P<filename>.+\\.csv))")
-    expected: List[LegacyBatchDefinition] = [
+    expected: list[LegacyBatchDefinition] = [
         LegacyBatchDefinition(
             datasource_name="my_file_path_datasource",
             data_connector_name="fluent",
@@ -362,7 +362,7 @@ def test_return_only_unique_batch_definitions(tmp_path_factory):
     )
 
     batching_regex = re.compile(r"(?P<directory>.+)/(?P<filename>.+\.csv)")
-    unsorted_batch_definition_list: List[LegacyBatchDefinition] = (
+    unsorted_batch_definition_list: list[LegacyBatchDefinition] = (
         my_data_connector.get_batch_definition_list(
             BatchRequest(
                 datasource_name="my_file_path_datasource",
@@ -549,7 +549,7 @@ def test_foxtrot(tmp_path_factory):
         options={},
         partitioner=FileNamePartitionerPath(regex=batching_regex),
     )
-    my_batch_definition_list: List[LegacyBatchDefinition] = (
+    my_batch_definition_list: list[LegacyBatchDefinition] = (
         my_data_connector.get_batch_definition_list(batch_request=my_batch_request)
     )
     assert len(my_batch_definition_list) == 3
@@ -618,7 +618,7 @@ def test_relative_base_directory_path(tmp_path_factory):
         options={},
         partitioner=FileNamePartitionerPath(regex=batching_regex),
     )
-    my_batch_definition_list: List[LegacyBatchDefinition] = (
+    my_batch_definition_list: list[LegacyBatchDefinition] = (
         my_data_connector.get_batch_definition_list(batch_request=my_batch_request)
     )
     assert len(my_batch_definition_list) == 1

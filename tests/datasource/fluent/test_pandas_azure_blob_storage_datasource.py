@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import logging
-from typing import TYPE_CHECKING, Any, Dict, Iterator, List, cast
+from typing import TYPE_CHECKING, Any, Iterator, cast
 from unittest import mock
 
 import pytest
@@ -56,7 +56,7 @@ class MockBlobServiceClient:
 
 
 def _build_pandas_abs_datasource(
-    azure_options: Dict[str, Any] | None = None,
+    azure_options: dict[str, Any] | None = None,
 ) -> PandasAzureBlobStorageDatasource:
     azure_client: azure.BlobServiceClient = cast(azure.BlobServiceClient, MockBlobServiceClient())
     pandas_abs_datasource = PandasAzureBlobStorageDatasource(
@@ -74,7 +74,7 @@ def pandas_abs_datasource() -> PandasAzureBlobStorageDatasource:
 
 
 @pytest.fixture
-def object_keys() -> List[str]:
+def object_keys() -> list[str]:
     return [
         "yellow_tripdata_sample_2024-01.csv",
         "yellow_tripdata_sample_2024-02.csv",
@@ -199,7 +199,7 @@ def test_construct_pandas_abs_datasource_with_multiple_auth_methods_raises_error
 def test_add_csv_asset_to_datasource(
     mock_azure_client,
     mock_list_keys,
-    object_keys: List[str],
+    object_keys: list[str],
     pandas_abs_datasource: PandasAzureBlobStorageDatasource,
 ):
     mock_list_keys.return_value = object_keys
@@ -215,7 +215,7 @@ def test_add_csv_asset_to_datasource(
     "great_expectations.datasource.fluent.data_connector.azure_blob_storage_data_connector.list_azure_keys"
 )
 @mock.patch("azure.storage.blob.BlobServiceClient")
-def test_construct_csv_asset_directly(mock_azure_client, mock_list_keys, object_keys: List[str]):
+def test_construct_csv_asset_directly(mock_azure_client, mock_list_keys, object_keys: list[str]):
     mock_list_keys.return_value = object_keys
     asset = CSVAsset(  # type: ignore[call-arg]
         name="csv_asset",
@@ -231,7 +231,7 @@ def test_construct_csv_asset_directly(mock_azure_client, mock_list_keys, object_
 def test_csv_asset_with_batching_regex_named_parameters(
     mock_azure_client,
     mock_list_keys,
-    object_keys: List[str],
+    object_keys: list[str],
     pandas_abs_datasource: PandasAzureBlobStorageDatasource,
 ):
     mock_list_keys.return_value = object_keys
@@ -253,7 +253,7 @@ def test_csv_asset_with_batching_regex_named_parameters(
 def test_csv_asset_with_non_string_batching_regex_named_parameters(
     mock_azure_client,
     mock_list_keys,
-    object_keys: List[str],
+    object_keys: list[str],
     pandas_abs_datasource: PandasAzureBlobStorageDatasource,
 ):
     mock_list_keys.return_value = object_keys
@@ -274,7 +274,7 @@ def test_csv_asset_with_non_string_batching_regex_named_parameters(
 def test_add_csv_asset_with_recursive_file_discovery_to_datasource(
     mock_azure_client,
     mock_list_keys,
-    object_keys: List[str],
+    object_keys: list[str],
     pandas_abs_datasource: PandasAzureBlobStorageDatasource,
 ):
     """

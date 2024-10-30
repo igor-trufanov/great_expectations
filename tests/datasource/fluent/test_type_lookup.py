@@ -1,5 +1,5 @@
 from pprint import pprint as pp
-from typing import Iterable, Mapping, Optional, Tuple
+from typing import Iterable, Mapping, Optional
 
 import pytest
 
@@ -64,7 +64,7 @@ def test_ok_to_add_identical_key_value():
         (TypeLookup(my_list=list), ("my_list", dict)),
     ],
 )
-def test_no_key_or_value_overwrites(initial: TypeLookup, kv_pair: Tuple[ValidTypes, ValidTypes]):
+def test_no_key_or_value_overwrites(initial: TypeLookup, kv_pair: tuple[ValidTypes, ValidTypes]):
     key, value = kv_pair
     with pytest.raises(TypeLookupError, match=r"`.*` already set"):
         initial[key] = value

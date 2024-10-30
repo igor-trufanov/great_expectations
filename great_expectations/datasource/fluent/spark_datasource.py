@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import builtins
 import logging
 import warnings
 from pprint import pformat as pf
@@ -7,12 +8,9 @@ from typing import (
     TYPE_CHECKING,
     Any,
     ClassVar,
-    Dict,
     Generic,
-    List,
     Literal,
     Optional,
-    Type,
     TypeVar,
     Union,
 )
@@ -63,7 +61,7 @@ logger = logging.getLogger(__name__)
 # this enables us to include dataframe in the json schema
 _SparkDataFrameT = TypeVar("_SparkDataFrameT")
 
-SparkConfig: TypeAlias = Dict[StrictStr, Union[StrictStr, StrictInt, StrictFloat, StrictBool]]
+SparkConfig: TypeAlias = dict[StrictStr, Union[StrictStr, StrictInt, StrictFloat, StrictBool]]
 
 
 class SparkDatasourceError(Exception):
@@ -102,7 +100,7 @@ class _SparkDatasource(Datasource):
 
     @staticmethod
     @override
-    def _update_asset_forward_refs(asset_type: Type[_DataAssetT]) -> None:
+    def _update_asset_forward_refs(asset_type: type[_DataAssetT]) -> None:
         # Only update forward refs if pyspark types are available
         if pyspark:
             asset_type.update_forward_refs()
@@ -110,7 +108,7 @@ class _SparkDatasource(Datasource):
     # Abstract Methods
     @property
     @override
-    def execution_engine_type(self) -> Type[SparkDFExecutionEngine]:
+    def execution_engine_type(self) -> type[SparkDFExecutionEngine]:
         """Return the SparkDFExecutionEngine unless the override is set"""
         from great_expectations.execution_engine.sparkdf_execution_engine import (
             SparkDFExecutionEngine,
@@ -272,7 +270,7 @@ class DataFrameAsset(DataAsset, Generic[_SparkDataFrameT]):
             )
 
     @override
-    def get_batch_identifiers_list(self, batch_request: BatchRequest) -> List[dict]:
+    def get_batch_identifiers_list(self, batch_request: BatchRequest) -> list[dict]:
         return [IDDict(batch_request.options)]
 
     @override
@@ -328,12 +326,12 @@ class DataFrameAsset(DataAsset, Generic[_SparkDataFrameT]):
 @public_api
 class SparkDatasource(_SparkDatasource):
     # class attributes
-    asset_types: ClassVar[List[Type[DataAsset]]] = [DataFrameAsset]
+    asset_types: ClassVar[list[builtins.type[DataAsset]]] = [DataFrameAsset]
 
     # instance attributes
     type: Literal["spark"] = "spark"
 
-    assets: List[DataFrameAsset] = []
+    assets: list[DataFrameAsset] = []
 
     @public_api
     def add_dataframe_asset(

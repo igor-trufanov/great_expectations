@@ -1,5 +1,3 @@
-from typing import Dict
-
 import pandas as pd
 import pygeos as geos
 
@@ -206,7 +204,7 @@ class ExpectColumnMinimumBoundingRadiusToBeBetween(ColumnAggregateExpectation):
     # This method performs a validation of your metrics against your success keys, returning a dict indicating the success or failure of the Expectation.
     def _validate(  # noqa: C901 - too complex
         self,
-        metrics: Dict,
+        metrics: dict,
         runtime_configuration: dict = None,
         execution_engine: ExecutionEngine = None,
     ):

@@ -59,7 +59,7 @@ import pathlib
 import re
 import sys
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, List, Set, Union, cast
+from typing import TYPE_CHECKING, Union, cast
 
 from docs.sphinx_api_docs_source import (
     public_api_excludes,
@@ -114,17 +114,17 @@ class FileContents:
         return cls(filepath=filepath, contents=file_contents)
 
     @classmethod
-    def create_from_local_files(cls, filepaths: Set[pathlib.Path]) -> Set[FileContents]:
+    def create_from_local_files(cls, filepaths: set[pathlib.Path]) -> set[FileContents]:
         return {cls.create_from_local_file(filepath) for filepath in filepaths}
 
 
 class DocsExampleParser:
     """Parse examples from docs to find classes, methods and functions used."""
 
-    def __init__(self, file_contents: Set[FileContents]) -> None:
+    def __init__(self, file_contents: set[FileContents]) -> None:
         self.file_contents = file_contents
 
-    def get_names_from_usage_in_docs_examples(self) -> Set[str]:
+    def get_names_from_usage_in_docs_examples(self) -> set[str]:
         """Get names in docs examples of classes, methods and functions used.
 
         Usages are retrieved from imports and function / method calls.
@@ -140,7 +140,7 @@ class DocsExampleParser:
             all_usages |= file_usages
         return all_usages
 
-    def _get_names_of_all_usages_in_file(self, file_contents: FileContents) -> Set[str]:
+    def _get_names_of_all_usages_in_file(self, file_contents: FileContents) -> set[str]:
         """Retrieve the names of all class, method + functions used in file_contents."""
 
         tree = ast.parse(file_contents.contents)
@@ -161,10 +161,10 @@ class DocsExampleParser:
 
     def _list_all_gx_imports(
         self, tree: ast.AST
-    ) -> List[Union[ast.Import, ast.ImportFrom]]:
+    ) -> list[Union[ast.Import, ast.ImportFrom]]:
         """Get all the GX related imports in an ast tree."""
 
-        imports: List[Union[ast.Import, ast.ImportFrom]] = []
+        imports: list[Union[ast.Import, ast.ImportFrom]] = []
 
         for node in ast.walk(tree):
             node_is_imported_from_gx = isinstance(
@@ -185,8 +185,8 @@ class DocsExampleParser:
         return imports
 
     def _get_non_private_gx_import_names(
-        self, imports: List[Union[ast.Import, ast.ImportFrom]]
-    ) -> Set[str]:
+        self, imports: list[Union[ast.Import, ast.ImportFrom]]
+    ) -> set[str]:
         """From ast trees, get names of all non private GX related imports."""
 
         names = []
@@ -202,7 +202,7 @@ class DocsExampleParser:
 
         return set(names)
 
-    def _get_all_function_calls(self, tree: ast.AST) -> List[ast.Call]:
+    def _get_all_function_calls(self, tree: ast.AST) -> list[ast.Call]:
         """Get all the function calls from an ast tree."""
         calls = []
         for node in ast.walk(tree):
@@ -211,7 +211,7 @@ class DocsExampleParser:
 
         return calls
 
-    def _get_non_private_function_names(self, calls: List[ast.Call]) -> Set[str]:
+    def _get_non_private_function_names(self, calls: list[ast.Call]) -> set[str]:
         """Get function names that are not private from ast.Call objects."""
         names = []
         for call in calls:
@@ -232,7 +232,7 @@ class CodeParser:
 
     def __init__(
         self,
-        file_contents: Set[FileContents],
+        file_contents: set[FileContents],
     ) -> None:
         """Create a CodeParser.
 
@@ -243,7 +243,7 @@ class CodeParser:
 
     def get_all_class_method_and_function_names(
         self,
-    ) -> Set[str]:
+    ) -> set[str]:
         """Get string names of all classes, methods and functions in all FileContents."""
         all_usages = set()
         for file_contents in self.file_contents:
@@ -255,9 +255,9 @@ class CodeParser:
 
     def _get_all_class_method_and_function_names_from_file_contents(
         self, file_contents: FileContents
-    ) -> Set[str]:
+    ) -> set[str]:
         """Get string names of all classes, methods and functions in a single FileContents."""
-        definitions: Set[Union[ast.FunctionDef, ast.ClassDef, ast.AsyncFunctionDef]] = (
+        definitions: set[Union[ast.FunctionDef, ast.ClassDef, ast.AsyncFunctionDef]] = (
             self._get_all_entity_definitions_from_file_contents(
                 file_contents=file_contents
             )
@@ -267,9 +267,9 @@ class CodeParser:
 
     def get_all_class_method_and_function_definitions(
         self,
-    ) -> Set[Definition]:
+    ) -> set[Definition]:
         """Get Definition objects for all class, method and function definitions."""
-        all_usages: Set[Definition] = set()
+        all_usages: set[Definition] = set()
         for file_contents in self.file_contents:
             entity_definitions = self._get_all_entity_definitions_from_file_contents(
                 file_contents=file_contents
@@ -279,9 +279,9 @@ class CodeParser:
             )
         return all_usages
 
-    def get_module_level_function_definitions(self) -> Set[Definition]:
+    def get_module_level_function_definitions(self) -> set[Definition]:
         """Get Definition objects only for functions defined at the module level."""
-        all_usages: Set[Definition] = set()
+        all_usages: set[Definition] = set()
         for file_contents in self.file_contents:
             module_level_function_definitions = (
                 self._get_module_level_function_definitions_from_file_contents(
@@ -297,12 +297,12 @@ class CodeParser:
     def _build_file_usage_definitions(
         self,
         file_contents: FileContents,
-        entity_definitions: Set[
+        entity_definitions: set[
             Union[ast.FunctionDef, ast.ClassDef, ast.AsyncFunctionDef]
         ],
-    ) -> Set[Definition]:
+    ) -> set[Definition]:
         """Build Definitions from FileContents."""
-        file_usages_definitions: List[Definition] = []
+        file_usages_definitions: list[Definition] = []
         for usage in entity_definitions:
             candidate_definition = Definition(
                 name=usage.name,
@@ -315,10 +315,10 @@ class CodeParser:
 
     def _get_all_entity_definitions_from_file_contents(
         self, file_contents: FileContents
-    ) -> Set[Union[ast.FunctionDef, ast.ClassDef, ast.AsyncFunctionDef]]:
+    ) -> set[Union[ast.FunctionDef, ast.ClassDef, ast.AsyncFunctionDef]]:
         """Parse FileContents to retrieve entity definitions as ast trees."""
         tree = ast.parse(file_contents.contents)
-        all_defs: List[Union[ast.FunctionDef, ast.ClassDef, ast.AsyncFunctionDef]] = []
+        all_defs: list[Union[ast.FunctionDef, ast.ClassDef, ast.AsyncFunctionDef]] = []
         all_defs.extend(self._list_class_definitions(tree=tree))
         all_defs.extend(self._list_function_definitions(tree=tree))
 
@@ -326,13 +326,13 @@ class CodeParser:
 
     def _get_module_level_function_definitions_from_file_contents(
         self, file_contents: FileContents
-    ) -> Set[Union[ast.FunctionDef, ast.ClassDef, ast.AsyncFunctionDef]]:
+    ) -> set[Union[ast.FunctionDef, ast.ClassDef, ast.AsyncFunctionDef]]:
         """Parse FileContents to retrieve module level function definitions as ast trees."""
         tree = ast.parse(file_contents.contents)
         defs = self._list_module_level_function_definitions(tree=tree)
         return set(defs)
 
-    def _list_class_definitions(self, tree: ast.AST) -> List[ast.ClassDef]:
+    def _list_class_definitions(self, tree: ast.AST) -> list[ast.ClassDef]:
         """List class definitions from an ast tree."""
 
         class_defs = []
@@ -345,7 +345,7 @@ class CodeParser:
 
     def _list_function_definitions(
         self, tree: ast.AST
-    ) -> List[Union[ast.FunctionDef, ast.AsyncFunctionDef]]:
+    ) -> list[Union[ast.FunctionDef, ast.AsyncFunctionDef]]:
         """List function definitions from an ast tree."""
         function_definitions = []
         for node in ast.walk(tree):
@@ -356,7 +356,7 @@ class CodeParser:
 
     def _list_module_level_function_definitions(
         self, tree: ast.AST
-    ) -> List[Union[ast.FunctionDef, ast.AsyncFunctionDef]]:
+    ) -> list[Union[ast.FunctionDef, ast.AsyncFunctionDef]]:
         """List function definitions that appear outside of classes."""
 
         function_definitions = []
@@ -367,7 +367,7 @@ class CodeParser:
         return function_definitions
 
 
-def parse_docs_contents_for_class_names(file_contents: Set[FileContents]) -> Set[str]:
+def parse_docs_contents_for_class_names(file_contents: set[FileContents]) -> set[str]:
     """Parse contents of documentation for class names.
 
     Parses based on class names used in yaml examples e.g. Datasource and
@@ -445,7 +445,7 @@ def get_shortest_dotted_path(
     return shortest_path
 
 
-def _get_import_names(code: str) -> List[str]:
+def _get_import_names(code: str) -> list[str]:
     """Get import names from import statements.
 
     Args:
@@ -475,9 +475,9 @@ class PublicAPIChecker:
     ) -> None:
         self.code_parser = code_parser
 
-    def get_all_public_api_definitions(self) -> Set[Definition]:
+    def get_all_public_api_definitions(self) -> set[Definition]:
         """Get definitions that are marked with the public api decorator."""
-        definitions: List[Definition] = []
+        definitions: list[Definition] = []
 
         for (
             definition
@@ -487,9 +487,9 @@ class PublicAPIChecker:
 
         return set(definitions)
 
-    def get_module_level_function_public_api_definitions(self) -> Set[Definition]:
+    def get_module_level_function_public_api_definitions(self) -> set[Definition]:
         """Get module level function definitions that are marked with the public api decorator."""
-        definitions: List[Definition] = []
+        definitions: list[Definition] = []
 
         for definition in self.code_parser.get_module_level_function_definitions():
             if self.is_definition_marked_public_api(definition):
@@ -512,7 +512,7 @@ class PublicAPIChecker:
 
     def _get_decorator_names(
         self, ast_definition: Union[ast.FunctionDef, ast.ClassDef, ast.AsyncFunctionDef]
-    ) -> Set[str]:
+    ) -> set[str]:
         """Get all decorator names for a single definition from an ast tree."""
 
         def flatten_attr(node):
@@ -549,8 +549,8 @@ class CodeReferenceFilter:
         code_parser: CodeParser,
         public_api_checker: PublicAPIChecker,
         references_from_docs_content: set[str] | None = None,
-        excludes: Union[List[IncludeExcludeDefinition], None] = None,
-        includes: Union[List[IncludeExcludeDefinition], None] = None,
+        excludes: Union[list[IncludeExcludeDefinition], None] = None,
+        includes: Union[list[IncludeExcludeDefinition], None] = None,
     ) -> None:
         """Create a CodeReferenceFilter.
 
@@ -586,7 +586,7 @@ class CodeReferenceFilter:
         else:
             self.includes = includes
 
-    def filter_definitions(self) -> Set[Definition]:
+    def filter_definitions(self) -> set[Definition]:
         """Main method to perform all filtering.
 
         Filters Definitions of entities (class, method and function).
@@ -599,21 +599,21 @@ class CodeReferenceFilter:
         Returns:
             Definitions that pass all filters.
         """
-        usages_in_docs_examples_and_docs_content: Set[str] = (
+        usages_in_docs_examples_and_docs_content: set[str] = (
             self._docs_examples_usages() | self.references_from_docs_content
         )
-        gx_definitions_used_in_docs_examples: Set[Definition] = (
+        gx_definitions_used_in_docs_examples: set[Definition] = (
             self._filter_gx_definitions_from_docs_examples(
                 gx_usages_in_docs_examples=usages_in_docs_examples_and_docs_content
             )
         )
-        non_private_definitions: Set[Definition] = self._filter_private_entities(
+        non_private_definitions: set[Definition] = self._filter_private_entities(
             definitions=gx_definitions_used_in_docs_examples
         )
-        included_definitions: Set[Definition] = self._filter_or_include(
+        included_definitions: set[Definition] = self._filter_or_include(
             definitions=non_private_definitions
         )
-        definitions_not_marked_public_api: Set[Definition] = (
+        definitions_not_marked_public_api: set[Definition] = (
             self._filter_for_definitions_not_marked_public_api(
                 definitions=included_definitions
             )
@@ -621,13 +621,13 @@ class CodeReferenceFilter:
 
         return definitions_not_marked_public_api
 
-    def _docs_examples_usages(self) -> Set[str]:
+    def _docs_examples_usages(self) -> set[str]:
         """Filter list of classes & methods from docs examples to only those found in
         the GX codebase
 
             (e.g. filter out print() or other python or 3rd party classes/methods).
         """
-        doc_example_usages: Set[str] = (
+        doc_example_usages: set[str] = (
             self.docs_example_parser.get_names_from_usage_in_docs_examples()
         )
         gx_code_definitions = self.code_parser.get_all_class_method_and_function_names()
@@ -638,8 +638,8 @@ class CodeReferenceFilter:
         return doc_example_usages_of_gx_code
 
     def _filter_gx_definitions_from_docs_examples(
-        self, gx_usages_in_docs_examples: Set[str]
-    ) -> Set[Definition]:
+        self, gx_usages_in_docs_examples: set[str]
+    ) -> set[Definition]:
         """Filter the list of GX definitions except those used in docs examples.
 
         Use the docs examples filtered list against the list of class and method
@@ -657,17 +657,17 @@ class CodeReferenceFilter:
         }
         return gx_code_definitions_appearing_in_docs_examples
 
-    def _filter_private_entities(self, definitions: Set[Definition]) -> Set[Definition]:
+    def _filter_private_entities(self, definitions: set[Definition]) -> set[Definition]:
         """Filter out private entities (classes, methods and functions with leading underscore)."""
         return {d for d in definitions if not self._is_definition_private(definition=d)}
 
-    def _filter_or_include(self, definitions: Set[Definition]) -> Set[Definition]:
+    def _filter_or_include(self, definitions: set[Definition]) -> set[Definition]:
         """Filter definitions per all IncludeExcludeDefinition directives.
 
         Includes override excludes, and also don't require the included entity
         to be used in docs examples.
         """
-        included_definitions: List[Definition] = []
+        included_definitions: list[Definition] = []
         all_gx_code_definitions = (
             self.code_parser.get_all_class_method_and_function_definitions()
         )
@@ -714,8 +714,8 @@ class CodeReferenceFilter:
         )
 
     def _filter_for_definitions_not_marked_public_api(
-        self, definitions: Set[Definition]
-    ) -> Set[Definition]:
+        self, definitions: set[Definition]
+    ) -> set[Definition]:
         """Return only those Definitions that are not marked with the public api decorator."""
         return {
             d
@@ -767,7 +767,7 @@ class CodeReferenceFilter:
 class PublicAPIReport:
     """Generate a report from entity definitions (class, method and function)."""
 
-    def __init__(self, definitions: Set[Definition], repo_root: pathlib.Path) -> None:
+    def __init__(self, definitions: set[Definition], repo_root: pathlib.Path) -> None:
         """Create a PublicAPIReport object.
 
         Args:
@@ -794,7 +794,7 @@ class PublicAPIReport:
 
     def generate_printable_definitions(
         self,
-    ) -> List[str]:
+    ) -> list[str]:
         """Generate a printable (human readable) definition.
 
         Returns:
@@ -803,7 +803,7 @@ class PublicAPIReport:
         sorted_definitions_list = sorted(
             list(self.definitions), key=operator.attrgetter("filepath", "name")
         )
-        sorted_definitions_strings: List[str] = []
+        sorted_definitions_strings: list[str] = []
         for definition in sorted_definitions_list:
             if definition.filepath.is_absolute():
                 filepath = str(definition.filepath.relative_to(self.repo_root))
@@ -819,7 +819,7 @@ class PublicAPIReport:
 
         return sorted_definitions_strings_no_dupes
 
-    def _deduplicate_strings(self, strings: List[str]) -> List[str]:
+    def _deduplicate_strings(self, strings: list[str]) -> list[str]:
         """Deduplicate a list of strings, keeping order intact."""
         seen = set()
         no_duplicates = []
@@ -836,21 +836,21 @@ def _repo_root() -> pathlib.Path:
     return repo_root_path
 
 
-def _default_doc_example_absolute_paths() -> Set[pathlib.Path]:
+def _default_doc_example_absolute_paths() -> set[pathlib.Path]:
     """Get all paths of doc examples (docs examples)."""
     base_directory = _repo_root() / "docs" / "docusaurus" / "docs"
     paths = base_directory.rglob("*.py")
     return set(paths)
 
 
-def _default_code_absolute_paths() -> Set[pathlib.Path]:
+def _default_code_absolute_paths() -> set[pathlib.Path]:
     """All Great Expectations modules related to the main library."""
     base_directory = _repo_root() / "great_expectations"
     paths = base_directory.rglob("**/*.py")
     return set(paths)
 
 
-def _default_docs_absolute_paths() -> Set[pathlib.Path]:
+def _default_docs_absolute_paths() -> set[pathlib.Path]:
     """All Great Expectations modules related to the main library."""
     base_directory = _repo_root() / "docs"
     paths: list[pathlib.Path] = []

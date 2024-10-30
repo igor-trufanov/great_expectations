@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import logging
 from functools import wraps
-from typing import TYPE_CHECKING, Any, Callable, Dict, Optional, Type, Union
+from typing import TYPE_CHECKING, Any, Callable, Optional, Union
 
 from great_expectations.compatibility.sqlalchemy import sqlalchemy as sa
 from great_expectations.compatibility.typing_extensions import override
@@ -38,7 +38,7 @@ if TYPE_CHECKING:
 
 
 def column_aggregate_value(
-    engine: Type[ExecutionEngine],
+    engine: type[ExecutionEngine],
     **kwargs,
 ):
     """Provides Pandas support for authoring a metric_fn with a simplified signature.
@@ -67,7 +67,7 @@ def column_aggregate_value(
                 execution_engine: PandasExecutionEngine,
                 metric_domain_kwargs: dict,
                 metric_value_kwargs: dict,
-                metrics: Dict[str, Any],
+                metrics: dict[str, Any],
                 runtime_configuration: dict,
             ):
                 filter_column_isnull = kwargs.get(
@@ -102,7 +102,7 @@ def column_aggregate_value(
         raise ValueError("column_aggregate_value decorator only supports PandasExecutionEngine")  # noqa: TRY003, TRY004
 
 
-def column_aggregate_partial(engine: Type[ExecutionEngine], **kwargs):  # noqa: C901
+def column_aggregate_partial(engine: type[ExecutionEngine], **kwargs):  # noqa: C901
     """Provides engine-specific support for authoring a metric_fn with a simplified signature.
 
     A column_aggregate_partial must provide an aggregate function; it will be executed with the specified engine
@@ -136,7 +136,7 @@ def column_aggregate_partial(engine: Type[ExecutionEngine], **kwargs):  # noqa: 
                 execution_engine: SqlAlchemyExecutionEngine,
                 metric_domain_kwargs: dict,
                 metric_value_kwargs: dict,
-                metrics: Dict[str, Any],
+                metrics: dict[str, Any],
                 runtime_configuration: dict,
             ):
                 filter_column_isnull = kwargs.get(
@@ -198,7 +198,7 @@ def column_aggregate_partial(engine: Type[ExecutionEngine], **kwargs):  # noqa: 
                 execution_engine: SparkDFExecutionEngine,
                 metric_domain_kwargs: dict,
                 metric_value_kwargs: dict,
-                metrics: Dict[str, Any],
+                metrics: dict[str, Any],
                 runtime_configuration: dict,
             ):
                 filter_column_isnull = kwargs.get(

@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import ClassVar, List, Optional
+from typing import ClassVar, Optional
 from uuid import UUID
 
 from great_expectations import __version__ as gx_version
@@ -58,7 +58,7 @@ class Event:
         """
         return self.user_id or self.oss_id
 
-    _allowed_actions: ClassVar[Optional[List[Action]]] = None
+    _allowed_actions: ClassVar[Optional[list[Action]]] = None
 
     def __post_init__(self):
         allowed_actions = self.get_allowed_actions()

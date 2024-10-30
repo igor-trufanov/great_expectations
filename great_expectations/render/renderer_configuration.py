@@ -7,13 +7,9 @@ from numbers import Number
 from typing import (
     TYPE_CHECKING,
     Any,
-    Dict,
     Generic,
     Iterable,
-    List,
     Optional,
-    Tuple,
-    Type,
     TypeVar,
     Union,
 )
@@ -107,9 +103,9 @@ class _RendererValueBase(BaseModel):
 
 RendererParams = TypeVar("RendererParams", bound=_RendererValueBase)
 
-RendererValueTypes: TypeAlias = Union[RendererValueType, List[RendererValueType]]
+RendererValueTypes: TypeAlias = Union[RendererValueType, list[RendererValueType]]
 
-AddParamArgs: TypeAlias = Tuple[Tuple[str, RendererValueTypes], ...]
+AddParamArgs: TypeAlias = tuple[tuple[str, RendererValueTypes], ...]
 
 
 class RendererTableValue(_RendererValueBase):
@@ -130,7 +126,7 @@ class MetaNotes(TypedDict):
     """Notes that can be added to the meta field of an Expectation."""
 
     format: MetaNotesFormat
-    content: List[str]
+    content: list[str]
 
 
 class CodeBlockLanguage(str, Enum):
@@ -171,8 +167,8 @@ class RendererConfiguration(pydantic_generics.GenericModel, Generic[RendererPara
     )
     template_str: Optional[str] = Field(None, allow_mutation=True)
     code_block: CodeBlock = Field({}, allow_mutation=True)
-    header_row: List[RendererTableValue] = Field([], allow_mutation=True)
-    table: List[List[RendererTableValue]] = Field([], allow_mutation=True)
+    header_row: list[RendererTableValue] = Field([], allow_mutation=True)
+    table: list[list[RendererTableValue]] = Field([], allow_mutation=True)
     graph: dict = Field({}, allow_mutation=True)
     include_column_name: bool = Field(True, allow_mutation=False)
     _raw_kwargs: dict = Field({}, allow_mutation=False)
@@ -207,7 +203,7 @@ class RendererConfiguration(pydantic_generics.GenericModel, Generic[RendererPara
     class _RendererParamArgs(_RequiredRendererParamArgs, total=False):
         """Used for building up a dictionary that is unpacked into RendererParams upon initialization."""  # noqa: E501
 
-        suite_parameter: Dict[str, Any]
+        suite_parameter: dict[str, Any]
 
     class _RendererParamBase(_RendererValueBase):
         """
@@ -217,7 +213,7 @@ class RendererConfiguration(pydantic_generics.GenericModel, Generic[RendererPara
 
         renderer_schema: RendererSchema = Field(alias="schema")
         value: Any
-        suite_parameter: Optional[Dict[str, Any]]
+        suite_parameter: Optional[dict[str, Any]]
 
         class Config:
             validate_assignment = True
@@ -275,7 +271,7 @@ class RendererConfiguration(pydantic_generics.GenericModel, Generic[RendererPara
     @staticmethod
     def _get_renderer_value_base_model_type(
         name: str,
-    ) -> Type[BaseModel]:
+    ) -> type[BaseModel]:
         return create_model(
             name,
             renderer_schema=(
@@ -288,8 +284,8 @@ class RendererConfiguration(pydantic_generics.GenericModel, Generic[RendererPara
 
     @staticmethod
     def _get_suite_parameter_params_from_raw_kwargs(
-        raw_kwargs: Dict[str, Any],
-    ) -> Dict[str, RendererConfiguration._RendererParamArgs]:
+        raw_kwargs: dict[str, Any],
+    ) -> dict[str, RendererConfiguration._RendererParamArgs]:
         renderer_params_args = {}
         for kwarg_name, value in raw_kwargs.items():
             renderer_params_args[kwarg_name] = RendererConfiguration._RendererParamArgs(
@@ -326,7 +322,7 @@ class RendererConfiguration(pydantic_generics.GenericModel, Generic[RendererPara
                     for key, value in raw_configuration.kwargs.items()
                     if (key, value) not in values["kwargs"].items()
                 }
-                renderer_params_args: Dict[str, RendererConfiguration._RendererParamArgs] = (
+                renderer_params_args: dict[str, RendererConfiguration._RendererParamArgs] = (
                     RendererConfiguration._get_suite_parameter_params_from_raw_kwargs(
                         raw_kwargs=values["_raw_kwargs"]
                     )
@@ -356,11 +352,11 @@ class RendererConfiguration(pydantic_generics.GenericModel, Generic[RendererPara
     @staticmethod
     def _get_row_condition_params(
         row_condition_str: str,
-    ) -> Dict[str, RendererConfiguration._RendererParamArgs]:
+    ) -> dict[str, RendererConfiguration._RendererParamArgs]:
         row_condition_str = RendererConfiguration._parse_row_condition_str(
             row_condition_str=row_condition_str
         )
-        row_conditions_list: List[str] = (
+        row_conditions_list: list[str] = (
             RendererConfiguration._get_row_conditions_list_from_row_condition_str(
                 row_condition_str=row_condition_str
             )
@@ -376,7 +372,7 @@ class RendererConfiguration(pydantic_generics.GenericModel, Generic[RendererPara
 
     @root_validator()
     def _validate_for_row_condition(cls, values: dict) -> dict:
-        kwargs: Dict[str, Any]
+        kwargs: dict[str, Any]
         if (
             "result" in values
             and values["result"] is not None
@@ -388,7 +384,7 @@ class RendererConfiguration(pydantic_generics.GenericModel, Generic[RendererPara
 
         values["_row_condition"] = kwargs.get("row_condition", "")
         if values["_row_condition"]:
-            renderer_params_args: Dict[str, RendererConfiguration._RendererParamArgs] = (
+            renderer_params_args: dict[str, RendererConfiguration._RendererParamArgs] = (
                 RendererConfiguration._get_row_condition_params(
                     row_condition_str=values["_row_condition"],
                 )
@@ -430,15 +426,15 @@ class RendererConfiguration(pydantic_generics.GenericModel, Generic[RendererPara
 
     @root_validator()
     def _validate_for_params(cls, values: dict) -> dict:
-        _params: Optional[Dict[str, Dict[str, Union[str, Dict[str, RendererValueType]]]]] = (
+        _params: Optional[dict[str, dict[str, Union[str, dict[str, RendererValueType]]]]] = (
             values.get("_params")
         )
         if not values["params"]:
             values["params"] = _RendererValueBase()
         if _params and _params != values["params"]:
-            renderer_param_definitions: Dict[str, Any] = {}
+            renderer_param_definitions: dict[str, Any] = {}
             for name in _params:
-                renderer_param_type: Type[BaseModel] = (
+                renderer_param_type: type[BaseModel] = (
                     RendererConfiguration._get_renderer_value_base_model_type(name=name)
                 )
                 renderer_param_definitions[name] = (
@@ -447,7 +443,7 @@ class RendererConfiguration(pydantic_generics.GenericModel, Generic[RendererPara
                 )
             existing_params = values["params"].__dict__
             combined_params = {**existing_params, **_params}
-            renderer_params: Type[BaseModel] = create_model(
+            renderer_params: type[BaseModel] = create_model(
                 "RendererParams",
                 **renderer_param_definitions,
                 __base__=_RendererValueBase,
@@ -459,7 +455,7 @@ class RendererConfiguration(pydantic_generics.GenericModel, Generic[RendererPara
     @staticmethod
     def _get_row_conditions_list_from_row_condition_str(
         row_condition_str: str,
-    ) -> List[str]:
+    ) -> list[str]:
         # divide the whole condition into smaller parts
         row_conditions_list = re.split(r"AND|OR|NOT(?! in)|\(|\)", row_condition_str)
         row_conditions_list = [
@@ -496,7 +492,7 @@ class RendererConfiguration(pydantic_generics.GenericModel, Generic[RendererPara
         row_condition_str = RendererConfiguration._parse_row_condition_str(
             row_condition_str=row_condition_str
         )
-        row_conditions_list: List[str] = (
+        row_conditions_list: list[str] = (
             RendererConfiguration._get_row_conditions_list_from_row_condition_str(
                 row_condition_str=row_condition_str
             )
@@ -524,11 +520,11 @@ class RendererConfiguration(pydantic_generics.GenericModel, Generic[RendererPara
 
     @staticmethod
     def _choose_param_type_for_value(
-        param_types: List[RendererValueType], value: Any
+        param_types: list[RendererValueType], value: Any
     ) -> RendererValueType:
         for param_type in param_types:
             try:
-                renderer_param: Type[BaseModel] = (
+                renderer_param: type[BaseModel] = (
                     RendererConfiguration._get_renderer_value_base_model_type(name="try_param")
                 )
                 renderer_param(schema=RendererSchema(type=param_type), value=value)
@@ -566,7 +562,7 @@ class RendererConfiguration(pydantic_generics.GenericModel, Generic[RendererPara
         Returns:
             None
         """  # noqa: E501
-        renderer_param: Type[BaseModel] = RendererConfiguration._get_renderer_value_base_model_type(
+        renderer_param: type[BaseModel] = RendererConfiguration._get_renderer_value_base_model_type(
             name=name
         )
 

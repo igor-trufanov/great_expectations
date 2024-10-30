@@ -6,7 +6,6 @@ from __future__ import annotations
 
 import logging
 from pprint import pformat as pf
-from typing import Set, Type
 
 from great_expectations.compatibility.pydantic import ModelMetaclass
 from great_expectations.datasource.fluent.sources import DataSourceManager
@@ -16,10 +15,10 @@ logger = logging.getLogger(__name__)
 
 
 class MetaDatasource(ModelMetaclass):
-    __cls_set: Set[Type] = set()
+    __cls_set: set[type] = set()
 
     def __new__(  # noqa: PYI034 # Self cannot be used with Metaclass
-        meta_cls: Type[MetaDatasource], cls_name: str, bases: tuple[type], cls_dict
+        meta_cls: type[MetaDatasource], cls_name: str, bases: tuple[type], cls_dict
     ) -> MetaDatasource:
         """
         MetaDatasource hook that runs when a new `Datasource` is defined.

@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, ClassVar, Dict, List, Optional, Set, Union
+from typing import TYPE_CHECKING, ClassVar, Optional, Union
 
 from great_expectations.compatibility.typing_extensions import override
 from great_expectations.core.domain import Domain  # noqa: TCH001
@@ -33,7 +33,7 @@ class MetricSingleBatchParameterBuilder(MetricMultiBatchParameterBuilder):
     and metric_name as arguments.
     """  # noqa: E501
 
-    exclude_field_names: ClassVar[Set[str]] = (
+    exclude_field_names: ClassVar[set[str]] = (
         MetricMultiBatchParameterBuilder.exclude_field_names
         | {
             "single_batch_mode",
@@ -49,7 +49,7 @@ class MetricSingleBatchParameterBuilder(MetricMultiBatchParameterBuilder):
         enforce_numeric_metric: Union[str, bool] = False,
         replace_nan_with_zero: Union[str, bool] = False,
         reduce_scalar_metric: Union[str, bool] = True,
-        suite_parameter_builder_configs: Optional[List[ParameterBuilderConfig]] = None,
+        suite_parameter_builder_configs: Optional[list[ParameterBuilderConfig]] = None,
         data_context: Optional[AbstractDataContext] = None,
     ) -> None:
         """
@@ -87,7 +87,7 @@ class MetricSingleBatchParameterBuilder(MetricMultiBatchParameterBuilder):
         self,
         domain: Domain,
         variables: Optional[ParameterContainer] = None,
-        parameters: Optional[Dict[str, ParameterContainer]] = None,
+        parameters: Optional[dict[str, ParameterContainer]] = None,
         runtime_configuration: Optional[dict] = None,
     ) -> Attributes:
         """

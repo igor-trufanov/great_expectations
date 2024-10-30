@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, ClassVar, Dict, Optional, Type
+from typing import TYPE_CHECKING, ClassVar, Optional
 
 from great_expectations.compatibility.typing_extensions import override
 from great_expectations.core.expectation_validation_result import (
@@ -96,7 +96,7 @@ class ValidationResultsStore(Store):
     --ge-feature-maturity-info--
     """  # noqa: E501
 
-    _key_class: ClassVar[Type] = ValidationResultIdentifier
+    _key_class: ClassVar[type] = ValidationResultIdentifier
 
     def __init__(self, store_backend=None, runtime_environment=None, store_name=None) -> None:
         self._expectationSuiteValidationResultSchema = ExpectationSuiteValidationResultSchema()
@@ -146,7 +146,7 @@ class ValidationResultsStore(Store):
 
     @override
     @staticmethod
-    def gx_cloud_response_json_to_object_dict(response_json: Dict) -> Dict:
+    def gx_cloud_response_json_to_object_dict(response_json: dict) -> dict:
         """
         This method takes full json response from GX cloud and outputs a dict appropriate for
         deserialization into a GX object

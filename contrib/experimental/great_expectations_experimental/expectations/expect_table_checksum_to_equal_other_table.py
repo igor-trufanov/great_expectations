@@ -10,7 +10,7 @@ except ImportError:
 # For most Expectations, the main business logic for calculation will live here.
 # To learn about the relationship between Metrics and Expectations, please visit
 # https://docs.greatexpectations.io/en/latest/reference/core_concepts.html#expectations-and-metrics.
-from typing import Any, Dict, Optional, Tuple
+from typing import Any, Optional
 
 from great_expectations.core import (
     ExpectationValidationResult,
@@ -74,10 +74,10 @@ class TableChecksum(TableMetricProvider):
     def _sqlalchemy(
         cls,
         execution_engine: SqlAlchemyExecutionEngine,
-        metric_domain_kwargs: Dict,
-        metric_value_kwargs: Dict,
-        metrics: Dict[Tuple, Any],
-        runtime_configuration: Dict,
+        metric_domain_kwargs: dict,
+        metric_value_kwargs: dict,
+        metrics: dict[tuple, Any],
+        runtime_configuration: dict,
     ):
         (
             selectable,
@@ -186,10 +186,10 @@ class TableChecksumValues(TableMetricProvider):
     def _sqlalchemy(
         cls,
         execution_engine: SqlAlchemyExecutionEngine,
-        metric_domain_kwargs: Dict,
-        metric_value_kwargs: Dict,
-        metrics: Dict[Tuple, Any],
-        runtime_configuration: Dict,
+        metric_domain_kwargs: dict,
+        metric_value_kwargs: dict,
+        metrics: dict[tuple, Any],
+        runtime_configuration: dict,
     ):
         cksum_value_self = metrics.get("table.checksum.self")
         cksum_value_other = metrics.get("table.checksum.other")
@@ -478,7 +478,7 @@ class ExpectTableChecksumToEqualOtherTable(BatchExpectation):
     # This method will utilize the computed metric to validate that your Expectation about the Table is true
     def _validate(
         self,
-        metrics: Dict,
+        metrics: dict,
         runtime_configuration: dict = None,
         execution_engine: ExecutionEngine = None,
     ):

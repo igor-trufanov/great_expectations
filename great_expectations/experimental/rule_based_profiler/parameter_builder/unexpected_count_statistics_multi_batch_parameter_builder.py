@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Dict, List, Optional, Union
+from typing import TYPE_CHECKING, Optional, Union
 
 import numpy as np
 import scipy
@@ -55,7 +55,7 @@ class UnexpectedCountStatisticsMultiBatchParameterBuilder(ParameterBuilder):
         mode: str,
         max_error_rate: Optional[Union[str, float]] = None,
         expectation_type: Optional[str] = None,
-        suite_parameter_builder_configs: Optional[List[ParameterBuilderConfig]] = None,
+        suite_parameter_builder_configs: Optional[list[ParameterBuilderConfig]] = None,
         data_context: Optional[AbstractDataContext] = None,
     ) -> None:
         """
@@ -115,7 +115,7 @@ class UnexpectedCountStatisticsMultiBatchParameterBuilder(ParameterBuilder):
         self,
         domain: Domain,
         variables: Optional[ParameterContainer] = None,
-        parameters: Optional[Dict[str, ParameterContainer]] = None,
+        parameters: Optional[dict[str, ParameterContainer]] = None,
         runtime_configuration: Optional[dict] = None,
     ) -> Attributes:
         """
@@ -204,7 +204,7 @@ class UnexpectedCountStatisticsMultiBatchParameterBuilder(ParameterBuilder):
 """  # noqa: E501
             )
 
-        result: Union[np.float64, Dict[str, Union[np.float64, np.ndarray]]]
+        result: Union[np.float64, dict[str, Union[np.float64, np.ndarray]]]
 
         if mode == "unexpected_count_fraction_values":
             result = unexpected_count_fraction_values

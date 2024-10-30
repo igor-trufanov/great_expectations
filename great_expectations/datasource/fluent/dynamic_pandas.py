@@ -11,20 +11,15 @@ from typing import (
     TYPE_CHECKING,
     Any,
     Callable,
-    Dict,
     Final,
     Hashable,
     Iterable,
     Iterator,
-    List,
     Literal,
     NamedTuple,
     Optional,
     Pattern,  # must use typing.Pattern for pydantic < v1.10
     Sequence,
-    Set,
-    Tuple,
-    Type,
     TypeVar,
     Union,
 )
@@ -50,12 +45,12 @@ try:
 except ImportError:
     # Types may not exist on earlier version of pandas (current min ver is v.1.1.0)
     # https://github.com/pandas-dev/pandas/blob/v1.1.0/pandas/_typing.py
-    CompressionDict = Dict[str, Any]
+    CompressionDict = dict[str, Any]
     CompressionOptions = Optional[  # type: ignore[misc]
         Union[Literal["infer", "gzip", "bz2", "zip", "xz", "zstd", "tar"], CompressionDict]
     ]
     CSVEngine = Literal["c", "python", "pyarrow", "python-fwf"]  # type: ignore[misc]
-    StorageOptions = Optional[Dict[str, Any]]  # type: ignore[misc]
+    StorageOptions = Optional[dict[str, Any]]  # type: ignore[misc]
 
 try:
     from pandas._libs.lib import _NoDefault
@@ -82,7 +77,7 @@ DataFrameFactoryFn: TypeAlias = Callable[..., pd.DataFrame]
 # sentinel values
 UNSUPPORTED_TYPE: Final = object()
 
-CAN_HANDLE: Final[Set[str]] = {
+CAN_HANDLE: Final[set[str]] = {
     # builtins
     "str",
     "int",
@@ -126,7 +121,7 @@ CAN_HANDLE: Final[Set[str]] = {
     "DtypeBackend",
 }
 
-TYPE_SUBSTITUTIONS: Final[Dict[str, str]] = {
+TYPE_SUBSTITUTIONS: Final[dict[str, str]] = {
     # Hashable causes `TypeError:issubclass() arg 1 must be a class` on some versions of pydantic
     "Hashable": "str",
     "Sequence[Hashable]": "Sequence[str]",
@@ -138,9 +133,9 @@ TYPE_SUBSTITUTIONS: Final[Dict[str, str]] = {
     "list[IntStrT]": "List[Union[int, str]]",
 }
 
-NEED_SPECIAL_HANDLING: Dict[str, Set[str]] = defaultdict(set)
-FIELD_SKIPPED_UNSUPPORTED_TYPE: Set[str] = set()
-FIELD_SKIPPED_NO_ANNOTATION: Set[str] = set()
+NEED_SPECIAL_HANDLING: dict[str, set[str]] = defaultdict(set)
+FIELD_SKIPPED_UNSUPPORTED_TYPE: set[str] = set()
+FIELD_SKIPPED_NO_ANNOTATION: set[str] = set()
 
 
 class DynamicAssetError(Exception):
@@ -155,7 +150,7 @@ class _SignatureTuple(NamedTuple):
 
 class _FieldSpec(NamedTuple):
     # mypy doesn't consider Optional[SOMETHING] or Union[SOMETHING] a type. So what is it?
-    type: Type | str
+    type: type | str
     default_value: object  # ... for required value
 
 
@@ -166,7 +161,7 @@ def _replace_builtins(input_: str | type) -> str | type:
     return input_.replace("list", "List").replace("dict", "Dict")
 
 
-FIELD_SUBSTITUTIONS: Final[Dict[str, Dict[str, _FieldSpec]]] = {
+FIELD_SUBSTITUTIONS: Final[dict[str, dict[str, _FieldSpec]]] = {
     # SQLTable
     "schema": {
         "schema_name": _FieldSpec(
@@ -213,7 +208,7 @@ FIELD_SUBSTITUTIONS: Final[Dict[str, Dict[str, _FieldSpec]]] = {
     },
 }
 
-_METHOD_TO_CLASS_NAME_MAPPINGS: Final[Dict[str, str]] = {
+_METHOD_TO_CLASS_NAME_MAPPINGS: Final[dict[str, str]] = {
     "csv": "CSVAsset",
     "fwf": "FWFAsset",
     "gbq": "GBQAsset",
@@ -228,7 +223,7 @@ _METHOD_TO_CLASS_NAME_MAPPINGS: Final[Dict[str, str]] = {
     "xml": "XMLAsset",
 }
 
-_TYPE_REF_LOCALS: Final[Dict[str, Type | Any]] = {
+_TYPE_REF_LOCALS: Final[dict[str, type | Any]] = {
     "Literal": Literal,
     "Sequence": Sequence,
     "Hashable": Hashable,
@@ -248,7 +243,7 @@ _TYPE_REF_LOCALS: Final[Dict[str, Type | Any]] = {
 
 def _extract_io_methods(
     blacklist: Optional[Sequence[str]] = None,
-) -> List[Tuple[str, DataFrameFactoryFn]]:
+) -> list[tuple[str, DataFrameFactoryFn]]:
     # suppress pandas future warnings that may be emitted by collecting
     # pandas io methods
     # Once the context manager exits, the warning filter is removed.
@@ -265,8 +260,8 @@ def _extract_io_methods(
 
 
 def _extract_io_signatures(
-    io_methods: List[Tuple[str, DataFrameFactoryFn]],
-) -> List[_SignatureTuple]:
+    io_methods: list[tuple[str, DataFrameFactoryFn]],
+) -> list[_SignatureTuple]:
     signatures = []
     for name, method in io_methods:
         sig = inspect.signature(method)
@@ -289,7 +284,7 @@ def _get_default_value(
     return default
 
 
-def _get_annotation_type(param: inspect.Parameter) -> Union[Type, str, object]:
+def _get_annotation_type(param: inspect.Parameter) -> Union[type, str, object]:
     """
     https://docs.python.org/3/howto/annotations.html#manually-un-stringizing-stringized-annotations
     """
@@ -333,12 +328,12 @@ def _get_annotation_type(param: inspect.Parameter) -> Union[Type, str, object]:
 
 def _to_pydantic_fields(
     sig_tuple: _SignatureTuple, skip_first_param: bool
-) -> Dict[str, _FieldSpec]:
+) -> dict[str, _FieldSpec]:
     """
     Extract the parameter details in a structure that can be easily unpacked to
     `pydantic.create_model()` as field arguments
     """
-    fields_dict: Dict[str, _FieldSpec] = {}
+    fields_dict: dict[str, _FieldSpec] = {}
     all_parameters: Iterator[tuple[str, inspect.Parameter]] = iter(
         sig_tuple.signature.parameters.items()
     )
@@ -370,14 +365,14 @@ def _to_pydantic_fields(
     return fields_dict
 
 
-M = TypeVar("M", bound=Type[DataAsset])
+M = TypeVar("M", bound=type[DataAsset])
 
 
 def _create_pandas_asset_model(  # noqa: PLR0913
     model_name: str,
     model_base: M,
-    type_field: Tuple[Union[Type, str], str],
-    fields_dict: Dict[str, _FieldSpec],
+    type_field: tuple[Union[type, str], str],
+    fields_dict: dict[str, _FieldSpec],
     extra: pydantic.Extra,
     model_docstring: str = "",
 ) -> M:
@@ -410,11 +405,11 @@ def _generate_pandas_data_asset_models(
     blacklist: Optional[Sequence[str]] = None,
     use_docstring_from_method: bool = False,
     skip_first_param: bool = False,
-) -> Dict[str, M]:
+) -> dict[str, M]:
     io_methods = _extract_io_methods(blacklist)
     io_method_sigs = _extract_io_signatures(io_methods)
 
-    data_asset_models: Dict[str, M] = {}
+    data_asset_models: dict[str, M] = {}
     for signature_tuple in io_method_sigs:
         # skip the first parameter as this corresponds to the path/buffer/io field
         # paths to specific files are provided by the batch building logic

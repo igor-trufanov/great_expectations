@@ -1,4 +1,4 @@
-from typing import Any, Dict, Optional, Tuple
+from typing import Any, Optional
 
 import scipy.stats
 
@@ -72,10 +72,10 @@ class ColumnDiscreteEntropy(ColumnAggregateMetricProvider):
     def _spark(
         cls,
         execution_engine: "SparkDFExecutionEngine",
-        metric_domain_kwargs: Dict,
-        metric_value_kwargs: Dict,
-        metrics: Dict[Tuple, Any],
-        runtime_configuration: Dict,
+        metric_domain_kwargs: dict,
+        metric_value_kwargs: dict,
+        metrics: dict[tuple, Any],
+        runtime_configuration: dict,
     ):
         (
             _df,
@@ -337,7 +337,7 @@ class ExpectColumnDiscreteEntropyToBeBetween(ColumnAggregateExpectation):
 
     def _validate(
         self,
-        metrics: Dict,
+        metrics: dict,
         runtime_configuration: dict = None,
         execution_engine: ExecutionEngine = None,
     ):

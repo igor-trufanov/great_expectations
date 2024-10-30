@@ -4,7 +4,7 @@ import importlib
 import itertools
 import json
 from collections.abc import Iterable
-from typing import TYPE_CHECKING, Any, Dict, List, Optional, Union
+from typing import TYPE_CHECKING, Any, Optional, Union
 
 from marshmallow import ValidationError
 
@@ -33,7 +33,7 @@ class GreatExpectationsAggregateError(ValueError):
 class GreatExpectationsValidationError(ValidationError, GreatExpectationsError):
     def __init__(self, message, validation_error=None) -> None:
         self.message = message
-        self.messages: Union[List[str], List[Any], Dict] = []
+        self.messages: Union[list[str], list[Any], dict] = []
         if validation_error is not None:
             self.messages = validation_error.messages
 

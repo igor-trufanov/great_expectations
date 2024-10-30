@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import logging
-from typing import TYPE_CHECKING, ClassVar, Literal, Type
+from typing import TYPE_CHECKING, ClassVar, Literal
 
 from great_expectations._docs_decorators import public_api
 from great_expectations.compatibility.typing_extensions import override
@@ -22,7 +22,7 @@ class PandasDBFSDatasource(PandasFilesystemDatasource):
     """Pandas based Datasource for DataBricks File System (DBFS) based data assets."""
 
     # class attributes
-    data_connector_type: ClassVar[Type[DBFSDataConnector]] = DBFSDataConnector
+    data_connector_type: ClassVar[type[DBFSDataConnector]] = DBFSDataConnector
 
     # instance attributes
     # overridden from base `Literal['pandas_filesystem']`

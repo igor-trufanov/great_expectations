@@ -5,7 +5,7 @@ import logging
 import weakref
 from abc import ABCMeta
 from enum import Enum
-from typing import Any, Dict, List, Optional, Set, Tuple, Union
+from typing import Any, Optional, Union
 from urllib.parse import urljoin
 
 import requests
@@ -30,11 +30,11 @@ logger = logging.getLogger(__name__)
 class ErrorDetail(TypedDict):
     code: Optional[str]
     detail: Optional[str]
-    source: Union[str, Dict[str, str], None]
+    source: Union[str, dict[str, str], None]
 
 
 class ErrorPayload(TypedDict):
-    errors: List[ErrorDetail]
+    errors: list[ErrorDetail]
 
 
 class EndpointVersion(str, Enum):
@@ -72,7 +72,7 @@ def get_user_friendly_error_message(
 
 
 class GXCloudStoreBackend(StoreBackend, metaclass=ABCMeta):
-    PAYLOAD_ATTRIBUTES_KEYS: Dict[GXCloudRESTResource, str] = {
+    PAYLOAD_ATTRIBUTES_KEYS: dict[GXCloudRESTResource, str] = {
         GXCloudRESTResource.CHECKPOINT: "checkpoint_config",
         GXCloudRESTResource.DATASOURCE: "datasource_config",
         GXCloudRESTResource.DATA_CONTEXT: "data_context_config",
@@ -82,7 +82,7 @@ class GXCloudStoreBackend(StoreBackend, metaclass=ABCMeta):
         GXCloudRESTResource.VALIDATION_DEFINITION: "validation_definition",
     }
 
-    ALLOWED_SET_KWARGS_BY_RESOURCE_TYPE: Dict[GXCloudRESTResource, Set[str]] = {
+    ALLOWED_SET_KWARGS_BY_RESOURCE_TYPE: dict[GXCloudRESTResource, set[str]] = {
         GXCloudRESTResource.EXPECTATION_SUITE: {"clause_id"},
         GXCloudRESTResource.VALIDATION_RESULT: {
             "checkpoint_id",
@@ -121,7 +121,7 @@ class GXCloudStoreBackend(StoreBackend, metaclass=ABCMeta):
 
     def __init__(  # noqa: PLR0913
         self,
-        ge_cloud_credentials: Dict,
+        ge_cloud_credentials: dict,
         ge_cloud_base_url: str = CLOUD_DEFAULT_BASE_URL,
         ge_cloud_resource_type: Optional[Union[str, GXCloudRESTResource]] = None,
         ge_cloud_resource_name: Optional[str] = None,
@@ -183,7 +183,7 @@ class GXCloudStoreBackend(StoreBackend, metaclass=ABCMeta):
 
     @override
     def _get(  # type: ignore[override]
-        self, key: Tuple[GXCloudRESTResource, str | None, str | None]
+        self, key: tuple[GXCloudRESTResource, str | None, str | None]
     ) -> dict:
         url = self.get_url_for_key(key=key)
 
@@ -327,7 +327,7 @@ class GXCloudStoreBackend(StoreBackend, metaclass=ABCMeta):
             ) from e
 
     @property
-    def allowed_set_kwargs(self) -> Set[str]:
+    def allowed_set_kwargs(self) -> set[str]:
         return self.ALLOWED_SET_KWARGS_BY_RESOURCE_TYPE.get(self.ge_cloud_resource_type, set())
 
     def validate_set_kwargs(self, kwargs: dict) -> Union[bool, None]:
@@ -346,7 +346,7 @@ class GXCloudStoreBackend(StoreBackend, metaclass=ABCMeta):
     @override
     def _set(  # type: ignore[override]
         self,
-        key: Tuple[GXCloudRESTResource, ...],
+        key: tuple[GXCloudRESTResource, ...],
         value: Any,
         **kwargs,
     ) -> Union[bool, GXCloudResourceRef]:
@@ -434,7 +434,7 @@ class GXCloudStoreBackend(StoreBackend, metaclass=ABCMeta):
         return self._ge_cloud_credentials
 
     @override
-    def list_keys(self, prefix: Tuple = ()) -> List[Tuple[GXCloudRESTResource, str, str]]:
+    def list_keys(self, prefix: tuple = ()) -> list[tuple[GXCloudRESTResource, str, str]]:
         url = self.construct_versioned_url(
             base_url=self.ge_cloud_base_url,
             organization_id=self.ge_cloud_credentials["organization_id"],
@@ -469,7 +469,7 @@ class GXCloudStoreBackend(StoreBackend, metaclass=ABCMeta):
     @override
     def get_url_for_key(
         self,
-        key: Tuple[GXCloudRESTResource, str | None, str | None],
+        key: tuple[GXCloudRESTResource, str | None, str | None],
         protocol: Optional[Any] = None,
     ) -> str:
         id = key[1]
@@ -591,7 +591,7 @@ class GXCloudStoreBackend(StoreBackend, metaclass=ABCMeta):
         return self.add(key=key, value=value, **kwargs)
 
     @override
-    def _has_key(self, key: Tuple[GXCloudRESTResource, str | None, str | None]) -> bool:
+    def _has_key(self, key: tuple[GXCloudRESTResource, str | None, str | None]) -> bool:
         try:
             _ = self._get(key)
             return True

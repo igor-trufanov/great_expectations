@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import os
-from typing import TYPE_CHECKING, List
+from typing import TYPE_CHECKING
 from unittest import mock
 
 import pytest
@@ -77,7 +77,7 @@ def test_data_profiler_column_domain_builder_with_profile_path_as_value(
     domain_builder: DomainBuilder = DataProfilerColumnDomainBuilder(
         data_context=data_context,
     )
-    domains: List[Domain] = domain_builder.get_domains(
+    domains: list[Domain] = domain_builder.get_domains(
         rule_name="my_rule",
         variables=variables,
         batch_request=batch_request,
@@ -348,7 +348,7 @@ def test_data_profiler_column_domain_builder_with_profile_path_as_default_refere
     domain_builder: DomainBuilder = DataProfilerColumnDomainBuilder(
         data_context=data_context,
     )
-    domains: List[Domain] = domain_builder.get_domains(
+    domains: list[Domain] = domain_builder.get_domains(
         rule_name="my_rule",
         variables=variables,
         batch_request=batch_request,
@@ -619,7 +619,7 @@ def test_data_profiler_column_domain_builder_with_profile_path_as_reference(
     domain_builder: DomainBuilder = DataProfilerColumnDomainBuilder(
         data_context=data_context,
     )
-    domains: List[Domain] = domain_builder.get_domains(
+    domains: list[Domain] = domain_builder.get_domains(
         rule_name="my_rule",
         variables=variables,
         batch_request=batch_request,
@@ -897,7 +897,7 @@ def test_data_profiler_column_domain_builder_with_profile_path_as_reference_with
         ],
         data_context=data_context,
     )
-    domains: List[Domain] = domain_builder.get_domains(
+    domains: list[Domain] = domain_builder.get_domains(
         rule_name="my_rule",
         variables=variables,
         batch_request=batch_request,
@@ -1101,7 +1101,7 @@ def test_data_profiler_column_domain_builder_with_profile_path_as_reference_with
         "dataprofiler.profilers.profile_builder.BaseProfiler.load",
         return_value=mock_base_data_profiler,
     ):
-        domains: List[Domain] = domain_builder.get_domains(
+        domains: list[Domain] = domain_builder.get_domains(
             rule_name="my_rule",
             variables=variables,
             batch_request=batch_request,

@@ -2,13 +2,11 @@ import typing
 from logging import Logger
 from typing import (
     Any,
-    Dict,
     Hashable,
     Iterable,
     Literal,
     Optional,
     Sequence,
-    Tuple,
     Union,
 )
 
@@ -65,7 +63,7 @@ class PandasGoogleCloudStorageDatasourceError(PandasDatasourceError): ...
 class PandasGoogleCloudStorageDatasource(_PandasFilePathDatasource):
     type: Literal["pandas_gcs"]
     bucket_or_name: str
-    gcs_options: Dict[str, Any]
+    gcs_options: dict[str, Any]
 
     _gcs_client: Union[google.Client, None]
 
@@ -141,7 +139,7 @@ class PandasGoogleCloudStorageDatasource(_PandasFilePathDatasource):
         gcs_max_results: int = 1000,
         sheet_name: typing.Union[str, int, None] = 0,
         header: Union[int, Sequence[int], None] = 0,
-        names: typing.Union[typing.List[str], None] = ...,
+        names: typing.Union[list[str], None] = ...,
         index_col: Union[int, Sequence[int], None] = ...,
         usecols: typing.Union[int, str, typing.Sequence[int], None] = ...,
         squeeze: typing.Union[bool, None] = ...,
@@ -154,7 +152,7 @@ class PandasGoogleCloudStorageDatasource(_PandasFilePathDatasource):
         keep_default_na: bool = ...,
         na_filter: bool = ...,
         verbose: bool = ...,
-        parse_dates: typing.Union[typing.List, typing.Dict, bool] = ...,
+        parse_dates: typing.Union[list, dict, bool] = ...,
         thousands: typing.Union[str, None] = ...,
         decimal: str = ".",
         comment: typing.Union[str, None] = ...,
@@ -182,7 +180,7 @@ class PandasGoogleCloudStorageDatasource(_PandasFilePathDatasource):
         glob_directive: str = ...,
         batch_metadata: Optional[BatchMetadata] = ...,
         connect_options: typing.Mapping = ...,
-        colspecs: Union[Sequence[Tuple[int, int]], str, None] = ...,
+        colspecs: Union[Sequence[tuple[int, int]], str, None] = ...,
         widths: Union[Sequence[int], None] = ...,
         infer_nrows: int = ...,
         kwargs: Optional[dict] = ...,
@@ -198,10 +196,10 @@ class PandasGoogleCloudStorageDatasource(_PandasFilePathDatasource):
         key: typing.Any = ...,
         mode: str = "r",
         errors: str = "strict",
-        where: typing.Union[str, typing.List, None] = ...,
+        where: typing.Union[str, list, None] = ...,
         start: typing.Union[int, None] = ...,
         stop: typing.Union[int, None] = ...,
-        columns: typing.Union[typing.List[str], None] = ...,
+        columns: typing.Union[list[str], None] = ...,
         iterator: bool = ...,
         chunksize: typing.Union[int, None] = ...,
         kwargs: typing.Union[dict, None] = ...,
@@ -219,12 +217,12 @@ class PandasGoogleCloudStorageDatasource(_PandasFilePathDatasource):
         header: Union[int, Sequence[int], None] = ...,
         index_col: Union[int, Sequence[int], None] = ...,
         skiprows: typing.Union[typing.Sequence[int], int, None] = ...,
-        attrs: typing.Union[typing.Dict[str, str], None] = ...,
+        attrs: typing.Union[dict[str, str], None] = ...,
         parse_dates: bool = ...,
         thousands: typing.Union[str, None] = ",",
         encoding: typing.Union[str, None] = ...,
         decimal: str = ".",
-        converters: typing.Union[typing.Dict, None] = ...,
+        converters: typing.Union[dict, None] = ...,
         na_values: Union[Iterable[object], None] = ...,
         keep_default_na: bool = ...,
         displayed_only: bool = ...,
@@ -240,7 +238,7 @@ class PandasGoogleCloudStorageDatasource(_PandasFilePathDatasource):
         orient: typing.Union[str, None] = ...,
         dtype: typing.Union[dict, None] = ...,
         convert_axes: typing.Any = ...,
-        convert_dates: typing.Union[bool, typing.List[str]] = ...,
+        convert_dates: typing.Union[bool, list[str]] = ...,
         keep_default_dates: bool = ...,
         numpy: bool = ...,
         precise_float: bool = ...,
@@ -261,7 +259,7 @@ class PandasGoogleCloudStorageDatasource(_PandasFilePathDatasource):
         gcs_prefix: str = "",
         gcs_delimiter: str = "/",
         gcs_max_results: int = 1000,
-        columns: typing.Union[typing.List[str], None] = ...,
+        columns: typing.Union[list[str], None] = ...,
         kwargs: typing.Union[dict, None] = ...,
     ) -> ORCAsset: ...
     def add_parquet_asset(  # noqa: PLR0913
@@ -273,7 +271,7 @@ class PandasGoogleCloudStorageDatasource(_PandasFilePathDatasource):
         gcs_delimiter: str = "/",
         gcs_max_results: int = 1000,
         engine: str = "auto",
-        columns: typing.Union[typing.List[str], None] = ...,
+        columns: typing.Union[list[str], None] = ...,
         storage_options: StorageOptions = ...,
         use_nullable_dtypes: bool = ...,
         kwargs: typing.Union[dict, None] = ...,
@@ -344,14 +342,14 @@ class PandasGoogleCloudStorageDatasource(_PandasFilePathDatasource):
         gcs_delimiter: str = "/",
         gcs_max_results: int = 1000,
         xpath: str = "./*",
-        namespaces: typing.Union[typing.Dict[str, str], None] = ...,
+        namespaces: typing.Union[dict[str, str], None] = ...,
         elems_only: bool = ...,
         attrs_only: bool = ...,
         names: Union[Sequence[str], None] = ...,
         dtype: typing.Union[dict, None] = ...,
         encoding: typing.Union[str, None] = "utf-8",
         stylesheet: Union[FilePath, None] = ...,
-        iterparse: typing.Union[typing.Dict[str, typing.List[str]], None] = ...,
+        iterparse: typing.Union[dict[str, list[str]], None] = ...,
         compression: CompressionOptions = "infer",
         storage_options: StorageOptions = ...,
     ) -> XMLAsset: ...

@@ -9,7 +9,6 @@ from typing import (
     Any,
     Callable,
     ClassVar,
-    Type,
     TypedDict,
     Union,
     overload,
@@ -60,21 +59,21 @@ class BlockConfigBatchRequestTypedDict(TypedDict):
     limit: NotRequired[BatchSlice]
 
 
-def _get_fluent_batch_request_class() -> Type[FluentBatchRequest]:
+def _get_fluent_batch_request_class() -> type[FluentBatchRequest]:
     """Using this function helps work around circular import dependncies."""
     module_name = "great_expectations.datasource.fluent.batch_request"
     class_name = "BatchRequest"
     return load_class(class_name=class_name, module_name=module_name)
 
 
-def _get_fluent_batch_class() -> Type[FluentBatch]:
+def _get_fluent_batch_class() -> type[FluentBatch]:
     """Using this function helps work around circular import dependncies."""
     module_name = "great_expectations.datasource.fluent.interfaces"
     class_name = "Batch"
     return load_class(class_name=class_name, module_name=module_name)
 
 
-def _get_metrics_calculator_class() -> Type[MetricsCalculator]:
+def _get_metrics_calculator_class() -> type[MetricsCalculator]:
     """Using this function helps work around circular import dependncies."""
     module_name = "great_expectations.validator.metrics_calculator"
     class_name = "MetricsCalculator"
@@ -1382,7 +1381,7 @@ if TYPE_CHECKING:
 if pyspark.DataFrame:  # type: ignore[truthy-function] # False if NotImported
     BatchDataUnion: TypeAlias = Union[BatchData, pd.DataFrame, pyspark.DataFrame]
 
-    BatchDataType: TypeAlias = Union[Type[BatchData], Type[pd.DataFrame], Type[pyspark.DataFrame]]
+    BatchDataType: TypeAlias = Union[type[BatchData], type[pd.DataFrame], type[pyspark.DataFrame]]
 else:
-    BatchDataType = Union[Type[BatchData], Type[pd.DataFrame]]  # type: ignore[misc] # Cannot assign multiple types
+    BatchDataType = Union[type[BatchData], type[pd.DataFrame]]  # type: ignore[misc] # Cannot assign multiple types
     BatchDataUnion = Union[BatchData, pd.DataFrame]  # type: ignore[misc] # Cannot assign multiple types

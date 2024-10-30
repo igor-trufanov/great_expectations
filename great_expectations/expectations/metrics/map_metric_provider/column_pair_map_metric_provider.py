@@ -4,7 +4,6 @@ import logging
 from typing import (
     TYPE_CHECKING,
     Optional,
-    Tuple,
 )
 
 from great_expectations.compatibility.typing_extensions import override
@@ -29,7 +28,7 @@ class ColumnPairMapMetricProvider(MapMetricProvider):
     `expect_column_pair_values_to_be_equal` is an example of an Expectation that uses this metric.
     """  # noqa: E501
 
-    condition_domain_keys: Tuple[str, ...] = (
+    condition_domain_keys: tuple[str, ...] = (
         "batch_id",
         "table",
         "column_A",

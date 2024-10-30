@@ -4,7 +4,7 @@ import errno
 import os
 from abc import ABC, abstractmethod
 from collections import OrderedDict
-from typing import Any, Dict, Optional, Type, cast
+from typing import Any, Optional, cast
 
 from great_expectations.compatibility.typing_extensions import override
 from great_expectations.core.config_substitutor import _ConfigurationSubstitutor
@@ -19,13 +19,13 @@ class _AbstractConfigurationProvider(ABC):
         self._substitutor = _ConfigurationSubstitutor()
 
     @abstractmethod
-    def get_values(self) -> Dict[str, str]:
+    def get_values(self) -> dict[str, str]:
         """
         Retrieve any configuration variables relevant to the provider's environment.
         """
         pass
 
-    def substitute_config(self, config: Any, config_values: Optional[Dict[str, str]] = None) -> Any:
+    def substitute_config(self, config: Any, config_values: Optional[dict[str, str]] = None) -> Any:
         """
         Utilizes the underlying ConfigurationSubstitutor instance to substitute any
         $VARIABLES with their corresponding config variable value.
@@ -56,7 +56,7 @@ class _ConfigurationProvider(_AbstractConfigurationProvider):
 
     def __init__(self) -> None:
         self._providers: OrderedDict[
-            Type[_AbstractConfigurationProvider], _AbstractConfigurationProvider
+            type[_AbstractConfigurationProvider], _AbstractConfigurationProvider
         ] = OrderedDict()
         super().__init__()
 
@@ -74,7 +74,7 @@ class _ConfigurationProvider(_AbstractConfigurationProvider):
         self._providers[type_] = provider
 
     def get_provider(
-        self, type_: Type[_AbstractConfigurationProvider]
+        self, type_: type[_AbstractConfigurationProvider]
     ) -> Optional[_AbstractConfigurationProvider]:
         """
         Retrieves a registered configuration provider (if available).
@@ -89,14 +89,14 @@ class _ConfigurationProvider(_AbstractConfigurationProvider):
         return self._providers.get(type_)
 
     @override
-    def get_values(self) -> Dict[str, str]:
+    def get_values(self) -> dict[str, str]:
         """
         Iterates through all registered providers to aggregate a list of configuration values.
 
         Values are generated based on the order of registration; if there is a conflict,
         subsequent providers will overwrite existing values.
         """
-        values: Dict[str, str] = {}
+        values: dict[str, str] = {}
         for provider in self._providers.values():
             values.update(provider.get_values())
         return values
@@ -107,12 +107,12 @@ class _RuntimeEnvironmentConfigurationProvider(_AbstractConfigurationProvider):
     Responsible for the management of the runtime_environment dictionary provided at runtime.
     """
 
-    def __init__(self, runtime_environment: Dict[str, str]) -> None:
+    def __init__(self, runtime_environment: dict[str, str]) -> None:
         self._runtime_environment = runtime_environment
         super().__init__()
 
     @override
-    def get_values(self) -> Dict[str, str]:
+    def get_values(self) -> dict[str, str]:
         return self._runtime_environment
 
 
@@ -125,7 +125,7 @@ class _EnvironmentConfigurationProvider(_AbstractConfigurationProvider):
         super().__init__()
 
     @override
-    def get_values(self) -> Dict[str, str]:
+    def get_values(self) -> dict[str, str]:
         return dict(os.environ)  # noqa: TID251 # os.environ allowed in config files
 
 
@@ -144,7 +144,7 @@ class _ConfigurationVariablesConfigurationProvider(_AbstractConfigurationProvide
         super().__init__()
 
     @override
-    def get_values(self) -> Dict[str, str]:
+    def get_values(self) -> dict[str, str]:
         env_vars = dict(os.environ)  # noqa: TID251 # os.environ allowed in config files
         try:
             # If the user specifies the config variable path with an environment variable, we want to substitute it  # noqa: E501
@@ -162,7 +162,7 @@ class _ConfigurationVariablesConfigurationProvider(_AbstractConfigurationProvide
 
             variables = dict(yaml.load(contents)) or {}
             return cast(
-                Dict[str, str],
+                dict[str, str],
                 self._substitutor.substitute_all_config_variables(variables, env_vars),
             )
 
@@ -184,7 +184,7 @@ class _CloudConfigurationProvider(_AbstractConfigurationProvider):
         self._cloud_config = cloud_config
 
     @override
-    def get_values(self) -> Dict[str, str]:
+    def get_values(self) -> dict[str, str]:
         from great_expectations.data_context.cloud_constants import (
             GXCloudEnvironmentVariable,
         )
@@ -193,7 +193,7 @@ class _CloudConfigurationProvider(_AbstractConfigurationProvider):
         access_token = self._cloud_config.access_token
         organization_id = self._cloud_config.organization_id
 
-        cloud_values: Dict[str, str] = {
+        cloud_values: dict[str, str] = {
             GXCloudEnvironmentVariable.BASE_URL: base_url,
             GXCloudEnvironmentVariable.ACCESS_TOKEN: access_token,
         }

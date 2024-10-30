@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import json
-from typing import Optional, Tuple, Union
+from typing import Optional, Union
 
 from great_expectations.compatibility.typing_extensions import override
 from great_expectations.core.domain import Domain
@@ -152,7 +152,7 @@ class MetricConfiguration:
         return MetricDomainTypes.TABLE
 
     @property
-    def id(self) -> Tuple[str, str, str]:
+    def id(self) -> tuple[str, str, str]:
         return (
             self.metric_name,
             self.metric_domain_kwargs_id,

@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, List, Optional
+from typing import TYPE_CHECKING, Optional
 
 from great_expectations.compatibility.typing_extensions import override
 from great_expectations.core.domain import Domain
@@ -49,7 +49,7 @@ class TableDomainBuilder(DomainBuilder):
         rule_name: str,
         variables: Optional[ParameterContainer] = None,
         runtime_configuration: Optional[dict] = None,
-    ) -> List[Domain]:
+    ) -> list[Domain]:
         other_table_name: Optional[str]
         try:
             # Obtain table from "rule state" (i.e., variables and parameters); from instance variable otherwise.  # noqa: E501
@@ -63,7 +63,7 @@ class TableDomainBuilder(DomainBuilder):
         except KeyError:
             other_table_name = None
 
-        domains: List[Domain]
+        domains: list[Domain]
         if other_table_name:
             domains = [
                 Domain(

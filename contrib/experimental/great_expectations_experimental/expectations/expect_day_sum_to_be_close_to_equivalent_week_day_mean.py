@@ -1,5 +1,4 @@
 from datetime import date, datetime, timedelta
-from typing import Dict, List
 
 from great_expectations.execution_engine import ExecutionEngine
 from great_expectations.expectations.expectation import QueryExpectation
@@ -182,7 +181,7 @@ class ExpectDaySumToBeCloseToEquivalentWeekDayMean(QueryExpectation):
 
     def _validate(
         self,
-        metrics: Dict,
+        metrics: dict,
         runtime_configuration: dict = None,
         execution_engine: ExecutionEngine = None,
     ):
@@ -226,14 +225,14 @@ def average_if_nonempty(list_: list):
     return sum(list_) / len(list_) if len(list_) > 0 else 0
 
 
-def get_diff_fraction(yesterday_sum: int, result_dict: dict, days_back_list: List[int]):
+def get_diff_fraction(yesterday_sum: int, result_dict: dict, days_back_list: list[int]):
     days_ago_dict = {days_ago: TODAY - timedelta(days=days_ago) for days_ago in days_back_list}
 
-    equivalent_previous_days: List[date] = list(days_ago_dict.values())
-    equivalent_previous_days_str: List[str] = [
+    equivalent_previous_days: list[date] = list(days_ago_dict.values())
+    equivalent_previous_days_str: list[str] = [
         datetime.strftime(i, date_format) for i in equivalent_previous_days
     ]
-    previous_days_sums: List[int] = [
+    previous_days_sums: list[int] = [
         result_dict[equiv_day] for equiv_day in equivalent_previous_days_str
     ]
 

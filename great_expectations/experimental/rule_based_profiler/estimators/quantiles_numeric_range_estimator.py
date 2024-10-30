@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import logging
-from typing import TYPE_CHECKING, Dict, Final, Optional
+from typing import TYPE_CHECKING, Final, Optional
 
 from great_expectations.compatibility.typing_extensions import override
 from great_expectations.core.domain import Domain  # noqa: TCH001
@@ -56,7 +56,7 @@ class QuantilesNumericRangeEstimator(NumericRangeEstimator):
         metric_values: np.ndarray,
         domain: Domain,
         variables: Optional[ParameterContainer] = None,
-        parameters: Optional[Dict[str, ParameterContainer]] = None,
+        parameters: Optional[dict[str, ParameterContainer]] = None,
     ) -> NumericRangeEstimationResult:
         false_positive_rate: np.float64 = get_false_positive_rate_from_rule_state(  # type: ignore[assignment] # could be float
             false_positive_rate=self.configuration.false_positive_rate,  # type: ignore[union-attr] # configuration could be None

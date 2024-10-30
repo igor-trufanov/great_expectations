@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Optional
+from typing import Any, Optional
 
 from capitalone_dataprofiler_expectations.rule_based_profiler.data_assistant_result import (
     DataProfilerStructuredDataAssistantResult,
@@ -48,14 +48,14 @@ class DataProfilerStructuredDataAssistant(DataAssistant):
             validator=validator,
         )
 
-    def get_variables(self) -> Optional[Dict[str, Any]]:
+    def get_variables(self) -> Optional[dict[str, Any]]:
         """
         Returns:
             Optional "variables" configuration attribute name/value pairs (overrides), commonly-used in Builder objects.
         """
         return None
 
-    def get_rules(self) -> Optional[List[Rule]]:
+    def get_rules(self) -> Optional[list[Rule]]:
         """
         Returns:
             Optional custom list of "Rule" objects implementing particular "DataAssistant" functionality.
@@ -112,7 +112,7 @@ class DataProfilerStructuredDataAssistant(DataAssistant):
 
         data_profiler_profile_report_metric_single_batch_parameter_builder_for_validations: ParameterBuilder = data_profiler_profile_report_metric_single_batch_parameter_builder_for_metrics
 
-        validation_parameter_builder_configs: Optional[List[ParameterBuilderConfig]]
+        validation_parameter_builder_configs: Optional[list[ParameterBuilderConfig]]
 
         validation_parameter_builder_configs = [
             ParameterBuilderConfig(
@@ -179,11 +179,11 @@ class DataProfilerStructuredDataAssistant(DataAssistant):
             "profile_report_accepted_filtering_values": ["int", "float", "string"],
         }
 
-        parameter_builders: List[ParameterBuilder] = [
+        parameter_builders: list[ParameterBuilder] = [
             data_profiler_profile_report_metric_single_batch_parameter_builder_for_metrics,
         ]
 
-        expectation_configuration_builders: List[ExpectationConfigurationBuilder] = [
+        expectation_configuration_builders: list[ExpectationConfigurationBuilder] = [
             expect_column_min_to_be_between_expectation_configuration_builder,
             expect_column_max_to_be_between_expectation_configuration_builder,
             expect_column_mean_to_be_between_expectation_configuration_builder,
@@ -223,7 +223,7 @@ class DataProfilerStructuredDataAssistant(DataAssistant):
 
         data_profiler_profile_report_metric_single_batch_parameter_builder_for_validations: ParameterBuilder = data_profiler_profile_report_metric_single_batch_parameter_builder_for_metrics
 
-        validation_parameter_builder_configs: Optional[List[ParameterBuilderConfig]]
+        validation_parameter_builder_configs: Optional[list[ParameterBuilderConfig]]
 
         validation_parameter_builder_configs = [
             ParameterBuilderConfig(
@@ -290,11 +290,11 @@ class DataProfilerStructuredDataAssistant(DataAssistant):
             "profile_report_accepted_filtering_values": ["float"],
         }
 
-        parameter_builders: List[ParameterBuilder] = [
+        parameter_builders: list[ParameterBuilder] = [
             data_profiler_profile_report_metric_single_batch_parameter_builder_for_metrics,
         ]
 
-        expectation_configuration_builders: List[ExpectationConfigurationBuilder] = [
+        expectation_configuration_builders: list[ExpectationConfigurationBuilder] = [
             expect_column_min_to_be_between_expectation_configuration_builder,
             expect_column_max_to_be_between_expectation_configuration_builder,
             expect_column_mean_to_be_between_expectation_configuration_builder,

@@ -40,7 +40,6 @@ import re
 import shutil
 import subprocess
 import sys
-from typing import List
 
 ITEMS_IGNORED_FROM_NAME_TAG_SNIPPET_CHECKER = {
     "docs/docusaurus/docs/components/connect_to_data/cloud/_abs_fluent_data_asset_config_keys.mdx",
@@ -54,7 +53,7 @@ def check_dependencies(*deps: str) -> None:
             raise Exception(f"Must have `{dep}` installed in PATH to run {__file__}")  # noqa: TRY002, TRY003
 
 
-def run_grep(target_dir: pathlib.Path) -> List[str]:
+def run_grep(target_dir: pathlib.Path) -> list[str]:
     try:
         res_positive = subprocess.run(  # noqa: PLW1510
             [

@@ -8,7 +8,7 @@ import sys
 import time
 import traceback
 from collections import defaultdict
-from typing import TYPE_CHECKING, Final, List, Optional, Union
+from typing import TYPE_CHECKING, Final, Optional, Union
 
 from great_expectations.core.expectation_diagnostics.expectation_diagnostics import (
     ExpectationDiagnostics,
@@ -76,7 +76,7 @@ class ExpectationDoctor:
         self,
         diagnostics: Optional[ExpectationDiagnostics] = None,
         show_failed_tests: bool = False,
-        backends: Optional[List[str]] = None,
+        backends: Optional[list[str]] = None,
         show_debug_messages: bool = False,
     ) -> str:
         if diagnostics is None:
@@ -114,7 +114,7 @@ class ExpectationDoctor:
         ignore_only_for: bool = False,
         for_gallery: bool = False,
         debug_logger: Optional[logging.Logger] = None,
-        only_consider_these_backends: Optional[List[str]] = None,
+        only_consider_these_backends: Optional[list[str]] = None,
         context: Optional[AbstractDataContext] = None,
     ) -> ExpectationDiagnostics:
         if debug_logger is not None:
@@ -129,10 +129,10 @@ class ExpectationDoctor:
             _error = lambda x: x  # noqa: E731
 
         library_metadata: AugmentedLibraryMetadata = self._get_augmented_library_metadata()
-        examples: List[ExpectationTestDataCases] = self._get_examples(
+        examples: list[ExpectationTestDataCases] = self._get_examples(
             return_only_gallery_examples=False
         )
-        gallery_examples: List[ExpectationTestDataCases] = []
+        gallery_examples: list[ExpectationTestDataCases] = []
         for example in examples:
             _tests_to_include = [test for test in example.tests if test.include_in_gallery]
             example = copy.deepcopy(example)  # noqa: PLW2901
@@ -152,7 +152,7 @@ class ExpectationDoctor:
                 f"Was NOT able to get Expectation configuration for {self._expectation.expectation_type}. "  # noqa: E501
                 "Is there at least one sample test where 'success' is True?"
             )
-        metric_diagnostics_list: List[ExpectationMetricDiagnostics] = (
+        metric_diagnostics_list: list[ExpectationMetricDiagnostics] = (
             self._get_metric_diagnostics_list(
                 expectation_config=_expectation_config,
             )
@@ -174,7 +174,7 @@ class ExpectationDoctor:
         )
 
         _debug("Getting test results")
-        test_results: List[ExpectationTestDiagnostics] = self._get_test_results(
+        test_results: list[ExpectationTestDiagnostics] = self._get_test_results(
             expectation_type=description_diagnostics.snake_name,
             test_data_cases=examples,
             execution_engine_diagnostics=introspected_execution_engines,
@@ -186,11 +186,11 @@ class ExpectationDoctor:
             context=context,
         )
 
-        backend_test_result_counts: List[ExpectationBackendTestResultCounts] = (
+        backend_test_result_counts: list[ExpectationBackendTestResultCounts] = (
             ExpectationDiagnostics._get_backends_from_test_results(test_results)
         )
 
-        renderers: List[ExpectationRendererDiagnostics] = self._get_renderer_diagnostics(
+        renderers: list[ExpectationRendererDiagnostics] = self._get_renderer_diagnostics(
             expectation_type=description_diagnostics.snake_name,
             test_diagnostics=test_results,
             registered_renderers=_registered_renderers,  # type: ignore[arg-type]
@@ -295,9 +295,9 @@ class ExpectationDoctor:
         self,
         library_metadata: Union[AugmentedLibraryMetadata, ExpectationDescriptionDiagnostics],
         description: ExpectationDescriptionDiagnostics,
-        examples: List[ExpectationTestDataCases],
-        tests: List[ExpectationTestDiagnostics],
-        backend_test_result_counts: List[ExpectationBackendTestResultCounts],
+        examples: list[ExpectationTestDataCases],
+        tests: list[ExpectationTestDiagnostics],
+        backend_test_result_counts: list[ExpectationBackendTestResultCounts],
     ) -> ExpectationDiagnosticMaturityMessages:
         """Generate maturity checklist messages"""
         experimental_checks = []
@@ -333,7 +333,7 @@ class ExpectationDoctor:
 
     @staticmethod
     def _get_coverage_score(
-        backend_test_result_counts: List[ExpectationBackendTestResultCounts],
+        backend_test_result_counts: list[ExpectationBackendTestResultCounts],
         execution_engines: ExpectationExecutionEngineDiagnostics,
     ) -> float:
         """Generate coverage score"""
@@ -380,7 +380,7 @@ class ExpectationDoctor:
 
     def _get_examples(  # noqa: C901 - too complex
         self, return_only_gallery_examples: bool = True
-    ) -> List[ExpectationTestDataCases]:
+    ) -> list[ExpectationTestDataCases]:
         """
         Get a list of examples from the object's `examples` member variable.
 
@@ -390,7 +390,7 @@ class ExpectationDoctor:
         :return: list of examples or [], if no examples exist
         """  # noqa: E501
         # Currently, only community contrib expectations have an examples attribute
-        all_examples: List[dict] = self._expectation.examples or self._get_examples_from_json()
+        all_examples: list[dict] = self._expectation.examples or self._get_examples_from_json()
 
         included_examples = []
         for i, example in enumerate(all_examples, 1):
@@ -474,7 +474,7 @@ class ExpectationDoctor:
 
     def _get_expectation_configuration_from_examples(  # noqa: C901 - too complex
         self,
-        examples: List[ExpectationTestDataCases],
+        examples: list[ExpectationTestDataCases],
     ) -> Optional[ExpectationConfiguration]:
         """Return an ExpectationConfiguration instance using test input expected to succeed"""
         if examples:
@@ -502,9 +502,9 @@ class ExpectationDoctor:
 
     @staticmethod
     def _get_execution_engine_diagnostics(
-        metric_diagnostics_list: List[ExpectationMetricDiagnostics],
+        metric_diagnostics_list: list[ExpectationMetricDiagnostics],
         registered_metrics: dict,
-        execution_engine_names: Optional[List[str]] = None,
+        execution_engine_names: Optional[list[str]] = None,
     ) -> ExpectationExecutionEngineDiagnostics:
         """Check to see which execution_engines are fully supported for this Expectation.
 
@@ -544,7 +544,7 @@ class ExpectationDoctor:
     def _get_metric_diagnostics_list(
         self,
         expectation_config: Optional[ExpectationConfiguration],
-    ) -> List[ExpectationMetricDiagnostics]:
+    ) -> list[ExpectationMetricDiagnostics]:
         """Check to see which Metrics are upstream validation_dependencies for this Expectation."""
 
         # NOTE: Abe 20210102: Strictly speaking, identifying upstream metrics shouldn't need to rely on an expectation config.  # noqa: E501
@@ -558,7 +558,7 @@ class ExpectationDoctor:
         )
 
         metric_name: str
-        metric_diagnostics_list: List[ExpectationMetricDiagnostics] = [
+        metric_diagnostics_list: list[ExpectationMetricDiagnostics] = [
             ExpectationMetricDiagnostics(
                 name=metric_name,
                 has_question_renderer=False,
@@ -572,15 +572,15 @@ class ExpectationDoctor:
     def _get_test_results(  # noqa: PLR0913
         cls,
         expectation_type: str,
-        test_data_cases: List[ExpectationTestDataCases],
+        test_data_cases: list[ExpectationTestDataCases],
         execution_engine_diagnostics: ExpectationExecutionEngineDiagnostics,
         raise_exceptions_for_backends: bool = False,
         ignore_suppress: bool = False,
         ignore_only_for: bool = False,
         debug_logger: Optional[logging.Logger] = None,
-        only_consider_these_backends: Optional[List[str]] = None,
+        only_consider_these_backends: Optional[list[str]] = None,
         context: Optional[AbstractDataContext] = None,
-    ) -> List[ExpectationTestDiagnostics]:
+    ) -> list[ExpectationTestDiagnostics]:
         """Generate test results. This is an internal method for run_diagnostics."""
 
         if debug_logger is not None:
@@ -695,12 +695,12 @@ class ExpectationDoctor:
     def _get_renderer_diagnostics(
         self,
         expectation_type: str,
-        test_diagnostics: List[ExpectationTestDiagnostics],
-        registered_renderers: List[str],
+        test_diagnostics: list[ExpectationTestDiagnostics],
+        registered_renderers: list[str],
         standard_renderers: Optional[
-            List[Union[str, LegacyRendererType, LegacyDiagnosticRendererType]]
+            list[Union[str, LegacyRendererType, LegacyDiagnosticRendererType]]
         ] = None,
-    ) -> List[ExpectationRendererDiagnostics]:
+    ) -> list[ExpectationRendererDiagnostics]:
         """Generate Renderer diagnostics for this Expectation, based primarily on a list of ExpectationTestDiagnostics."""  # noqa: E501
 
         if not standard_renderers:
@@ -773,7 +773,7 @@ class ExpectationDoctor:
     def _get_registered_renderers(
         expectation_type: str,
         registered_renderers: dict,
-    ) -> List[str]:
+    ) -> list[str]:
         """Get a list of supported renderers for this Expectation, in sorted order."""
         supported_renderers = list(registered_renderers[expectation_type].keys())
         supported_renderers.sort()

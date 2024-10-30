@@ -1,5 +1,3 @@
-from typing import List
-
 import pytest
 
 # module level markers
@@ -16,9 +14,9 @@ def test_list_datasources_base_data_context_no_datasources(empty_data_context) -
 
     # no datasources
 
-    observed: List[dict] = context.list_datasources()
+    observed: list[dict] = context.list_datasources()
 
-    expected: List[dict] = []
+    expected: list[dict] = []
 
     assert observed == expected
 

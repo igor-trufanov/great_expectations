@@ -1,4 +1,4 @@
-from typing import Dict, Optional
+from typing import Optional
 
 from great_expectations.execution_engine.execution_engine import ExecutionEngine
 from great_expectations.expectations.expectation import BatchExpectation
@@ -49,7 +49,7 @@ class ProfileNumericColumnsDiffExpectation(BatchExpectation):
 
     def _validate(
         self,
-        metrics: Dict,
+        metrics: dict,
         runtime_configuration: dict = None,
         execution_engine: ExecutionEngine = None,
     ):

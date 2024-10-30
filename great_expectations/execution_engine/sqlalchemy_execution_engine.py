@@ -17,12 +17,9 @@ from typing import (
     TYPE_CHECKING,
     Any,
     Callable,
-    Dict,
     Iterable,
-    List,
     MutableMapping,
     Optional,
-    Tuple,
     Union,
     cast,
 )
@@ -547,7 +544,7 @@ class SqlAlchemyExecutionEngine(ExecutionEngine):
     def _get_sqlalchemy_key_pair_auth_url(
         drivername: str,
         credentials: dict,
-    ) -> Tuple[sa.engine.url.URL, dict]:
+    ) -> tuple[sa.engine.url.URL, dict]:
         """
         Utilizing a private key path and a passphrase in a given credentials dictionary, attempts to encode the provided
         values into a private key. If passphrase is incorrect, this will fail and an exception is raised.
@@ -663,7 +660,7 @@ class SqlAlchemyExecutionEngine(ExecutionEngine):
                 )
 
         # Filtering by filter_conditions
-        filter_conditions: List[RowCondition] = domain_kwargs.get("filter_conditions", [])
+        filter_conditions: list[RowCondition] = domain_kwargs.get("filter_conditions", [])
         # For SqlAlchemyExecutionEngine only one filter condition is allowed
         if len(filter_conditions) == 1:
             filter_condition = filter_conditions[0]
@@ -795,7 +792,7 @@ class SqlAlchemyExecutionEngine(ExecutionEngine):
         domain_kwargs: dict,
         domain_type: Union[str, MetricDomainTypes],
         accessor_keys: Optional[Iterable[str]] = None,
-    ) -> Tuple[sqlalchemy.Selectable, dict, dict]:
+    ) -> tuple[sqlalchemy.Selectable, dict, dict]:
         """Uses a given batch dictionary and Domain kwargs to obtain a SqlAlchemy column object.
 
         Args:
@@ -950,7 +947,7 @@ class SqlAlchemyExecutionEngine(ExecutionEngine):
     def resolve_metric_bundle(  # noqa: C901 - too complex
         self,
         metric_fn_bundle: Iterable[MetricComputationConfiguration],
-    ) -> Dict[Tuple[str, str, str], MetricValue]:
+    ) -> dict[tuple[str, str, str], MetricValue]:
         """For every metric in a set of Metrics to resolve, obtains necessary metric keyword arguments and builds
         bundles of the metrics into one large query dictionary so that they are all executed simultaneously. Will fail
         if bundling the metrics together is not possible.
@@ -964,16 +961,16 @@ class SqlAlchemyExecutionEngine(ExecutionEngine):
             Returns:
                 A dictionary of "MetricConfiguration" IDs and their corresponding now-queried (fully resolved) values.
         """  # noqa: E501
-        resolved_metrics: Dict[Tuple[str, str, str], MetricValue] = {}
+        resolved_metrics: dict[tuple[str, str, str], MetricValue] = {}
 
-        res: List[sqlalchemy.Row]
+        res: list[sqlalchemy.Row]
 
         # We need a different query for each Domain (where clause).
-        queries: Dict[Tuple[str, str, str], dict] = {}
+        queries: dict[tuple[str, str, str], dict] = {}
 
         query: dict
 
-        domain_id: Tuple[str, str, str]
+        domain_id: tuple[str, str, str]
 
         bundled_metric_configuration: MetricComputationConfiguration
         for bundled_metric_configuration in metric_fn_bundle:
@@ -1049,7 +1046,7 @@ class SqlAlchemyExecutionEngine(ExecutionEngine):
             assert len(query["metric_ids"]) == len(res[0]), "unexpected number of metrics returned"
 
             idx: int
-            metric_id: Tuple[str, str, str]
+            metric_id: tuple[str, str, str]
             for idx, metric_id in enumerate(query["metric_ids"]):
                 # Converting SQL query execution results into JSON-serializable format produces simple data types,  # noqa: E501
                 # amenable for subsequent post-processing by higher-level "Metric" and "Expectation" layers.  # noqa: E501
@@ -1095,7 +1092,7 @@ class SqlAlchemyExecutionEngine(ExecutionEngine):
 
     def execute_partitioned_query(
         self, partitioned_query: sqlalchemy.Selectable
-    ) -> List[sqlalchemy.Row]:
+    ) -> list[sqlalchemy.Row]:
         """Use the execution engine to run the partitioned query and fetch all of the results.
 
         Args:
@@ -1122,7 +1119,7 @@ class SqlAlchemyExecutionEngine(ExecutionEngine):
         selectable: sqlalchemy.Selectable,
         partitioner_method_name: str,
         partitioner_kwargs: dict,
-    ) -> List[dict]:
+    ) -> list[dict]:
         """Build data used to construct batch identifiers for the input table using the provided partitioner config.
 
         Sql partitioner configurations yield the unique values that comprise a batch by introspecting your data.
@@ -1213,7 +1210,7 @@ class SqlAlchemyExecutionEngine(ExecutionEngine):
     @override
     def get_batch_data_and_markers(
         self, batch_spec: BatchSpec
-    ) -> Tuple[SqlAlchemyBatchData, BatchMarkers]:
+    ) -> tuple[SqlAlchemyBatchData, BatchMarkers]:
         if not isinstance(batch_spec, (SqlAlchemyDatasourceBatchSpec, RuntimeQueryBatchSpec)):
             raise InvalidBatchSpecError(  # noqa: TRY003
                 f"""SqlAlchemyExecutionEngine accepts batch_spec only of type SqlAlchemyDatasourceBatchSpec or

@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import inspect
 import logging
-from typing import TYPE_CHECKING, Any, ClassVar, Dict, Optional, Tuple, Type, Union
+from typing import TYPE_CHECKING, Any, ClassVar, Optional, Union
 
 import numpy as np
 import pandas as pd
@@ -230,7 +230,7 @@ class ExpectColumnValuesToBeOfType(ColumnMapExpectation):
 
     type_: str = pydantic.Field(description=TYPE__DESCRIPTION)
 
-    library_metadata: ClassVar[Dict[str, Union[str, list, bool]]] = {
+    library_metadata: ClassVar[dict[str, Union[str, list, bool]]] = {
         "maturity": "production",
         "tags": ["core expectation", "column map expectation"],
         "contributors": ["@great_expectations"],
@@ -241,7 +241,7 @@ class ExpectColumnValuesToBeOfType(ColumnMapExpectation):
     _library_metadata = library_metadata
 
     map_metric = "column_values.of_type"
-    domain_keys: ClassVar[Tuple[str, ...]] = (
+    domain_keys: ClassVar[tuple[str, ...]] = (
         "column",
         "row_condition",
         "condition_parser",
@@ -259,7 +259,7 @@ class ExpectColumnValuesToBeOfType(ColumnMapExpectation):
         title = "Expect column values to be of type"
 
         @staticmethod
-        def schema_extra(schema: Dict[str, Any], model: Type[ExpectColumnValuesToBeOfType]) -> None:
+        def schema_extra(schema: dict[str, Any], model: type[ExpectColumnValuesToBeOfType]) -> None:
             ColumnMapExpectation.Config.schema_extra(schema, model)
             schema["properties"]["metadata"]["properties"].update(
                 {
@@ -578,7 +578,7 @@ class ExpectColumnValuesToBeOfType(ColumnMapExpectation):
     @override
     def _validate(
         self,
-        metrics: Dict,
+        metrics: dict,
         runtime_configuration: Optional[dict] = None,
         execution_engine: Optional[ExecutionEngine] = None,
     ):

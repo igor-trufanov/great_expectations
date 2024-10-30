@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import logging
 from abc import ABCMeta
-from typing import TYPE_CHECKING, Any, Callable, List, Literal, Protocol
+from typing import TYPE_CHECKING, Any, Callable, Literal, Protocol
 
 from great_expectations.compatibility.typing_extensions import override
 from great_expectations.core.id_dict import BatchSpec
@@ -237,5 +237,5 @@ class GlueDataCatalogBatchSpec(BatchSpec):
         return self.get("reader_options", {})
 
     @property
-    def partitions(self) -> List[str]:
+    def partitions(self) -> list[str]:
         return self.get("partitions", [])

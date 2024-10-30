@@ -1,4 +1,4 @@
-from typing import Any, List, Union
+from typing import Any, Union
 
 import geopandas
 from shapely.geometry import mapping, shape
@@ -200,7 +200,7 @@ class ExpectColumnValuesToBePolygonAreaBetween(ColumnMapExpectation):
         result: ExpectationValidationResult = None,
         runtime_configuration: dict = None,
         **kwargs,
-    ) -> List[
+    ) -> list[
         Union[
             dict,
             str,

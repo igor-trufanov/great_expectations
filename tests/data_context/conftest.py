@@ -5,7 +5,7 @@ import os
 import pathlib
 import shutil
 import unittest.mock
-from typing import Any, Callable, Dict, Optional, Union, cast
+from typing import Any, Callable, Optional, Union, cast
 from unittest.mock import Mock  # noqa: TID251
 
 import pytest
@@ -320,7 +320,7 @@ def fake_data_connector_id() -> str:
     return "0c08e6ba-8ed9-4715-a179-da2f08aab13e"
 
 
-JSONData = Union[Dict[str, Any]]
+JSONData = Union[dict[str, Any]]
 RequestError = Union[requests.exceptions.HTTPError, requests.exceptions.Timeout]
 
 
@@ -330,7 +330,7 @@ class MockResponse:
         self,
         json_data: JSONData,
         status_code: int,
-        headers: Optional[Dict[str, str]] = None,
+        headers: Optional[dict[str, str]] = None,
         exc_to_raise: Optional[RequestError] = None,
     ) -> None:
         self._json_data = json_data
@@ -414,7 +414,7 @@ def mock_http_unavailable(mock_response_factory: Callable):
         patch=unittest.mock.DEFAULT,
         delete=unittest.mock.DEFAULT,
     ) as mock_requests:
-        for name, mock in cast(Dict[str, Mock], mock_requests).items():
+        for name, mock in cast(dict[str, Mock], mock_requests).items():
             mock.side_effect = mocked_response
             print(f"Mocking `requests.{name}` with `{mocked_response.__name__}()`")
 

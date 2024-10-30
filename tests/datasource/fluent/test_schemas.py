@@ -4,7 +4,7 @@ import json
 import pathlib
 import sys
 from pprint import pformat as pf
-from typing import Any, Generator, Type
+from typing import Any, Generator
 
 import pandas
 import pytest
@@ -29,9 +29,9 @@ def min_supported_python() -> Version:
 
 
 def _models_and_schema_dirs() -> (
-    Generator[tuple[Type[Datasource | DataAsset], pathlib.Path, str], None, None]
+    Generator[tuple[type[Datasource | DataAsset], pathlib.Path, str], None, None]
 ):
-    datasource: Type[Datasource] = Datasource
+    datasource: type[Datasource] = Datasource
     ds_type_name: str = ""
 
     yield Datasource, _SCHEMAS_DIR, Datasource.__name__
@@ -60,7 +60,7 @@ def _models_and_schema_dirs() -> (
     [pytest.param(t[0], t[1], id=t[2]) for t in _models_and_schema_dirs()],
 )
 def test_vcs_schemas_match(  # noqa: C901
-    fluent_ds_or_asset_model: Type[Datasource | DataAsset], schema_dir: pathlib.Path
+    fluent_ds_or_asset_model: type[Datasource | DataAsset], schema_dir: pathlib.Path
 ):
     """
     Test that json schemas for each DataSource and DataAsset match the current schema

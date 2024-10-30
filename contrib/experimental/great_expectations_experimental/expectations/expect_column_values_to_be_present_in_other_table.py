@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, ClassVar, List, Optional, Tuple, Union
+from typing import TYPE_CHECKING, ClassVar, Optional, Union
 
 import pandas as pd
 
@@ -92,18 +92,18 @@ class ExpectColumnValuesToBePresentInOtherTable(QueryExpectation):
         "manually_reviewed_code": True,
     }
 
-    success_keys: ClassVar[Tuple[str, ...]] = (
+    success_keys: ClassVar[tuple[str, ...]] = (
         "template_dict",
         "query",
     )
-    domain_keys: ClassVar[Tuple[str, ...]] = (
+    domain_keys: ClassVar[tuple[str, ...]] = (
         "query",
         "batch_id",
         "row_condition",
         "condition_parser",
     )
 
-    examples: ClassVar[List[dict]] = [
+    examples: ClassVar[list[dict]] = [
         {
             "data": [
                 {
@@ -202,7 +202,7 @@ class ExpectColumnValuesToBePresentInOtherTable(QueryExpectation):
         configuration: Optional[ExpectationConfiguration] = None,
         result: Optional[ExpectationValidationResult] = None,
         runtime_configuration: Optional[dict] = None,
-    ) -> List[RenderedStringTemplateContent]:
+    ) -> list[RenderedStringTemplateContent]:
         runtime_configuration = runtime_configuration or {}
         styling = runtime_configuration.get("styling")
 
@@ -247,7 +247,7 @@ class ExpectColumnValuesToBePresentInOtherTable(QueryExpectation):
         if result_dict is None:
             return None
 
-        unexpected_index_list: Optional[List[dict]] = result_dict.get("unexpected_index_list")
+        unexpected_index_list: Optional[list[dict]] = result_dict.get("unexpected_index_list")
         # Don't render table if we don't have unexpected_values
         if not unexpected_index_list:
             return None

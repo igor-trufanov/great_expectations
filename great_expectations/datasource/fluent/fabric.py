@@ -4,6 +4,7 @@ https://learn.microsoft.com/en-us/python/api/semantic-link-sempy/sempy.fabric?vi
 
 from __future__ import annotations
 
+import builtins
 import logging
 import os
 import uuid
@@ -11,13 +12,9 @@ from pprint import pformat as pf
 from typing import (
     TYPE_CHECKING,
     ClassVar,
-    Dict,
     Final,
-    List,
     Literal,
     Optional,
-    Set,
-    Type,
     Union,
 )
 
@@ -54,7 +51,7 @@ if TYPE_CHECKING:
 
 LOGGER = logging.getLogger(__name__)
 
-SortersDefinition: TypeAlias = List[Union[Sorter, str, dict]]
+SortersDefinition: TypeAlias = list[Union[Sorter, str, dict]]
 
 _REQUIRED_FABRIC_SERVICE: Final[str] = "Microsoft.ProjectArcadia"
 Mode: TypeAlias = Literal["xmla", "rest", "onelake"]
@@ -64,7 +61,7 @@ class _PowerBIAsset(DataAsset):
     """Microsoft PowerBI Asset base class."""
 
     _reader_method: ClassVar[FabricReaderMethods]
-    _EXCLUDE_FROM_READER_OPTIONS: ClassVar[Set[str]] = {
+    _EXCLUDE_FROM_READER_OPTIONS: ClassVar[set[str]] = {
         "batch_definitions",
         "batch_metadata",
         "name",
@@ -82,7 +79,7 @@ class _PowerBIAsset(DataAsset):
         LOGGER.debug(f"Testing connection to {self.__class__.__name__} has not been implemented")
 
     @override
-    def get_batch_identifiers_list(self, batch_request: BatchRequest) -> List[dict]:
+    def get_batch_identifiers_list(self, batch_request: BatchRequest) -> list[dict]:
         return [IDDict(batch_request.options)]
 
     @override
@@ -219,9 +216,9 @@ class PowerBIMeasure(_PowerBIAsset):
     _reader_method: ClassVar[FabricReaderMethods] = "evaluate_measure"
 
     type: Literal["powerbi_measure"] = "powerbi_measure"
-    measure: Union[str, List[str]]
-    groupby_columns: Optional[List[str]] = None
-    filters: Optional[Dict[str, List[str]]] = None
+    measure: Union[str, list[str]]
+    groupby_columns: Optional[list[str]] = None
+    filters: Optional[dict[str, list[str]]] = None
     fully_qualified_columns: Optional[bool] = None
     num_rows: Optional[int] = None
     use_xmla: bool = False
@@ -259,7 +256,7 @@ class FabricPowerBIDatasource(Datasource):
     """
 
     # class var definitions
-    asset_types: ClassVar[List[Type[DataAsset]]] = [
+    asset_types: ClassVar[list[builtins.type[DataAsset]]] = [
         PowerBIDax,
         PowerBIMeasure,
         PowerBITable,
@@ -271,7 +268,7 @@ class FabricPowerBIDatasource(Datasource):
     # right side of the operator determines the type name
     # left side enforces the names on instance creation
     type: Literal["fabric_powerbi"] = "fabric_powerbi"
-    assets: List[AssetTypes] = []
+    assets: list[AssetTypes] = []
 
     # fabric datasource specific fields
     workspace: Optional[Union[uuid.UUID, str]] = None
@@ -279,7 +276,7 @@ class FabricPowerBIDatasource(Datasource):
 
     @property
     @override
-    def execution_engine_type(self) -> Type[PandasExecutionEngine]:
+    def execution_engine_type(self) -> type[PandasExecutionEngine]:
         """Return the PandasExecutionEngine unless the override is set"""
         from great_expectations.execution_engine.pandas_execution_engine import (
             PandasExecutionEngine,
@@ -340,10 +337,10 @@ class FabricPowerBIDatasource(Datasource):
     def add_powerbi_measure_asset(  # noqa: PLR0913
         self,
         name: str,
-        measure: Union[str, List[str]],
+        measure: Union[str, list[str]],
         batch_metadata: Optional[BatchMetadata] = None,
-        groupby_columns: Optional[List[str]] = None,
-        filters: Optional[Dict[str, List[str]]] = None,
+        groupby_columns: Optional[list[str]] = None,
+        filters: Optional[dict[str, list[str]]] = None,
         fully_qualified_columns: Optional[bool] = None,
         num_rows: Optional[int] = None,
         use_xmla: bool = False,

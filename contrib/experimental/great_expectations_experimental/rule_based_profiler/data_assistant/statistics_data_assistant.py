@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Optional
+from typing import Any, Optional
 
 from contrib.experimental.great_expectations_experimental.rule_based_profiler.data_assistant_result import (
     StatisticsDataAssistantResult,
@@ -51,14 +51,14 @@ class StatisticsDataAssistant(DataAssistant):
             validator=validator,
         )
 
-    def get_variables(self) -> Optional[Dict[str, Any]]:
+    def get_variables(self) -> Optional[dict[str, Any]]:
         """
         Returns:
             Optional "variables" configuration attribute name/value pairs (overrides), commonly-used in Builder objects.
         """
         return None
 
-    def get_rules(self) -> Optional[List[Rule]]:
+    def get_rules(self) -> Optional[list[Rule]]:
         """
         Returns:
             Optional custom list of "Rule" objects implementing particular "DataAssistant" functionality.
@@ -114,7 +114,7 @@ class StatisticsDataAssistant(DataAssistant):
 
         # Step-3: Declare "ParameterBuilder" configurations for all additional statistics needed.
 
-        suite_parameter_builder_configs: Optional[List[ParameterBuilderConfig]] = [
+        suite_parameter_builder_configs: Optional[list[ParameterBuilderConfig]] = [
             ParameterBuilderConfig(
                 **table_row_count_metric_multi_batch_parameter_builder_for_metrics.to_json_dict()
             ),
@@ -153,7 +153,7 @@ class StatisticsDataAssistant(DataAssistant):
             "exact_match": None,
             "success_ratio": 1.0,
         }
-        parameter_builders: List[ParameterBuilder] = [
+        parameter_builders: list[ParameterBuilder] = [
             table_row_count_metric_multi_batch_parameter_builder_for_metrics,
             table_columns_metric_multi_batch_parameter_builder_for_metrics,
             table_row_count_range_parameter_builder_for_validations,
@@ -199,14 +199,14 @@ class StatisticsDataAssistant(DataAssistant):
 
         # Step-3: Declare "ParameterBuilder" configurations for all additional statistics needed.
 
-        suite_parameter_builder_configs: Optional[List[ParameterBuilderConfig]]
+        suite_parameter_builder_configs: Optional[list[ParameterBuilderConfig]]
 
         if total_count_metric_multi_batch_parameter_builder_for_evaluations is None:
             total_count_metric_multi_batch_parameter_builder_for_evaluations = DataAssistant.commonly_used_parameter_builders.get_table_row_count_metric_multi_batch_parameter_builder()
 
         column_values_nonnull_unexpected_count_metric_multi_batch_parameter_builder_for_evaluations = column_values_nonnull_unexpected_count_metric_multi_batch_parameter_builder_for_metrics
 
-        suite_parameter_builder_configs: Optional[List[ParameterBuilderConfig]] = [
+        suite_parameter_builder_configs: Optional[list[ParameterBuilderConfig]] = [
             ParameterBuilderConfig(
                 **total_count_metric_multi_batch_parameter_builder_for_evaluations.to_json_dict()
             ),
@@ -256,7 +256,7 @@ class StatisticsDataAssistant(DataAssistant):
         variables: dict = {
             "success_ratio": 7.5e-1,
         }
-        parameter_builders: List[ParameterBuilder] = [
+        parameter_builders: list[ParameterBuilder] = [
             column_values_unique_mean_unexpected_value_multi_batch_parameter_builder_for_validations,
             column_values_null_mean_unexpected_value_multi_batch_parameter_builder_for_validations,
             column_values_nonnull_mean_unexpected_value_multi_batch_parameter_builder_for_validations,
@@ -309,7 +309,7 @@ class StatisticsDataAssistant(DataAssistant):
 
         # Step-3: Declare "ParameterBuilder" configurations for all additional statistics needed.
 
-        suite_parameter_builder_configs: Optional[List[ParameterBuilderConfig]]
+        suite_parameter_builder_configs: Optional[list[ParameterBuilderConfig]]
 
         suite_parameter_builder_configs = [
             ParameterBuilderConfig(
@@ -412,7 +412,7 @@ class StatisticsDataAssistant(DataAssistant):
             },
             "round_decimals": 15,
         }
-        parameter_builders: List[ParameterBuilder] = [
+        parameter_builders: list[ParameterBuilder] = [
             column_min_values_range_parameter_builder_for_validations,
             column_max_values_range_parameter_builder_for_validations,
             column_quantile_values_range_parameter_builder_for_validations,
@@ -461,7 +461,7 @@ class StatisticsDataAssistant(DataAssistant):
 
         # Step-3: Declare "ParameterBuilder" configurations for all additional statistics needed.
 
-        suite_parameter_builder_configs: Optional[List[ParameterBuilderConfig]]
+        suite_parameter_builder_configs: Optional[list[ParameterBuilderConfig]]
 
         suite_parameter_builder_configs = [
             ParameterBuilderConfig(
@@ -507,7 +507,7 @@ class StatisticsDataAssistant(DataAssistant):
             },
             "round_decimals": 1,
         }
-        parameter_builders: List[ParameterBuilder] = [
+        parameter_builders: list[ParameterBuilder] = [
             column_min_values_range_parameter_builder_for_validations,
             column_max_values_range_parameter_builder_for_validations,
         ]
@@ -549,7 +549,7 @@ class StatisticsDataAssistant(DataAssistant):
 
         # Step-3: Declare "ParameterBuilder" configurations for all additional statistics needed.
 
-        suite_parameter_builder_configs: Optional[List[ParameterBuilderConfig]]
+        suite_parameter_builder_configs: Optional[list[ParameterBuilderConfig]]
 
         suite_parameter_builder_configs = [
             ParameterBuilderConfig(
@@ -596,7 +596,7 @@ class StatisticsDataAssistant(DataAssistant):
             "round_decimals": 0,
             "success_ratio": 7.5e-1,
         }
-        parameter_builders: List[ParameterBuilder] = [
+        parameter_builders: list[ParameterBuilder] = [
             column_min_length_range_parameter_builder_for_validations,
             column_max_length_range_parameter_builder_for_validations,
         ]
@@ -670,7 +670,7 @@ class StatisticsDataAssistant(DataAssistant):
             },
             "round_decimals": 15,
         }
-        parameter_builders: List[ParameterBuilder] = [
+        parameter_builders: list[ParameterBuilder] = [
             column_unique_proportion_range_parameter_builder_for_validations,
         ]
         rule = Rule(

@@ -9,14 +9,11 @@ import uuid
 from pprint import pformat as pf
 from typing import (
     TYPE_CHECKING,
-    Dict,
     Final,
     Generator,
-    List,
     NamedTuple,
     Optional,
     Sequence,
-    Set,
     TypedDict,
     Union,
 )
@@ -65,7 +62,7 @@ class _DatasourceSchema(pydantic.BaseModel, extra="allow"):
     id: Optional[str] = None
     type: str
     name: str
-    assets: List[dict] = pydantic.Field(default_factory=list)
+    assets: list[dict] = pydantic.Field(default_factory=list)
 
 
 class CloudResponseSchema(pydantic.BaseModel):
@@ -98,16 +95,16 @@ FakeDBTypedDict = TypedDict(
     # using alternative syntax for creating type dict because of key names with hyphens
     # https://peps.python.org/pep-0589/#alternative-syntax
     {
-        "me": Dict[str, str],
-        "data-context-configuration": Dict[str, Union[str, dict]],
-        "DATASOURCE_NAMES": Set[str],
-        "datasources": Dict[str, dict],
-        "EXPECTATION_SUITE_NAMES": Set[str],
-        "expectation_suites": Dict[str, dict],
-        "CHECKPOINT_NAMES": Set[str],
-        "checkpoints": Dict[str, dict],
-        "VALIDATION_DEFINITION_NAMES": Set[str],
-        "validation_definitions": Dict[str, dict],
+        "me": dict[str, str],
+        "data-context-configuration": dict[str, Union[str, dict]],
+        "DATASOURCE_NAMES": set[str],
+        "datasources": dict[str, dict],
+        "EXPECTATION_SUITE_NAMES": set[str],
+        "expectation_suites": dict[str, dict],
+        "CHECKPOINT_NAMES": set[str],
+        "checkpoints": dict[str, dict],
+        "VALIDATION_DEFINITION_NAMES": set[str],
+        "validation_definitions": dict[str, dict],
     },
 )
 

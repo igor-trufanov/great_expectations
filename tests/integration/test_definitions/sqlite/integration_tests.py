@@ -1,14 +1,12 @@
-from typing import List
-
 from tests.integration.integration_test_fixture import IntegrationTestFixture
 
 sqlite_integration_tests = []
 
-connecting_to_your_data: List[IntegrationTestFixture] = []
+connecting_to_your_data: list[IntegrationTestFixture] = []
 
-partition_data: List[IntegrationTestFixture] = []
+partition_data: list[IntegrationTestFixture] = []
 
-sample_data: List[IntegrationTestFixture] = []
+sample_data: list[IntegrationTestFixture] = []
 
 sqlite_integration_tests += connecting_to_your_data
 sqlite_integration_tests += partition_data

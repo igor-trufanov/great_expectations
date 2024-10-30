@@ -6,8 +6,6 @@ import uuid
 from copy import deepcopy
 from typing import (
     TYPE_CHECKING,
-    Dict,
-    List,
     Optional,
     Sequence,
     TypeVar,
@@ -362,7 +360,7 @@ class ExpectationSuite(SerializableDictDot):
 
     @public_api
     @override
-    def to_json_dict(self) -> Dict[str, JSONValues]:
+    def to_json_dict(self) -> dict[str, JSONValues]:
         """Returns a JSON-serializable dict representation of this ExpectationSuite.
 
         Returns:
@@ -386,7 +384,7 @@ class ExpectationSuite(SerializableDictDot):
         match_type: str = "domain",
         remove_multiple_matches: bool = False,
         id: Optional[Union[str, uuid.UUID]] = None,
-    ) -> List[ExpectationConfiguration]:
+    ) -> list[ExpectationConfiguration]:
         """Remove an ExpectationConfiguration from the ExpectationSuite.
 
         Args:
@@ -444,7 +442,7 @@ class ExpectationSuite(SerializableDictDot):
         expectation_configuration: Optional[ExpectationConfiguration] = None,
         match_type: str = "domain",
         id: Optional[str] = None,
-    ) -> List[int]:
+    ) -> list[int]:
         """
         Find indexes of Expectations matching the given ExpectationConfiguration on the given match_type.
         If a id is provided, match_type is ignored and only indexes of Expectations
@@ -555,10 +553,10 @@ class ExpectationSuite(SerializableDictDot):
 
     def add_expectation_configurations(
         self,
-        expectation_configurations: List[ExpectationConfiguration],
+        expectation_configurations: list[ExpectationConfiguration],
         match_type: str = "domain",
         overwrite_existing: bool = True,
-    ) -> List[ExpectationConfiguration]:
+    ) -> list[ExpectationConfiguration]:
         """Upsert a list of ExpectationConfigurations into this ExpectationSuite.
 
         Args:
@@ -577,7 +575,7 @@ class ExpectationSuite(SerializableDictDot):
             One match if overwrite_existing = False
         """  # noqa: E501
         expectation_configuration: ExpectationConfiguration
-        expectation_configurations_attempted_to_be_added: List[ExpectationConfiguration] = [
+        expectation_configurations_attempted_to_be_added: list[ExpectationConfiguration] = [
             self.add_expectation_configuration(
                 expectation_configuration=expectation_configuration,
                 match_type=match_type,

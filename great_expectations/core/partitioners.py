@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import re
-from typing import List, Literal, Tuple, Union
+from typing import Literal, Union
 
 from great_expectations.compatibility import pydantic
 
@@ -27,7 +27,7 @@ class ColumnPartitionerDaily(pydantic.BaseModel):
 
 
 class PartitionerDatetimePart(pydantic.BaseModel):
-    datetime_parts: List[str]
+    datetime_parts: list[str]
     column_name: str
     sort_ascending: bool = True
     method_name: Literal["partition_on_date_parts"] = "partition_on_date_parts"
@@ -54,7 +54,7 @@ class PartitionerColumnValue(pydantic.BaseModel):
 
 
 class PartitionerMultiColumnValue(pydantic.BaseModel):
-    column_names: List[str]
+    column_names: list[str]
     sort_ascending: bool = True
     method_name: Literal["partition_on_multi_column_values"] = "partition_on_multi_column_values"
 
@@ -81,25 +81,25 @@ ColumnPartitioner = Union[
 
 class FileNamePartitionerYearly(pydantic.BaseModel):
     regex: re.Pattern
-    param_names: Tuple[Literal["year"]] = ("year",)
+    param_names: tuple[Literal["year"]] = ("year",)
     sort_ascending: bool = True
 
 
 class FileNamePartitionerMonthly(pydantic.BaseModel):
     regex: re.Pattern
-    param_names: Tuple[Literal["year"], Literal["month"]] = ("year", "month")
+    param_names: tuple[Literal["year"], Literal["month"]] = ("year", "month")
     sort_ascending: bool = True
 
 
 class FileNamePartitionerDaily(pydantic.BaseModel):
     regex: re.Pattern
-    param_names: Tuple[Literal["year"], Literal["month"], Literal["day"]] = ("year", "month", "day")
+    param_names: tuple[Literal["year"], Literal["month"], Literal["day"]] = ("year", "month", "day")
     sort_ascending: bool = True
 
 
 class FileNamePartitionerPath(pydantic.BaseModel):
     regex: re.Pattern
-    param_names: Tuple[()] = ()
+    param_names: tuple[()] = ()
     sort_ascending: bool = True
 
 

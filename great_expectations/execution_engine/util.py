@@ -2,7 +2,7 @@ from __future__ import annotations
 
 # Utility methods for dealing with Dataset objects
 import logging
-from typing import Any, List
+from typing import Any
 
 import numpy as np
 
@@ -482,7 +482,7 @@ def create_multiple_expectations(df, columns, expectation_type, *args, **kwargs)
     return results
 
 
-def get_approximate_percentile_disc_sql(selects: List, sql_engine_dialect: Any) -> str:
+def get_approximate_percentile_disc_sql(selects: list, sql_engine_dialect: Any) -> str:
     return ", ".join(
         [
             "approximate "

@@ -2,13 +2,11 @@ import typing
 from logging import Logger
 from typing import (
     Any,
-    Dict,
     Hashable,
     Iterable,
     Literal,
     Optional,
     Sequence,
-    Tuple,
     Union,
 )
 
@@ -66,7 +64,7 @@ class PandasS3DatasourceError(PandasDatasourceError): ...
 class PandasS3Datasource(_PandasFilePathDatasource):
     type: Literal["pandas_s3"]
     bucket: str
-    boto3_options: Dict[str, ConfigStr | Any]
+    boto3_options: dict[str, ConfigStr | Any]
     @override
     def test_connection(self, test_assets: bool = ...) -> None: ...
     def add_csv_asset(  # noqa: PLR0913
@@ -139,7 +137,7 @@ class PandasS3Datasource(_PandasFilePathDatasource):
         s3_max_keys: int = 1000,
         sheet_name: typing.Union[str, int, None] = 0,
         header: Union[int, Sequence[int], None] = 0,
-        names: typing.Union[typing.List[str], None] = ...,
+        names: typing.Union[list[str], None] = ...,
         index_col: Union[int, Sequence[int], None] = ...,
         usecols: typing.Union[int, str, typing.Sequence[int], None] = ...,
         squeeze: typing.Union[bool, None] = ...,
@@ -152,7 +150,7 @@ class PandasS3Datasource(_PandasFilePathDatasource):
         keep_default_na: bool = ...,
         na_filter: bool = ...,
         verbose: bool = ...,
-        parse_dates: typing.Union[typing.List, typing.Dict, bool] = ...,
+        parse_dates: typing.Union[list, dict, bool] = ...,
         thousands: typing.Union[str, None] = ...,
         decimal: str = ".",
         comment: typing.Union[str, None] = ...,
@@ -180,7 +178,7 @@ class PandasS3Datasource(_PandasFilePathDatasource):
         glob_directive: str = ...,
         batch_metadata: Optional[BatchMetadata] = ...,
         connect_options: typing.Mapping = ...,
-        colspecs: Union[Sequence[Tuple[int, int]], str, None] = ...,
+        colspecs: Union[Sequence[tuple[int, int]], str, None] = ...,
         widths: Union[Sequence[int], None] = ...,
         infer_nrows: int = ...,
         kwargs: Optional[dict] = ...,
@@ -196,10 +194,10 @@ class PandasS3Datasource(_PandasFilePathDatasource):
         key: typing.Any = ...,
         mode: str = "r",
         errors: str = "strict",
-        where: typing.Union[str, typing.List, None] = ...,
+        where: typing.Union[str, list, None] = ...,
         start: typing.Union[int, None] = ...,
         stop: typing.Union[int, None] = ...,
-        columns: typing.Union[typing.List[str], None] = ...,
+        columns: typing.Union[list[str], None] = ...,
         iterator: bool = ...,
         chunksize: typing.Union[int, None] = ...,
         kwargs: typing.Union[dict, None] = ...,
@@ -217,12 +215,12 @@ class PandasS3Datasource(_PandasFilePathDatasource):
         header: Union[int, Sequence[int], None] = ...,
         index_col: Union[int, Sequence[int], None] = ...,
         skiprows: typing.Union[typing.Sequence[int], int, None] = ...,
-        attrs: typing.Union[typing.Dict[str, str], None] = ...,
+        attrs: typing.Union[dict[str, str], None] = ...,
         parse_dates: bool = ...,
         thousands: typing.Union[str, None] = ",",
         encoding: typing.Union[str, None] = ...,
         decimal: str = ".",
-        converters: typing.Union[typing.Dict, None] = ...,
+        converters: typing.Union[dict, None] = ...,
         na_values: Union[Iterable[object], None] = ...,
         keep_default_na: bool = ...,
         displayed_only: bool = ...,
@@ -238,7 +236,7 @@ class PandasS3Datasource(_PandasFilePathDatasource):
         orient: typing.Union[str, None] = ...,
         dtype: typing.Union[dict, None] = ...,
         convert_axes: typing.Any = ...,
-        convert_dates: typing.Union[bool, typing.List[str]] = ...,
+        convert_dates: typing.Union[bool, list[str]] = ...,
         keep_default_dates: bool = ...,
         numpy: bool = ...,
         precise_float: bool = ...,
@@ -259,7 +257,7 @@ class PandasS3Datasource(_PandasFilePathDatasource):
         s3_prefix: str = "",
         s3_delimiter: str = "/",
         s3_max_keys: int = 1000,
-        columns: typing.Union[typing.List[str], None] = ...,
+        columns: typing.Union[list[str], None] = ...,
         kwargs: typing.Union[dict, None] = ...,
     ) -> ORCAsset: ...
     def add_parquet_asset(  # noqa: PLR0913
@@ -271,7 +269,7 @@ class PandasS3Datasource(_PandasFilePathDatasource):
         s3_delimiter: str = "/",
         s3_max_keys: int = 1000,
         engine: str = "auto",
-        columns: typing.Union[typing.List[str], None] = ...,
+        columns: typing.Union[list[str], None] = ...,
         storage_options: StorageOptions = ...,
         use_nullable_dtypes: bool = ...,
         kwargs: typing.Union[dict, None] = ...,
@@ -342,14 +340,14 @@ class PandasS3Datasource(_PandasFilePathDatasource):
         s3_delimiter: str = "/",
         s3_max_keys: int = 1000,
         xpath: str = "./*",
-        namespaces: typing.Union[typing.Dict[str, str], None] = ...,
+        namespaces: typing.Union[dict[str, str], None] = ...,
         elems_only: bool = ...,
         attrs_only: bool = ...,
         names: Union[Sequence[str], None] = ...,
         dtype: typing.Union[dict, None] = ...,
         encoding: typing.Union[str, None] = "utf-8",
         stylesheet: Union[FilePath, None] = ...,
-        iterparse: typing.Union[typing.Dict[str, typing.List[str]], None] = ...,
+        iterparse: typing.Union[dict[str, list[str]], None] = ...,
         compression: CompressionOptions = "infer",
         storage_options: StorageOptions = ...,
     ) -> XMLAsset: ...

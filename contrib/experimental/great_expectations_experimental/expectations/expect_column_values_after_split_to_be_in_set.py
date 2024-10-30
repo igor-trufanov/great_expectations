@@ -4,8 +4,6 @@ For detailed instructions on how to use it, please see:
     https://docs.greatexpectations.io/docs/guides/expectations/creating_custom_expectations/how_to_create_custom_column_map_expectations
 """
 
-from typing import List
-
 from great_expectations.execution_engine import PandasExecutionEngine
 from great_expectations.expectations.expectation import ColumnMapExpectation
 from great_expectations.expectations.metrics import (
@@ -14,7 +12,7 @@ from great_expectations.expectations.metrics import (
 )
 
 
-def are_values_after_split_in_value_set(val: str, delimiter: str, value_set: List[str]) -> bool:
+def are_values_after_split_in_value_set(val: str, delimiter: str, value_set: list[str]) -> bool:
     all_split_values = [v.strip() for v in val.split(delimiter)]
 
     return all(val in value_set for val in all_split_values)

@@ -1,6 +1,6 @@
 import pathlib
 from logging import Logger
-from typing import ClassVar, Literal, Optional, Type, Union
+from typing import ClassVar, Literal, Optional, Union
 
 from great_expectations.compatibility.pyspark import (
     types as pyspark_types,
@@ -38,7 +38,7 @@ logger: Logger
 
 class SparkFilesystemDatasource(_SparkFilePathDatasource):
     # class attributes
-    data_connector_type: ClassVar[Type[FilesystemDataConnector]] = ...
+    data_connector_type: ClassVar[type[FilesystemDataConnector]] = ...
 
     # instance attributes
     type: Literal["spark_filesystem"] = "spark_filesystem"

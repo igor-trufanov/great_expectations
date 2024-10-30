@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from functools import reduce
-from typing import TYPE_CHECKING, Dict, Optional
+from typing import TYPE_CHECKING, Optional
 
 import sqlalchemy as sa
 
@@ -388,7 +388,7 @@ class ExpectMulticolumnValuesToBeEqual(MulticolumnMapExpectation):
 
     def _validate(
         self,
-        metrics: Dict,
+        metrics: dict,
         runtime_configuration: Optional[dict] = None,
         execution_engine: Optional[ExecutionEngine] = None,
     ):

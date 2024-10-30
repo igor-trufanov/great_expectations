@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Callable, List, Union
+from typing import Callable, Union
 
 import pytest
 from pytest import MonkeyPatch
@@ -119,7 +119,7 @@ def test_config_nested_substitution_dict(
     monkeypatch.setenv("MY_ENV_VAR", "success")
 
     class MyCollection(FluentBaseModel):
-        my_classes: List[MyClass] = []
+        my_classes: list[MyClass] = []
 
     MyCollection.update_forward_refs(MyClass=MyClass)
 
@@ -143,7 +143,7 @@ def test_config_nested_substitution_dict_raises_error_for_missing_config_var(
     monkeypatch.setenv("NOT_MY_ENV_VAR", "failure")
 
     class MyCollection(FluentBaseModel):
-        my_classes: List[MyClass] = []
+        my_classes: list[MyClass] = []
 
     MyCollection.update_forward_refs(MyClass=MyClass)
 
@@ -180,7 +180,7 @@ def test_serialization_returns_original(monkeypatch: MonkeyPatch, method: str):
 def test_nested_serialization_returns_original(monkeypatch: MonkeyPatch, method: str):
     # TODO: fix this
     class MyCollection(FluentBaseModel):
-        my_classes: List[MyClass] = []
+        my_classes: list[MyClass] = []
 
     MyCollection.update_forward_refs(MyClass=MyClass)
 

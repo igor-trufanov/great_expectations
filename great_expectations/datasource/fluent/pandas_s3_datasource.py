@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import logging
-from typing import TYPE_CHECKING, Any, ClassVar, Dict, Literal, Type, Union
+from typing import TYPE_CHECKING, Any, ClassVar, Literal, Union
 
 from great_expectations._docs_decorators import public_api
 from great_expectations.compatibility import aws, pydantic
@@ -33,7 +33,7 @@ class PandasS3DatasourceError(PandasDatasourceError):
 @public_api
 class PandasS3Datasource(_PandasFilePathDatasource):
     # class attributes
-    data_connector_type: ClassVar[Type[S3DataConnector]] = S3DataConnector
+    data_connector_type: ClassVar[type[S3DataConnector]] = S3DataConnector
     # these fields should not be passed to the execution engine
     _EXTRA_EXCLUDED_EXEC_ENG_ARGS: ClassVar[set] = {
         "bucket",
@@ -45,7 +45,7 @@ class PandasS3Datasource(_PandasFilePathDatasource):
 
     # S3 specific attributes
     bucket: str
-    boto3_options: Dict[str, Union[ConfigStr, Any]] = {}
+    boto3_options: dict[str, Union[ConfigStr, Any]] = {}
 
     _s3_client: Union[BaseClient, None] = pydantic.PrivateAttr(default=None)
 

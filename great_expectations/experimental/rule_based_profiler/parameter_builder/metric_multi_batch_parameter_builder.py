@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Dict, List, Optional, Union
+from typing import TYPE_CHECKING, Optional, Union
 
 import numpy as np
 
@@ -46,7 +46,7 @@ class MetricMultiBatchParameterBuilder(ParameterBuilder):
         enforce_numeric_metric: Union[str, bool] = False,
         replace_nan_with_zero: Union[str, bool] = False,
         reduce_scalar_metric: Union[str, bool] = True,
-        suite_parameter_builder_configs: Optional[List[ParameterBuilderConfig]] = None,
+        suite_parameter_builder_configs: Optional[list[ParameterBuilderConfig]] = None,
         data_context: Optional[AbstractDataContext] = None,
     ) -> None:
         """
@@ -133,7 +133,7 @@ class MetricMultiBatchParameterBuilder(ParameterBuilder):
         self,
         domain: Domain,
         variables: Optional[ParameterContainer] = None,
-        parameters: Optional[Dict[str, ParameterContainer]] = None,
+        parameters: Optional[dict[str, ParameterContainer]] = None,
         runtime_configuration: Optional[dict] = None,
     ) -> Attributes:
         """

@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
-from typing import Any, Set, TypeVar, Union
+from typing import Any, TypeVar, Union
 
 from great_expectations.compatibility.typing_extensions import override
 from great_expectations.util import convert_to_json_serializable  # noqa: TID251
@@ -11,7 +11,7 @@ T = TypeVar("T")
 
 
 class IDDict(dict):
-    _id_ignore_keys: Set[str] = set()
+    _id_ignore_keys: set[str] = set()
 
     def to_id(self, id_keys=None, id_ignore_keys=None):
         if id_keys is None:

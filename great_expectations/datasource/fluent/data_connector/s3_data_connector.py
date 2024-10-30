@@ -3,7 +3,7 @@ from __future__ import annotations
 import copy
 import logging
 import re
-from typing import TYPE_CHECKING, Any, Callable, ClassVar, Dict, Generator, List, Optional, Type
+from typing import TYPE_CHECKING, Any, Callable, ClassVar, Generator, Optional
 
 from great_expectations.compatibility import pydantic
 from great_expectations.compatibility.typing_extensions import override
@@ -53,7 +53,7 @@ class S3DataConnector(FilePathDataConnector):
         "s3_max_keys",
         "s3_recursive_file_discovery",
     )
-    asset_options_type: ClassVar[Type[_S3Options]] = _S3Options
+    asset_options_type: ClassVar[type[_S3Options]] = _S3Options
 
     def __init__(  # noqa: PLR0913
         self,
@@ -174,14 +174,14 @@ class S3DataConnector(FilePathDataConnector):
 
     # Interface Method
     @override
-    def get_data_references(self) -> List[str]:
+    def get_data_references(self) -> list[str]:
         query_options: dict = {
             "Bucket": self._bucket,
             "Prefix": self._sanitized_prefix,
             "Delimiter": self._delimiter,
             "MaxKeys": self._max_keys,
         }
-        path_list: List[str] = list(
+        path_list: list[str] = list(
             list_s3_keys(
                 s3=self._s3_client,
                 query_options=query_options,
@@ -244,11 +244,11 @@ def list_s3_keys(  # noqa: C901 - too complex
         raise ValueError("S3 query may not have been configured correctly.")  # noqa: TRY003
 
     if "Contents" in s3_objects_info:
-        keys: List[str] = [item["Key"] for item in s3_objects_info["Contents"] if item["Size"] > 0]
+        keys: list[str] = [item["Key"] for item in s3_objects_info["Contents"] if item["Size"] > 0]
         yield from keys
 
     if recursive and "CommonPrefixes" in s3_objects_info:
-        common_prefixes: List[Dict[str, Any]] = s3_objects_info["CommonPrefixes"]
+        common_prefixes: list[dict[str, Any]] = s3_objects_info["CommonPrefixes"]
         for prefix_info in common_prefixes:
             query_options_tmp: dict = copy.deepcopy(query_options)
             query_options_tmp.update({"Prefix": prefix_info["Prefix"]})

@@ -1,5 +1,5 @@
 from logging import Logger
-from typing import Any, ClassVar, Literal, Optional, Type
+from typing import Any, ClassVar, Literal, Optional
 
 from great_expectations.compatibility import google
 from great_expectations.datasource.fluent import BatchMetadata, _SparkFilePathDatasource
@@ -15,7 +15,7 @@ logger: Logger
 
 class SparkGoogleCloudStorageDatasource(_SparkFilePathDatasource):
     # class attributes
-    data_connector_type: ClassVar[Type[GoogleCloudStorageDataConnector]] = ...
+    data_connector_type: ClassVar[type[GoogleCloudStorageDataConnector]] = ...
 
     # instance attributes
     type: Literal["spark_gcs"] = "spark_gcs"

@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import logging
-from typing import TYPE_CHECKING, Any, ClassVar, Dict, List, Literal, Optional, Type, Union
+from typing import TYPE_CHECKING, Any, ClassVar, Literal, Optional, Union
 
 from great_expectations.compatibility import pydantic
 from great_expectations.expectations.expectation import (
@@ -190,7 +190,7 @@ class ExpectMulticolumnSumToEqual(MulticolumnMapExpectation):
     )
 
     # This dictionary contains metadata for display in the public gallery
-    library_metadata: ClassVar[Dict[str, Union[str, list, bool]]] = {
+    library_metadata: ClassVar[dict[str, Union[str, list, bool]]] = {
         "maturity": "production",
         "tags": [
             "core expectation",
@@ -214,7 +214,7 @@ class ExpectMulticolumnSumToEqual(MulticolumnMapExpectation):
         title = "Expect multicolumn sum to equal"
 
         @staticmethod
-        def schema_extra(schema: Dict[str, Any], model: Type[ExpectMulticolumnSumToEqual]) -> None:
+        def schema_extra(schema: dict[str, Any], model: type[ExpectMulticolumnSumToEqual]) -> None:
             MulticolumnMapExpectation.Config.schema_extra(schema, model)
             schema["properties"]["metadata"]["properties"].update(
                 {
@@ -292,7 +292,7 @@ class ExpectMulticolumnSumToEqual(MulticolumnMapExpectation):
         result: Optional[ExpectationValidationResult] = None,
         runtime_configuration: Optional[dict] = None,
         **kwargs,
-    ) -> List[RenderedStringTemplateContent]:
+    ) -> list[RenderedStringTemplateContent]:
         runtime_configuration = runtime_configuration or {}
         styling = runtime_configuration.get("styling")
         params = substitute_none_for_missing(

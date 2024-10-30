@@ -4,7 +4,7 @@ import uuid
 import warnings
 from contextlib import contextmanager
 from dataclasses import dataclass
-from typing import Dict, List, Optional, Tuple, Union, cast
+from typing import Optional, Union, cast
 
 import pandas as pd
 
@@ -49,7 +49,7 @@ def safe_remove(path):
 
 
 def create_files_in_directory(
-    directory: str, file_name_list: List[str], file_content_fn=lambda: "x,y\n1,2\n2,3"
+    directory: str, file_name_list: list[str], file_content_fn=lambda: "x,y\n1,2\n2,3"
 ):
     subdirectories = []
     for file_name in file_name_list:
@@ -412,9 +412,9 @@ class LoadedTable:
 
 
 def load_and_concatenate_csvs(
-    csv_paths: List[str],
+    csv_paths: list[str],
     load_full_dataset: bool = False,
-    convert_column_names_to_datetime: Optional[List[str]] = None,
+    convert_column_names_to_datetime: Optional[list[str]] = None,
 ) -> pd.DataFrame:
     """Utility method that is used in loading test data into a pandas dataframe.
 
@@ -434,7 +434,7 @@ def load_and_concatenate_csvs(
 
     import pandas as pd
 
-    dfs: List[pd.DataFrame] = []
+    dfs: list[pd.DataFrame] = []
     for csv_path in csv_paths:
         df = pd.read_csv(csv_path)
         convert_string_columns_to_datetime(
@@ -452,7 +452,7 @@ def load_and_concatenate_csvs(
 
 
 def convert_string_columns_to_datetime(
-    df: pd.DataFrame, column_names_to_convert: Optional[List[str]] = None
+    df: pd.DataFrame, column_names_to_convert: Optional[list[str]] = None
 ) -> None:
     """
     Converts specified columns (e.g., "pickup_datetime" and "dropoff_datetime") to datetime column type.
@@ -471,9 +471,9 @@ def load_data_into_test_database(  # noqa: C901, PLR0912, PLR0915
     connection_string: str,
     schema_name: Optional[str] = None,
     csv_path: Optional[str] = None,
-    csv_paths: Optional[List[str]] = None,
+    csv_paths: Optional[list[str]] = None,
     load_full_dataset: bool = False,
-    convert_colnames_to_datetime: Optional[List[str]] = None,
+    convert_colnames_to_datetime: Optional[list[str]] = None,
     random_table_suffix: bool = False,
     to_sql_method: Optional[str] = None,
     drop_existing_table: bool = True,
@@ -658,7 +658,7 @@ def load_dataframe_into_test_athena_database_as_table(
     )
 
 
-def clean_up_tables_with_prefix(connection_string: str, table_prefix: str) -> List[str]:
+def clean_up_tables_with_prefix(connection_string: str, table_prefix: str) -> list[str]:
     """Drop all tables starting with the provided table_prefix.
     Note: Uses private method InferredAssetSqlDataConnector._introspect_db()
     to get the table names to not duplicate code, but should be refactored in the
@@ -676,8 +676,8 @@ def clean_up_tables_with_prefix(connection_string: str, table_prefix: str) -> Li
     )
     introspection_output = introspect_db(execution_engine=execution_engine)
 
-    tables_to_drop: List[str] = []
-    tables_dropped: List[str] = []
+    tables_to_drop: list[str] = []
+    tables_dropped: list[str] = []
 
     for table in introspection_output:
         if table["table_name"].startswith(table_prefix):
@@ -688,7 +688,7 @@ def clean_up_tables_with_prefix(connection_string: str, table_prefix: str) -> Li
         execution_engine.execute_query_in_transaction(sa.text(f"DROP TABLE IF EXISTS {table_name}"))
         tables_dropped.append(table_name)
 
-    tables_skipped: List[str] = list(set(tables_to_drop) - set(tables_dropped))
+    tables_skipped: list[str] = list(set(tables_to_drop) - set(tables_dropped))
     if len(tables_skipped) > 0:
         warnings.warn(f"Warning: Tables skipped: {tables_skipped}")
 
@@ -699,10 +699,10 @@ def introspect_db(  # noqa: C901, PLR0912
     execution_engine: SqlAlchemyExecutionEngine,
     schema_name: Union[str, None] = None,
     ignore_information_schemas_and_system_tables: bool = True,
-    information_schemas: Optional[List[str]] = None,
-    system_tables: Optional[List[str]] = None,
+    information_schemas: Optional[list[str]] = None,
+    system_tables: Optional[list[str]] = None,
     include_views=True,
-) -> List[Dict[str, str]]:
+) -> list[dict[str, str]]:
     # This code was broken out from the InferredAssetSqlDataConnector when it was removed
     if information_schemas is None:
         information_schemas = [
@@ -721,8 +721,8 @@ def introspect_db(  # noqa: C901, PLR0912
 
     selected_schema_name = schema_name
 
-    tables: List[Dict[str, str]] = []
-    all_schema_names: List[str] = inspector.get_schema_names()
+    tables: list[dict[str, str]] = []
+    all_schema_names: list[str] = inspector.get_schema_names()
     for schema in all_schema_names:
         if ignore_information_schemas_and_system_tables and schema_name in information_schemas:
             continue
@@ -730,7 +730,7 @@ def introspect_db(  # noqa: C901, PLR0912
         if selected_schema_name is not None and schema_name != selected_schema_name:
             continue
 
-        table_names: List[str] = inspector.get_table_names(schema=schema)
+        table_names: list[str] = inspector.get_table_names(schema=schema)
         for table_name in table_names:
             if ignore_information_schemas_and_system_tables and (table_name in system_tables):
                 continue
@@ -915,7 +915,7 @@ def get_awsathena_connection_url(db_name_env_var: str = "ATHENA_DB_NAME") -> str
 
 def get_connection_string_and_dialect(
     athena_db_name_env_var: str = "ATHENA_DB_NAME",
-) -> Tuple[str, str]:
+) -> tuple[str, str]:
     with open("./connection_string.yml") as f:
         db_config: dict = yaml_handler.load(f)
 

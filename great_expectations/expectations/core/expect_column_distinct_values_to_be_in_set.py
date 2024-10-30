@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, ClassVar, Dict, List, Optional, Type, Union
+from typing import TYPE_CHECKING, Any, ClassVar, Optional, Union
 
 import altair as alt
 import pandas as pd
@@ -195,7 +195,7 @@ class ExpectColumnDistinctValuesToBeInSet(ColumnAggregateExpectation):
 
     value_set: ValueSetField
 
-    library_metadata: ClassVar[Dict[str, Union[str, list, bool]]] = {
+    library_metadata: ClassVar[dict[str, Union[str, list, bool]]] = {
         "maturity": "production",
         "tags": ["core expectation", "column aggregate expectation"],
         "contributors": ["@great_expectations"],
@@ -219,7 +219,7 @@ class ExpectColumnDistinctValuesToBeInSet(ColumnAggregateExpectation):
 
         @staticmethod
         def schema_extra(
-            schema: Dict[str, Any], model: Type[ExpectColumnDistinctValuesToBeInSet]
+            schema: dict[str, Any], model: type[ExpectColumnDistinctValuesToBeInSet]
         ) -> None:
             ColumnAggregateExpectation.Config.schema_extra(schema, model)
             schema["properties"]["metadata"]["properties"].update(
@@ -299,7 +299,7 @@ class ExpectColumnDistinctValuesToBeInSet(ColumnAggregateExpectation):
         configuration: Optional[ExpectationConfiguration] = None,
         result: Optional[ExpectationValidationResult] = None,
         runtime_configuration: Optional[dict] = None,
-    ) -> List[RenderedStringTemplateContent]:
+    ) -> list[RenderedStringTemplateContent]:
         renderer_configuration: RendererConfiguration = RendererConfiguration(
             configuration=configuration,
             result=result,
@@ -425,7 +425,7 @@ class ExpectColumnDistinctValuesToBeInSet(ColumnAggregateExpectation):
 
     def _validate(
         self,
-        metrics: Dict,
+        metrics: dict,
         runtime_configuration: Optional[dict] = None,
         execution_engine: Optional[ExecutionEngine] = None,
     ):

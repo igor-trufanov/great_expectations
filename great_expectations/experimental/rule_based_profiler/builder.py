@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import json
-from typing import TYPE_CHECKING, Any, ClassVar, List, Optional, Set, Union
+from typing import TYPE_CHECKING, Any, ClassVar, Optional, Union
 
 from great_expectations.compatibility.typing_extensions import override
 from great_expectations.core.batch import (
@@ -30,7 +30,7 @@ class Builder(SerializableDictDot):
     A Builder provides methods to serialize any builder object of a rule generically.
     """
 
-    exclude_field_names: ClassVar[Set[str]] = {
+    exclude_field_names: ClassVar[set[str]] = {
         "batch_list",
         "batch_request",
         "data_context",
@@ -44,7 +44,7 @@ class Builder(SerializableDictDot):
         Args:
             data_context: AbstractDataContext associated with this Builder
         """
-        self._batch_list: Optional[List[Batch]] = None
+        self._batch_list: Optional[list[Batch]] = None
         self._batch_request: Union[BatchRequestBase, dict, None] = None
         self._data_context: Optional[AbstractDataContext] = data_context
 
@@ -53,11 +53,11 @@ class Builder(SerializableDictDot):
     """  # noqa: E501
 
     @property
-    def batch_list(self) -> Optional[List[Batch]]:
+    def batch_list(self) -> Optional[list[Batch]]:
         return self._batch_list
 
     @batch_list.setter
-    def batch_list(self, value: List[Batch]) -> None:
+    def batch_list(self, value: list[Batch]) -> None:
         self._batch_list = value
 
     @property
@@ -77,7 +77,7 @@ class Builder(SerializableDictDot):
 
     def set_batch_list_if_null_batch_request(
         self,
-        batch_list: Optional[List[Batch]] = None,
+        batch_list: Optional[list[Batch]] = None,
         batch_request: Optional[Union[BatchRequestBase, dict]] = None,
     ) -> None:
         """
@@ -92,7 +92,7 @@ class Builder(SerializableDictDot):
 
     def set_batch_data(
         self,
-        batch_list: Optional[List[Batch]] = None,
+        batch_list: Optional[list[Batch]] = None,
         batch_request: Optional[Union[BatchRequestBase, dict]] = None,
     ) -> None:
         arg: Any

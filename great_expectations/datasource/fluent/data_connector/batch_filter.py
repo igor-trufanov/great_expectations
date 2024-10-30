@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import itertools
 import logging
-from typing import TYPE_CHECKING, Callable, Dict, List, Optional, Sequence, Union
+from typing import TYPE_CHECKING, Callable, Optional, Sequence, Union
 
 import great_expectations.exceptions as gx_exceptions
 from great_expectations.compatibility.pydantic import StrictInt, StrictStr
@@ -76,7 +76,7 @@ BatchSlice: TypeAlias = Union[
 
 def build_batch_filter(  # noqa: C901 - too complex
     data_connector_query_dict: Optional[
-        Dict[
+        dict[
             str,
             Optional[
                 Union[
@@ -85,7 +85,7 @@ def build_batch_filter(  # noqa: C901 - too complex
                     tuple,
                     Union[slice, SliceValidator],
                     str,
-                    Union[Dict, IDDict],
+                    Union[dict, IDDict],
                     Callable,
                 ]
             ],
@@ -291,8 +291,8 @@ class BatchFilter:
         return str(doc_fields_dict)
 
     def select_from_data_connector_query(
-        self, batch_definition_list: Optional[List[LegacyBatchDefinition]] = None
-    ) -> List[LegacyBatchDefinition]:
+        self, batch_definition_list: Optional[list[LegacyBatchDefinition]] = None
+    ) -> list[LegacyBatchDefinition]:
         if batch_definition_list is None:
             return []
         filter_function: Callable
@@ -300,7 +300,7 @@ class BatchFilter:
             filter_function = self.custom_filter_function
         else:
             filter_function = self.best_effort_batch_definition_matcher()
-        selected_batch_definitions: List[LegacyBatchDefinition]
+        selected_batch_definitions: list[LegacyBatchDefinition]
         selected_batch_definitions = list(
             filter(
                 lambda batch_definition: filter_function(

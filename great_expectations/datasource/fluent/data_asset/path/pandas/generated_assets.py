@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from typing import Type
-
 from great_expectations.datasource.fluent.data_asset.path.file_asset import FileDataAsset
 from great_expectations.datasource.fluent.dynamic_pandas import _generate_pandas_data_asset_models
 
@@ -32,9 +30,9 @@ _FILE_PATH_ASSET_MODELS = _generate_pandas_data_asset_models(
     use_docstring_from_method=True,
     skip_first_param=True,
 )
-CSVAsset: Type[FileDataAsset] = _FILE_PATH_ASSET_MODELS.get("csv", FileDataAsset)
-ExcelAsset: Type[FileDataAsset] = _FILE_PATH_ASSET_MODELS.get("excel", FileDataAsset)
-FWFAsset: Type[FileDataAsset] = _FILE_PATH_ASSET_MODELS.get("fwf", FileDataAsset)
-JSONAsset: Type[FileDataAsset] = _FILE_PATH_ASSET_MODELS.get("json", FileDataAsset)
-ORCAsset: Type[FileDataAsset] = _FILE_PATH_ASSET_MODELS.get("orc", FileDataAsset)
-ParquetAsset: Type[FileDataAsset] = _FILE_PATH_ASSET_MODELS.get("parquet", FileDataAsset)
+CSVAsset: type[FileDataAsset] = _FILE_PATH_ASSET_MODELS.get("csv", FileDataAsset)
+ExcelAsset: type[FileDataAsset] = _FILE_PATH_ASSET_MODELS.get("excel", FileDataAsset)
+FWFAsset: type[FileDataAsset] = _FILE_PATH_ASSET_MODELS.get("fwf", FileDataAsset)
+JSONAsset: type[FileDataAsset] = _FILE_PATH_ASSET_MODELS.get("json", FileDataAsset)
+ORCAsset: type[FileDataAsset] = _FILE_PATH_ASSET_MODELS.get("orc", FileDataAsset)
+ParquetAsset: type[FileDataAsset] = _FILE_PATH_ASSET_MODELS.get("parquet", FileDataAsset)

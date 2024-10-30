@@ -2,7 +2,7 @@ import copy
 import json
 import os
 import warnings
-from typing import Any, Dict, Optional
+from typing import Any, Optional
 
 import dataprofiler as dp
 import pandas as pd
@@ -42,10 +42,10 @@ class DataProfilerProfileNumericColumnsPercentDiffBetweenInclusiveThresholdRange
     def _pandas(  # noqa: C901 - 22
         cls,
         execution_engine: PandasExecutionEngine,
-        metric_domain_kwargs: Dict,
-        metric_value_kwargs: Dict,
-        metrics: Dict[str, Any],
-        runtime_configuration: Dict,
+        metric_domain_kwargs: dict,
+        metric_value_kwargs: dict,
+        metrics: dict[str, Any],
+        runtime_configuration: dict,
     ):
         profile_percent_diff = metrics.get("data_profiler.profile_percent_diff")
         numeric_columns = metrics.get("data_profiler.profile_numeric_columns")

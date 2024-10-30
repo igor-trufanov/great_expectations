@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import logging
-from typing import List, Union
+from typing import Union
 
 from great_expectations.compatibility import pyspark
 from great_expectations.compatibility.pyspark import functions as F
@@ -105,7 +105,7 @@ class SparkDataPartitioner(DataPartitioner):
         df: pyspark.DataFrame,
         column_name: str,
         batch_identifiers: dict,
-        date_parts: Union[List[DatePart], List[str]],
+        date_parts: Union[list[DatePart], list[str]],
     ) -> pyspark.DataFrame:
         """Partition on date_part values in column_name.
 

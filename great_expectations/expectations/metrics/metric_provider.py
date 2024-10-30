@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import logging
 from functools import wraps
-from typing import TYPE_CHECKING, Callable, Dict, Optional, Tuple, Type, TypeVar, Union
+from typing import TYPE_CHECKING, Callable, Optional, TypeVar, Union
 
 from typing_extensions import ParamSpec
 
@@ -34,7 +34,7 @@ T = TypeVar("T")
 
 
 def metric_value(
-    engine: Type[ExecutionEngine],
+    engine: type[ExecutionEngine],
     metric_fn_type: Union[str, MetricFunctionTypes] = MetricFunctionTypes.VALUE,
     **kwargs,
 ) -> Callable[[Callable[P, T]], Callable[P, T]]:
@@ -68,7 +68,7 @@ def metric_value(
 
 
 def metric_partial(
-    engine: Type[ExecutionEngine],
+    engine: type[ExecutionEngine],
     partial_fn_type: MetricPartialFunctionTypes,
     domain_type: Union[str, MetricDomainTypes],
     **kwargs,
@@ -136,8 +136,8 @@ class MetricProvider(metaclass=MetaMetricProvider):
 
     """  # noqa: E501
 
-    domain_keys: Tuple[str, ...] = tuple()
-    value_keys: Tuple[str, ...] = tuple()
+    domain_keys: tuple[str, ...] = tuple()
+    value_keys: tuple[str, ...] = tuple()
     default_kwarg_values: dict = {}
 
     @classmethod
@@ -272,7 +272,7 @@ support "{MetricFunctionTypes.VALUE.value}" and "{MetricPartialFunctionTypes.AGG
         execution_engine: Optional[ExecutionEngine] = None,
         runtime_configuration: Optional[dict] = None,
     ):
-        dependencies: Dict[str, MetricConfiguration] = {}
+        dependencies: dict[str, MetricConfiguration] = {}
 
         if execution_engine is None:
             return dependencies

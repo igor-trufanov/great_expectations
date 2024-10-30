@@ -3,7 +3,7 @@ from __future__ import annotations
 import json
 import pathlib
 import uuid
-from typing import TYPE_CHECKING, List, Type
+from typing import TYPE_CHECKING
 from unittest import mock
 
 import pandas as pd
@@ -656,7 +656,7 @@ class TestCheckpointResult:
         )
         og_action = OpsgenieAlertAction(name="my_opsgenie_action", api_key="api_key")
         data_docs_action = UpdateDataDocsAction(name="my_docs_action")
-        actions: List[CheckpointAction] = [pd_action, og_action, data_docs_action]
+        actions: list[CheckpointAction] = [pd_action, og_action, data_docs_action]
 
         validation_definitions = [validation_definition]
         checkpoint = Checkpoint(
@@ -1199,7 +1199,7 @@ def test_is_fresh(
     has_validation_def_id: bool,
     has_suite_id: bool,
     has_batch_def_id: bool,
-    error_list: list[Type[ResourceFreshnessError]],
+    error_list: list[type[ResourceFreshnessError]],
 ):
     context = in_memory_runtime_context
 

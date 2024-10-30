@@ -6,9 +6,7 @@ from typing import (
     TYPE_CHECKING,
     Any,
     Callable,
-    Dict,
     Optional,
-    Type,
 )
 
 from great_expectations.compatibility.sqlalchemy import (
@@ -38,7 +36,7 @@ if TYPE_CHECKING:
 
 
 def column_pair_condition_partial(  # noqa: C901 - 16
-    engine: Type[ExecutionEngine],
+    engine: type[ExecutionEngine],
     partial_fn_type: Optional[MetricPartialFunctionTypes] = None,
     **kwargs,
 ):
@@ -85,7 +83,7 @@ def column_pair_condition_partial(  # noqa: C901 - 16
                 execution_engine: PandasExecutionEngine,
                 metric_domain_kwargs: dict,
                 metric_value_kwargs: dict,
-                metrics: Dict[str, Any],
+                metrics: dict[str, Any],
                 runtime_configuration: dict,
             ):
                 metric_domain_kwargs = get_dbms_compatible_metric_domain_kwargs(
@@ -153,7 +151,7 @@ def column_pair_condition_partial(  # noqa: C901 - 16
                 execution_engine: SqlAlchemyExecutionEngine,
                 metric_domain_kwargs: dict,
                 metric_value_kwargs: dict,
-                metrics: Dict[str, Any],
+                metrics: dict[str, Any],
                 runtime_configuration: dict,
             ):
                 metric_domain_kwargs = get_dbms_compatible_metric_domain_kwargs(
@@ -227,7 +225,7 @@ def column_pair_condition_partial(  # noqa: C901 - 16
                 execution_engine: SparkDFExecutionEngine,
                 metric_domain_kwargs: dict,
                 metric_value_kwargs: dict,
-                metrics: Dict[str, Any],
+                metrics: dict[str, Any],
                 runtime_configuration: dict,
             ):
                 metric_domain_kwargs = get_dbms_compatible_metric_domain_kwargs(

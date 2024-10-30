@@ -1,15 +1,15 @@
 from __future__ import annotations
 
-from typing import Any, Dict, List, Set, Tuple, Union
+from typing import Any, Union
 
 import numpy as np
 import pandas as pd
 
 MetricValue = Union[
     Any,  # Encompasses deferred-query/execution plans ("SQLAlchemy" and "Spark") conditions and aggregation functions.  # noqa: E501
-    List[Any],
-    Set[Any],
-    Tuple[Any, ...],
+    list[Any],
+    set[Any],
+    tuple[Any, ...],
     pd.DataFrame,
     pd.Series,
     np.ndarray,
@@ -17,5 +17,5 @@ MetricValue = Union[
     str,
     float,
     bool,
-    Dict[str, Any],
+    dict[str, Any],
 ]

@@ -1,4 +1,4 @@
-from typing import Dict, Optional
+from typing import Optional
 
 from great_expectations.compatibility.pyspark import functions as F
 from great_expectations.core.metric_domain_types import MetricDomainTypes
@@ -98,18 +98,18 @@ class ColumnValuesEqualThree(ColumnMapMetricProvider):
         metric: MetricConfiguration,
         configuration: Optional[ExpectationConfiguration] = None,
         execution_engine: Optional[ExecutionEngine] = None,
-        runtime_configuration: Optional[Dict] = None,
+        runtime_configuration: Optional[dict] = None,
     ):
         """Returns a dictionary of given metric names and their corresponding configuration, specifying the metric
         types and their respective domains"""
-        dependencies: Dict = super()._get_evaluation_dependencies(
+        dependencies: dict = super()._get_evaluation_dependencies(
             metric=metric,
             configuration=configuration,
             execution_engine=execution_engine,
             runtime_configuration=runtime_configuration,
         )
 
-        table_domain_kwargs: Dict = {
+        table_domain_kwargs: dict = {
             k: v for k, v in metric.metric_domain_kwargs.items() if k != "column"
         }
         dependencies["table.column_types"] = MetricConfiguration(

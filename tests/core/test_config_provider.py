@@ -1,5 +1,3 @@
-from typing import Dict
-
 import pytest
 
 from great_expectations.core.config_provider import _CloudConfigurationProvider
@@ -41,7 +39,7 @@ organization_id = "0dcf5ce1-806f-4199-9e69-e24dfba5e62a"
     ],
 )
 def test_CloudConfigurationProvider_get_values(
-    cloud_config: GXCloudConfig, expected_values: Dict[str, str]
+    cloud_config: GXCloudConfig, expected_values: dict[str, str]
 ):
     provider = _CloudConfigurationProvider(cloud_config)
     assert provider.get_values() == expected_values

@@ -10,7 +10,7 @@ matter here but we leverage an existing fixture to mimic the contents of request
 in production. The same logic applies to all UUIDs in this test.
 """
 
-from typing import Callable, Optional, Set, Union
+from typing import Callable, Optional, Union
 from unittest import mock
 
 import pytest
@@ -409,7 +409,7 @@ def test_appropriate_casting_of_str_resource_type_to_GXCloudRESTResource(
 )
 def test_allowed_set_kwargs(
     resource_type: GXCloudRESTResource,
-    expected_set_kwargs: Set[str],
+    expected_set_kwargs: set[str],
     construct_ge_cloud_store_backend: Callable[[GXCloudRESTResource], GXCloudStoreBackend],
 ) -> None:
     store_backend = construct_ge_cloud_store_backend(resource_type)

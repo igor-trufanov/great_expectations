@@ -1,14 +1,12 @@
 from __future__ import annotations
 
+import builtins
 from typing import (
     TYPE_CHECKING,
     Any,
     ClassVar,
-    Dict,
-    List,
     Literal,
     Optional,
-    Type,
     Union,
     cast,
 )
@@ -66,13 +64,13 @@ class PartitionerConvertedDateTime(_PartitionerOneColumnOneParam):
 
     @property
     @override
-    def param_names(self) -> List[str]:
+    def param_names(self) -> list[str]:
         # The datetime parameter will be a string representing a datetime in the format
         # given by self.date_format_string.
         return ["datetime"]
 
     @override
-    def partitioner_method_kwargs(self) -> Dict[str, Any]:
+    def partitioner_method_kwargs(self) -> dict[str, Any]:
         return {
             "column_name": self.column_name,
             "date_format_string": self.date_format_string,
@@ -81,7 +79,7 @@ class PartitionerConvertedDateTime(_PartitionerOneColumnOneParam):
     @override
     def batch_parameters_to_batch_spec_kwarg_identifiers(
         self, options: BatchParameters
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         if "datetime" not in options:
             raise ValueError(  # noqa: TRY003
                 "'datetime' must be specified in the batch parameters to create a batch identifier"
@@ -135,7 +133,7 @@ class SqliteDatasource(SQLDatasource):
     """
 
     # class var definitions
-    asset_types: ClassVar[List[Type[DataAsset]]] = [SqliteTableAsset, SqliteQueryAsset]
+    asset_types: ClassVar[list[builtins.type[DataAsset]]] = [SqliteTableAsset, SqliteQueryAsset]
 
     # Subclass instance var overrides
     # right side of the operator determines the type name
@@ -143,8 +141,8 @@ class SqliteDatasource(SQLDatasource):
     type: Literal["sqlite"] = "sqlite"  # type: ignore[assignment]
     connection_string: Union[ConfigStr, SqliteDsn]
 
-    _TableAsset: Type[SqlTableAsset] = pydantic.PrivateAttr(SqliteTableAsset)
-    _QueryAsset: Type[SqlQueryAsset] = pydantic.PrivateAttr(SqliteQueryAsset)
+    _TableAsset: builtins.type[SqlTableAsset] = pydantic.PrivateAttr(SqliteTableAsset)
+    _QueryAsset: builtins.type[SqlQueryAsset] = pydantic.PrivateAttr(SqliteQueryAsset)
 
     @public_api
     @override

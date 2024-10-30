@@ -11,7 +11,7 @@ import shutil
 import urllib.parse
 import warnings
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, Any, Dict, Final, Generator, List, Optional
+from typing import TYPE_CHECKING, Any, Final, Generator, Optional
 from unittest import mock
 
 import numpy as np
@@ -282,7 +282,7 @@ def pytest_addoption(parser):
 
 
 def build_test_backends_list_v2_api(metafunc):
-    test_backend_names: List[str] = build_test_backends_list_v3_api(metafunc)
+    test_backend_names: list[str] = build_test_backends_list_v3_api(metafunc)
     return test_backend_names
 
 
@@ -312,7 +312,7 @@ def build_test_backends_list_v3_api(metafunc):
     include_athena: bool = metafunc.config.getoption("--athena")
     include_snowflake: bool = metafunc.config.getoption("--snowflake")
     include_clickhouse: bool = metafunc.config.getoption("--clickhouse")
-    test_backend_names: List[str] = build_test_backends_list_v3(
+    test_backend_names: list[str] = build_test_backends_list_v3(
         include_pandas=include_pandas,
         include_spark=include_spark,
         include_sqlalchemy=include_sqlalchemy,
@@ -516,8 +516,8 @@ def spark_connect_session(test_backends):
 def basic_spark_df_execution_engine(spark_session):
     from great_expectations.execution_engine import SparkDFExecutionEngine
 
-    conf: List[tuple] = spark_session.sparkContext.getConf().getAll()
-    spark_config: Dict[str, Any] = dict(conf)
+    conf: list[tuple] = spark_session.sparkContext.getConf().getAll()
+    spark_config: dict[str, Any] = dict(conf)
     execution_engine = SparkDFExecutionEngine(
         spark_config=spark_config,
     )
@@ -1665,7 +1665,7 @@ def ge_cloud_access_token() -> str:
 
 
 @pytest.fixture
-def request_headers(ge_cloud_access_token: str) -> Dict[str, str]:
+def request_headers(ge_cloud_access_token: str) -> dict[str, str]:
     return {
         "Content-Type": "application/vnd.api+json",
         "Authorization": f"Bearer {ge_cloud_access_token}",
@@ -1933,7 +1933,7 @@ def multibatch_generic_csv_generator():
         start_date: Optional[datetime.datetime] = None,
         num_event_batches: Optional[int] = 20,
         num_events_per_batch: Optional[int] = 5,
-    ) -> List[str]:
+    ) -> list[str]:
         data_path = pathlib.Path(data_path)
         if start_date is None:
             start_date = datetime.datetime(2000, 1, 1)  # noqa: DTZ001

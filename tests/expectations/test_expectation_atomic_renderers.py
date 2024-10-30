@@ -1,6 +1,6 @@
 import re
 from pprint import pprint
-from typing import Callable, Dict, Union
+from typing import Callable, Union
 
 import pytest
 
@@ -25,10 +25,10 @@ def expectation_configuration_kwargs():
 
 @pytest.fixture
 def get_prescriptive_rendered_content(
-    expectation_configuration_kwargs: Dict[str, Union[str, dict]],
+    expectation_configuration_kwargs: dict[str, Union[str, dict]],
 ) -> Callable:
     def _get_prescriptive_rendered_content(
-        update_dict: Dict[str, Union[str, dict]],
+        update_dict: dict[str, Union[str, dict]],
     ) -> RenderedAtomicContent:
         # Overwrite any fields passed in from test and instantiate ExpectationConfiguration
         expectation_configuration_kwargs.update(update_dict)
@@ -60,10 +60,10 @@ def evr_kwargs(expectation_configuration_kwargs):
 
 @pytest.fixture
 def get_diagnostic_rendered_content(
-    evr_kwargs: Dict[str, Union[dict, ExpectationConfiguration]],
+    evr_kwargs: dict[str, Union[dict, ExpectationConfiguration]],
 ) -> Callable:
     def _get_diagnostic_rendered_content(
-        update_dict: Dict[str, Union[dict, ExpectationConfiguration]],
+        update_dict: dict[str, Union[dict, ExpectationConfiguration]],
     ) -> RenderedAtomicContent:
         # Overwrite any fields passed in from test and instantiate ExpectationValidationResult
         evr_kwargs.update(update_dict)

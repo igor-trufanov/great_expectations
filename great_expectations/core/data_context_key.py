@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from abc import ABCMeta, abstractmethod
-from typing import Optional, Tuple, Union
+from typing import Optional, Union
 
 from great_expectations.compatibility.typing_extensions import override
 
@@ -99,14 +99,14 @@ class DataContextVariableKey(DataContextKey):
         return self._resource_name
 
     @override
-    def to_tuple(self) -> Tuple[str]:
+    def to_tuple(self) -> tuple[str]:
         """
         See parent `DataContextKey.to_tuple` for more information.
         """
         return (self._resource_name or "",)
 
     @override
-    def to_fixed_length_tuple(self) -> Tuple[str]:
+    def to_fixed_length_tuple(self) -> tuple[str]:
         """
         See parent `DataContextKey.to_fixed_length_tuple` for more information.
         """

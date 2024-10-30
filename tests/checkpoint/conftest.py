@@ -1,5 +1,3 @@
-from typing import Dict, List
-
 import pandas as pd
 import pytest
 
@@ -50,7 +48,7 @@ def slack_notification_action(webhook):
 def common_action_list(
     store_validation_result_action: dict,
     update_data_docs_action: dict,
-) -> List[dict]:
+) -> list[dict]:
     return [
         store_validation_result_action,
         update_data_docs_action,
@@ -58,7 +56,7 @@ def common_action_list(
 
 
 @pytest.fixture
-def batch_request_as_dict() -> Dict[str, str]:
+def batch_request_as_dict() -> dict[str, str]:
     return {
         "datasource_name": "my_pandas_filesystem_datasource",
         "data_asset_name": "users",
@@ -66,7 +64,7 @@ def batch_request_as_dict() -> Dict[str, str]:
 
 
 @pytest.fixture
-def fluent_batch_request(batch_request_as_dict: Dict[str, str]) -> FluentBatchRequest:
+def fluent_batch_request(batch_request_as_dict: dict[str, str]) -> FluentBatchRequest:
     return FluentBatchRequest(
         datasource_name=batch_request_as_dict["datasource_name"],
         data_asset_name=batch_request_as_dict["data_asset_name"],

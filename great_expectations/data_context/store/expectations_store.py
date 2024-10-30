@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import uuid
-from typing import TYPE_CHECKING, Any, Dict, List, Optional, TypeVar, Union
+from typing import TYPE_CHECKING, Any, Optional, TypeVar, Union
 
 import great_expectations.exceptions as gx_exceptions
 from great_expectations.compatibility import pydantic
@@ -38,7 +38,7 @@ class ExpectationConfigurationDTO(pydantic.BaseModel):
 
     id: str
     type: str
-    rendered_content: List[dict] = pydantic.Field(default_factory=list)
+    rendered_content: list[dict] = pydantic.Field(default_factory=list)
     kwargs: dict
     meta: Union[dict, None]
     expectation_context: Union[dict, None]
@@ -52,7 +52,7 @@ class ExpectationSuiteDTO(pydantic.BaseModel):
 
     name: str
     id: str
-    expectations: List[ExpectationConfigurationDTO]
+    expectations: list[ExpectationConfigurationDTO]
     meta: Union[dict, None]
     notes: Union[str, None]
 
@@ -113,7 +113,7 @@ class ExpectationsStore(Store):
         This method takes full json response from GX cloud and outputs a dict appropriate for
         deserialization into a GX object
         """
-        suite_data: Dict
+        suite_data: dict
         # if only the expectation_suite_name is passed, a list will be returned
         if isinstance(response_json["data"], list):
             if len(response_json["data"]) == 1:

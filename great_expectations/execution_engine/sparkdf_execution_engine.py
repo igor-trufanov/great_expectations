@@ -10,9 +10,7 @@ from typing import (
     TYPE_CHECKING,
     Any,
     Callable,
-    Dict,
     Iterable,
-    List,
     Optional,
     Tuple,
     Union,
@@ -414,7 +412,7 @@ class SparkDFExecutionEngine(ExecutionEngine):
     @override
     def get_batch_data_and_markers(  # noqa: C901, PLR0912, PLR0915
         self, batch_spec: BatchSpec
-    ) -> Tuple[Any, BatchMarkers]:  # batch_data
+    ) -> tuple[Any, BatchMarkers]:  # batch_data
         # We need to build a batch_markers to be used in the dataframe
         batch_markers = BatchMarkers(
             {
@@ -537,7 +535,7 @@ illegal.  Please check your config."""  # noqa: E501
 
     def _apply_partitioning_and_sampling_methods(self, batch_spec, batch_data):
         # Note this is to get a batch from tables in AWS Glue Data Catalog by its partitions
-        partitions: Optional[List[str]] = batch_spec.get("partitions")
+        partitions: Optional[list[str]] = batch_spec.get("partitions")
         if partitions:
             batch_data = self._data_partitioner.partition_on_multi_column_values(
                 df=batch_data,
@@ -676,7 +674,7 @@ illegal.  Please check your config."""  # noqa: E501
                 )
 
         # Filtering by filter_conditions
-        filter_conditions: List[RowCondition] = domain_kwargs.get("filter_conditions", [])
+        filter_conditions: list[RowCondition] = domain_kwargs.get("filter_conditions", [])
         if len(filter_conditions) > 0:
             filter_condition = self._combine_row_conditions(filter_conditions)
             data = data.filter(filter_condition.condition)
@@ -728,7 +726,7 @@ illegal.  Please check your config."""  # noqa: E501
         return data
 
     @staticmethod
-    def _combine_row_conditions(row_conditions: List[RowCondition]) -> RowCondition:
+    def _combine_row_conditions(row_conditions: list[RowCondition]) -> RowCondition:
         """Combine row conditions using AND if condition_type is SPARK_SQL
 
         Note, although this method does not currently use `self` internally we
@@ -745,7 +743,7 @@ illegal.  Please check your config."""  # noqa: E501
             condition.condition_type == RowConditionParserType.SPARK_SQL
             for condition in row_conditions
         ), "All row conditions must have type SPARK_SQL"
-        conditions: List[str] = [row_condition.condition for row_condition in row_conditions]
+        conditions: list[str] = [row_condition.condition for row_condition in row_conditions]
         joined_condition: str = " AND ".join(conditions)
         return RowCondition(
             condition=joined_condition, condition_type=RowConditionParserType.SPARK_SQL
@@ -814,7 +812,7 @@ illegal.  Please check your config."""  # noqa: E501
         else:
             column = domain_kwargs["column"]
 
-        filter_conditions: List[RowCondition] = []
+        filter_conditions: list[RowCondition] = []
         if filter_null:
             filter_conditions.append(
                 RowCondition(
@@ -843,7 +841,7 @@ illegal.  Please check your config."""  # noqa: E501
     def resolve_metric_bundle(
         self,
         metric_fn_bundle: Iterable[MetricComputationConfiguration],
-    ) -> Dict[Tuple[str, str, str], MetricValue]:
+    ) -> dict[tuple[str, str, str], MetricValue]:
         """For every metric in a set of Metrics to resolve, obtains necessary metric keyword arguments and builds
         bundles of the metrics into one large query dictionary so that they are all executed simultaneously. Will fail
         if bundling the metrics together is not possible.
@@ -857,15 +855,15 @@ illegal.  Please check your config."""  # noqa: E501
             Returns:
                 A dictionary of "MetricConfiguration" IDs and their corresponding fully resolved values for domains.
         """  # noqa: E501
-        resolved_metrics: Dict[Tuple[str, str, str], MetricValue] = {}
+        resolved_metrics: dict[tuple[str, str, str], MetricValue] = {}
 
-        res: List[pyspark.Row]
+        res: list[pyspark.Row]
 
-        aggregates: Dict[Tuple[str, str, str], dict] = {}
+        aggregates: dict[tuple[str, str, str], dict] = {}
 
         aggregate: dict
 
-        domain_id: Tuple[str, str, str]
+        domain_id: tuple[str, str, str]
 
         bundled_metric_configuration: MetricComputationConfiguration
         for bundled_metric_configuration in metric_fn_bundle:
@@ -906,7 +904,7 @@ illegal.  Please check your config."""  # noqa: E501
             ), "unexpected number of metrics returned"
 
             idx: int
-            metric_id: Tuple[str, str, str]
+            metric_id: tuple[str, str, str]
             for idx, metric_id in enumerate(aggregate["metric_ids"]):
                 # Converting DataFrame.collect() results into JSON-serializable format produces simple data types,  # noqa: E501
                 # amenable for subsequent post-processing by higher-level "Metric" and "Expectation" layers.  # noqa: E501

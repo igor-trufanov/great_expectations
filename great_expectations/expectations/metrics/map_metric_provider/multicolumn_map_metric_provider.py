@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import logging
-from typing import TYPE_CHECKING, Optional, Tuple
+from typing import TYPE_CHECKING, Optional
 
 from great_expectations.compatibility.typing_extensions import override
 from great_expectations.expectations.metrics.map_metric_provider import (
@@ -25,7 +25,7 @@ class MulticolumnMapMetricProvider(MapMetricProvider):
     `expect_compound_columns_to_be_unique` is an example of an Expectation that uses this metric.
     """  # noqa: E501
 
-    condition_domain_keys: Tuple[str, ...] = (
+    condition_domain_keys: tuple[str, ...] = (
         "batch_id",
         "table",
         "column_list",

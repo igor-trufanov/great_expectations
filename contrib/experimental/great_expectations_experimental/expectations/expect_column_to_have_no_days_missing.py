@@ -1,5 +1,3 @@
-from typing import Dict
-
 from great_expectations.compatibility.sqlalchemy import sqlalchemy as sa
 from great_expectations.core.metric_domain_types import MetricDomainTypes
 from great_expectations.execution_engine import (
@@ -110,7 +108,7 @@ class ExpectColumnToHaveNoDaysMissing(ColumnAggregateExpectation):
 
     def _validate(
         self,
-        metrics: Dict,
+        metrics: dict,
         runtime_configuration: dict = None,
         execution_engine: ExecutionEngine = None,
     ):

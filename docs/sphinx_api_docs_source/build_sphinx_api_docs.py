@@ -26,7 +26,6 @@ import pathlib
 import shutil
 import sys
 from dataclasses import dataclass
-from typing import Dict
 from urllib.parse import urlparse
 
 import invoke
@@ -91,8 +90,8 @@ class SphinxInvokeDocsBuilder:
         self.docusaurus_api_docs_path = self.docs_path / pathlib.Path(
             "docusaurus/docs/reference/api"
         )
-        self.definitions: Dict[str, Definition] = {}
-        self.sidebar_entries: Dict[str, SidebarEntry] = {}
+        self.definitions: dict[str, Definition] = {}
+        self.sidebar_entries: dict[str, SidebarEntry] = {}
         self.written_class_md_stubs: dict[
             pathlib.Path, list[str]
         ] = {}  # Dict of {path_to_class_def: ["ClassName1", "ClassName2", ...]}

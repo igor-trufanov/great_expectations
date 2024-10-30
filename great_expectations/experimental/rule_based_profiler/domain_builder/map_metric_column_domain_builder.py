@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, Dict, Iterable, List, Optional, Tuple, Union
+from typing import TYPE_CHECKING, Any, Iterable, Optional, Union
 
 from great_expectations.core.domain import Domain, SemanticDomainTypes  # noqa: TCH001
 from great_expectations.core.metric_function_types import (
@@ -34,17 +34,17 @@ class MapMetricColumnDomainBuilder(ColumnDomainBuilder):
     def __init__(  # noqa: PLR0913
         self,
         map_metric_name: str,
-        include_column_names: Optional[Union[str, Optional[List[str]]]] = None,
-        exclude_column_names: Optional[Union[str, Optional[List[str]]]] = None,
-        include_column_name_suffixes: Optional[Union[str, Iterable, List[str]]] = None,
-        exclude_column_name_suffixes: Optional[Union[str, Iterable, List[str]]] = None,
+        include_column_names: Optional[Union[str, Optional[list[str]]]] = None,
+        exclude_column_names: Optional[Union[str, Optional[list[str]]]] = None,
+        include_column_name_suffixes: Optional[Union[str, Iterable, list[str]]] = None,
+        exclude_column_name_suffixes: Optional[Union[str, Iterable, list[str]]] = None,
         semantic_type_filter_module_name: Optional[str] = None,
         semantic_type_filter_class_name: Optional[str] = None,
         include_semantic_types: Optional[
-            Union[str, SemanticDomainTypes, List[Union[str, SemanticDomainTypes]]]
+            Union[str, SemanticDomainTypes, list[Union[str, SemanticDomainTypes]]]
         ] = None,
         exclude_semantic_types: Optional[
-            Union[str, SemanticDomainTypes, List[Union[str, SemanticDomainTypes]]]
+            Union[str, SemanticDomainTypes, list[Union[str, SemanticDomainTypes]]]
         ] = None,
         max_unexpected_values: Union[str, int] = 0,
         max_unexpected_ratio: Optional[Union[str, float]] = None,
@@ -137,7 +137,7 @@ class MapMetricColumnDomainBuilder(ColumnDomainBuilder):
         rule_name: str,
         variables: Optional[ParameterContainer] = None,
         runtime_configuration: Optional[dict] = None,
-    ) -> List[Domain]:
+    ) -> list[Domain]:
         """Return domains matching the specified tolerance limits.
 
         Args:
@@ -184,18 +184,18 @@ class MapMetricColumnDomainBuilder(ColumnDomainBuilder):
             parameters=None,
         )
 
-        batch_ids: List[str] = self.get_batch_ids(variables=variables)
+        batch_ids: list[str] = self.get_batch_ids(variables=variables)
         num_batch_ids: int = len(batch_ids)
 
         validator: Validator = self.get_validator(variables=variables)
 
-        table_column_names: List[str] = self.get_effective_column_names(
+        table_column_names: list[str] = self.get_effective_column_names(
             batch_ids=batch_ids,
             validator=validator,
             variables=variables,
         )
 
-        table_row_counts: Dict[str, int] = self.get_table_row_counts(
+        table_row_counts: dict[str, int] = self.get_table_row_counts(
             validator=validator,
             batch_ids=batch_ids,
             variables=variables,
@@ -209,7 +209,7 @@ class MapMetricColumnDomainBuilder(ColumnDomainBuilder):
         if max_unexpected_ratio is None:
             max_unexpected_ratio = max_unexpected_values / mean_table_row_count_as_float
 
-        metric_configurations_by_column_name: Dict[str, List[MetricConfiguration]] = (
+        metric_configurations_by_column_name: dict[str, list[MetricConfiguration]] = (
             self._generate_metric_configurations(
                 map_metric_name=map_metric_name,
                 batch_ids=batch_ids,
@@ -217,7 +217,7 @@ class MapMetricColumnDomainBuilder(ColumnDomainBuilder):
             )
         )
 
-        candidate_column_names: List[str] = self._get_column_names_satisfying_tolerance_limits(
+        candidate_column_names: list[str] = self._get_column_names_satisfying_tolerance_limits(
             validator=validator,
             num_batch_ids=num_batch_ids,
             metric_configurations_by_column_name=metric_configurations_by_column_name,
@@ -227,7 +227,7 @@ class MapMetricColumnDomainBuilder(ColumnDomainBuilder):
         )
 
         column_name: str
-        domains: List[Domain] = build_domains_from_column_names(
+        domains: list[Domain] = build_domains_from_column_names(
             rule_name=rule_name,
             column_names=candidate_column_names,
             domain_type=self.domain_type,
@@ -239,9 +239,9 @@ class MapMetricColumnDomainBuilder(ColumnDomainBuilder):
     @staticmethod
     def _generate_metric_configurations(
         map_metric_name: str,
-        batch_ids: List[str],
-        column_names: List[str],
-    ) -> Dict[str, List[MetricConfiguration]]:
+        batch_ids: list[str],
+        column_names: list[str],
+    ) -> dict[str, list[MetricConfiguration]]:
         """
         Generate metric configurations used to compute "unexpected_count" values for "map_metric_name".
 
@@ -258,7 +258,7 @@ class MapMetricColumnDomainBuilder(ColumnDomainBuilder):
         """  # noqa: E501
         column_name: str
         batch_id: str
-        metric_configurations: Dict[str, List[MetricConfiguration]] = {
+        metric_configurations: dict[str, list[MetricConfiguration]] = {
             column_name: [
                 MetricConfiguration(
                     metric_name=f"{map_metric_name}.{SummarizationMetricNameSuffixes.UNEXPECTED_COUNT.value}",
@@ -279,12 +279,12 @@ class MapMetricColumnDomainBuilder(ColumnDomainBuilder):
     def _get_column_names_satisfying_tolerance_limits(  # noqa: PLR0913
         validator: Validator,
         num_batch_ids: int,
-        metric_configurations_by_column_name: Dict[str, List[MetricConfiguration]],
+        metric_configurations_by_column_name: dict[str, list[MetricConfiguration]],
         mean_table_row_count_as_float: float,
         max_unexpected_ratio: float,
         min_max_unexpected_values_proportion: float,
         runtime_configuration: Optional[dict] = None,
-    ) -> List[str]:
+    ) -> list[str]:
         """
         Compute figures of merit and return column names satisfying tolerance limits.
 
@@ -300,9 +300,9 @@ class MapMetricColumnDomainBuilder(ColumnDomainBuilder):
             List of column names satisfying tolerance limits.
         """  # noqa: E501
         column_name: str
-        resolved_metrics: Dict[Tuple[str, str, str], MetricValue]
+        resolved_metrics: dict[tuple[str, str, str], MetricValue]
 
-        resolved_metrics_by_column_name: Dict[str, Dict[Tuple[str, str, str], MetricValue]] = (
+        resolved_metrics_by_column_name: dict[str, dict[tuple[str, str, str], MetricValue]] = (
             get_resolved_metrics_by_key(
                 validator=validator,
                 metric_configurations_by_key=metric_configurations_by_column_name,
@@ -311,7 +311,7 @@ class MapMetricColumnDomainBuilder(ColumnDomainBuilder):
         )
 
         metric_value: Any
-        intra_batch_unexpected_ratios_by_column_name: Dict[str, List[float]] = {
+        intra_batch_unexpected_ratios_by_column_name: dict[str, list[float]] = {
             column_name: [
                 (metric_value or 0.0) / mean_table_row_count_as_float
                 for metric_value in resolved_metrics.values()
@@ -319,9 +319,9 @@ class MapMetricColumnDomainBuilder(ColumnDomainBuilder):
             for column_name, resolved_metrics in resolved_metrics_by_column_name.items()
         }
 
-        metric_value_ratios: List[float]
+        metric_value_ratios: list[float]
         metric_value_ratio: float
-        intra_batch_adherence_by_column_name: Dict[str, List[bool]] = {
+        intra_batch_adherence_by_column_name: dict[str, list[bool]] = {
             column_name: [
                 metric_value_ratio <= max_unexpected_ratio
                 for metric_value_ratio in metric_value_ratios
@@ -329,7 +329,7 @@ class MapMetricColumnDomainBuilder(ColumnDomainBuilder):
             for column_name, metric_value_ratios in intra_batch_unexpected_ratios_by_column_name.items()  # noqa: E501
         }
 
-        inter_batch_adherence_by_column_name: Dict[str, float] = {
+        inter_batch_adherence_by_column_name: dict[str, float] = {
             column_name: 1.0
             * sum(intra_batch_adherence_by_column_name[column_name])
             / num_batch_ids
@@ -337,7 +337,7 @@ class MapMetricColumnDomainBuilder(ColumnDomainBuilder):
         }
 
         inter_batch_unexpected_values_proportion: float
-        candidate_column_names: List[str] = [
+        candidate_column_names: list[str] = [
             column_name
             for column_name, inter_batch_unexpected_values_proportion in inter_batch_adherence_by_column_name.items()  # noqa: E501
             if inter_batch_unexpected_values_proportion >= min_max_unexpected_values_proportion

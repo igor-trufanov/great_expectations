@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, Dict, Iterable, List, Optional
+from typing import TYPE_CHECKING, Any, Iterable, Optional
 
 import pandas as pd
 
@@ -31,8 +31,8 @@ class ColumnValueCounts(ColumnAggregateMetricProvider):
     def _pandas(
         cls,
         execution_engine: PandasExecutionEngine,
-        metric_domain_kwargs: Dict[str, str],
-        metric_value_kwargs: Dict[str, Optional[str]],
+        metric_domain_kwargs: dict[str, str],
+        metric_value_kwargs: dict[str, Optional[str]],
         **kwargs,
     ) -> pd.Series:
         sort: str = metric_value_kwargs.get("sort") or cls.default_kwarg_values["sort"]
@@ -46,7 +46,7 @@ class ColumnValueCounts(ColumnAggregateMetricProvider):
             raise ValueError("collate parameter is not supported in PandasDataset")  # noqa: TRY003
 
         df: pd.DataFrame
-        accessor_domain_kwargs: Dict[str, str]
+        accessor_domain_kwargs: dict[str, str]
         df, _, accessor_domain_kwargs = execution_engine.get_compute_domain(
             metric_domain_kwargs, MetricDomainTypes.COLUMN
         )
@@ -73,8 +73,8 @@ class ColumnValueCounts(ColumnAggregateMetricProvider):
     def _sqlalchemy(
         cls,
         execution_engine: SqlAlchemyExecutionEngine,
-        metric_domain_kwargs: Dict[str, str],
-        metric_value_kwargs: Dict[str, Optional[str]],
+        metric_domain_kwargs: dict[str, str],
+        metric_value_kwargs: dict[str, Optional[str]],
         **kwargs,
     ) -> pd.Series:
         sort: str = metric_value_kwargs.get("sort") or cls.default_kwarg_values["sort"]
@@ -88,7 +88,7 @@ class ColumnValueCounts(ColumnAggregateMetricProvider):
             raise ValueError("collate parameter is not supported in PandasDataset")  # noqa: TRY003
 
         selectable: sqlalchemy.Selectable
-        accessor_domain_kwargs: Dict[str, str]
+        accessor_domain_kwargs: dict[str, str]
         selectable, _, accessor_domain_kwargs = execution_engine.get_compute_domain(
             metric_domain_kwargs, MetricDomainTypes.COLUMN
         )
@@ -124,7 +124,7 @@ class ColumnValueCounts(ColumnAggregateMetricProvider):
                 query = query.order_by(sa.column(column))
         elif sort == "count":
             query = query.order_by(sa.column("count").desc())
-        results: List[sqlalchemy.Row] = execution_engine.execute_query(  # type: ignore[assignment]
+        results: list[sqlalchemy.Row] = execution_engine.execute_query(  # type: ignore[assignment]
             query.select_from(selectable)  # type: ignore[arg-type]
         ).fetchall()
         # Numpy does not always infer the correct DataTypes for SqlAlchemy Row, so we cannot use vectorized approach.  # noqa: E501
@@ -139,8 +139,8 @@ class ColumnValueCounts(ColumnAggregateMetricProvider):
     def _spark(
         cls,
         execution_engine: SparkDFExecutionEngine,
-        metric_domain_kwargs: Dict[str, str],
-        metric_value_kwargs: Dict[str, Optional[str]],
+        metric_domain_kwargs: dict[str, str],
+        metric_value_kwargs: dict[str, Optional[str]],
         **kwargs,
     ) -> pd.Series:
         sort: str = metric_value_kwargs.get("sort") or cls.default_kwarg_values["sort"]
@@ -154,7 +154,7 @@ class ColumnValueCounts(ColumnAggregateMetricProvider):
             raise ValueError("collate parameter is not supported in SparkDFDataset")  # noqa: TRY003
 
         df: pyspark.DataFrame
-        accessor_domain_kwargs: Dict[str, str]
+        accessor_domain_kwargs: dict[str, str]
         df, _, accessor_domain_kwargs = execution_engine.get_compute_domain(
             metric_domain_kwargs, MetricDomainTypes.COLUMN
         )
@@ -169,7 +169,7 @@ class ColumnValueCounts(ColumnAggregateMetricProvider):
         elif sort == "count":
             value_counts_df = value_counts_df.orderBy(F.desc("count"))
 
-        value_counts: List[pyspark.Row] = value_counts_df.collect()
+        value_counts: list[pyspark.Row] = value_counts_df.collect()
 
         # Numpy does not always infer the correct DataTypes for Spark df, so we cannot use vectorized approach.  # noqa: E501
         values: Iterable[Any]

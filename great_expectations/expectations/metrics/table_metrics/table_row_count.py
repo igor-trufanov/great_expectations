@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Any, Dict
+from typing import Any
 
 from great_expectations.compatibility.pyspark import functions as F
 from great_expectations.compatibility.sqlalchemy import sqlalchemy as sa
@@ -29,7 +29,7 @@ class TableRowCount(TableMetricProvider):
         execution_engine: PandasExecutionEngine,
         metric_domain_kwargs: dict,
         metric_value_kwargs: dict,
-        metrics: Dict[str, Any],
+        metrics: dict[str, Any],
         runtime_configuration: dict,
     ):
         df, _, _ = execution_engine.get_compute_domain(
@@ -47,7 +47,7 @@ class TableRowCount(TableMetricProvider):
         execution_engine: SqlAlchemyExecutionEngine,
         metric_domain_kwargs: dict,
         metric_value_kwargs: dict,
-        metrics: Dict[str, Any],
+        metrics: dict[str, Any],
         runtime_configuration: dict,
     ):
         return sa.func.count(), metric_domain_kwargs, {}
@@ -62,7 +62,7 @@ class TableRowCount(TableMetricProvider):
         execution_engine: SqlAlchemyExecutionEngine,
         metric_domain_kwargs: dict,
         metric_value_kwargs: dict,
-        metrics: Dict[str, Any],
+        metrics: dict[str, Any],
         runtime_configuration: dict,
     ):
         return F.count(F.lit(1)), metric_domain_kwargs, {}

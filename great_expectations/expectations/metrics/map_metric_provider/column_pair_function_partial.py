@@ -5,8 +5,6 @@ from functools import wraps
 from typing import (
     Any,
     Callable,
-    Dict,
-    Type,
 )
 
 from great_expectations.compatibility.sqlalchemy import sqlalchemy as sa
@@ -31,7 +29,7 @@ logger = logging.getLogger(__name__)
 
 
 def column_pair_function_partial(  # noqa: C901 - 16
-    engine: Type[ExecutionEngine],
+    engine: type[ExecutionEngine],
     partial_fn_type: MetricPartialFunctionTypes | None = None,
     **kwargs,
 ):
@@ -75,7 +73,7 @@ def column_pair_function_partial(  # noqa: C901 - 16
                 execution_engine: PandasExecutionEngine,
                 metric_domain_kwargs: dict,
                 metric_value_kwargs: dict,
-                metrics: Dict[str, Any],
+                metrics: dict[str, Any],
                 runtime_configuration: dict,
             ):
                 metric_domain_kwargs = get_dbms_compatible_metric_domain_kwargs(
@@ -135,7 +133,7 @@ def column_pair_function_partial(  # noqa: C901 - 16
                 execution_engine: SqlAlchemyExecutionEngine,
                 metric_domain_kwargs: dict,
                 metric_value_kwargs: dict,
-                metrics: Dict[str, Any],
+                metrics: dict[str, Any],
                 runtime_configuration: dict,
             ):
                 metric_domain_kwargs = get_dbms_compatible_metric_domain_kwargs(
@@ -197,7 +195,7 @@ def column_pair_function_partial(  # noqa: C901 - 16
                 execution_engine: SparkDFExecutionEngine,
                 metric_domain_kwargs: dict,
                 metric_value_kwargs: dict,
-                metrics: Dict[str, Any],
+                metrics: dict[str, Any],
                 runtime_configuration: dict,
             ):
                 metric_domain_kwargs = get_dbms_compatible_metric_domain_kwargs(

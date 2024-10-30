@@ -1,4 +1,4 @@
-from typing import List, Optional, Tuple
+from typing import Optional
 
 import pandas as pd
 
@@ -16,9 +16,9 @@ class WeeklyTimeSeriesGenerator(DailyTimeSeriesGenerator):
         size: Optional[int] = 52 * 3,
         day_of_week: Optional[int] = 0,
         start_date: Optional[str] = "2018-01-01",
-        trend_params: Optional[List[TrendParams]] = None,
-        weekday_dummy_params: Optional[List[float]] = None,
-        annual_seasonality_params: Optional[List[Tuple[float, float]]] = None,
+        trend_params: Optional[list[TrendParams]] = None,
+        weekday_dummy_params: Optional[list[float]] = None,
+        annual_seasonality_params: Optional[list[tuple[float, float]]] = None,
         holiday_alpha: float = 3.5,
         outlier_alpha: float = 2.5,
         noise_scale: float = 1.0,

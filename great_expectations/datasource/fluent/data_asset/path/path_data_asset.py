@@ -8,10 +8,8 @@ from typing import (
     TYPE_CHECKING,
     ClassVar,
     Generic,
-    List,
     Mapping,
     Optional,
-    Set,
 )
 
 import great_expectations.exceptions as gx_exceptions
@@ -45,7 +43,7 @@ logger = logging.getLogger(__name__)
 
 
 class PathDataAsset(DataAsset, Generic[DatasourceT, PartitionerT], ABC):
-    _EXCLUDE_FROM_READER_OPTIONS: ClassVar[Set[str]] = {
+    _EXCLUDE_FROM_READER_OPTIONS: ClassVar[set[str]] = {
         "batch_definitions",
         "type",
         "name",
@@ -116,9 +114,9 @@ class PathDataAsset(DataAsset, Generic[DatasourceT, PartitionerT], ABC):
             )
 
     @override
-    def get_batch_identifiers_list(self, batch_request: BatchRequest) -> List[dict]:
+    def get_batch_identifiers_list(self, batch_request: BatchRequest) -> list[dict]:
         batch_definition_list = self._get_batch_definition_list(batch_request)
-        batch_identifiers_list: List[dict] = [
+        batch_identifiers_list: list[dict] = [
             batch_definition_list.batch_identifiers
             for batch_definition_list in batch_definition_list
         ]

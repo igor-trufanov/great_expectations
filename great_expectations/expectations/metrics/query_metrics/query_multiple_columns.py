@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, Dict, List
+from typing import TYPE_CHECKING, Any
 
 from great_expectations.core.metric_domain_types import MetricDomainTypes
 from great_expectations.execution_engine import (
@@ -31,7 +31,7 @@ class QueryMultipleColumns(QueryMetricProvider):
         execution_engine: SqlAlchemyExecutionEngine,
         metric_domain_kwargs: dict,
         metric_value_kwargs: dict,
-        metrics: Dict[str, Any],
+        metrics: dict[str, Any],
         runtime_configuration: dict,
     ) -> list[dict]:
         batch_selectable, _, _ = execution_engine.get_compute_domain(
@@ -54,7 +54,7 @@ class QueryMultipleColumns(QueryMetricProvider):
         execution_engine: SparkDFExecutionEngine,
         metric_domain_kwargs: dict,
         metric_value_kwargs: dict,
-        metrics: Dict[str, Any],
+        metrics: dict[str, Any],
         runtime_configuration: dict,
     ) -> list[dict]:
         query = cls._get_query_from_metric_value_kwargs(metric_value_kwargs)
@@ -79,6 +79,6 @@ class QueryMultipleColumns(QueryMetricProvider):
         )
 
         engine: pyspark.SparkSession = execution_engine.spark
-        result: List[pyspark.Row] = engine.sql(query).limit(MAX_RESULT_RECORDS).collect()
+        result: list[pyspark.Row] = engine.sql(query).limit(MAX_RESULT_RECORDS).collect()
 
         return [element.asDict() for element in result]

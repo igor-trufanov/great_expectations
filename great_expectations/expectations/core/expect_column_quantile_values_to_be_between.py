@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from numbers import Number
-from typing import TYPE_CHECKING, Any, ClassVar, Dict, List, Optional, Type, Union
+from typing import TYPE_CHECKING, Any, ClassVar, Optional, Union
 
 import numpy as np
 
@@ -51,8 +51,8 @@ if TYPE_CHECKING:
 
 
 class QuantileRange(pydantic.BaseModel):
-    quantiles: List[float]
-    value_ranges: List[List[Union[float, int, None]]]
+    quantiles: list[float]
+    value_ranges: list[list[Union[float, int, None]]]
 
 
 EXPECTATION_SHORT_DESCRIPTION = (
@@ -241,7 +241,7 @@ class ExpectColumnQuantileValuesToBeBetween(ColumnAggregateExpectation):
     )
 
     # This dictionary contains metadata for display in the public gallery
-    library_metadata: ClassVar[Dict[str, Union[str, list, bool]]] = {
+    library_metadata: ClassVar[dict[str, Union[str, list, bool]]] = {
         "maturity": "production",
         "tags": ["core expectation", "column aggregate expectation"],
         "contributors": ["@great_expectations"],
@@ -269,7 +269,7 @@ class ExpectColumnQuantileValuesToBeBetween(ColumnAggregateExpectation):
 
         @staticmethod
         def schema_extra(
-            schema: Dict[str, Any], model: Type[ExpectColumnQuantileValuesToBeBetween]
+            schema: dict[str, Any], model: type[ExpectColumnQuantileValuesToBeBetween]
         ) -> None:
             ColumnAggregateExpectation.Config.schema_extra(schema, model)
             schema["properties"]["metadata"]["properties"].update(
@@ -714,7 +714,7 @@ class ExpectColumnQuantileValuesToBeBetween(ColumnAggregateExpectation):
 
     def _validate(
         self,
-        metrics: Dict,
+        metrics: dict,
         runtime_configuration: Optional[dict] = None,
         execution_engine: Optional[ExecutionEngine] = None,
     ):

@@ -11,12 +11,7 @@ from typing import (
     Any,
     Callable,
     ClassVar,
-    Dict,
     Final,
-    List,
-    Set,
-    Tuple,
-    Type,
     TypeVar,
     Union,
     overload,
@@ -64,7 +59,7 @@ yaml.default_flow_style = False
 
 _FLUENT_STYLE_DESCRIPTION: Final[str] = "Fluent Datasources"
 
-_MISSING_FLUENT_DATASOURCES_ERRORS: Final[List[PydanticErrorDict]] = [
+_MISSING_FLUENT_DATASOURCES_ERRORS: Final[list[PydanticErrorDict]] = [
     {
         "loc": (_FLUENT_DATASOURCES_KEY,),
         "msg": "field required",
@@ -75,7 +70,7 @@ _MISSING_FLUENT_DATASOURCES_ERRORS: Final[List[PydanticErrorDict]] = [
 # sentinel value to know if parameter was passed
 _MISSING: Final = object()
 
-JSON_ENCODERS: dict[Type, Callable] = {}
+JSON_ENCODERS: dict[type, Callable] = {}
 if TextClause:  # type: ignore[truthy-function]
     JSON_ENCODERS[TextClause] = lambda v: str(v)
 
@@ -85,17 +80,17 @@ T = TypeVar("T")
 class GxConfig(FluentBaseModel):
     """Represents the full fluent configuration file."""
 
-    fluent_datasources: List[Datasource] = Field(..., description=_FLUENT_STYLE_DESCRIPTION)
+    fluent_datasources: list[Datasource] = Field(..., description=_FLUENT_STYLE_DESCRIPTION)
 
-    _EXCLUDE_FROM_DATASOURCE_SERIALIZATION: ClassVar[Set[str]] = {
+    _EXCLUDE_FROM_DATASOURCE_SERIALIZATION: ClassVar[set[str]] = {
         _DATASOURCE_NAME_KEY,  # The "name" field is set in validation upon deserialization from configuration key; hence, it should not be serialized.  # noqa: E501
     }
 
-    _EXCLUDE_FROM_DATA_ASSET_SERIALIZATION: ClassVar[Set[str]] = {
+    _EXCLUDE_FROM_DATA_ASSET_SERIALIZATION: ClassVar[set[str]] = {
         _DATA_ASSET_NAME_KEY,  # The "name" field is set in validation upon deserialization from configuration key; hence, it should not be serialized.  # noqa: E501
     }
 
-    _EXCLUDE_FROM_BATCH_DEFINITION_SERIALIZATION: ClassVar[Set[str]] = {
+    _EXCLUDE_FROM_BATCH_DEFINITION_SERIALIZATION: ClassVar[set[str]] = {
         _BATCH_DEFINITION_NAME_KEY,  # The "name" field is set in validation upon deserialization from configuration key; hence, it should not be serialized.  # noqa: E501
     }
 
@@ -104,24 +99,24 @@ class GxConfig(FluentBaseModel):
         json_encoders = JSON_ENCODERS
 
     @property
-    def datasources(self) -> List[Datasource]:
+    def datasources(self) -> list[Datasource]:
         """Returns available Fluent Datasources as list."""
         return self.fluent_datasources
 
-    def get_datasources_as_dict(self) -> Dict[str, Datasource]:
+    def get_datasources_as_dict(self) -> dict[str, Datasource]:
         """Returns available Datasource objects as dictionary, with corresponding name as key.
 
         Returns:
             Dictionary of "Datasource" objects with "name" attribute serving as key.
         """
         datasource: Datasource
-        datasources_as_dict: Dict[str, Datasource] = {
+        datasources_as_dict: dict[str, Datasource] = {
             datasource.name: datasource for datasource in self.fluent_datasources
         }
 
         return datasources_as_dict
 
-    def get_datasource_names(self) -> Set[str]:
+    def get_datasource_names(self) -> set[str]:
         """Returns the set of available Datasource names.
 
         Returns:
@@ -152,14 +147,14 @@ class GxConfig(FluentBaseModel):
                 f"'{name}' not found. Available datasources are {self.get_datasource_names()}"
             ) from exc
 
-    def update_datasources(self, datasources: Dict[str, Datasource]) -> None:
+    def update_datasources(self, datasources: dict[str, Datasource]) -> None:
         """
         Updates internal list of datasources using supplied datasources dictionary.
 
         Args:
             datasources: Dictionary of datasources to use to update internal datasources.
         """
-        datasources_as_dict: Dict[str, Datasource] = self.get_datasources_as_dict()
+        datasources_as_dict: dict[str, Datasource] = self.get_datasources_as_dict()
         datasources_as_dict.update(datasources)
         self.fluent_datasources = list(datasources_as_dict.values())
 
@@ -187,9 +182,9 @@ class GxConfig(FluentBaseModel):
     # noinspection PyNestedDecorators
     @validator(_FLUENT_DATASOURCES_KEY, pre=True)
     @classmethod
-    def _load_datasource_subtype(cls, v: List[dict]):  # noqa: C901 - too complex
+    def _load_datasource_subtype(cls, v: list[dict]):  # noqa: C901 - too complex
         logger.info(f"Loading 'datasources' ->\n{pf(v, depth=2)}")
-        loaded_datasources: List[Datasource] = []
+        loaded_datasources: list[Datasource] = []
 
         for config in v:
             ds_type_name: str = config.get("type", "")
@@ -200,7 +195,7 @@ class GxConfig(FluentBaseModel):
                 raise ValueError(f"'{ds_name}' is missing a 'type' entry")  # noqa: TRY003
 
             try:
-                ds_type: Type[Datasource] = DataSourceManager.type_lookup[ds_type_name]
+                ds_type: type[Datasource] = DataSourceManager.type_lookup[ds_type_name]
                 logger.debug(f"Instantiating '{ds_name}' as {ds_type}")
             except KeyError as type_lookup_err:
                 raise ValueError(  # noqa: TRY003
@@ -235,7 +230,7 @@ class GxConfig(FluentBaseModel):
     @classmethod
     @override
     def parse_yaml(
-        cls: Type[GxConfig], f: Union[pathlib.Path, str], _allow_empty: bool = False
+        cls: type[GxConfig], f: Union[pathlib.Path, str], _allow_empty: bool = False
     ) -> GxConfig:
         """
         Overriding base method to allow an empty/missing `fluent_datasources` field.
@@ -332,12 +327,12 @@ class GxConfig(FluentBaseModel):
         return stream_or_path.getvalue()
 
     def _exclude_name_fields_from_fluent_datasources(
-        self, config: Dict[str, Any]
-    ) -> Dict[str, Any]:
+        self, config: dict[str, Any]
+    ) -> dict[str, Any]:
         if _FLUENT_DATASOURCES_KEY in config:
             fluent_datasources_config_as_dict = {}
 
-            fluent_datasources: List[dict] = config[_FLUENT_DATASOURCES_KEY]
+            fluent_datasources: list[dict] = config[_FLUENT_DATASOURCES_KEY]
 
             datasource_name: str
             datasource_config: dict
@@ -348,7 +343,7 @@ class GxConfig(FluentBaseModel):
                     exclusions=self._EXCLUDE_FROM_DATASOURCE_SERIALIZATION,
                 )
                 if "assets" in datasource_config:
-                    data_assets: List[dict] = datasource_config["assets"]
+                    data_assets: list[dict] = datasource_config["assets"]
                     data_asset_config: dict
                     data_assets_config_as_dict = {
                         data_asset_config[_DATA_ASSET_NAME_KEY]: _exclude_fields_from_serialization(
@@ -378,9 +373,9 @@ class GxConfig(FluentBaseModel):
 
 
 def _exclude_fields_from_serialization(
-    source_dict: Dict[str, Any], exclusions: Set[str]
-) -> Dict[str, Any]:
-    element: Tuple[str, Any]
+    source_dict: dict[str, Any], exclusions: set[str]
+) -> dict[str, Any]:
+    element: tuple[str, Any]
     # noinspection PyTypeChecker
     return dict(
         filter(
@@ -391,8 +386,8 @@ def _exclude_fields_from_serialization(
 
 
 def _convert_fluent_datasources_loaded_from_yaml_to_internal_object_representation(
-    config: Dict[str, Any], _allow_empty: bool = False
-) -> Dict[str, Any]:
+    config: dict[str, Any], _allow_empty: bool = False
+) -> dict[str, Any]:
     if _FLUENT_DATASOURCES_KEY in config:
         fluent_datasources: dict = config[_FLUENT_DATASOURCES_KEY] or {}
 
@@ -424,8 +419,8 @@ def _convert_fluent_datasources_loaded_from_yaml_to_internal_object_representati
 
 
 def _convert_batch_definitions_from_yaml_to_internal_object_representation(
-    batch_definitions: Dict[str, Dict],
-) -> List[Dict]:
+    batch_definitions: dict[str, dict],
+) -> list[dict]:
     for (
         batch_definition_name,
         batch_definition,

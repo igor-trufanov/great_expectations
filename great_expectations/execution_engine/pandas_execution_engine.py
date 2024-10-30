@@ -10,10 +10,8 @@ from typing import (
     TYPE_CHECKING,
     Any,
     Callable,
-    Dict,
     Iterable,
     Optional,
-    Tuple,
     Union,
     cast,
     overload,
@@ -111,9 +109,9 @@ class PandasExecutionEngine(ExecutionEngine):
         self.discard_subset_failing_expectations = kwargs.pop(
             "discard_subset_failing_expectations", False
         )
-        boto3_options: Dict[str, dict] = kwargs.pop("boto3_options", {})
-        azure_options: Dict[str, dict] = kwargs.pop("azure_options", {})
-        gcs_options: Dict[str, dict] = kwargs.pop("gcs_options", {})
+        boto3_options: dict[str, dict] = kwargs.pop("boto3_options", {})
+        azure_options: dict[str, dict] = kwargs.pop("azure_options", {})
+        gcs_options: dict[str, dict] = kwargs.pop("gcs_options", {})
 
         # Instantiate cloud provider clients as None at first.
         # They will be instantiated if/when passed cloud-specific in BatchSpec is passed in
@@ -204,7 +202,7 @@ class PandasExecutionEngine(ExecutionEngine):
     @override
     def get_batch_data_and_markers(  # noqa: C901, PLR0912, PLR0915
         self, batch_spec: BatchSpec | PandasBatchSpecProtocol
-    ) -> Tuple[PandasBatchData, BatchMarkers]:  # batch_data
+    ) -> tuple[PandasBatchData, BatchMarkers]:  # batch_data
         # We need to build a batch_markers to be used in the dataframe
         batch_markers = BatchMarkers(
             {
@@ -479,7 +477,7 @@ not {batch_spec.__class__.__name__}"""  # noqa: E501
             )
 
     @override
-    def resolve_metric_bundle(self, metric_fn_bundle) -> Dict[Tuple[str, str, str], Any]:
+    def resolve_metric_bundle(self, metric_fn_bundle) -> dict[tuple[str, str, str], Any]:
         """Resolve a bundle of metrics with the same compute Domain as part of a single trip to the compute engine."""  # noqa: E501
         return {}  # This is NO-OP for "PandasExecutionEngine" (no bundling for direct execution computational backend).  # noqa: E501
 
@@ -595,7 +593,7 @@ not {batch_spec.__class__.__name__}"""  # noqa: E501
         domain_kwargs: dict,
         domain_type: Union[str, MetricDomainTypes],
         accessor_keys: Optional[Iterable[str]] = None,
-    ) -> Tuple[pd.DataFrame, dict, dict]:
+    ) -> tuple[pd.DataFrame, dict, dict]:
         """Uses the given Domain kwargs (which include row_condition, condition_parser, and ignore_row_if directives) to obtain and/or query a batch.
 
         Returns in the format of a Pandas DataFrame along with Domain arguments required for computing.  If the Domain \

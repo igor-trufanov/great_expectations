@@ -4,7 +4,7 @@ import json
 from copy import deepcopy
 from enum import Enum
 from string import Template as pTemplate
-from typing import TYPE_CHECKING, Any, Final, List, Optional, Union
+from typing import TYPE_CHECKING, Any, Final, Optional, Union
 
 from marshmallow import Schema, fields, post_dump, post_load
 
@@ -750,8 +750,8 @@ class RenderedAtomicValue(DictDot):
         template: Optional[str] = None,
         params: Optional[dict] = None,
         code_block: Optional[CodeBlock] = None,
-        header_row: Optional[List[RendererTableValue]] = None,
-        table: Optional[List[List[RendererTableValue]]] = None,
+        header_row: Optional[list[RendererTableValue]] = None,
+        table: Optional[list[list[RendererTableValue]]] = None,
         graph: Optional[dict] = None,
         meta_notes: Optional[MetaNotes] = None,
     ) -> None:
@@ -764,8 +764,8 @@ class RenderedAtomicValue(DictDot):
         self.code_block: Optional[CodeBlock] = code_block
 
         # TableType
-        self.header_row: Optional[List[RendererTableValue]] = header_row
-        self.table: Optional[List[List[RendererTableValue]]] = table
+        self.header_row: Optional[list[RendererTableValue]] = header_row
+        self.table: Optional[list[list[RendererTableValue]]] = table
 
         # GraphType
         self.graph = RenderedAtomicValueGraph(graph=graph)

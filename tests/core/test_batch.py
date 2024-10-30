@@ -1,5 +1,3 @@
-from typing import Dict
-
 import pytest
 
 from great_expectations.core.batch import (
@@ -11,12 +9,12 @@ from great_expectations.datasource.fluent import BatchRequest as FluentBatchRequ
 
 
 @pytest.fixture()
-def base_fluent() -> Dict[str, str]:
+def base_fluent() -> dict[str, str]:
     return {"datasource_name": "ds", "data_asset_name": "da"}
 
 
 @pytest.fixture()
-def base_block(base_fluent: Dict[str, str]) -> Dict[str, str]:
+def base_block(base_fluent: dict[str, str]) -> dict[str, str]:
     """Basic block-style batch request args"""
     result = base_fluent.copy()
     result["data_connector_name"] = "dc"
@@ -24,7 +22,7 @@ def base_block(base_fluent: Dict[str, str]) -> Dict[str, str]:
 
 
 @pytest.fixture()
-def runtime_base_block(base_block: Dict[str, str]) -> Dict[str, str]:
+def runtime_base_block(base_block: dict[str, str]) -> dict[str, str]:
     """Basic block-style batch request args and a runtime parameter"""
     result = base_block.copy()
     result["path"] = "p"
@@ -48,7 +46,7 @@ def test_get_batch_request_from_acceptable_arguments_batch_request_passthrough()
 
 @pytest.mark.unit
 def test_get_batch_request_from_acceptable_arguments_runtime_parameter_conflicts_raise(
-    base_block: Dict[str, str],
+    base_block: dict[str, str],
 ):
     with pytest.raises(ValueError) as ve:
         runtime = base_block.copy()
@@ -81,7 +79,7 @@ def test_get_batch_request_from_acceptable_arguments_runtime_parameter_conflicts
 @pytest.mark.unit
 @pytest.mark.parametrize("param,value", [("batch_data", "b"), ("query", "q"), ("path", "p")])
 def test_get_batch_request_from_acceptable_arguments_runtime_parameter_path(
-    base_block: Dict[str, str], param, value
+    base_block: dict[str, str], param, value
 ):
     """Setting any of the parameters should result in a runtime batch request"""
     base_block["batch_identifiers"] = {"a": "1"}
@@ -99,7 +97,7 @@ def test_get_batch_request_from_acceptable_arguments_runtime_parameter_path(
 
 @pytest.mark.unit
 def test_get_batch_request_from_acceptable_arguments_runtime_batch_identifiers_kwargs(
-    runtime_base_block: Dict[str, str],
+    runtime_base_block: dict[str, str],
 ):
     """Batch identifiers can be provided by batch identifiers or kwargs"""
     bids = {"a": 1, "b": 2}
@@ -112,7 +110,7 @@ def test_get_batch_request_from_acceptable_arguments_runtime_batch_identifiers_k
 
 @pytest.mark.unit
 def test_get_batch_request_from_acceptable_arguments_runtime_parameters_no_batch_identifiers(
-    runtime_base_block: Dict[str, str],
+    runtime_base_block: dict[str, str],
 ):
     """Batch identifiers can be provided by batch identifiers or kwargs"""
     # testing no batch identifiers
@@ -122,7 +120,7 @@ def test_get_batch_request_from_acceptable_arguments_runtime_parameters_no_batch
 
 @pytest.mark.unit
 def test_get_batch_request_from_acceptable_arguments_runtime_batch_identifiers(
-    runtime_base_block: Dict[str, str],
+    runtime_base_block: dict[str, str],
 ):
     """Batch identifiers can be provided by batch identifiers or kwargs"""
     bids = {"a": 1, "b": 2}
@@ -136,7 +134,7 @@ def test_get_batch_request_from_acceptable_arguments_runtime_batch_identifiers(
 
 @pytest.mark.unit
 def test_get_batch_request_from_acceptable_arguments_fluent(
-    base_fluent: Dict[str, str],
+    base_fluent: dict[str, str],
 ):
     actual = get_batch_request_from_acceptable_arguments(**base_fluent)
     assert isinstance(actual, FluentBatchRequest)
@@ -144,7 +142,7 @@ def test_get_batch_request_from_acceptable_arguments_fluent(
 
 @pytest.mark.unit
 def test_get_batch_request_from_acceptable_arguments_fluent_with_options(
-    base_fluent: Dict[str, str],
+    base_fluent: dict[str, str],
 ):
     actual = get_batch_request_from_acceptable_arguments(**base_fluent)
     assert isinstance(actual, FluentBatchRequest)
@@ -152,7 +150,7 @@ def test_get_batch_request_from_acceptable_arguments_fluent_with_options(
 
 @pytest.mark.unit
 def test_get_batch_request_from_acceptable_arguments_fluent_and_block_args_raises(
-    base_fluent: Dict[str, str],
+    base_fluent: dict[str, str],
 ):
     base_fluent["data_connector_query"] = "q"
 
@@ -163,14 +161,14 @@ def test_get_batch_request_from_acceptable_arguments_fluent_and_block_args_raise
 
 
 @pytest.mark.unit
-def test_get_batch_request_from_acceptable_arguments_block(base_block: Dict[str, str]):
+def test_get_batch_request_from_acceptable_arguments_block(base_block: dict[str, str]):
     actual = get_batch_request_from_acceptable_arguments(**base_block)
     assert isinstance(actual, BatchRequest)
 
 
 @pytest.mark.unit
 def test_get_batch_request_from_acceptable_arguments_block_batch_filter_parameters(
-    base_block: Dict[str, str],
+    base_block: dict[str, str],
 ):
     filter_params = {"a": "1"}
 
@@ -193,7 +191,7 @@ def test_get_batch_request_from_acceptable_arguments_block_batch_filter_paramete
 
 @pytest.mark.unit
 def test_get_batch_request_from_acceptable_arguments_block_data_connector_query(
-    base_block: Dict[str, str],
+    base_block: dict[str, str],
 ):
     query = {"a": "1"}  # any old dict can be passed
 
@@ -206,7 +204,7 @@ def test_get_batch_request_from_acceptable_arguments_block_data_connector_query(
 
 @pytest.mark.unit
 def test_get_batch_request_from_acceptable_arguments_block_partitioner_sampler_batch_spec_passthrough(  # noqa: E501
-    base_block: Dict[str, str],
+    base_block: dict[str, str],
 ):
     # partitioner and sampling as batch_spec_passthrough
     base_block["sampling_method"] = "sample"

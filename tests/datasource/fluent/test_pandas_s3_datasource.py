@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import logging
 from pprint import pformat as pf
-from typing import TYPE_CHECKING, List
+from typing import TYPE_CHECKING
 
 import pandas as pd
 import pytest
@@ -52,7 +52,7 @@ def s3_bucket(s3_mock: BaseClient, aws_s3_bucket_name: str) -> str:
 def pandas_s3_datasource(empty_data_context, s3_mock, s3_bucket: str) -> PandasS3Datasource:
     test_df: pd.DataFrame = pd.DataFrame(data={"col1": [1, 2], "col2": [3, 4]})
 
-    keys: List[str] = [
+    keys: list[str] = [
         "yellow_tripdata_sample_2024-01.csv",
         "yellow_tripdata_sample_2024-02.csv",
         "yellow_tripdata_sample_2024-03.csv",

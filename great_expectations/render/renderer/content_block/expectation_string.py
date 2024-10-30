@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, List, Optional
+from typing import TYPE_CHECKING, Optional
 
 from great_expectations.compatibility.typing_extensions import override
 from great_expectations.render import RenderedStringTemplateContent
@@ -27,7 +27,7 @@ class ExpectationStringRenderer(ContentBlockRenderer):
         result: Optional[ExpectationValidationResult] = None,
         runtime_configuration: Optional[dict] = None,
         **kwargs,
-    ) -> List[RenderedStringTemplateContent]:
+    ) -> list[RenderedStringTemplateContent]:
         renderer_configuration: RendererConfiguration = RendererConfiguration(
             configuration=configuration,
             result=result,

@@ -37,41 +37,25 @@ class ColumnValuesMatchXmlSchema(ColumnMapMetricProvider):
 
     @column_condition_partial(engine=PandasExecutionEngine)
     def _pandas(cls, column, xml_schema, format, **kwargs):
-        try:
-            xmlschema_doc = etree.fromstring(xml_schema)
-            xmlschema = etree.XMLSchema(xmlschema_doc)
-        except etree.ParseError:  # noqa: TRY203
-            raise
-        except:  # noqa: TRY203
-            raise
+        xmlschema_doc = etree.fromstring(xml_schema)
+        xmlschema = etree.XMLSchema(xmlschema_doc)
 
         def matches_xml_schema(val):
-            try:
-                xml_doc = etree.fromstring(val)
-                return xmlschema(xml_doc)
-            except:  # noqa: TRY203
-                raise
+            xml_doc = etree.fromstring(val)
+            return xmlschema(xml_doc)
 
         return column.map(matches_xml_schema)
 
     @column_condition_partial(engine=SparkDFExecutionEngine)
     def _spark(cls, column, xml_schema, **kwargs):
-        try:
-            xmlschema_doc = etree.fromstring(xml_schema)
-            xmlschema = etree.XMLSchema(xmlschema_doc)
-        except etree.ParseError:  # noqa: TRY203
-            raise
-        except:  # noqa: TRY203
-            raise
+        xmlschema_doc = etree.fromstring(xml_schema)
+        xmlschema = etree.XMLSchema(xmlschema_doc)
 
         def matches_xml_schema(val):
             if val is None:
                 return False
-            try:
-                xml_doc = etree.fromstring(val)
-                return xmlschema(xml_doc)
-            except:  # noqa: TRY203
-                raise
+            xml_doc = etree.fromstring(val)
+            return xmlschema(xml_doc)
 
         matches_xml_schema_udf = F.udf(matches_xml_schema, pyspark.types.BooleanType())
 

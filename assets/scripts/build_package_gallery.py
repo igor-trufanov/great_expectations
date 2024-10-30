@@ -6,7 +6,7 @@
 import json
 import logging
 import os
-from typing import TYPE_CHECKING, List
+from typing import TYPE_CHECKING
 
 import pip
 from great_expectations_contrib.commands import read_package_from_file, sync_package
@@ -22,7 +22,7 @@ logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
 
-def gather_all_contrib_package_paths() -> List[str]:
+def gather_all_contrib_package_paths() -> list[str]:
     """Iterate through contrib/ and identify the relative paths to all contrib packages.
 
     A contrib package is defined by the existence of a .great_expectations_package.json file.
@@ -30,7 +30,7 @@ def gather_all_contrib_package_paths() -> List[str]:
     Returns:
         List of relative paths pointing to contrib packages
     """
-    package_paths: List[str] = []
+    package_paths: list[str] = []
     for root, _, files in os.walk("contrib/"):
         for file in files:
             if file == "package_info.yml":
@@ -40,7 +40,7 @@ def gather_all_contrib_package_paths() -> List[str]:
     return package_paths
 
 
-def gather_all_package_manifests(package_paths: List[str]) -> List[dict]:
+def gather_all_package_manifests(package_paths: list[str]) -> list[dict]:
     """Takes a list of relative paths to contrib packages and collects dictionaries to represent package state.
 
     Args:
@@ -49,7 +49,7 @@ def gather_all_package_manifests(package_paths: List[str]) -> List[dict]:
     Returns:
         A list of dictionaries that represents contributor package manifests
     """  # noqa: E501
-    payload: List[dict] = []
+    payload: list[dict] = []
     root = os.getcwd()  # noqa: PTH109
     for path in package_paths:
         try:
@@ -77,14 +77,14 @@ def gather_all_package_manifests(package_paths: List[str]) -> List[dict]:
 
 
 def _run_pip(stmt: str) -> None:
-    args: List[str] = stmt.split(" ")
+    args: list[str] = stmt.split(" ")
     if hasattr(pip, "main"):
         pip.main(args)
     else:
         pip._internal.main(args)
 
 
-def write_results_to_disk(path: str, package_manifests: List[dict]) -> None:
+def write_results_to_disk(path: str, package_manifests: list[dict]) -> None:
     """Take the list of package manifests and write to JSON file.
 
     Args:

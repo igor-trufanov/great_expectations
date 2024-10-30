@@ -2,7 +2,7 @@ import datetime
 import hashlib
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
-from typing import Any, List, Optional
+from typing import Any, Optional
 
 import pandas as pd
 
@@ -18,8 +18,8 @@ class TaxiTestData:
         self,
         test_df: pd.DataFrame,
         test_column_name: Optional[str] = None,
-        test_column_names: Optional[List[str]] = None,
-        column_names_to_convert: Optional[List[str]] = None,
+        test_column_names: Optional[list[str]] = None,
+        column_names_to_convert: Optional[list[str]] = None,
     ):
         if (
             sum(
@@ -54,43 +54,43 @@ class TaxiTestData:
         return self._test_column_name
 
     @property
-    def test_column_names(self) -> Optional[List[str]]:
+    def test_column_names(self) -> Optional[list[str]]:
         return self._test_column_names
 
     @staticmethod
-    def years_in_taxi_data() -> List[datetime.datetime]:
+    def years_in_taxi_data() -> list[datetime.datetime]:
         return (
             pd.date_range(start="2018-01-01", end="2020-12-31", freq="AS").to_pydatetime().tolist()
         )
 
-    def year_batch_identifier_data(self) -> List[dict]:
+    def year_batch_identifier_data(self) -> list[dict]:
         return [{DatePart.YEAR.value: dt.year} for dt in self.years_in_taxi_data()]
 
     @staticmethod
-    def months_in_taxi_data() -> List[datetime.datetime]:
+    def months_in_taxi_data() -> list[datetime.datetime]:
         return (
             pd.date_range(start="2018-01-01", end="2020-12-31", freq="MS").to_pydatetime().tolist()
         )
 
-    def get_unique_sorted_months_in_taxi_data(self) -> List[str]:
-        months: List[datetime.datetime] = sorted(set(self.months_in_taxi_data()))
+    def get_unique_sorted_months_in_taxi_data(self) -> list[str]:
+        months: list[datetime.datetime] = sorted(set(self.months_in_taxi_data()))
 
         month: datetime.datetime
         return [month.strftime("%Y-%m-%d") for month in months]
 
-    def year_month_batch_identifier_data(self) -> List[dict]:
+    def year_month_batch_identifier_data(self) -> list[dict]:
         return [
             {DatePart.YEAR.value: dt.year, DatePart.MONTH.value: dt.month}
             for dt in self.months_in_taxi_data()
         ]
 
-    def month_batch_identifier_data(self) -> List[dict]:
+    def month_batch_identifier_data(self) -> list[dict]:
         return [{DatePart.MONTH.value: dt.month} for dt in self.months_in_taxi_data()]
 
-    def year_month_day_batch_identifier_data(self) -> List[dict]:
+    def year_month_day_batch_identifier_data(self) -> list[dict]:
         # Since taxi data does not contain all days,
         # we need to introspect the data to build the fixture:
-        year_month_day_batch_identifier_list_unsorted: List[dict] = list(
+        year_month_day_batch_identifier_list_unsorted: list[dict] = list(
             {val[0]: val[1], val[2]: val[3], val[4]: val[5]}
             for val in {
                 (
@@ -114,12 +114,12 @@ class TaxiTestData:
             ),
         )
 
-    def get_test_column_values(self) -> List[Optional[Any]]:
-        column_values: List[Optional[Any]] = self.test_df[self.test_column_name].tolist()
+    def get_test_column_values(self) -> list[Optional[Any]]:
+        column_values: list[Optional[Any]] = self.test_df[self.test_column_name].tolist()
         return column_values
 
-    def get_test_multi_column_values(self) -> List[dict]:
-        multi_column_values: List[dict] = self.test_df[self.test_column_names].to_dict("records")
+    def get_test_multi_column_values(self) -> list[dict]:
+        multi_column_values: list[dict] = self.test_df[self.test_column_names].to_dict("records")
         return multi_column_values
 
     def get_unique_sorted_test_column_values(
@@ -127,8 +127,8 @@ class TaxiTestData:
         reverse: Optional[bool] = False,
         move_null_to_front: Optional[bool] = False,
         limit: Optional[int] = None,
-    ) -> List[Optional[Any]]:
-        column_values: List[Optional[Any]] = self.get_test_column_values()
+    ) -> list[Optional[Any]]:
+        column_values: list[Optional[Any]] = self.get_test_column_values()
         column_values = list(set(column_values))
         column_values = sorted(
             column_values,
@@ -156,8 +156,8 @@ class TaxiTestData:
         self,
         reverse: Optional[bool] = False,
         limit: Optional[int] = None,
-    ) -> List[dict]:
-        multi_column_values: List[dict] = self.get_test_multi_column_values()
+    ) -> list[dict]:
+        multi_column_values: list[dict] = self.get_test_multi_column_values()
         multi_column_values = sorted(
             multi_column_values,
             key=lambda element: sum(
@@ -171,9 +171,9 @@ class TaxiTestData:
             reverse=reverse,
         )
 
-        unique_multi_column_values: List[dict] = []
+        unique_multi_column_values: list[dict] = []
 
-        hash_codes: List[str] = []
+        hash_codes: list[str] = []
         hash_code: str
         dictionary_element: dict
         for dictionary_element in multi_column_values:
@@ -191,29 +191,29 @@ class TaxiTestData:
 
         return unique_multi_column_values[:limit]
 
-    def get_divided_integer_test_column_values(self, divisor: int) -> List[Optional[Any]]:
-        column_values: List[Optional[Any]] = self.get_test_column_values()
+    def get_divided_integer_test_column_values(self, divisor: int) -> list[Optional[Any]]:
+        column_values: list[Optional[Any]] = self.get_test_column_values()
 
         column_value: Any
         column_values = [column_value // divisor for column_value in column_values]
 
         return list(set(column_values))
 
-    def get_mod_integer_test_column_values(self, mod: int) -> List[Optional[Any]]:
-        column_values: List[Optional[Any]] = self.get_test_column_values()
+    def get_mod_integer_test_column_values(self, mod: int) -> list[Optional[Any]]:
+        column_values: list[Optional[Any]] = self.get_test_column_values()
 
         column_value: Any
         column_values = [column_value % mod for column_value in column_values]
 
         return list(set(column_values))
 
-    def get_hashed_test_column_values(self, hash_digits: int) -> List[Optional[Any]]:
+    def get_hashed_test_column_values(self, hash_digits: int) -> list[Optional[Any]]:
         """
         hashlib.md5(string).hexdigest()
         hashlib.md5(str(tuple_).encode("utf-8")).hexdigest()
         [:num_digits]
         """
-        column_values: List[Optional[Any]] = self.get_unique_sorted_test_column_values(
+        column_values: list[Optional[Any]] = self.get_unique_sorted_test_column_values(
             reverse=False, move_null_to_front=False, limit=None
         )
 
@@ -235,7 +235,7 @@ class TaxiPartitioningTestCase:
     num_expected_rows_in_first_batch_definition: int
     add_batch_definition_method_name: str
     add_batch_definition_kwargs: dict
-    expected_column_values: List[Any] = field(default_factory=list)
+    expected_column_values: list[Any] = field(default_factory=list)
 
 
 class TaxiPartitioningTestCasesBase(ABC):
@@ -255,17 +255,17 @@ class TaxiPartitioningTestCasesBase(ABC):
         return self._taxi_test_data.test_column_name
 
     @property
-    def test_column_names(self) -> List[str]:
+    def test_column_names(self) -> list[str]:
         return self._taxi_test_data.test_column_names
 
     @abstractmethod
-    def test_cases(self) -> List[TaxiPartitioningTestCase]:
+    def test_cases(self) -> list[TaxiPartitioningTestCase]:
         pass
 
 
 class TaxiPartitioningTestCasesWholeTable(TaxiPartitioningTestCasesBase):
     @override
-    def test_cases(self) -> List[TaxiPartitioningTestCase]:
+    def test_cases(self) -> list[TaxiPartitioningTestCase]:
         return [
             TaxiPartitioningTestCase(
                 table_domain_test_case=True,
@@ -280,7 +280,7 @@ class TaxiPartitioningTestCasesWholeTable(TaxiPartitioningTestCasesBase):
 
 class TaxiPartitioningTestCasesDateTime(TaxiPartitioningTestCasesBase):
     @override
-    def test_cases(self) -> List[TaxiPartitioningTestCase]:
+    def test_cases(self) -> list[TaxiPartitioningTestCase]:
         return [
             TaxiPartitioningTestCase(
                 table_domain_test_case=False,

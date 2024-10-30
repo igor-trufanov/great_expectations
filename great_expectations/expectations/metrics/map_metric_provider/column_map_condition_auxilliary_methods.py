@@ -4,9 +4,7 @@ import logging
 from typing import (
     TYPE_CHECKING,
     Any,
-    Dict,
     Sequence,
-    Tuple,
     Union,
 )
 
@@ -44,7 +42,7 @@ def _pandas_column_map_condition_values(
     execution_engine: PandasExecutionEngine,
     metric_domain_kwargs: dict,
     metric_value_kwargs: dict,
-    metrics: Dict[str, Any],
+    metrics: dict[str, Any],
     **kwargs,
 ) -> list[dict]:
     """Return values from the specified domain that match the map-style metric in the metrics dictionary."""  # noqa: E501
@@ -101,7 +99,7 @@ def _pandas_column_map_condition_value_counts(
     execution_engine: PandasExecutionEngine,
     metric_domain_kwargs: dict,
     metric_value_kwargs: dict,
-    metrics: Dict[str, Any],
+    metrics: dict[str, Any],
     **kwargs,
 ) -> pd.Series[int]:
     """Returns respective value counts for distinct column values"""
@@ -166,7 +164,7 @@ def _sqlalchemy_column_map_condition_values(
     execution_engine: SqlAlchemyExecutionEngine,
     metric_domain_kwargs: dict,
     metric_value_kwargs: dict,
-    metrics: Dict[str, Tuple],
+    metrics: dict[str, tuple],
     **kwargs,
 ) -> list[dict]:
     """
@@ -225,7 +223,7 @@ def _sqlalchemy_column_map_condition_value_counts(
     execution_engine: SqlAlchemyExecutionEngine,
     metric_domain_kwargs: dict,
     metric_value_kwargs: dict,
-    metrics: Dict[str, Any],
+    metrics: dict[str, Any],
     **kwargs,
 ) -> Union[Sequence[sa.Row[Any]], Any]:
     """
@@ -266,7 +264,7 @@ def _spark_column_map_condition_values(
     execution_engine: SparkDFExecutionEngine,
     metric_domain_kwargs: dict,
     metric_value_kwargs: dict,
-    metrics: Dict[str, Any],
+    metrics: dict[str, Any],
     **kwargs,
 ) -> list[dict]:
     """Return values from the specified domain that match the map-style metric in the metrics dictionary."""  # noqa: E501
@@ -314,7 +312,7 @@ def _spark_column_map_condition_value_counts(
     execution_engine: SparkDFExecutionEngine,
     metric_domain_kwargs: dict,
     metric_value_kwargs: dict,
-    metrics: Dict[str, Any],
+    metrics: dict[str, Any],
     **kwargs,
 ) -> list[pyspark.Row]:
     unexpected_condition, compute_domain_kwargs, accessor_domain_kwargs = metrics[

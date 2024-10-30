@@ -7,7 +7,7 @@ import sre_constants
 import sre_parse
 from abc import abstractmethod
 from collections import defaultdict
-from typing import TYPE_CHECKING, Callable, Dict, List, Optional, Set, Tuple, Union
+from typing import TYPE_CHECKING, Callable, Optional, Union
 
 from great_expectations.compatibility.typing_extensions import override
 from great_expectations.core import IDDict
@@ -27,8 +27,6 @@ from great_expectations.datasource.fluent.data_connector.regex_parser import (
 )
 
 if TYPE_CHECKING:
-    from typing import DefaultDict
-
     from great_expectations.alias_types import PathStr
     from great_expectations.core.partitioners import FileNamePartitioner
     from great_expectations.datasource.fluent import BatchRequest
@@ -73,13 +71,13 @@ class FilePathDataConnector(DataConnector):
         self._whole_directory_path_override = whole_directory_path_override
 
         # This is a dictionary which maps data_references onto batch_requests.
-        self._data_references_cache: DefaultDict[
-            re.Pattern, Dict[str, List[LegacyBatchDefinition] | None]
+        self._data_references_cache: defaultdict[
+            re.Pattern, dict[str, list[LegacyBatchDefinition] | None]
         ] = defaultdict(dict)
 
     # Interface Method
     @override
-    def get_batch_definition_list(self, batch_request: BatchRequest) -> List[LegacyBatchDefinition]:
+    def get_batch_definition_list(self, batch_request: BatchRequest) -> list[LegacyBatchDefinition]:
         """
         Retrieve batch_definitions and that match batch_request.
 
@@ -93,7 +91,7 @@ class FilePathDataConnector(DataConnector):
             A list of BatchDefinition objects that match BatchRequest
 
         """  # noqa: E501
-        legacy_batch_definition_list: List[LegacyBatchDefinition] = (
+        legacy_batch_definition_list: list[LegacyBatchDefinition] = (
             self._get_unfiltered_batch_definition_list(batch_request=batch_request)
         )
 
@@ -145,7 +143,7 @@ class FilePathDataConnector(DataConnector):
 
     # Interface Method
     @override
-    def get_matched_data_references(self, regex: re.Pattern | None = None) -> List[str]:
+    def get_matched_data_references(self, regex: re.Pattern | None = None) -> list[str]:
         """
         Returns the list of data_references matched by configuration by looping through items in
         _data_references_cache and returning data_references that have an associated data_asset.
@@ -170,7 +168,7 @@ class FilePathDataConnector(DataConnector):
 
     # Interface Method
     @override
-    def get_unmatched_data_references(self) -> List[str]:
+    def get_unmatched_data_references(self) -> list[str]:
         """
         Returns the list of data_references unmatched by configuration by looping through items in
         _data_references_cache and returning data_references that do not have an associated data_asset.
@@ -245,7 +243,7 @@ class FilePathDataConnector(DataConnector):
         )
         return [batch_definition]
 
-    def _get_data_references(self, matched: bool, regex: re.Pattern | None = None) -> List[str]:
+    def _get_data_references(self, matched: bool, regex: re.Pattern | None = None) -> list[str]:
         """
         Returns the list of data_references unmatched by configuration by looping through items in
         _data_references_cache and returning data_references that do not have an associated data_asset.
@@ -257,15 +255,15 @@ class FilePathDataConnector(DataConnector):
             regex = self._preprocess_batching_regex(MATCH_ALL_PATTERN)
 
         def _matching_criterion(
-            batch_definition_list: Union[List[LegacyBatchDefinition], None],
+            batch_definition_list: Union[list[LegacyBatchDefinition], None],
         ) -> bool:
             return (
                 (batch_definition_list is not None) if matched else (batch_definition_list is None)
             )
 
-        data_reference_mapped_element: Tuple[str, Union[List[LegacyBatchDefinition], None]]
+        data_reference_mapped_element: tuple[str, Union[list[LegacyBatchDefinition], None]]
         data_references = self._get_data_references_cache(batching_regex=regex)
-        unmatched_data_references: List[str] = list(
+        unmatched_data_references: list[str] = list(
             dict(
                 filter(
                     lambda data_reference_mapped_element: _matching_criterion(
@@ -311,7 +309,7 @@ class FilePathDataConnector(DataConnector):
             regex_pattern=batching_regex,
             unnamed_regex_group_prefix=self._unnamed_regex_group_prefix,
         )
-        group_names: List[str] = regex_parser.group_names()
+        group_names: list[str] = regex_parser.group_names()
         path: str = map_batch_definition_to_data_reference_string_using_regex(
             batch_definition=batch_definition,
             regex_pattern=batching_regex,
@@ -340,7 +338,7 @@ class FilePathDataConnector(DataConnector):
             regex_pattern=regex,
             unnamed_regex_group_prefix=self._unnamed_regex_group_prefix,
         )
-        group_names: List[str] = regex_parser.group_names()
+        group_names: list[str] = regex_parser.group_names()
         if FilePathDataConnector.FILE_PATH_BATCH_SPEC_KEY not in group_names:
             pattern: str = regex.pattern
             pattern = f"(?P<{FilePathDataConnector.FILE_PATH_BATCH_SPEC_KEY}>{pattern})"
@@ -350,7 +348,7 @@ class FilePathDataConnector(DataConnector):
 
     def _get_data_references_cache(
         self, batching_regex: re.Pattern
-    ) -> Dict[str, List[LegacyBatchDefinition] | None]:
+    ) -> dict[str, list[LegacyBatchDefinition] | None]:
         """Access a map where keys are data references and values are LegacyBatchDefinitions."""
 
         batch_definitions = self._data_references_cache[batching_regex]
@@ -371,7 +369,7 @@ class FilePathDataConnector(DataConnector):
 
         return batch_definitions
 
-    def _get_batch_definitions(self, batching_regex: re.Pattern) -> List[LegacyBatchDefinition]:
+    def _get_batch_definitions(self, batching_regex: re.Pattern) -> list[LegacyBatchDefinition]:
         batch_definition_map = self._get_data_references_cache(batching_regex=batching_regex)
         batch_definitions = [
             batch_definitions[0]
@@ -413,19 +411,19 @@ class FilePathDataConnector(DataConnector):
         num_all_matched_group_values: int = regex_parser.get_num_all_matched_group_values()
 
         # Check for `(?P<name>)` named group syntax
-        defined_group_name_to_group_index_mapping: Dict[str, int] = (
+        defined_group_name_to_group_index_mapping: dict[str, int] = (
             regex_parser.get_named_group_name_to_group_index_mapping()
         )
-        defined_group_name_indexes: Set[int] = set(
+        defined_group_name_indexes: set[int] = set(
             defined_group_name_to_group_index_mapping.values()
         )
-        defined_group_name_to_group_value_mapping: Dict[str, str] = matches.groupdict()
+        defined_group_name_to_group_value_mapping: dict[str, str] = matches.groupdict()
 
-        all_matched_group_values: List[str] = list(matches.groups())
+        all_matched_group_values: list[str] = list(matches.groups())
 
         assert len(all_matched_group_values) == num_all_matched_group_values
 
-        group_name_to_group_value_mapping: Dict[str, str] = copy.deepcopy(
+        group_name_to_group_value_mapping: dict[str, str] = copy.deepcopy(
             defined_group_name_to_group_value_mapping
         )
 
@@ -450,7 +448,7 @@ class FilePathDataConnector(DataConnector):
 def map_batch_definition_to_data_reference_string_using_regex(
     batch_definition: LegacyBatchDefinition,
     regex_pattern: re.Pattern,
-    group_names: List[str],
+    group_names: list[str],
 ) -> str:
     if not isinstance(batch_definition, LegacyBatchDefinition):
         raise TypeError("batch_definition is not of an instance of type BatchDefinition")  # noqa: TRY003
@@ -469,7 +467,7 @@ def map_batch_definition_to_data_reference_string_using_regex(
 def convert_batch_identifiers_to_data_reference_string_using_regex(
     batch_identifiers: IDDict,
     regex_pattern: re.Pattern,
-    group_names: List[str],
+    group_names: list[str],
     data_asset_name: Optional[str] = None,
 ) -> str:
     if not isinstance(batch_identifiers, IDDict):
@@ -490,7 +488,7 @@ def convert_batch_identifiers_to_data_reference_string_using_regex(
 
 def _invert_regex_to_data_reference_template(  # noqa: C901 - too complex
     regex_pattern: re.Pattern | str,
-    group_names: List[str],
+    group_names: list[str],
 ) -> str:
     r"""Create a string template based on a regex and corresponding list of group names.
 

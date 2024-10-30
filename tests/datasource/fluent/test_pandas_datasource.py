@@ -6,7 +6,7 @@ import logging
 import pathlib
 import uuid
 from pprint import pformat as pf
-from typing import TYPE_CHECKING, Any, Callable, Type
+from typing import TYPE_CHECKING, Any, Callable
 
 import pytest
 from pytest import MonkeyPatch, param
@@ -141,7 +141,7 @@ class TestDynamicPandasAssets:
         assert type_name in asset_class_names
 
     @pytest.mark.parametrize("asset_class", _DYNAMIC_ASSET_TYPES)
-    def test_add_asset_method_exists_and_is_functional(self, asset_class: Type[_PandasDataAsset]):
+    def test_add_asset_method_exists_and_is_functional(self, asset_class: type[_PandasDataAsset]):
         type_name: str = _get_field_details(asset_class, "type").default_value
         method_name: str = f"add_{type_name}_asset"
 
@@ -171,7 +171,7 @@ class TestDynamicPandasAssets:
         assert exc_info.value.model == asset_class
 
     @pytest.mark.parametrize("asset_class", _DYNAMIC_ASSET_TYPES)
-    def test_add_asset_method_signature(self, asset_class: Type[_PandasDataAsset]):
+    def test_add_asset_method_signature(self, asset_class: type[_PandasDataAsset]):
         type_name: str = _get_field_details(asset_class, "type").default_value
         method_name: str = f"add_{type_name}_asset"
 
@@ -200,7 +200,7 @@ class TestDynamicPandasAssets:
             print("✅")
 
     @pytest.mark.parametrize("asset_class", _DYNAMIC_ASSET_TYPES)
-    def test_minimal_validation(self, asset_class: Type[_PandasDataAsset]):
+    def test_minimal_validation(self, asset_class: type[_PandasDataAsset]):
         """
         These parametrized tests ensures that every `PandasDatasource` asset model does some minimal
         validation, and doesn't accept arbitrary keyword arguments.
@@ -238,7 +238,7 @@ class TestDynamicPandasAssets:
     def test_data_asset_defaults(
         self,
         csv_path: pathlib.Path,
-        asset_model: Type[_PandasDataAsset],
+        asset_model: type[_PandasDataAsset],
         extra_kwargs: dict,
     ):
         """

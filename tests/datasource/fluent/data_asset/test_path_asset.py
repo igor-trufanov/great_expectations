@@ -1,6 +1,6 @@
 import pathlib
 import re
-from typing import Final, List, Union
+from typing import Final, Union
 
 import pytest
 
@@ -84,7 +84,7 @@ def validated_pandas_filesystem_datasource(
     pandas_filesystem_datasource: PandasFilesystemDatasource,
 ):
     years = ["2018", "2019", "2020"]
-    all_files: List[str] = [
+    all_files: list[str] = [
         file_name.stem
         for file_name in list(pathlib.Path(pandas_filesystem_datasource.base_directory).iterdir())
     ]

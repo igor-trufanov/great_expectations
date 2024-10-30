@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, ClassVar, Dict, Optional, Type, Union
+from typing import TYPE_CHECKING, Any, ClassVar, Optional, Union
 
 from great_expectations.compatibility import pydantic
 from great_expectations.compatibility.typing_extensions import override
@@ -195,7 +195,7 @@ class ExpectColumnMaxToBeBetween(ColumnAggregateExpectation):
     strict_min: bool = pydantic.Field(default=False, description=STRICT_MAX_DESCRIPTION)
     strict_max: bool = pydantic.Field(default=False, description=STRICT_MIN_DESCRIPTION)
 
-    library_metadata: ClassVar[Dict[str, Union[str, list, bool]]] = {
+    library_metadata: ClassVar[dict[str, Union[str, list, bool]]] = {
         "maturity": "production",
         "tags": ["core expectation", "column aggregate expectation"],
         "contributors": ["@great_expectations"],
@@ -220,7 +220,7 @@ class ExpectColumnMaxToBeBetween(ColumnAggregateExpectation):
         title = "Expect column maximum to be between"
 
         @staticmethod
-        def schema_extra(schema: Dict[str, Any], model: Type[ExpectColumnMaxToBeBetween]) -> None:
+        def schema_extra(schema: dict[str, Any], model: type[ExpectColumnMaxToBeBetween]) -> None:
             ColumnAggregateExpectation.Config.schema_extra(schema, model)
             schema["properties"]["metadata"]["properties"].update(
                 {
@@ -385,7 +385,7 @@ class ExpectColumnMaxToBeBetween(ColumnAggregateExpectation):
     @override
     def _validate(
         self,
-        metrics: Dict,
+        metrics: dict,
         runtime_configuration: Optional[dict] = None,
         execution_engine: Optional[ExecutionEngine] = None,
     ):

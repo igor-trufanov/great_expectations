@@ -5,7 +5,7 @@ import os
 import pathlib
 import shutil
 import uuid
-from typing import Dict, List, Union
+from typing import Union
 
 import pytest
 
@@ -699,7 +699,7 @@ class ExpectSkyToBeColor(BatchExpectation):
     def _validate(  # type: ignore[override,explicit-override] # FIXME
         self,
         **kwargs: dict,
-    ) -> Dict[str, Union[bool, dict]]:
+    ) -> dict[str, Union[bool, dict]]:
         return {
             "success": True,
             "result": {"observed_value": "blue"},
@@ -754,7 +754,7 @@ class TestRenderedContent:
         )
         expectation_suite = empty_cloud_data_context.suites.get(name=suite_name)
 
-        expected_rendered_content: List[RenderedAtomicContent] = [
+        expected_rendered_content: list[RenderedAtomicContent] = [
             RenderedAtomicContent(
                 name=AtomicPrescriptiveRendererType.FAILED,
                 value=renderedAtomicValueSchema.load(
@@ -801,7 +801,7 @@ class TestRenderedContent:
             ),
         ]
 
-        actual_rendered_content: List[RenderedAtomicContent] = []
+        actual_rendered_content: list[RenderedAtomicContent] = []
         for expectation in expectation_suite.expectations:
             assert expectation.rendered_content is not None
             actual_rendered_content.extend(expectation.rendered_content)

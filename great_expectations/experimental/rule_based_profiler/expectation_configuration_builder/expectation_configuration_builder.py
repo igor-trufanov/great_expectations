@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import logging
 from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING, ClassVar, Dict, List, Optional, Set, Union
+from typing import TYPE_CHECKING, ClassVar, Optional, Union
 
 from great_expectations.core.batch import Batch, BatchRequestBase  # noqa: TCH001
 from great_expectations.core.domain import Domain  # noqa: TCH001
@@ -33,14 +33,14 @@ logger.setLevel(logging.INFO)
 
 
 class ExpectationConfigurationBuilder(ABC, Builder):
-    exclude_field_names: ClassVar[Set[str]] = Builder.exclude_field_names | {
+    exclude_field_names: ClassVar[set[str]] = Builder.exclude_field_names | {
         "validation_parameter_builders",
     }
 
     def __init__(
         self,
         expectation_type: str,
-        validation_parameter_builder_configs: Optional[List[ParameterBuilderConfig]] = None,
+        validation_parameter_builder_configs: Optional[list[ParameterBuilderConfig]] = None,
         data_context: Optional[AbstractDataContext] = None,
         **kwargs,
     ) -> None:
@@ -80,8 +80,8 @@ class ExpectationConfigurationBuilder(ABC, Builder):
         self,
         domain: Domain,
         variables: Optional[ParameterContainer] = None,
-        parameters: Optional[Dict[str, ParameterContainer]] = None,
-        batch_list: Optional[List[Batch]] = None,
+        parameters: Optional[dict[str, ParameterContainer]] = None,
+        batch_list: Optional[list[Batch]] = None,
         batch_request: Optional[Union[BatchRequestBase, dict]] = None,
         runtime_configuration: Optional[dict] = None,
     ) -> ExpectationConfiguration | None:
@@ -128,12 +128,12 @@ class ExpectationConfigurationBuilder(ABC, Builder):
         self,
         domain: Domain,
         variables: Optional[ParameterContainer] = None,
-        parameters: Optional[Dict[str, ParameterContainer]] = None,
-        batch_list: Optional[List[Batch]] = None,
+        parameters: Optional[dict[str, ParameterContainer]] = None,
+        batch_list: Optional[list[Batch]] = None,
         batch_request: Optional[Union[BatchRequestBase, dict]] = None,
         runtime_configuration: Optional[dict] = None,
     ) -> None:
-        validation_parameter_builders: List[ParameterBuilder] = (
+        validation_parameter_builders: list[ParameterBuilder] = (
             self.validation_parameter_builders or []
         )
 
@@ -154,7 +154,7 @@ class ExpectationConfigurationBuilder(ABC, Builder):
         self,
         domain: Domain,
         variables: Optional[ParameterContainer] = None,
-        parameters: Optional[Dict[str, ParameterContainer]] = None,
+        parameters: Optional[dict[str, ParameterContainer]] = None,
         runtime_configuration: Optional[dict] = None,
     ) -> ExpectationConfiguration | None:
         pass
@@ -164,14 +164,14 @@ class ExpectationConfigurationBuilder(ABC, Builder):
         return self._expectation_type
 
     @property
-    def validation_parameter_builders(self) -> Optional[List[ParameterBuilder]]:
+    def validation_parameter_builders(self) -> Optional[list[ParameterBuilder]]:
         return self._validation_parameter_builders
 
 
 def init_rule_expectation_configuration_builders(
-    expectation_configuration_builder_configs: List[dict],
+    expectation_configuration_builder_configs: list[dict],
     data_context: Optional[AbstractDataContext] = None,
-) -> List[ExpectationConfigurationBuilder]:
+) -> list[ExpectationConfigurationBuilder]:
     expectation_configuration_builder_config: dict
     return [
         init_expectation_configuration_builder(

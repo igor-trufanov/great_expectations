@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from enum import Enum
 from itertools import chain
-from typing import Set
 
 
 class ValidSqlTokens(str, Enum):
@@ -260,7 +259,7 @@ class ValidSparkSqlTokens(str, Enum):
     FOR = "FOR"
 
 
-valid_sql_tokens_and_types: Set[str] = set(
+valid_sql_tokens_and_types: set[str] = set(
     chain.from_iterable(
         [
             list(map(lambda i: i.upper(), ValidSqlTokens.__members__.keys())),

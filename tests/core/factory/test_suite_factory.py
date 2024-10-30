@@ -1,5 +1,4 @@
 import re
-from typing import Dict
 from unittest import mock
 from unittest.mock import ANY as ANY_TEST_ARG
 from unittest.mock import Mock  # noqa: TID251
@@ -247,7 +246,7 @@ def test_suite_factory_all_with_bad_marshmallow_config(
             # This type intentionally mismatches. We want a bad config.
             self.configuration: dict = {}
 
-        def to_json_dict(self) -> Dict[str, JSONValues]:  # type: ignore[explicit-override] # FIXME
+        def to_json_dict(self) -> dict[str, JSONValues]:  # type: ignore[explicit-override] # FIXME
             return {"id": self.id}
 
     # Arrange

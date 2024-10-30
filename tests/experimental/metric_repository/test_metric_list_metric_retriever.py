@@ -1,5 +1,3 @@
-from typing import Dict, List
-
 import pytest
 
 from great_expectations.data_context import CloudDataContext
@@ -74,7 +72,7 @@ def test_get_metrics_table_metrics_only(
         MetricTypes.TABLE_COLUMNS,
         MetricTypes.TABLE_COLUMN_TYPES,
     ]
-    aborted_metrics: Dict[str, str] = {}
+    aborted_metrics: dict[str, str] = {}
     mock_validator.compute_metrics.return_value = (
         computed_metrics,
         aborted_metrics,
@@ -91,13 +89,13 @@ def test_get_metrics_table_metrics_only(
             value=2,
             exception=None,
         ),
-        TableMetric[List[str]](
+        TableMetric[list[str]](
             batch_id="batch_id",
             metric_name="table.columns",
             value=["col1", "col2"],
             exception=None,
         ),
-        TableMetric[List[str]](
+        TableMetric[list[str]](
             batch_id="batch_id",
             metric_name="table.column_types",
             value=[
@@ -140,7 +138,7 @@ def test_get_metrics_full_list(
         MetricTypes.COLUMN_MEDIAN,
         MetricTypes.COLUMN_NULL_COUNT,
     ]
-    aborted_metrics: Dict[str, str] = {}
+    aborted_metrics: dict[str, str] = {}
     mock_validator.compute_metrics.return_value = (
         computed_metrics,
         aborted_metrics,
@@ -157,13 +155,13 @@ def test_get_metrics_full_list(
         TableMetric[int](
             batch_id="batch_id", metric_name="table.row_count", value=2, exception=None
         ),
-        TableMetric[List[str]](
+        TableMetric[list[str]](
             batch_id="batch_id",
             metric_name="table.columns",
             value=["col1", "col2"],
             exception=None,
         ),
-        TableMetric[List[str]](
+        TableMetric[list[str]](
             batch_id="batch_id",
             metric_name="table.column_types",
             value=[
@@ -257,7 +255,7 @@ def test_column_metrics_not_returned_if_column_types_missing(
         ("table.row_count", (), ()): 2,
         ("table.columns", (), ()): ["timestamp_col"],
     }
-    metrics_list: List[MetricTypes] = [
+    metrics_list: list[MetricTypes] = [
         MetricTypes.TABLE_ROW_COUNT,
         MetricTypes.TABLE_COLUMNS,
         # MetricTypes.TABLE_COLUMN_TYPES,
@@ -284,7 +282,7 @@ def test_column_metrics_not_returned_if_column_types_missing(
             value=2,
             exception=None,
         ),
-        TableMetric[List[str]](
+        TableMetric[list[str]](
             batch_id="batch_id",
             metric_name="table.columns",
             value=["timestamp_col"],
@@ -316,7 +314,7 @@ def test_get_metrics_metrics_missing(
         ("column.min", "column=col2", ()): 2.7,
     }
 
-    metrics_list: List[MetricTypes] = [
+    metrics_list: list[MetricTypes] = [
         MetricTypes.TABLE_ROW_COUNT,
         MetricTypes.TABLE_COLUMNS,
         MetricTypes.TABLE_COLUMN_TYPES,
@@ -342,13 +340,13 @@ def test_get_metrics_metrics_missing(
                 message="Metric was not successfully computed but exception was not found.",
             ),
         ),
-        TableMetric[List[str]](
+        TableMetric[list[str]](
             batch_id="batch_id",
             metric_name="table.columns",
             value=["col1", "col2"],
             exception=None,
         ),
-        TableMetric[List[str]](
+        TableMetric[list[str]](
             batch_id="batch_id",
             metric_name="table.column_types",
             value=[
@@ -418,7 +416,7 @@ def test_get_metrics_with_exception(
         computed_metrics,
         aborted_metrics,
     )
-    metrics_list: List[MetricTypes] = [
+    metrics_list: list[MetricTypes] = [
         MetricTypes.TABLE_ROW_COUNT,
         MetricTypes.TABLE_COLUMNS,
         MetricTypes.TABLE_COLUMN_TYPES,
@@ -435,13 +433,13 @@ def test_get_metrics_with_exception(
             value=None,
             exception=MetricException(type="Unknown", message="test exception message"),
         ),
-        TableMetric[List[str]](
+        TableMetric[list[str]](
             batch_id="batch_id",
             metric_name="table.columns",
             value=["col1", "col2"],
             exception=None,
         ),
-        TableMetric[List[str]](
+        TableMetric[list[str]](
             batch_id="batch_id",
             metric_name="table.column_types",
             value=[
@@ -493,7 +491,7 @@ def test_get_metrics_with_column_type_missing(
         computed_metrics,
         aborted_metrics,
     )
-    metrics_list: List[MetricTypes] = [
+    metrics_list: list[MetricTypes] = [
         MetricTypes.TABLE_ROW_COUNT,
         MetricTypes.TABLE_COLUMNS,
         MetricTypes.TABLE_COLUMN_TYPES,
@@ -513,13 +511,13 @@ def test_get_metrics_with_column_type_missing(
             value=None,
             exception=MetricException(type="Unknown", message="test exception message"),
         ),
-        TableMetric[List[str]](
+        TableMetric[list[str]](
             batch_id="batch_id",
             metric_name="table.columns",
             value=["col1", "col2"],
             exception=None,
         ),
-        TableMetric[List[str]](
+        TableMetric[list[str]](
             batch_id="batch_id",
             metric_name="table.column_types",
             value=[
@@ -560,7 +558,7 @@ def test_get_metrics_with_timestamp_columns(
         ("column.max", "column=timestamp_col", ()): "2023-12-31T00:00:00",
         ("column_values.null.count", "column=timestamp_col", ()): 1,
     }
-    metrics_list: List[MetricTypes] = [
+    metrics_list: list[MetricTypes] = [
         MetricTypes.TABLE_ROW_COUNT,
         MetricTypes.TABLE_COLUMNS,
         MetricTypes.TABLE_COLUMN_TYPES,
@@ -587,13 +585,13 @@ def test_get_metrics_with_timestamp_columns(
             value=2,
             exception=None,
         ),
-        TableMetric[List[str]](
+        TableMetric[list[str]](
             batch_id="batch_id",
             metric_name="table.columns",
             value=["timestamp_col"],
             exception=None,
         ),
-        TableMetric[List[str]](
+        TableMetric[list[str]](
             batch_id="batch_id",
             metric_name="table.column_types",
             value=[{"name": "timestamp_col", "type": "TIMESTAMP_NTZ"}],
@@ -636,7 +634,7 @@ def test_get_metrics_only_gets_a_validator_once(
             {"name": "col2", "type": "float"},
         ],
     }
-    metrics_list: List[MetricTypes] = [
+    metrics_list: list[MetricTypes] = [
         MetricTypes.TABLE_ROW_COUNT,
         MetricTypes.TABLE_COLUMNS,
         MetricTypes.TABLE_COLUMN_TYPES,
@@ -658,7 +656,7 @@ def test_get_metrics_with_no_metrics(
     mock_context, mock_validator, mock_batch_request, metric_retriever
 ):
     computed_metrics = {}
-    metrics_list: List[MetricTypes] = []
+    metrics_list: list[MetricTypes] = []
     aborted_metrics = {}
     mock_validator.compute_metrics.return_value = (
         computed_metrics,
@@ -738,7 +736,7 @@ def test_get_table_columns(
     mock_validator.compute_metrics.return_value = (computed_metrics, aborted_metrics)
 
     ret = metric_retriever._get_table_columns(mock_batch_request)
-    assert ret == TableMetric[List[str]](
+    assert ret == TableMetric[list[str]](
         batch_id="batch_id",
         metric_name="table.columns",
         value=["col1", "col2"],
@@ -777,7 +775,7 @@ def test_get_metrics_with_timestamp_columns_exclude_time(
         ("column_values.null.count", "column=timestamp_col", ()): 1,
         ("column_values.null.count", "column=time_col", ()): 1,
     }
-    metrics_list: List[MetricTypes] = [
+    metrics_list: list[MetricTypes] = [
         MetricTypes.TABLE_ROW_COUNT,
         MetricTypes.TABLE_COLUMNS,
         MetricTypes.TABLE_COLUMN_TYPES,
@@ -803,13 +801,13 @@ def test_get_metrics_with_timestamp_columns_exclude_time(
             value=2,
             exception=None,
         ),
-        TableMetric[List[str]](
+        TableMetric[list[str]](
             batch_id="batch_id",
             metric_name="table.columns",
             value=["timestamp_col", "time_col"],
             exception=None,
         ),
-        TableMetric[List[str]](
+        TableMetric[list[str]](
             batch_id="batch_id",
             metric_name="table.column_types",
             value=[

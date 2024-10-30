@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import logging
-from typing import Any, Dict, Iterator, List, cast
+from typing import Any, Iterator, cast
 from unittest import mock
 
 import pytest
@@ -46,7 +46,7 @@ class MockBlobServiceClient:
 
 
 def _build_spark_abs_datasource(
-    azure_options: Dict[str, Any] | None = None,
+    azure_options: dict[str, Any] | None = None,
 ) -> SparkAzureBlobStorageDatasource:
     azure_client: azure.BlobServiceClient = cast(azure.BlobServiceClient, MockBlobServiceClient())
     spark_abs_datasource = SparkAzureBlobStorageDatasource(
@@ -64,7 +64,7 @@ def spark_abs_datasource() -> SparkAzureBlobStorageDatasource:
 
 
 @pytest.fixture
-def object_keys() -> List[str]:
+def object_keys() -> list[str]:
     return [
         "alex_20200809_1000.csv",
         "eugene_20200809_1500.csv",
@@ -85,7 +85,7 @@ def object_keys() -> List[str]:
 )
 def csv_asset(
     mock_list_keys,
-    object_keys: List[str],
+    object_keys: list[str],
     spark_abs_datasource: SparkAzureBlobStorageDatasource,
 ) -> PathDataAsset:
     mock_list_keys.return_value = object_keys
@@ -180,7 +180,7 @@ def test_construct_spark_abs_datasource_with_multiple_auth_methods_raises_error(
 def test_add_csv_asset_to_datasource(
     mock_azure_client,
     mock_list_keys,
-    object_keys: List[str],
+    object_keys: list[str],
     spark_abs_datasource: SparkAzureBlobStorageDatasource,
 ):
     mock_list_keys.return_value = object_keys
@@ -199,7 +199,7 @@ def test_add_csv_asset_to_datasource(
     "great_expectations.datasource.fluent.data_connector.azure_blob_storage_data_connector.list_azure_keys"
 )
 @mock.patch("azure.storage.blob.BlobServiceClient")
-def test_construct_csv_asset_directly(mock_azure_client, mock_list_keys, object_keys: List[str]):
+def test_construct_csv_asset_directly(mock_azure_client, mock_list_keys, object_keys: list[str]):
     mock_list_keys.return_value = object_keys
     asset = CSVAsset(  # type: ignore[call-arg] # missing args
         name="csv_asset",
@@ -215,7 +215,7 @@ def test_construct_csv_asset_directly(mock_azure_client, mock_list_keys, object_
 def test_csv_asset_with_batching_regex_named_parameters(
     mock_azure_client,
     mock_list_keys,
-    object_keys: List[str],
+    object_keys: list[str],
     spark_abs_datasource: SparkAzureBlobStorageDatasource,
 ):
     mock_list_keys.return_value = object_keys
@@ -237,7 +237,7 @@ def test_csv_asset_with_batching_regex_named_parameters(
 def test_csv_asset_with_non_string_batching_regex_named_parameters(
     mock_azure_client,
     mock_list_keys,
-    object_keys: List[str],
+    object_keys: list[str],
     spark_abs_datasource: SparkAzureBlobStorageDatasource,
 ):
     mock_list_keys.return_value = object_keys
@@ -258,7 +258,7 @@ def test_csv_asset_with_non_string_batching_regex_named_parameters(
 def test_add_csv_asset_with_recursive_file_discovery_to_datasource(
     mock_azure_client,
     mock_list_keys,
-    object_keys: List[str],
+    object_keys: list[str],
     spark_abs_datasource: SparkAzureBlobStorageDatasource,
 ):
     """

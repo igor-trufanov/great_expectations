@@ -1,4 +1,4 @@
-from typing import Dict, Tuple, Union
+from typing import Union
 
 from great_expectations.experimental.rule_based_profiler.altair import AltairDataTypes
 from great_expectations.experimental.rule_based_profiler.data_assistant_result import (
@@ -12,14 +12,14 @@ class StatisticsDataAssistantResult(DataAssistantResult):
     """
 
     @property
-    def metric_expectation_map(self) -> Dict[Union[str, Tuple[str]], str]:
+    def metric_expectation_map(self) -> dict[Union[str, tuple[str]], str]:
         """
         A mapping is defined for which metrics to plot and their associated expectations.
         """
         return {}
 
     @property
-    def metric_types(self) -> Dict[str, AltairDataTypes]:
+    def metric_types(self) -> dict[str, AltairDataTypes]:
         """
         A mapping is defined for the Altair data type associated with each metric.
         """

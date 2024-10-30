@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import Dict, Union
+from typing import Union
 
 from scipy import stats
 
@@ -268,7 +268,7 @@ class ExpectColumnValuesToBeNormallyDistributed(ColumnAggregateExpectation):
 
     def _validate(
         self,
-        metrics: Dict,
+        metrics: dict,
         runtime_configuration: dict = None,
         execution_engine: ExecutionEngine = None,
     ):

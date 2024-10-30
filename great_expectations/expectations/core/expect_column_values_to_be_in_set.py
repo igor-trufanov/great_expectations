@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, ClassVar, Dict, List, Optional, Tuple, Type, Union
+from typing import TYPE_CHECKING, Any, ClassVar, Optional, Union
 
 from great_expectations.expectations.expectation import (
     ColumnMapExpectation,
@@ -186,7 +186,7 @@ class ExpectColumnValuesToBeInSet(ColumnMapExpectation):
 
     value_set: ValueSetField
 
-    library_metadata: ClassVar[Dict[str, Union[str, list, bool]]] = {
+    library_metadata: ClassVar[dict[str, Union[str, list, bool]]] = {
         "maturity": "production",
         "tags": ["core expectation", "column map expectation"],
         "contributors": ["@great_expectations"],
@@ -203,7 +203,7 @@ class ExpectColumnValuesToBeInSet(ColumnMapExpectation):
         "value_set",
     )
 
-    domain_keys: ClassVar[Tuple[str, ...]] = (
+    domain_keys: ClassVar[tuple[str, ...]] = (
         "column",
         "row_condition",
         "condition_parser",
@@ -217,7 +217,7 @@ class ExpectColumnValuesToBeInSet(ColumnMapExpectation):
         title = "Expect column values to be in set"
 
         @staticmethod
-        def schema_extra(schema: Dict[str, Any], model: Type[ExpectColumnValuesToBeInSet]) -> None:
+        def schema_extra(schema: dict[str, Any], model: type[ExpectColumnValuesToBeInSet]) -> None:
             ColumnMapExpectation.Config.schema_extra(schema, model)
             schema["properties"]["metadata"]["properties"].update(
                 {
@@ -298,7 +298,7 @@ class ExpectColumnValuesToBeInSet(ColumnMapExpectation):
         configuration: Optional[ExpectationConfiguration] = None,
         result: Optional[ExpectationValidationResult] = None,
         runtime_configuration: Optional[dict] = None,
-    ) -> List[RenderedStringTemplateContent]:
+    ) -> list[RenderedStringTemplateContent]:
         renderer_configuration: RendererConfiguration = RendererConfiguration(
             configuration=configuration,
             result=result,

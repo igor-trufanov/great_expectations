@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import logging
-from typing import TYPE_CHECKING, Callable, List, Optional, Union
+from typing import TYPE_CHECKING, Callable, Optional, Union
 
 from typing_extensions import TypedDict
 
@@ -53,7 +53,7 @@ class InlineRenderer(Renderer):
     def _get_atomic_rendered_content_for_object(
         self,
         render_object: Union[ExpectationConfiguration, ExpectationValidationResult],
-    ) -> List[RenderedAtomicContent]:
+    ) -> list[RenderedAtomicContent]:
         """Gets RenderedAtomicContent for a given ExpectationConfiguration or ExpectationValidationResult.
 
         Args:
@@ -63,7 +63,7 @@ class InlineRenderer(Renderer):
             A list of RenderedAtomicContent objects for a given ExpectationConfiguration or ExpectationValidationResult.
         """  # noqa: E501
         expectation_type: str
-        renderer_types: List[AtomicRendererType]
+        renderer_types: list[AtomicRendererType]
         if isinstance(render_object, ExpectationConfiguration):
             expectation_type = render_object.type
             renderer_types = [AtomicRendererType.PRESCRIPTIVE]
@@ -83,14 +83,14 @@ class InlineRenderer(Renderer):
                 f"InlineRenderer._get_atomic_rendered_content_for_object can only be used with an ExpectationConfiguration or ExpectationValidationResult, but {type(render_object)} was used."  # noqa: E501
             )
 
-        renderer_names: List[
+        renderer_names: list[
             Union[str, AtomicDiagnosticRendererType, AtomicPrescriptiveRendererType]
         ] = get_renderer_names_with_renderer_types(
             expectation_or_metric_type=expectation_type,
             renderer_types=renderer_types,
         )
 
-        rendered_content: List[RenderedAtomicContent] = (
+        rendered_content: list[RenderedAtomicContent] = (
             self._get_atomic_rendered_content_from_renderer_names(
                 render_object=render_object,
                 renderer_names=renderer_names,
@@ -103,12 +103,12 @@ class InlineRenderer(Renderer):
     def _get_atomic_rendered_content_from_renderer_names(
         self,
         render_object: Union[ExpectationConfiguration, ExpectationValidationResult],
-        renderer_names: List[
+        renderer_names: list[
             Union[str, AtomicDiagnosticRendererType, AtomicPrescriptiveRendererType]
         ],
         expectation_type: str,
-    ) -> List[RenderedAtomicContent]:
-        try_renderer_names: List[
+    ) -> list[RenderedAtomicContent]:
+        try_renderer_names: list[
             Union[str, AtomicDiagnosticRendererType, AtomicPrescriptiveRendererType]
         ] = [
             renderer_name
@@ -121,7 +121,7 @@ class InlineRenderer(Renderer):
         ]
 
         renderer_rendered_content: RenderedAtomicContent
-        rendered_content: List[RenderedAtomicContent] = []
+        rendered_content: list[RenderedAtomicContent] = []
         for renderer_name in try_renderer_names:
             renderer_rendered_content = self._get_renderer_atomic_rendered_content(
                 render_object=render_object,
@@ -204,7 +204,7 @@ class InlineRenderer(Renderer):
 
     def get_rendered_content(
         self,
-    ) -> List[RenderedAtomicContent]:
+    ) -> list[RenderedAtomicContent]:
         """Gets RenderedAtomicContent for a given object.
 
         Returns:

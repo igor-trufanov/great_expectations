@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, Dict, Optional, Type
+from typing import TYPE_CHECKING, Any, Optional
 
 from great_expectations.compatibility import pydantic
 from great_expectations.core.types import Comparable  # noqa: TCH001
@@ -225,7 +225,7 @@ class ExpectColumnProportionOfUniqueValuesToBeBetween(ColumnAggregateExpectation
 
         @staticmethod
         def schema_extra(
-            schema: Dict[str, Any], model: Type[ExpectColumnProportionOfUniqueValuesToBeBetween]
+            schema: dict[str, Any], model: type[ExpectColumnProportionOfUniqueValuesToBeBetween]
         ) -> None:
             ColumnAggregateExpectation.Config.schema_extra(schema, model)
             schema["properties"]["metadata"]["properties"].update(
@@ -395,7 +395,7 @@ class ExpectColumnProportionOfUniqueValuesToBeBetween(ColumnAggregateExpectation
 
     def _validate(
         self,
-        metrics: Dict,
+        metrics: dict,
         runtime_configuration: Optional[dict] = None,
         execution_engine: Optional[ExecutionEngine] = None,
     ):
