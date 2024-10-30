@@ -2,9 +2,8 @@ from typing import Dict, Type, Union
 
 import pandas as pd
 import pytest
-from sqlalchemy.sql.type_api import TypeEngine
 
-from great_expectations.compatibility.sqlalchemy import postgresql
+from great_expectations.compatibility.sqlalchemy import TypeEngine, postgresql
 from great_expectations.compatibility.typing_extensions import override
 from great_expectations.datasource.fluent.interfaces import Batch
 from tests.integration.test_utils.data_source_config.base import (
