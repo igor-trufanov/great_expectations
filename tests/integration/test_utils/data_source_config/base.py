@@ -16,6 +16,8 @@ if TYPE_CHECKING:
     import pytest
     from pytest import FixtureRequest
 
+_ColumnTypes = TypeVar("_ColumnTypes")
+
 
 _ColumnTypes = TypeVar("_ColumnTypes")
 

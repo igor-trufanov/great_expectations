@@ -1,18 +1,21 @@
 import pandas as pd
 
 import great_expectations.expectations as gxe
+from great_expectations.compatibility.snowflake import SNOWFLAKE_TYPES
 from tests.integration.conftest import parameterize_batch_for_data_sources
 from tests.integration.test_utils.data_source_config import (
     PandasDataFrameDatasourceTestConfig,
     PandasFilesystemCsvDatasourceTestConfig,
+    PostgreSQLDatasourceTestConfig,
+    SnowflakeDatasourceTestConfig,
 )
-from tests.integration.test_utils.data_source_config.postgres import PostgreSQLDatasourceTestConfig
 
 
 @parameterize_batch_for_data_sources(
     data_source_configs=[
         PandasDataFrameDatasourceTestConfig(),
         PandasFilesystemCsvDatasourceTestConfig(),
+        SnowflakeDatasourceTestConfig(column_types={"a": SNOWFLAKE_TYPES.NUMBER}),
         PostgreSQLDatasourceTestConfig(),
     ],
     data=pd.DataFrame({"a": [1, 2]}),
@@ -27,6 +30,7 @@ def test_expect_column_min_to_be_between(batch_for_datasource) -> None:
     data_source_configs=[
         PandasDataFrameDatasourceTestConfig(),
         PandasFilesystemCsvDatasourceTestConfig(),
+        SnowflakeDatasourceTestConfig(column_types={"a": SNOWFLAKE_TYPES.NUMBER}),
         PostgreSQLDatasourceTestConfig(),
     ],
     data=pd.DataFrame({"a": [1, 2]}),
@@ -41,6 +45,7 @@ def test_expect_column_max_to_be_between(batch_for_datasource) -> None:
     data_source_configs=[
         PandasDataFrameDatasourceTestConfig(),
         PandasFilesystemCsvDatasourceTestConfig(),
+        SnowflakeDatasourceTestConfig(column_types={"a": SNOWFLAKE_TYPES.NUMBER}),
         PostgreSQLDatasourceTestConfig(),
     ],
     data=pd.DataFrame({"a": [1, 2]}),
@@ -55,6 +60,7 @@ def test_expect_column_to_exist(batch_for_datasource):
     data_source_configs=[
         PandasDataFrameDatasourceTestConfig(),
         PandasFilesystemCsvDatasourceTestConfig(),
+        SnowflakeDatasourceTestConfig(column_types={"a": SNOWFLAKE_TYPES.NUMBER}),
         PostgreSQLDatasourceTestConfig(),
     ],
     data=pd.DataFrame({"a": [1, 2]}),
@@ -69,6 +75,7 @@ def test_expect_column_values_to_not_be_null(batch_for_datasource):
     data_source_configs=[
         PandasDataFrameDatasourceTestConfig(),
         PandasFilesystemCsvDatasourceTestConfig(),
+        SnowflakeDatasourceTestConfig(column_types={"a": SNOWFLAKE_TYPES.NUMBER}),
         PostgreSQLDatasourceTestConfig(),
     ],
     data=pd.DataFrame({"a": [1, 2, 3, 4]}),
