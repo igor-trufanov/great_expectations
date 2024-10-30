@@ -277,3 +277,15 @@ try:
     __version__: str | None = sqlalchemy.__version__
 except (ImportError, AttributeError):
     __version__ = None
+
+
+try:
+    from sqlalchemy.sql.type_api import TypeEngine
+except (ImportError, AttributeError):
+    TypeEngine = SQLALCHEMY_NOT_IMPORTED  # type: ignore[misc,assignment]
+
+
+try:
+    from sqlalchemy.dialects import postgresql
+except (ImportError, AttributeError):
+    postgresql = SQLALCHEMY_NOT_IMPORTED  # type: ignore[misc,assignment]
