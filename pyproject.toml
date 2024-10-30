@@ -302,7 +302,6 @@ lint.ignore = [
     "C416", # TODO enable
     "C417", # TODO enable
     # https://beta.ruff.rs/docs/rules/#pyupgrade-up
-    "UP006", # use-pep585-annotation
     "UP007", # use-pep604-annotation
     # https://beta.ruff.rs/docs/rules/#flake8-type-checking-tch
     # minimal cost for standard lib imports; keep this disabled
