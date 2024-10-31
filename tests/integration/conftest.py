@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from collections import defaultdict
 from typing import Callable, Generator, Mapping, Optional, Sequence, TypeVar
 
 import pandas as pd
@@ -6,15 +6,9 @@ import pytest
 
 from great_expectations.datasource.fluent.interfaces import Batch
 from tests.integration.test_utils.data_source_config import DataSourceTestConfig
+from tests.integration.test_utils.data_source_config.caching import CacheableTestConfig, TestConfig
 
 _F = TypeVar("_F", bound=Callable)
-
-
-@dataclass(frozen=True)
-class _TestConfig:
-    data_source_config: DataSourceTestConfig
-    data: pd.DataFrame
-    extra_data: Mapping[str, pd.DataFrame]
 
 
 def parameterize_batch_for_data_sources(
@@ -46,7 +40,7 @@ def parameterize_batch_for_data_sources(
     def decorator(func: _F) -> _F:
         pytest_params = [
             pytest.param(
-                _TestConfig(
+                TestConfig(
                     data_source_config=config,
                     data=data,
                     extra_data=extra_data or {},
@@ -66,13 +60,17 @@ def parameterize_batch_for_data_sources(
     return decorator
 
 
+cached_test_configs = defaultdict[CacheableTestConfig, int]()
+
+
 @pytest.fixture
 def batch_for_datasource(request: pytest.FixtureRequest) -> Generator[Batch, None, None]:
     """Fixture that yields a batch for a specific data source type.
     This must be used in conjunction with `indirect=True` to defer execution
     """
     config = request.param
-    assert isinstance(config, _TestConfig)
+    assert isinstance(config, TestConfig)
+    cacheable_test_config = CacheableTestConfig.from_test_config(config)
 
     batch_setup = config.data_source_config.create_batch_setup(
         request=request,
@@ -80,6 +78,12 @@ def batch_for_datasource(request: pytest.FixtureRequest) -> Generator[Batch, Non
         extra_data=config.extra_data,
     )
 
-    batch_setup.setup()
+    if cached_test_configs[cacheable_test_config] == 0:
+        batch_setup.setup()
+
+    cached_test_configs[cacheable_test_config] += 1
     yield batch_setup.make_batch()
-    batch_setup.teardown()
+    cached_test_configs[cacheable_test_config] -= 1
+
+    if cached_test_configs[cacheable_test_config] == 0:
+        batch_setup.teardown()
