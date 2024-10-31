@@ -10,6 +10,7 @@ from typing import (
     ClassVar,
     Mapping,
     Optional,
+    Type,
     Union,
 )
 
@@ -434,7 +435,7 @@ class ExpectationConfiguration(SerializableDictDot):
             myself["rendered_content"] = convert_to_json_serializable(myself["rendered_content"])
         return myself
 
-    def _get_expectation_impl(self) -> type[Expectation]:
+    def _get_expectation_impl(self) -> Type[Expectation]:  # noqa: UP006 # needed to disambiguate from the type property
         return get_expectation_impl(self.type)
 
     def to_domain_obj(self) -> Expectation:
