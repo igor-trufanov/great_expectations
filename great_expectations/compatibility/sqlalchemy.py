@@ -288,4 +288,4 @@ except (ImportError, AttributeError):
 try:
     from sqlalchemy.dialects import postgresql as POSTGRESQL_TYPES
 except (ImportError, AttributeError):
-    POSTGRESQL_TYPES = SQLALCHEMY_NOT_IMPORTED  # type: ignore[misc,assignment]
+    POSTGRESQL_TYPES = SQLALCHEMY_NOT_IMPORTED
