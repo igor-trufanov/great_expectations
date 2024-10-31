@@ -1,5 +1,5 @@
 from random import randint
-from typing import TYPE_CHECKING, Dict, List, TypeVar, Union
+from typing import TYPE_CHECKING, TypeVar, Union
 
 import pandas as pd
 import pytest
@@ -106,8 +106,8 @@ class SnowflakeBatchTestSetup(BatchTestSetup[SnowflakeDatasourceTestConfig]):
 
     @override
     def setup(self) -> None:
-        column_types: Dict[str, SnowflakeType] = self.get_column_types()
-        columns: List[Column] = [
+        column_types: dict[str, SnowflakeType] = self.get_column_types()
+        columns: list[Column] = [
             Column(name, column_type) for name, column_type in column_types.items()
         ]
         self.table = Table(
@@ -131,7 +131,7 @@ class SnowflakeBatchTestSetup(BatchTestSetup[SnowflakeDatasourceTestConfig]):
         if self.table is not None:
             self.table.drop(self.engine)
 
-    def get_column_types(self) -> Dict[str, _SnowflakeType]:
+    def get_column_types(self) -> dict[str, _SnowflakeType]:
         if self.config.column_types is None:
             raise NotImplementedError("Column inference not implemented")
         else:
