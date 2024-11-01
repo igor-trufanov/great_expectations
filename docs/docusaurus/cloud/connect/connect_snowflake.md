@@ -9,7 +9,7 @@ import Tabs from '@theme/Tabs';
 
 ## Prerequisites
 
-- You have a [GX Cloud account](https://greatexpectations.io/cloud) with [Admin or Editor permissions](/cloud/users/manage_users.md#roles-and-responsibilities).
+- You have a [GX Cloud account](https://greatexpectations.io/cloud) with [Admin or Editor permissions](/users/manage_users.md#roles-and-responsibilities).
 
 - You have a Snowflake database, schema, and table.
 
@@ -83,4 +83,4 @@ You can use an existing Snowflake warehouse, but GX recommends creating a separa
 
 12. Click **Finish**.
 
-13. Create an Expectation. See [Create an Expectation](/cloud/expectations/manage_expectations.md#create-an-expectation).
+13. Create an Expectation. See [Create an Expectation](/expectations/manage_expectations.md#create-an-expectation).

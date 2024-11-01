@@ -47,7 +47,7 @@ Define the data you want GX Cloud to access within Snowflake.
 
 3. Select one of the following options:
 
-    - If you're connecting to an org-hosted Snowflake Data Asset for the first time, copy the code and see [Connect GX Cloud to Snowflake](../connect/connect_snowflake.md).
+    - If you're connecting to an org-hosted Snowflake Data Asset for the first time, copy the code and see [Connect GX Cloud to Snowflake](/connect/connect_snowflake.md).
 
     - If you're testing GX Cloud features and functionality in a self-hosted environment, click **I have created a GX Cloud user with valid permissions** and then click **Continue**.
 
@@ -89,7 +89,7 @@ Define the data you want GX Cloud to access within Snowflake.
 
 9. Click **Add Asset**.
 
-10. Create an Expectation. See [Create an Expectation](/cloud/expectations/manage_expectations.md#create-an-expectation).
+10. Create an Expectation. See [Create an Expectation](/expectations/manage_expectations.md#create-an-expectation).
 
 </TabItem>
 <TabItem value="PostgreSQL">
@@ -114,7 +114,7 @@ Define the data you want GX Cloud to access within PostgreSQL.
 
 3. Select one of the following options:
 
-    - If you're connecting to an org-hosted PostgreSQL Data Asset for the first time, copy the code and see [Connect GX Cloud to PostgreSQL](../connect/connect_postgresql.md).
+    - If you're connecting to an org-hosted PostgreSQL Data Asset for the first time, copy the code and see [Connect GX Cloud to PostgreSQL](/connect/connect_postgresql.md).
 
     - If you're testing GX Cloud features and functionality in a self-hosted environment, click **I have created a GX Cloud user with valid permissions** and then click **Continue**.
 
@@ -137,7 +137,7 @@ Define the data you want GX Cloud to access within PostgreSQL.
 
 8. Click **Add Asset**.
 
-9. Create an Expectation. See [Create an Expectation](/cloud/expectations/manage_expectations.md#create-an-expectation).
+9. Create an Expectation. See [Create an Expectation](/expectations/manage_expectations.md#create-an-expectation).
 
 </TabItem>
 </Tabs>
@@ -198,7 +198,7 @@ When you create an Expectation after fetching metrics for a Data Asset, the colu
 
     - To add an Expectation to an existing Expectation Suite, click the **Existing Suite** tab and then select an existing Expectation Suite.
 
-6. Select an Expectation type. See [Available Expectation types](/cloud/expectations/manage_expectations.md#available-expectation-types).
+6. Select an Expectation type. See [Available Expectation types](/expectations/manage_expectations.md#available-expectation-types).
 
 7. Complete the fields in the **Create Expectation** pane.
 

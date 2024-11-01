@@ -12,7 +12,7 @@ import Tabs from '@theme/Tabs';
 
 If you're new to GX Cloud, start here to learn how you can quickly connect to your Data Assets and validate data.
 
-If you've tested GX Cloud features and functionality and discovered it's a great solution for your organization, see [Connect GX Cloud](./connect/connect_lp.md).
+If you've tested GX Cloud features and functionality and discovered it's a great solution for your organization, see [Connect GX Cloud](connect/connect_lp.md).
 
 ## Prerequisites
 
@@ -24,7 +24,7 @@ If you've tested GX Cloud features and functionality and discovered it's a great
 
 ## Self-hosted deployment
 
-To try GX Cloud, you use a [self-hosted deployment](/cloud/deploy/deployment_patterns.md) to run the GX Agent with Docker, connect the GX Agent to your target Data Sources, and use the GX Cloud web UI to define your Data Assets, create Expectations, and run Validations. A self-hosted deployment is recommended when you want to test GX Cloud features and functionality and it differs from the recommended [org-hosted deployment](/cloud/deploy/deployment_patterns.md), in which the GX Agent runs in your organization's deployment environment.
+To try GX Cloud, you use a [self-hosted deployment](deploy/deployment_patterns.md) to run the GX Agent with Docker, connect the GX Agent to your target Data Sources, and use the GX Cloud web UI to define your Data Assets, create Expectations, and run Validations. A self-hosted deployment is recommended when you want to test GX Cloud features and functionality and it differs from the recommended [org-hosted deployment](deploy/deployment_patterns.md), in which the GX Agent runs in your organization's deployment environment.
 
 ## Get your user access token and copy your organization ID
 
@@ -48,7 +48,7 @@ You'll need your user access token and organization ID to set your environment v
 
 ## Set the environment variables and deploy the GX Agent
 
-Environment variables securely store your GX Cloud access credentials. The GX Agent runs open source GX code in GX Cloud, and it allows you to securely access your data without connecting to it or interacting with it directly. To learn more about the GX Agent and deployment patterns, see [GX Cloud deployment patterns](/cloud/deploy/deployment_patterns.md).
+Environment variables securely store your GX Cloud access credentials. The GX Agent runs open source GX code in GX Cloud, and it allows you to securely access your data without connecting to it or interacting with it directly. To learn more about the GX Agent and deployment patterns, see [GX Cloud deployment patterns](deploy/deployment_patterns.md).
 
 1. Start the Docker Engine.
 
@@ -195,7 +195,7 @@ An Expectation is a verifiable assertion about your data. They make implicit ass
 
 3. Click **New Expectation**.
 
-4. Select an Expectation type, enter the column name, and then complete the optional fields. To view descriptions of the available Expectation types, see [Available Expectations](./expectations/manage_expectations.md#available-expectations).
+4. Select an Expectation type, enter the column name, and then complete the optional fields. To view descriptions of the available Expectation types, see [Available Expectations](expectations/manage_expectations.md#available-expectations).
 
 5. Click **Save**. The Expectation is added to the default Expectation Suite.
 

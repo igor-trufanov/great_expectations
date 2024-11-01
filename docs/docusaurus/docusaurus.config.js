@@ -17,6 +17,15 @@ module.exports = {
   organizationName: 'great-expectations',
   projectName: 'great_expectations',
   plugins: [
+    [
+      '@docusaurus/plugin-content-docs',
+      {
+        id: 'cloud',
+        path: 'cloud',
+        routeBasePath: 'cloud',
+        sidebarPath: require.resolve('./sidebarsCloud.js'),
+      },
+    ],
     require.resolve('@cmfcmf/docusaurus-search-local'),
     '@docusaurus-terminology/parser',
     'docusaurus-plugin-sass',
@@ -152,9 +161,10 @@ module.exports = {
         },
         {
           label: 'GX Cloud',
-          to: 'docs/cloud/overview/gx_cloud_overview',
+          to: '/cloud/overview/gx_cloud_overview',
           position: 'right',
           className: 'non-versioned-section',
+          activeBaseRegex: `/cloud/`,
         },
         {
           type: 'doc',

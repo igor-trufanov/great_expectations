@@ -10,7 +10,7 @@ An Expectation is a verifiable assertion about your data. They make implicit ass
 
 ## Prerequisites
 
-- You have a [Data Asset](/cloud/data_assets/manage_data_assets.md#create-a-data-asset).
+- You have a [Data Asset](/data_assets/manage_data_assets.md#create-a-data-asset).
 
 ## Available Expectations
 
@@ -129,7 +129,7 @@ When you select your `n` run count, and:
 
 8. Click **Save** or click **Save & Add More** and then repeat steps 5 and 7 to add additional Expectations.
 
-9. Optional. Run a Validation. See [Run a Validation](/cloud/validations/manage_validations.md#run-a-validation).
+9. Optional. Run a Validation. See [Run a Validation](/validations/manage_validations.md#run-a-validation).
 
 ## Edit an Expectation
 
@@ -173,4 +173,4 @@ View the Expectation history to determine when an Expectation was changed and wh
 
 ## Related documentation
 
-- [Manage Expectation Suites](../expectation_suites/manage_expectation_suites.md)
+- [Manage Expectation Suites](/expectation_suites/manage_expectation_suites.md)

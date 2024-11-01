@@ -10,7 +10,7 @@ Expectation Suites contain multiple Expectations for a single Data Asset. Like E
 
 ## Prerequisites
 
-- You have a [Data Asset](/cloud/data_assets/manage_data_assets.md#create-a-data-asset).
+- You have a [Data Asset](/data_assets/manage_data_assets.md#create-a-data-asset).
 
 ## Create an Expectation Suite
 
@@ -26,9 +26,9 @@ If you have specific business requirements, or you want to examine specific data
 
 5. Click **Create**. 
 
-7. Add Expectations to the Expectation Suite. See [Create an Expectation](/cloud/expectations/manage_expectations.md#create-an-expectation).
+7. Add Expectations to the Expectation Suite. See [Create an Expectation](/expectations/manage_expectations.md#create-an-expectation).
 
-8. Optional. Run a Validation on the Expectation Suite. See [Run a Validation](/cloud/validations/manage_validations.md#run-a-validation).
+8. Optional. Run a Validation on the Expectation Suite. See [Run a Validation](/validations/manage_validations.md#run-a-validation).
 
 ## Edit an Expectation Suite
 
@@ -54,6 +54,6 @@ If you have specific business requirements, or you want to examine specific data
 
 ## Related documentation
 
-- [Manage Expectations](../expectations/manage_expectations.md)
+- [Manage Expectations](/expectations/manage_expectations.md)
 
-- [Manage Validations](../validations/manage_validations.md)
+- [Manage Validations](/validations/manage_validations.md)
