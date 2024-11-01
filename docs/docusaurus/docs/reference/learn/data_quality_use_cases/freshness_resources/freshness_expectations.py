@@ -40,9 +40,7 @@ data_asset = datasource.add_table_asset(name="data asset", table_name="transacti
 batch_definition = data_asset.add_batch_definition_whole_table("batch definition")
 batch = batch_definition.get_batch()
 
-suite = context.suites.add(
-    gx.ExpectationSuite(name="example freshness expectations")
-)
+suite = context.suites.add(gx.ExpectationSuite(name="example freshness expectations"))
 
 #############################
 # Start Expectation snippets.
@@ -60,9 +58,7 @@ suite.add_expectation(
 suite.add_expectation(
     # <snippet name="docs/docusaurus/docs/reference/learn/data_quality_use_cases/freshness_resources/freshness_expectations.py ExpectColumnMinToBeBetween">
     gxe.ExpectColumnMinToBeBetween(
-        column="transfer_ts",
-        min_value="2024-04-30 00:00",
-        max_value="2024-05-01 00:00"
+        column="transfer_ts", min_value="2024-04-30 00:00", max_value="2024-05-01 00:00"
     )
     # </snippet>
 )

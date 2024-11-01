@@ -10,9 +10,10 @@ pytest --postgresql --docs-tests -k "data_quality_use_case_integration_workflow"
 """
 
 # <snippet name="docs/docusaurus/docs/reference/learn/data_quality_use_cases/freshness_resources/freshness_workflow.py full workflow">
+from datetime import datetime, timedelta
+
 import great_expectations as gx
 import great_expectations.expectations as gxe
-from datetime import datetime, timedelta
 
 # Create Data Context.
 context = gx.get_context()
