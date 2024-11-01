@@ -6,7 +6,6 @@ from typing import TYPE_CHECKING, Any, ClassVar, Dict, Optional, Tuple, Type, Un
 
 import numpy as np
 import pandas as pd
-
 from great_expectations.compatibility import aws, pydantic, pyspark, trino
 from great_expectations.compatibility.sqlalchemy import sqlalchemy as sa
 from great_expectations.compatibility.typing_extensions import override
@@ -75,7 +74,9 @@ except (ImportError, KeyError):
     clickhouse_sqlalchemy = None
     ch_types = None
 
-EXPECTATION_SHORT_DESCRIPTION = "Expect a column to contain values of a specified data type."
+EXPECTATION_SHORT_DESCRIPTION = (
+    "Expect a column to contain values of a specified data type."
+)
 TYPE__DESCRIPTION = """
     A string representing the data type that each column should have as entries. \
     Valid types are defined by the current backend implementation and are dynamically loaded.
@@ -259,7 +260,9 @@ class ExpectColumnValuesToBeOfType(ColumnMapExpectation):
         title = "Expect column values to be of type"
 
         @staticmethod
-        def schema_extra(schema: Dict[str, Any], model: Type[ExpectColumnValuesToBeOfType]) -> None:
+        def schema_extra(
+            schema: Dict[str, Any], model: Type[ExpectColumnValuesToBeOfType]
+        ) -> None:
             ColumnMapExpectation.Config.schema_extra(schema, model)
             schema["properties"]["metadata"]["properties"].update(
                 {
@@ -306,7 +309,9 @@ class ExpectColumnValuesToBeOfType(ColumnMapExpectation):
             renderer_configuration = cls._add_mostly_pct_param(
                 renderer_configuration=renderer_configuration
             )
-            template_str = "values must be of type $type_, at least $mostly_pct % of the time."
+            template_str = (
+                "values must be of type $type_, at least $mostly_pct % of the time."
+            )
         else:
             template_str = "values must be of type $type_."
 
@@ -329,7 +334,9 @@ class ExpectColumnValuesToBeOfType(ColumnMapExpectation):
         **kwargs,
     ):
         runtime_configuration = runtime_configuration or {}
-        include_column_name = runtime_configuration.get("include_column_name") is not False
+        include_column_name = (
+            runtime_configuration.get("include_column_name") is not False
+        )
         styling = runtime_configuration.get("styling")
 
         kwargs = configuration.kwargs if configuration is not None else {}
@@ -340,9 +347,13 @@ class ExpectColumnValuesToBeOfType(ColumnMapExpectation):
         )
 
         if params["mostly"] is not None and params["mostly"] < 1.0:
-            params["mostly_pct"] = num_to_str(params["mostly"] * 100, no_scientific=True)
+            params["mostly_pct"] = num_to_str(
+                params["mostly"] * 100, no_scientific=True
+            )
             # params["mostly_pct"] = "{:.14f}".format(params["mostly"]*100).rstrip("0").rstrip(".")
-            template_str = "values must be of type $type_, at least $mostly_pct % of the time."
+            template_str = (
+                "values must be of type $type_, at least $mostly_pct % of the time."
+            )
         else:
             template_str = "values must be of type $type_."
 
@@ -407,6 +418,44 @@ class ExpectColumnValuesToBeOfType(ColumnMapExpectation):
         }
 
     def _validate_sqlalchemy(self, actual_column_type, expected_type, execution_engine):
+        breakpoint()
+        success = False
+        if expected_type is None:
+            success = True
+
+        if (
+            isinstance(actual_column_type, str)
+            and actual_column_type.lower() == expected_type.lower()
+        ):
+            # In newer versions of GX, metric.column_type returns a string
+            # of the DB type, so we can compare directly.
+            success = True
+
+        if not success:
+            # This is the old method of validating types.
+            success = self._deprecated_validate_sqlalchemy(
+                actual_column_type=actual_column_type,
+                expected_type=expected_type,
+                execution_engine=execution_engine,
+            )
+
+        return {
+            "success": success,
+            "result": {
+                "observed_value": (
+                    actual_column_type
+                    if isinstance(actual_column_type, str)
+                    else type(actual_column_type).__name__
+                )
+            },
+        }
+
+    def _deprecated_validate_sqlalchemy(
+        self,
+        actual_column_type,
+        expected_type,
+        execution_engine,
+    ) -> bool:
         # Our goal is to be as explicit as possible. We will match the dialect
         # if that is possible. If there is no dialect available, we *will*
         # match against a top-level SqlAlchemy type.
@@ -415,55 +464,49 @@ class ExpectColumnValuesToBeOfType(ColumnMapExpectation):
         #
         # In particular, we *exclude* types that would be valid under an ORM
         # such as "float" for postgresql with this approach
-
-        if expected_type is None:
-            success = True
-        else:
-            types = []
-            type_module = _get_dialect_type_module(execution_engine=execution_engine)
-            try:
-                # bigquery geography requires installing an extra package
-                if (
-                    expected_type.lower() == "geography"
-                    and execution_engine.engine.dialect.name.lower() == GXSqlDialect.BIGQUERY
-                    and not BIGQUERY_GEO_SUPPORT
-                ):
-                    logger.warning(
-                        "BigQuery GEOGRAPHY type is not supported by default. "
-                        + "To install support, please run:"
-                        + "  $ pip install 'sqlalchemy-bigquery[geography]'"
-                    )
-                elif type_module.__name__ == "pyathena.sqlalchemy_athena":
-                    potential_type = get_pyathena_potential_type(type_module, expected_type)
-                    # In the case of the PyAthena dialect we need to verify that
-                    # the type returned is indeed a type and not an instance.
-                    if not inspect.isclass(potential_type):
-                        real_type = type(potential_type)
-                    else:
-                        real_type = potential_type
-                    types.append(real_type)
-                elif type_module.__name__ == "clickhouse_sqlalchemy.drivers.base":
-                    actual_column_type = get_clickhouse_sqlalchemy_potential_type(
-                        type_module, actual_column_type
-                    )()
-                    potential_type = get_clickhouse_sqlalchemy_potential_type(
-                        type_module, expected_type
-                    )
-                    types.append(potential_type)
+        types = []
+        type_module = _get_dialect_type_module(execution_engine=execution_engine)
+        try:
+            # bigquery geography requires installing an extra package
+            if (
+                expected_type.lower() == "geography"
+                and execution_engine.engine.dialect.name.lower()
+                == GXSqlDialect.BIGQUERY
+                and not BIGQUERY_GEO_SUPPORT
+            ):
+                logger.warning(
+                    "BigQuery GEOGRAPHY type is not supported by default. "
+                    + "To install support, please run:"
+                    + "  $ pip install 'sqlalchemy-bigquery[geography]'"
+                )
+            elif type_module.__name__ == "pyathena.sqlalchemy_athena":
+                potential_type = get_pyathena_potential_type(type_module, expected_type)
+                # In the case of the PyAthena dialect we need to verify that
+                # the type returned is indeed a type and not an instance.
+                if not inspect.isclass(potential_type):
+                    real_type = type(potential_type)
                 else:
-                    potential_type = getattr(type_module, expected_type)
-                    types.append(potential_type)
-            except AttributeError:
-                logger.debug(f"Unrecognized type: {expected_type}")
-            if len(types) == 0:
-                logger.warning("No recognized sqlalchemy types in type_list for current dialect.")
-            types = tuple(types)
-            success = isinstance(actual_column_type, types)
-
-        return {
-            "success": success,
-            "result": {"observed_value": type(actual_column_type).__name__},
-        }
+                    real_type = potential_type
+                types.append(real_type)
+            elif type_module.__name__ == "clickhouse_sqlalchemy.drivers.base":
+                actual_column_type = get_clickhouse_sqlalchemy_potential_type(
+                    type_module, actual_column_type
+                )()
+                potential_type = get_clickhouse_sqlalchemy_potential_type(
+                    type_module, expected_type
+                )
+                types.append(potential_type)
+            else:
+                potential_type = getattr(type_module, expected_type)
+                types.append(potential_type)
+        except AttributeError:
+            logger.debug(f"Unrecognized type: {expected_type}")
+        if len(types) == 0:
+            logger.warning(
+                "No recognized sqlalchemy types in type_list for current dialect."
+            )
+        types = tuple(types)
+        return isinstance(actual_column_type, types)
 
     def _validate_spark(
         self,
@@ -480,7 +523,7 @@ class ExpectColumnValuesToBeOfType(ColumnMapExpectation):
             except AttributeError:
                 logger.debug(f"Unrecognized type: {expected_type}")
             if len(types) == 0:
-                raise ValueError("No recognized spark types in expected_types_list")  # noqa: TRY003
+                raise ValueError("No recognized spark types in expected_types_list")
             types = tuple(types)
             success = isinstance(actual_column_type, types)
         return {
@@ -608,7 +651,9 @@ class ExpectColumnValuesToBeOfType(ColumnMapExpectation):
                 None,
             ]:
                 # this calls ColumnMapMetric._validate
-                return super()._validate(metrics, runtime_configuration, execution_engine)
+                return super()._validate(
+                    metrics, runtime_configuration, execution_engine
+                )
             return self._validate_pandas(
                 actual_column_type=actual_column_type, expected_type=expected_type
             )
@@ -628,7 +673,9 @@ def _get_dialect_type_module(  # noqa: C901, PLR0911
     execution_engine,
 ):
     if execution_engine.dialect_module is None:
-        logger.warning("No sqlalchemy dialect found; relying in top-level sqlalchemy types.")
+        logger.warning(
+            "No sqlalchemy dialect found; relying in top-level sqlalchemy types."
+        )
         return sa
 
     # Redshift does not (yet) export types to top level; only recognize base SA types

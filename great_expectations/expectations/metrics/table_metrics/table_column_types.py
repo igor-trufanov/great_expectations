@@ -37,7 +37,10 @@ class ColumnTypes(TableMetricProvider):
         df, _, _ = execution_engine.get_compute_domain(
             metric_domain_kwargs, domain_type=MetricDomainTypes.TABLE
         )
-        return [{"name": name, "type": dtype} for (name, dtype) in zip(df.columns, df.dtypes)]
+        return [
+            {"name": name, "type": dtype}
+            for (name, dtype) in zip(df.columns, df.dtypes)
+        ]
 
     @metric_value(engine=SqlAlchemyExecutionEngine)
     def _sqlalchemy(
@@ -111,7 +114,9 @@ def _get_sqlalchemy_column_metadata(
     )
 
 
-def _get_spark_column_metadata(field, parent_name="", include_nested=True):  # noqa: C901 - too complex
+def _get_spark_column_metadata(
+    field, parent_name="", include_nested=True
+):  # noqa: C901 - too complex
     cols = []
     if parent_name != "":
         parent_name = f"{parent_name}."

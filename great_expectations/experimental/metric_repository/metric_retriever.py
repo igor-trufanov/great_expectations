@@ -18,7 +18,9 @@ from great_expectations.experimental.metric_repository.metrics import (
     MetricTypes,
     TableMetric,
 )
-from great_expectations.experimental.rule_based_profiler.domain_builder import ColumnDomainBuilder
+from great_expectations.experimental.rule_based_profiler.domain_builder import (
+    ColumnDomainBuilder,
+)
 from great_expectations.validator.exception_info import ExceptionInfo
 from great_expectations.validator.metric_configuration import MetricConfiguration
 
@@ -86,12 +88,12 @@ class MetricRetriever(abc.ABC):
         elif metric_lookup_key in aborted_metrics:
             exception = aborted_metrics[metric_lookup_key]
             exception_info = exception["exception_info"]
-            exception_type = (
-                "Unknown"  # Note: we currently only capture the message and traceback, not the type
-            )
+            exception_type = "Unknown"  # Note: we currently only capture the message and traceback, not the type
             if isinstance(exception_info, ExceptionInfo):
                 exception_message = exception_info.exception_message
-                metric_exception = MetricException(type=exception_type, message=exception_message)
+                metric_exception = MetricException(
+                    type=exception_type, message=exception_message
+                )
         else:
             metric_exception = MetricException(
                 type="Not found",
