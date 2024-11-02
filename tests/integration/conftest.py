@@ -1,10 +1,10 @@
-from collections import defaultdict
 from dataclasses import dataclass
-from typing import Callable, Generator, Mapping, Optional, Sequence, TypeVar
+from typing import Callable, Generator, Hashable, Mapping, Optional, Sequence, TypeVar
 
 import pandas as pd
 import pytest
 
+from great_expectations.compatibility.typing_extensions import override
 from great_expectations.datasource.fluent.interfaces import Batch
 from tests.integration.test_utils.data_source_config import DataSourceTestConfig
 from tests.integration.test_utils.data_source_config.base import BatchTestSetup
@@ -17,6 +17,43 @@ class TestConfig:
     data_source_config: DataSourceTestConfig
     data: pd.DataFrame
     extra_data: Mapping[str, pd.DataFrame]
+
+    @override
+    def __hash__(self) -> int:
+        return hash(
+            (
+                self.__class__.__name__,
+                self.data_source_config,
+                self._hash_the_unhashable(self.data),
+                self._dict_to_tuple(
+                    {
+                        k: self._hash_the_unhashable(self.extra_data[k])
+                        for k in sorted(self.extra_data)
+                    }
+                ),
+            )
+        )
+
+    @override
+    def __eq__(self, value: object) -> bool:
+        if not isinstance(value, TestConfig):
+            return False
+        return all(
+            [
+                self.data_source_config == value.data_source_config,
+                self.data.equals(value.data),
+                self.extra_data.keys() == value.extra_data.keys(),
+                all(self.extra_data[k].equals(value.extra_data[k]) for k in self.extra_data),
+            ]
+        )
+
+    @staticmethod
+    def _hash_the_unhashable(df: pd.DataFrame) -> int:
+        return hash(tuple(pd.util.hash_pandas_object(df).array))
+
+    @staticmethod
+    def _dict_to_tuple(d: Mapping[str, Hashable]) -> tuple[tuple[str, Hashable], ...]:
+        return tuple((key, d[key]) for key in sorted(d))
 
 
 def parameterize_batch_for_data_sources(
@@ -68,29 +105,48 @@ def parameterize_batch_for_data_sources(
     return decorator
 
 
-cached_test_configs = defaultdict[BatchTestSetup, int](int)
+cached_test_configs: dict[TestConfig, BatchTestSetup] = {}
+
+
+@pytest.fixture(scope="session")
+def _cleanup() -> Generator[None, None, None]:
+    yield
+    for batch_setup in cached_test_configs.values():
+        batch_setup.teardown()
 
 
 @pytest.fixture
-def batch_for_datasource(request: pytest.FixtureRequest) -> Generator[Batch, None, None]:
+def batch_for_datasource(
+    request: pytest.FixtureRequest,
+    _cleanup,
+) -> Generator[Batch, None, None]:
     """Fixture that yields a batch for a specific data source type.
     This must be used in conjunction with `indirect=True` to defer execution
     """
     config = request.param
     assert isinstance(config, TestConfig)
 
-    batch_setup = config.data_source_config.create_batch_setup(
-        request=request,
-        data=config.data,
-        extra_data=config.extra_data,
-    )
-
-    if cached_test_configs[batch_setup] == 0:
+    if config not in cached_test_configs:
+        batch_setup = config.data_source_config.create_batch_setup(
+            request=request,
+            data=config.data,
+            extra_data=config.extra_data,
+        )
+        cached_test_configs[config] = batch_setup
         batch_setup.setup()
-    cached_test_configs[batch_setup] += 1
+
+    batch_setup = cached_test_configs[config]
+    # batch_setup = config.data_source_config.create_batch_setup(
+    #     request=request,
+    #     data=config.data,
+    #     extra_data=config.extra_data,
+    # )
+
+    # if batch_setup not in cached_test_configs:
+    #     cached_test_configs.add(batch_setup)
 
     yield batch_setup.make_batch()
 
-    cached_test_configs[batch_setup] -= 1
-    if cached_test_configs[batch_setup] == 0:
-        batch_setup.teardown()
+    # cached_test_configs[batch_setup] -= 1
+    # if cached_test_configs[batch_setup] == 0:
+    #     batch_setup.teardown()
