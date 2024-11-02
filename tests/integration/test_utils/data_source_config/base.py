@@ -119,35 +119,6 @@ class BatchTestSetup(ABC, Generic[_ConfigT]):
     def context(self) -> AbstractDataContext:
         return gx.get_context(mode="ephemeral")
 
-    @override
-    def __hash__(self) -> int:
-        return hash(
-            (
-                self.__class__.__name__,
-                self.config,
-                self._hash_the_unhashable(self.data),
-                dict_to_tuple(
-                    {
-                        k: self._hash_the_unhashable(self.extra_data[k])
-                        for k in sorted(self.extra_data)
-                    }
-                ),
-            )
-        )
-
-    @override
-    def __eq__(self, value: object) -> bool:
-        if not isinstance(value, BatchTestSetup):
-            return False
-        return all(
-            [
-                self.config == value.config,
-                self.data.equals(value.data),
-                self.extra_data.keys() == value.extra_data.keys(),
-                all(self.extra_data[k].equals(value.extra_data[k]) for k in self.extra_data),
-            ]
-        )
-
     def _hash_the_unhashable(self, df: pd.DataFrame) -> int:
         return hash(tuple(pd.util.hash_pandas_object(df).array))
 

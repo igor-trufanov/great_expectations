@@ -111,6 +111,7 @@ cached_test_configs: dict[TestConfig, BatchTestSetup] = {}
 
 @pytest.fixture(scope="session")
 def _cleanup() -> Generator[None, None, None]:
+    """Fixture to do all teardown at the end of the test session."""
     yield
     for batch_setup in cached_test_configs.values():
         batch_setup.teardown()
