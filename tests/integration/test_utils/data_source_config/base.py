@@ -119,9 +119,10 @@ class BatchTestSetup(ABC, Generic[_ConfigT]):
     def context(self) -> AbstractDataContext:
         return gx.get_context(mode="ephemeral")
 
-    def _hash_the_unhashable(self, df: pd.DataFrame) -> int:
-        return hash(tuple(pd.util.hash_pandas_object(df).array))
-
 
 def dict_to_tuple(d: Mapping[str, Hashable]) -> tuple[tuple[str, Hashable], ...]:
     return tuple((key, d[key]) for key in sorted(d))
+
+
+def hash_data_frame(df: pd.DataFrame) -> int:
+    return hash(tuple(pd.util.hash_pandas_object(df).array))

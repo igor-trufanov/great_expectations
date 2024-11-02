@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Callable, Generator, Hashable, Mapping, Optional, Sequence, TypeVar
+from typing import Callable, Generator, Mapping, Optional, Sequence, TypeVar
 
 import pandas as pd
 import pytest
@@ -8,7 +8,11 @@ from great_expectations.compatibility.typing_extensions import override
 from great_expectations.data_context.data_context.context_factory import set_context
 from great_expectations.datasource.fluent.interfaces import Batch
 from tests.integration.test_utils.data_source_config import DataSourceTestConfig
-from tests.integration.test_utils.data_source_config.base import BatchTestSetup
+from tests.integration.test_utils.data_source_config.base import (
+    BatchTestSetup,
+    dict_to_tuple,
+    hash_data_frame,
+)
 
 _F = TypeVar("_F", bound=Callable)
 
@@ -25,18 +29,16 @@ class TestConfig:
             (
                 self.__class__,
                 self.data_source_config,
-                self._hash_the_unhashable(self.data),
-                self._dict_to_tuple(
-                    {
-                        k: self._hash_the_unhashable(self.extra_data[k])
-                        for k in sorted(self.extra_data)
-                    }
+                hash_data_frame(self.data),
+                dict_to_tuple(
+                    {k: hash_data_frame(self.extra_data[k]) for k in sorted(self.extra_data)}
                 ),
             )
         )
 
     @override
     def __eq__(self, value: object) -> bool:
+        # We need to implemnet this ourselves to call `.equals` on dataframes.`
         if not isinstance(value, TestConfig):
             return False
         return all(
@@ -47,14 +49,6 @@ class TestConfig:
                 all(self.extra_data[k].equals(value.extra_data[k]) for k in self.extra_data),
             ]
         )
-
-    @staticmethod
-    def _hash_the_unhashable(df: pd.DataFrame) -> int:
-        return hash(tuple(pd.util.hash_pandas_object(df).array))
-
-    @staticmethod
-    def _dict_to_tuple(d: Mapping[str, Hashable]) -> tuple[tuple[str, Hashable], ...]:
-        return tuple((key, d[key]) for key in sorted(d))
 
 
 def parameterize_batch_for_data_sources(
@@ -70,7 +64,8 @@ def parameterize_batch_for_data_sources(
         data_source_configs: The data source configurations to test.
         data: Data to load into the asset
         extra_data: Mapping of {asset_name: data} to load into other assets. Only relevant for SQL
-                    mutli-table expectations.
+                    mutli-table expectations. NOTE: Different test configs using the same extra_data
+                    keys will run into collisions, so take care to ensure unique names are used.
 
 
     example use:
@@ -123,12 +118,17 @@ def batch_for_datasource(
     _cleanup,
 ) -> Generator[Batch, None, None]:
     """Fixture that yields a batch for a specific data source type.
-    This must be used in conjunction with `indirect=True` to defer execution
+    This must be used in conjunction with `indirect=True` to defer execution.
+
+    Equivalent TestConfigs will only be set up once to improve performance.
+    Because this is parameterized (by `parameterize_batch_for_data_sources`), it
+    cannot function as a session-scoped fixture, so setup occurs just before the first
+    test that needs it. Cleanup must be saved until the end of the test session, so
+    we use the session-scoped _cleanup fixture.
     """
     config = request.param
     assert isinstance(config, TestConfig)
 
-    # if config not in cached_test_configs:
     if config not in cached_test_configs:
         batch_setup = config.data_source_config.create_batch_setup(
             request=request,
