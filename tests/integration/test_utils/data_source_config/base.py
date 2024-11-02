@@ -5,14 +5,16 @@ import string
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from functools import cached_property
-from typing import TYPE_CHECKING, Generic, Mapping, Optional, TypeVar
+from typing import TYPE_CHECKING, Generic, Hashable, Mapping, Optional, TypeVar
+
+import pandas as pd
 
 import great_expectations as gx
+from great_expectations.compatibility.typing_extensions import override
 from great_expectations.data_context.data_context.abstract_data_context import AbstractDataContext
 from great_expectations.datasource.fluent.interfaces import Batch
 
 if TYPE_CHECKING:
-    import pandas as pd
     import pytest
     from pytest import FixtureRequest
 
@@ -53,6 +55,24 @@ class DataSourceTestConfig(ABC, Generic[_ColumnTypes]):
 
         return "-".join(non_null_parts)
 
+    @override
+    def __hash__(self) -> int:
+        assets_dict = self.extra_assets
+        hashable_col_types = dict_to_tuple(self.column_types) if self.column_types else None
+        hashable_extra_assets = (
+            dict_to_tuple({k: dict_to_tuple(assets_dict[k]) for k in sorted(assets_dict)})
+            if assets_dict
+            else None
+        )
+        return hash(
+            (
+                self.__class__.name,
+                self.test_id,
+                hashable_col_types,
+                hashable_extra_assets,
+            )
+        )
+
 
 _ConfigT = TypeVar("_ConfigT", bound=DataSourceTestConfig)
 
@@ -60,9 +80,15 @@ _ConfigT = TypeVar("_ConfigT", bound=DataSourceTestConfig)
 class BatchTestSetup(ABC, Generic[_ConfigT]):
     """ABC for classes that set up and tear down batches."""
 
-    def __init__(self, config: _ConfigT, data: pd.DataFrame) -> None:
+    def __init__(
+        self,
+        config: _ConfigT,
+        data: pd.DataFrame,
+        extra_data: Optional[Mapping[str, pd.DataFrame]] = None,
+    ) -> None:
         self.config = config
         self.data = data
+        self.extra_data = extra_data or {}
 
     @abstractmethod
     def make_batch(self) -> Batch: ...
@@ -80,3 +106,26 @@ class BatchTestSetup(ABC, Generic[_ConfigT]):
     @cached_property
     def _context(self) -> AbstractDataContext:
         return gx.get_context(mode="ephemeral")
+
+    @override
+    def __hash__(self) -> int:
+        return hash(
+            (
+                self.__class__.__name__,
+                self.config,
+                self._hash_the_unhashable(self.data),
+                dict_to_tuple(
+                    {
+                        k: self._hash_the_unhashable(self.extra_data[k])
+                        for k in sorted(self.extra_data)
+                    }
+                ),
+            )
+        )
+
+    def _hash_the_unhashable(self, df: pd.DataFrame) -> int:
+        return hash(tuple(pd.util.hash_pandas_object(df).array))
+
+
+def dict_to_tuple(d: Mapping[str, Hashable]) -> tuple[tuple[str, Hashable], ...]:
+    return tuple((key, d[key]) for key in sorted(d))

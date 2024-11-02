@@ -157,8 +157,11 @@ class PostgresBatchTestSetup(BatchTestSetup[PostgreSQLDatasourceTestConfig]):
         self.metadata = MetaData()
         self.tables: Union[list[Table], None] = None
         self.schema = "public"
-        self.extra_data = extra_data
-        super().__init__(config=config, data=data)
+        super().__init__(
+            config=config,
+            data=data,
+            extra_data=extra_data,
+        )
 
     @override
     def make_batch(self) -> Batch:

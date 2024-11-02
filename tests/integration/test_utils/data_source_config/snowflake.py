@@ -80,8 +80,7 @@ class SnowflakeBatchTestSetup(BatchTestSetup[SnowflakeDatasourceTestConfig]):
         self.engine = create_engine(url=self.snowflake_connection_config.connection_string)
         self.metadata = MetaData()
         self.tables: Union[list[Table], None] = None
-        self.extra_data = extra_data
-        super().__init__(config=config, data=data)
+        super().__init__(config=config, data=data, extra_data=extra_data)
 
     @override
     def make_batch(self) -> Batch:
