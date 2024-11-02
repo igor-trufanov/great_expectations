@@ -1,3 +1,12 @@
+"""Tests to ensure we are reusing BatchTestSetup instances across tests when appropriate.
+
+The tests here work together to give some confidence that we aren't running the same setup/teardown
+multiple times for equivalent TestConfigs. This is primarily to prevent regressions in this process.
+
+Note that we aren't testing to ensure we don't over-reuse BatchTestSetup instances, e.g. for
+different TestConfigs; that would be caught by our regular tests.
+"""
+
 from typing import Mapping
 
 import pandas as pd
