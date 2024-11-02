@@ -76,7 +76,7 @@ class DummyBatchTestSetup(BatchTestSetup):
     def make_batch(self) -> Batch:
         name = self._random_resource_name()
         return (
-            self._context.data_sources.add_pandas(name)
+            self.context.data_sources.add_pandas(name)
             .add_dataframe_asset(name)
             .add_batch_definition_whole_dataframe(name)
             .get_batch(batch_parameters={"dataframe": self.data})

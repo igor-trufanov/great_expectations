@@ -56,6 +56,18 @@ class DataSourceTestConfig(ABC, Generic[_ColumnTypes]):
         return "-".join(non_null_parts)
 
     @override
+    def __eq__(self, value: object) -> bool:
+        if not isinstance(value, DataSourceTestConfig):
+            return False
+        return all(
+            [
+                super().__eq__(value),
+                self.label == value.label,
+                self.pytest_mark == value.pytest_mark,
+            ]
+        )
+
+    @override
     def __hash__(self) -> int:
         assets_dict = self.extra_assets
         hashable_col_types = dict_to_tuple(self.column_types) if self.column_types else None
@@ -104,7 +116,7 @@ class BatchTestSetup(ABC, Generic[_ConfigT]):
         return "".join(random.choices(string.ascii_lowercase, k=10))
 
     @cached_property
-    def _context(self) -> AbstractDataContext:
+    def context(self) -> AbstractDataContext:
         return gx.get_context(mode="ephemeral")
 
     @override

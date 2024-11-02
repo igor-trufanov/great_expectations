@@ -5,6 +5,7 @@ import pandas as pd
 import pytest
 
 from great_expectations.compatibility.typing_extensions import override
+from great_expectations.data_context.data_context.context_factory import set_context
 from great_expectations.datasource.fluent.interfaces import Batch
 from tests.integration.test_utils.data_source_config import DataSourceTestConfig
 from tests.integration.test_utils.data_source_config.base import BatchTestSetup
@@ -22,7 +23,7 @@ class TestConfig:
     def __hash__(self) -> int:
         return hash(
             (
-                self.__class__.__name__,
+                self.__class__,
                 self.data_source_config,
                 self._hash_the_unhashable(self.data),
                 self._dict_to_tuple(
@@ -126,6 +127,7 @@ def batch_for_datasource(
     config = request.param
     assert isinstance(config, TestConfig)
 
+    # if config not in cached_test_configs:
     if config not in cached_test_configs:
         batch_setup = config.data_source_config.create_batch_setup(
             request=request,
@@ -136,17 +138,6 @@ def batch_for_datasource(
         batch_setup.setup()
 
     batch_setup = cached_test_configs[config]
-    # batch_setup = config.data_source_config.create_batch_setup(
-    #     request=request,
-    #     data=config.data,
-    #     extra_data=config.extra_data,
-    # )
 
-    # if batch_setup not in cached_test_configs:
-    #     cached_test_configs.add(batch_setup)
-
+    set_context(batch_setup.context)
     yield batch_setup.make_batch()
-
-    # cached_test_configs[batch_setup] -= 1
-    # if cached_test_configs[batch_setup] == 0:
-    #     batch_setup.teardown()

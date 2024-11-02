@@ -148,14 +148,14 @@ class TestExpectTableRowCountToEqualOtherTable:
         data_source_configs=[
             PostgreSQLDatasourceTestConfig(
                 column_types={"col_a": sqltypes.INTEGER},
-                extra_assets={"test_table_two": {"col_b": sqltypes.VARCHAR}},
+                extra_assets={"test_table_a": {"col_b": sqltypes.VARCHAR}},
             ),
         ],
         data=pd.DataFrame({"a": [1, 2, 3, 4]}),
-        extra_data={"test_table_two": pd.DataFrame({"col_b": ["a", "b", "c", "d"]})},
+        extra_data={"test_table_a": pd.DataFrame({"col_b": ["a", "b", "c", "d"]})},
     )
     def test_success(self, batch_for_datasource):
-        expectation = gxe.ExpectTableRowCountToEqualOtherTable(other_table_name="test_table_two")
+        expectation = gxe.ExpectTableRowCountToEqualOtherTable(other_table_name="test_table_a")
         result = batch_for_datasource.validate(expectation)
         assert result.success
 
@@ -163,14 +163,14 @@ class TestExpectTableRowCountToEqualOtherTable:
         data_source_configs=[
             PostgreSQLDatasourceTestConfig(
                 column_types={"col_a": sqltypes.INTEGER},
-                extra_assets={"test_table_two": {"col_b": sqltypes.VARCHAR}},
+                extra_assets={"test_table_b": {"col_b": sqltypes.VARCHAR}},
             ),
         ],
         data=pd.DataFrame({"a": [1, 2, 3, 4]}),
-        extra_data={"test_table_two": pd.DataFrame({"col_b": ["just_this_one!"]})},
+        extra_data={"test_table_b": pd.DataFrame({"col_b": ["just_this_one!"]})},
     )
     def test_different_counts(self, batch_for_datasource):
-        expectation = gxe.ExpectTableRowCountToEqualOtherTable(other_table_name="test_table_two")
+        expectation = gxe.ExpectTableRowCountToEqualOtherTable(other_table_name="test_table_b")
         result = batch_for_datasource.validate(expectation)
         assert not result.success
         assert result.result["observed_value"] == {
