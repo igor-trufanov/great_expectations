@@ -64,8 +64,10 @@ def parameterize_batch_for_data_sources(
         data_source_configs: The data source configurations to test.
         data: Data to load into the asset
         extra_data: Mapping of {asset_name: data} to load into other assets. Only relevant for SQL
-                    mutli-table expectations. NOTE: Different test configs using the same extra_data
+                    mutli-table expectations.
+                    TODO: Different test configs using the same extra_data
                     keys will run into collisions, so take care to ensure unique names are used.
+                    Fix in CORE-586.
 
 
     example use:
@@ -101,6 +103,13 @@ def parameterize_batch_for_data_sources(
     return decorator
 
 
+# NOTE on performance setup/teardown:
+# When we get equivalent TestConfigs, we only instantiate one BatchTestSetup for all of them, and
+# only perform its setup/teardown once. batch_for_datasource instantiate the BatchTestSetup
+# immediately before the first test that needs it and store it in cached_test_configs. Subsequetn
+# tests that use the same TestConfig will reuse the same BatchTestSetup. At the end of the test
+# session, _cleanup will clean up all the BatchTestSetups.
+
 cached_test_configs: dict[TestConfig, BatchTestSetup] = {}
 
 
@@ -113,18 +122,9 @@ def _cleanup() -> Generator[None, None, None]:
 
 
 @pytest.fixture
-def batch_for_datasource(
-    request: pytest.FixtureRequest,
-    _cleanup,
-) -> Generator[Batch, None, None]:
+def batch_for_datasource(request: pytest.FixtureRequest, _cleanup) -> Generator[Batch, None, None]:
     """Fixture that yields a batch for a specific data source type.
     This must be used in conjunction with `indirect=True` to defer execution.
-
-    Equivalent TestConfigs will only be set up once to improve performance.
-    Because this is parameterized (by `parameterize_batch_for_data_sources`), it
-    cannot function as a session-scoped fixture, so setup occurs just before the first
-    test that needs it. Cleanup must be saved until the end of the test session, so
-    we use the session-scoped _cleanup fixture.
     """
     config = request.param
     assert isinstance(config, TestConfig)
@@ -140,5 +140,5 @@ def batch_for_datasource(
 
     batch_setup = cached_test_configs[config]
 
-    set_context(batch_setup.context)
+    set_context(batch_setup.context)  # ensure the right context is active
     yield batch_setup.make_batch()
