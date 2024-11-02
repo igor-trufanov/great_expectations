@@ -1159,9 +1159,7 @@ class Batch:
 
         if isinstance(expect, Expectation):
             return self._validate_expectation(
-                expect,
-                result_format=result_format,
-                expectation_parameters=expectation_parameters,
+                expect, result_format=result_format, expectation_parameters=expectation_parameters
             )
         elif isinstance(expect, ExpectationSuite):
             return self._validate_expectation_suite(
