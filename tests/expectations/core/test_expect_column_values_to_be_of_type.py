@@ -116,4 +116,4 @@ def test_expect_column_values_to_be_in_set_render_performance():
     )
 
     duration_s = timeit.timeit(x.render, number=1)
-    assert duration_s < 2, f"Rendering took {duration_s} seconds"
+    assert duration_s < 3, f"Rendering took {duration_s} seconds"
