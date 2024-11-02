@@ -12,40 +12,6 @@ from tests.integration.test_utils.data_source_config.base import (
     DataSourceTestConfig,
 )
 
-# @parameterize_batch_for_data_sources(
-#     data_source_configs=[
-#         PostgreSQLDatasourceTestConfig(column_types={"a": POSTGRESQL_TYPES.INTEGER}),
-#         PostgreSQLDatasourceTestConfig(column_types={"a": POSTGRESQL_TYPES.INTEGER}),
-#         PostgreSQLDatasourceTestConfig(column_types={"a": POSTGRESQL_TYPES.INTEGER}),
-#         PostgreSQLDatasourceTestConfig(column_types={"a": POSTGRESQL_TYPES.INTEGER}),
-#         PostgreSQLDatasourceTestConfig(column_types={"a": POSTGRESQL_TYPES.INTEGER}),
-#         PostgreSQLDatasourceTestConfig(column_types={"a": POSTGRESQL_TYPES.INTEGER}),
-#         PostgreSQLDatasourceTestConfig(column_types={"a": POSTGRESQL_TYPES.INTEGER}),
-#         PostgreSQLDatasourceTestConfig(
-#             column_types={"a": POSTGRESQL_TYPES.INTEGER, "b": POSTGRESQL_TYPES.INTEGER}
-#         ),
-#     ],
-#     data=pd.DataFrame({"a": [1, 2]}),
-# )
-# def test_expect_column_min_to_be_between(batch_for_datasource) -> None:
-#     expectation = gxe.ExpectColumnMinToBeBetween(column="a", min_value=1, max_value=1)
-#     result = batch_for_datasource.validate(expectation)
-#     assert result.success
-
-
-# @parameterize_batch_for_data_sources(
-#     data_source_configs=[
-#         PostgreSQLDatasourceTestConfig(column_types={"a": POSTGRESQL_TYPES.INTEGER}),
-#         PostgreSQLDatasourceTestConfig(column_types={"a": POSTGRESQL_TYPES.INTEGER}),
-#     ],
-#     data=pd.DataFrame({"a": [1, 2]}),
-# )
-# def test_more(batch_for_datasource) -> None:
-#     expectation = gxe.ExpectColumnMinToBeBetween(column="a", min_value=1, max_value=1)
-#     result = batch_for_datasource.validate(expectation)
-#     assert result.success
-
-
 setup_count = 0
 teardown_count = 0
 
