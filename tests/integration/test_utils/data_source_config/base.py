@@ -123,6 +123,19 @@ class BatchTestSetup(ABC, Generic[_ConfigT]):
             )
         )
 
+    @override
+    def __eq__(self, value: object) -> bool:
+        if not isinstance(value, BatchTestSetup):
+            return False
+        return all(
+            [
+                self.config == value.config,
+                self.data.equals(value.data),
+                self.extra_data.keys() == value.extra_data.keys(),
+                all(self.extra_data[k].equals(value.extra_data[k]) for k in self.extra_data),
+            ]
+        )
+
     def _hash_the_unhashable(self, df: pd.DataFrame) -> int:
         return hash(tuple(pd.util.hash_pandas_object(df).array))
 
