@@ -124,7 +124,7 @@ def _cleanup() -> Generator[None, None, None]:
 @pytest.fixture
 def batch_for_datasource(request: pytest.FixtureRequest, _cleanup) -> Generator[Batch, None, None]:
     """Fixture that yields a batch for a specific data source type.
-    This must be used in conjunction with `indirect=True` to defer execution.
+    This must be used in conjunction with `indirect=True` to defer execution
     """
     config = request.param
     assert isinstance(config, TestConfig)
