@@ -69,14 +69,9 @@ class DataSourceTestConfig(ABC, Generic[_ColumnTypes]):
 
     @override
     def __hash__(self) -> int:
-        extra_column_types = self.extra_column_types
         hashable_col_types = dict_to_tuple(self.column_types) if self.column_types else None
-        hashable_extra_col_types = (
-            dict_to_tuple(
-                {k: dict_to_tuple(extra_column_types[k]) for k in sorted(extra_column_types)}
-            )
-            if extra_column_types
-            else None
+        hashable_extra_col_types = dict_to_tuple(
+            {k: dict_to_tuple(self.extra_column_types[k]) for k in sorted(self.extra_column_types)}
         )
         return hash(
             (
