@@ -58,11 +58,12 @@ class SQLBatchTestSetup(BatchTestSetup, ABC, Generic[_ConfigT]):
         data: pd.DataFrame,
         extra_data: Mapping[str, pd.DataFrame],
     ) -> None:
+        self.extra_data = extra_data
         self.table_name = f"{config.label}_expectation_test_table_{self._random_resource_name()}"
         self.engine = create_engine(url=self.connection_string)
         self.metadata = MetaData()
         self.tables: List[Table] = []
-        super().__init__(config, data, extra_data)
+        super().__init__(config, data)
 
     @override
     def setup(self) -> None:

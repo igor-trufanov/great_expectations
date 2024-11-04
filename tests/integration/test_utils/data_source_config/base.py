@@ -89,15 +89,9 @@ _ConfigT = TypeVar("_ConfigT", bound=DataSourceTestConfig)
 class BatchTestSetup(ABC, Generic[_ConfigT]):
     """ABC for classes that set up and tear down batches."""
 
-    def __init__(
-        self,
-        config: _ConfigT,
-        data: pd.DataFrame,
-        extra_data: Optional[Mapping[str, pd.DataFrame]] = None,
-    ) -> None:
+    def __init__(self, config: _ConfigT, data: pd.DataFrame) -> None:
         self.config = config
         self.data = data
-        self.extra_data = extra_data or {}
 
     @abstractmethod
     def make_batch(self) -> Batch: ...
