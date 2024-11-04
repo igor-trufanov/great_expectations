@@ -3,7 +3,7 @@ from __future__ import annotations
 import random
 import string
 from abc import ABC, abstractmethod
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from functools import cached_property
 from typing import TYPE_CHECKING, Generic, Hashable, Mapping, Optional, TypeVar
 
@@ -25,7 +25,7 @@ _ColumnTypes = TypeVar("_ColumnTypes")
 class DataSourceTestConfig(ABC, Generic[_ColumnTypes]):
     name: Optional[str] = None
     column_types: Optional[Mapping[str, _ColumnTypes]] = None
-    extra_assets: Optional[Mapping[str, Mapping[str, _ColumnTypes]]] = None
+    extra_column_types: Mapping[str, Mapping[str, _ColumnTypes]] = field(default_factory=dict)
 
     @property
     @abstractmethod
@@ -69,11 +69,13 @@ class DataSourceTestConfig(ABC, Generic[_ColumnTypes]):
 
     @override
     def __hash__(self) -> int:
-        assets_dict = self.extra_assets
+        extra_column_types = self.extra_column_types
         hashable_col_types = dict_to_tuple(self.column_types) if self.column_types else None
-        hashable_extra_assets = (
-            dict_to_tuple({k: dict_to_tuple(assets_dict[k]) for k in sorted(assets_dict)})
-            if assets_dict
+        hashable_extra_col_types = (
+            dict_to_tuple(
+                {k: dict_to_tuple(extra_column_types[k]) for k in sorted(extra_column_types)}
+            )
+            if extra_column_types
             else None
         )
         return hash(
@@ -81,7 +83,7 @@ class DataSourceTestConfig(ABC, Generic[_ColumnTypes]):
                 self.__class__.name,
                 self.test_id,
                 hashable_col_types,
-                hashable_extra_assets,
+                hashable_extra_col_types,
             )
         )
 
