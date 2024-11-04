@@ -38,7 +38,7 @@ class TestConfig:
 
     @override
     def __eq__(self, value: object) -> bool:
-        # We need to implemnet this ourselves to call `.equals` on dataframes.`
+        # We need to implement this ourselves to call `.equals` on dataframes.`
         if not isinstance(value, TestConfig):
             return False
         return all(
