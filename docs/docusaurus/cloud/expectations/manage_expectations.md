@@ -98,7 +98,7 @@ When you select your `n` run count, and:
 - There are `>n` runs, the Expectation will take the last `n` runs into account.
 
 
-![GX Cloud dynamic parameters](./expectation_images/dynamic_parameters.png)
+![GX Cloud dynamic parameters](expectation_images/dynamic_parameters.png)
 
 
 ## Add an Expectation
