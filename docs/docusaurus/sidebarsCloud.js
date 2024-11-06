@@ -107,6 +107,11 @@ module.exports = {
                 },
                 {
                     type: 'link',
+                    label: 'Dynamic Parameters',
+                    href: '/cloud/expectations/manage_expectations#dynamic-parameters',
+                },
+                {
+                    type: 'link',
                     label: 'Add an Expectation',
                     href: '/cloud/expectations/manage_expectations#add-an-expectation',
                 },
