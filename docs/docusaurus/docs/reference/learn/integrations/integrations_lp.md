@@ -20,8 +20,8 @@ Great Expectations can be integrated with a variety of orchestrators and data pi
 
 <LinkCardGrid>
 
-  <LinkCard topIcon label="Integrate GX with Airflow" description="Learn how to integrate GX with Airflow and add data validation to a pipeline." to="/reference/learn/integrations/airflow_pipeline_tutorial" icon="/img/airflow_icon.svg"/>
+  <LinkCard topIcon label="Integrate GX with Airflow" description="Learn how to integrate GX with Airflow and add data validation to a pipeline." to="/docs/reference/learn/integrations/airflow_pipeline_tutorial" icon="/img/airflow_icon.svg"/>
 
-  <LinkCard topIcon label="Use GX with dbt" description="Learn how to use GX with dbt." to="/reference/learn/integrations/dbt_tutorial" icon="/img/dbt_icon.svg"/>
+  <LinkCard topIcon label="Use GX with dbt" description="Learn how to use GX with dbt." to="/docs/reference/learn/integrations/dbt_tutorial" icon="/img/dbt_icon.svg"/>
 
 </LinkCardGrid>

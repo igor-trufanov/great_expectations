@@ -253,16 +253,6 @@ module.exports = {
             ]
         },
         {
-            type: 'doc',
-            id: 'try_gx_cloud',
-            label: 'Try GX Cloud'
-        },
-        {
-            type: 'doc',
-            id: 'gx_cloud_lp',
-            label: 'GX Cloud LP'
-        },
-        {
             type: 'link',
             label: 'Request a demo for GX Cloud',
             href: 'https://www.greatexpectations.io/demo',

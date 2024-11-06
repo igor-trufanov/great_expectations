@@ -20,7 +20,7 @@ import OverviewCard from '@site/src/components/OverviewCard';
     topIcon 
     label="Create a Validation Definition"
     description="Use a Validation Definition to associate a Batch Definition with an Expectation Suite."
-    to="/core/run_validations/create_a_validation_definition" 
+    to="/docs/core/run_validations/create_a_validation_definition" 
     icon="/img/expectation_icon.svg" 
   />
 
@@ -28,7 +28,7 @@ import OverviewCard from '@site/src/components/OverviewCard';
     topIcon 
     label="Run a Validation Definition"
     description="Run a Validation Definition using predefined defaults or parameters defined at runtime."
-    to="/core/run_validations/run_a_validation_definition" 
+    to="/docs/core/run_validations/run_a_validation_definition" 
     icon="/img/expectation_icon.svg" 
   />
 

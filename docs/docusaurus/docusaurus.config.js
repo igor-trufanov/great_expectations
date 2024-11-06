@@ -69,7 +69,7 @@ module.exports = {
         },
         secondary: {
           label: 'GX Cloud overview',
-          href: '/docs/cloud/overview/gx_cloud_overview',
+          href: '/cloud/overview/gx_cloud_overview',
         },
       },
     },
@@ -155,7 +155,7 @@ module.exports = {
         },
         {
           label: 'Home',
-          to: '/docs/home',
+          to: '/home',
           position: 'right',
           className: 'non-versioned-section',
         },

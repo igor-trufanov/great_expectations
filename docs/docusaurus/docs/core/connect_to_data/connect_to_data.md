@@ -20,21 +20,21 @@ import OverviewCard from '@site/src/components/OverviewCard';
       topIcon 
       label="SQL Data"
       description="Connect to data in SQL databases and organize it into Batches for validation."
-      to="/core/connect_to_data/sql_data" 
+      to="/docs/core/connect_to_data/sql_data" 
       icon="/img/expectation_icon.svg" 
   />
   <LinkCard 
       topIcon 
       label="Filesystem Data"
       description="Connect to data stored as files in a folder hierarchy and organize it into Batches for validation."
-      to="/core/connect_to_data/filesystem_data" 
+      to="/docs/core/connect_to_data/filesystem_data" 
       icon="/img/expectation_icon.svg" 
   />
   <LinkCard 
       topIcon 
       label="Dataframes"
       description="Connect to data in pandas or Spark Dataframes and organize it into Batches for validation."
-      to="/core/connect_to_data/dataframes" 
+      to="/docs/core/connect_to_data/dataframes" 
       icon="/img/expectation_icon.svg" 
   />
 </LinkCardGrid>

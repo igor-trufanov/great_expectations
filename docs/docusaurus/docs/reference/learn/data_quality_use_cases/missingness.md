@@ -11,7 +11,7 @@ In this guide, you will learn how to leverage GX to effectively handle missing d
 
 ## Prerequisite knowledge
 
-This article assumes basic familiarity with GX components and workflows. If you're new to GX, start with the [GX Overview](https://docs.greatexpectations.io/docs/cloud/overview/gx_cloud_overview/) to familiarize yourself with key concepts and setup procedures.
+This article assumes basic familiarity with GX components and workflows. If you're new to GX, start with the [GX Overview](https://docs.greatexpectations.io/cloud/overview/gx_cloud_overview/) to familiarize yourself with key concepts and setup procedures.
 
 ## Data preview
 
@@ -64,7 +64,7 @@ Ensures that values within a specific column are not `NULL`.
 
 The examples given in this section provide insight into how and when to apply missingness Expectations to identify different varieties of missing data. The focus of this guidance is on the specifics of the Expectations, rather than the overall workflow, which can be implemented using either GX Cloud or GX Core.
 
-[GX Cloud](/cloud/overview/gx_cloud_overview.md) provides a visual interface to create and run workflows for managing missing data. The GX Cloud workflow to handle data missingness is intuitive and straightforward: create a Data Asset, define Expectations for missing values, run a Validation, and review Validation Results.
+[GX Cloud](/cloud/overview/gx_cloud_overview) provides a visual interface to create and run workflows for managing missing data. The GX Cloud workflow to handle data missingness is intuitive and straightforward: create a Data Asset, define Expectations for missing values, run a Validation, and review Validation Results.
 
 ![Validate missingness Expectations in GX Cloud](./missingness_resources/gx_cloud_missingness_expectations_validate.gif)
 

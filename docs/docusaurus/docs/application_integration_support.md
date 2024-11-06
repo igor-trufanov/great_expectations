@@ -40,10 +40,10 @@ The following table defines the GX Cloud, GX Core, and Community Supported integ
 
 The following table defines the GX components supported by GX Cloud and GX Core.
 
-| Component    | GX Cloud                                                                                        | GX Core                                                               | Community                                                                  |
-| ------------ | ----------------------------------------------------------------------------------------------- | --------------------------------------------------------------------- | -------------------------------------------------------------------------- |
-| Expectations | See [Available Expectations](/cloud/expectations/manage_expectations.md#available-expectations) | See [Expectations Gallery](https://greatexpectations.io/expectations) | See [Legacy Gallery](https://greatexpectations.io/legacy/v1/expectations/) |
-| GX Agent     | All versions                                                                                    | N/A                                                                   | N/A                                                                        |
+| Component    | GX Cloud                                                                                     | GX Core                                                               | Community                                                                  |
+| ------------ | -------------------------------------------------------------------------------------------- | --------------------------------------------------------------------- | -------------------------------------------------------------------------- |
+| Expectations | See [Available Expectations](/cloud/expectations/manage_expectations#available-expectations) | See [Expectations Gallery](https://greatexpectations.io/expectations) | See [Legacy Gallery](https://greatexpectations.io/legacy/v1/expectations/) |
+| GX Agent     | All versions                                                                                 | N/A                                                                   | N/A                                                                        |
 
 ### Operating systems
 

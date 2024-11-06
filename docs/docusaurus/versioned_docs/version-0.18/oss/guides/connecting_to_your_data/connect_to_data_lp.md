@@ -16,8 +16,8 @@ import OverviewCard from '@site/src/components/OverviewCard';
 </OverviewCard>
 
 <LinkCardGrid>
-  <LinkCard topIcon label="Connect to filesystem Data Assets" description="Connect to filesystem Data Assets" to="/oss/guides/connecting_to_your_data/fluent/filesystem/connect_filesystem_source_data" icon="/img/connect_icon.svg" />
-  <LinkCard topIcon label="Connect to in-memory Data Assets" description="Connect to an in-memory pandas or Spark DataFrame" to="/oss/guides/connecting_to_your_data/fluent/in_memory/connect_in_memory_data" icon="/img/connect_icon.svg" />
-  <LinkCard topIcon label="Connect to SQL database Data Assets" description="Connect to Data Assets on SQL databases" to="/oss/guides/connecting_to_your_data/fluent/database/connect_sql_source_data" icon="/img/connect_icon.svg" />
-  <LinkCard topIcon label="Manage Data Assets" description="Request data from a Data Source and organize Batches in file-based and SQL Data Assets" to="/oss/guides/connecting_to_your_data/manage_data_assets_lp" icon="/img/manage_icon.svg" />
+  <LinkCard topIcon label="Connect to filesystem Data Assets" description="Connect to filesystem Data Assets" to="/docs/oss/guides/connecting_to_your_data/fluent/filesystem/connect_filesystem_source_data" icon="/img/connect_icon.svg" />
+  <LinkCard topIcon label="Connect to in-memory Data Assets" description="Connect to an in-memory pandas or Spark DataFrame" to="/docs/oss/guides/connecting_to_your_data/fluent/in_memory/connect_in_memory_data" icon="/img/connect_icon.svg" />
+  <LinkCard topIcon label="Connect to SQL database Data Assets" description="Connect to Data Assets on SQL databases" to="/docs/oss/guides/connecting_to_your_data/fluent/database/connect_sql_source_data" icon="/img/connect_icon.svg" />
+  <LinkCard topIcon label="Manage Data Assets" description="Request data from a Data Source and organize Batches in file-based and SQL Data Assets" to="/docs/oss/guides/connecting_to_your_data/manage_data_assets_lp" icon="/img/manage_icon.svg" />
 </LinkCardGrid>
