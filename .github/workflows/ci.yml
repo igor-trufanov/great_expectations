@@ -200,10 +200,9 @@ jobs:
       GX_PYTHON_EXPERIMENTAL: true # allow for python 3.13+
     strategy:
       matrix:
-        os: [ubuntu-latest]
         python-version: ["3.9", "3.10", "3.11", "3.12"]
 
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
@@ -239,6 +238,34 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           flags: ${{ matrix.python-version }}
+
+  unit-tests-os:
+    env:
+      GX_PYTHON_EXPERIMENTAL: true # allow for python 3.13+
+    strategy:
+      matrix:
+        os: [windows-latest, macos-latest]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.9
+          cache-dependency-path: |
+            reqs/requirements-dev-test.txt
+            setup.py
+
+      - name: Install dependencies
+        run: pip install . -c constraints-dev.txt -r reqs/requirements-dev-test.txt
+
+      - name: Run the unit tests for ${{ matrix.os }}
+        # TODO: revert the timeout back to 1.5 or lower after resolving arc issues
+        run: invoke ci-tests -m "unit" --xdist --slowest=10 --timeout=2.0 --reports
 
   doc-checks:
     needs: [static-analysis]
@@ -322,7 +349,7 @@ jobs:
         run: cd docs/docusaurus && yarn install && yarn test
 
   cloud-tests:
-    needs: [unit-tests, static-analysis, ci-is-on-main-repo]
+    needs: [unit-tests, unit-tests-os, static-analysis, ci-is-on-main-repo]
     if: github.event.pull_request.draft == false
     permissions:
       id-token: write
@@ -402,7 +429,7 @@ jobs:
           flags: cloud
 
   marker-tests:
-    needs: [unit-tests, static-analysis]
+    needs: [unit-tests, unit-tests-os, static-analysis]
     if: github.event.pull_request.draft == false
     env:
       GX_PYTHON_EXPERIMENTAL: true # allow for python 3.13+
@@ -504,7 +531,7 @@ jobs:
           flags: "${{ matrix.python-version }} ${{ matrix.markers }}"
 
   py39-min-versions:
-    needs: [unit-tests, static-analysis]
+    needs: [unit-tests, unit-tests-os, static-analysis]
     if: github.event.pull_request.draft == false
     runs-on: ubuntu-latest
     steps:
@@ -522,7 +549,7 @@ jobs:
         run: invoke ci-tests -m unit --xdist --slowest=10  --timeout=2.0
 
   py310-min-versions:
-    needs: [unit-tests, static-analysis]
+    needs: [unit-tests, unit-tests-os, static-analysis]
     if: github.event.pull_request.draft == false
     runs-on: ubuntu-latest
     steps:
@@ -540,7 +567,7 @@ jobs:
         run: invoke ci-tests -m unit --xdist --slowest=10  --timeout=2.0
 
   py311-min-versions:
-    needs: [unit-tests, static-analysis]
+    needs: [unit-tests, unit-tests-os, static-analysis]
     if: github.event.pull_request.draft == false
     runs-on: ubuntu-latest
     steps:
@@ -558,7 +585,7 @@ jobs:
         run: invoke ci-tests -m unit --xdist --slowest=10  --timeout=2.0
 
   py312-min-versions:
-    needs: [unit-tests, static-analysis]
+    needs: [unit-tests, unit-tests-os, static-analysis]
     if: github.event.pull_request.draft == false
     runs-on: ubuntu-latest
     steps:
@@ -576,7 +603,7 @@ jobs:
         run: invoke ci-tests -m unit --xdist --slowest=10  --timeout=2.0
 
   pydantic-v1:
-    needs: [unit-tests, static-analysis]
+    needs: [unit-tests, unit-tests-os, static-analysis]
     if: github.event.pull_request.draft == false
     runs-on: ubuntu-latest
     steps:
@@ -594,7 +621,7 @@ jobs:
         run: invoke ci-tests -m unit --xdist --slowest=10  --timeout=2.0
 
   airflow-min-versions:
-    needs: [unit-tests, static-analysis]
+    needs: [unit-tests, unit-tests-os, static-analysis]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -645,6 +672,7 @@ jobs:
         static-analysis,
         docs-snippets,
         unit-tests,
+        unit-tests-os,
         cloud-tests,
         marker-tests,
         py39-min-versions,
