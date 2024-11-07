@@ -247,14 +247,11 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
+      - name: Prep git
+        run: git config core.longpaths true
+
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          sparse-checkout: |
-            .github
-            reqs
-            great_expectations
-            tests
 
       - name: Set up Python 3.9
         uses: actions/setup-python@v5
