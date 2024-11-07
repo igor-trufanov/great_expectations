@@ -80,7 +80,7 @@ jobs:
         run: invoke marker-coverage
 
   docs-snippets:
-    needs: [unit-tests, doc-checks, ci-is-on-main-repo]
+    needs: [unit-tests, unit-tests-os, doc-checks, ci-is-on-main-repo]
     # run on non-draft PRs with docs changes
     if: |
       (github.event.pull_request.draft == false && github.base_ref == 'develop') ||
@@ -240,8 +240,6 @@ jobs:
           flags: ${{ matrix.python-version }}
 
   unit-tests-os:
-    env:
-      GX_PYTHON_EXPERIMENTAL: true # allow for python 3.13+
     strategy:
       matrix:
         os: [windows-latest, macos-latest]
@@ -721,6 +719,7 @@ jobs:
         static-analysis,
         docs-snippets,
         unit-tests,
+        unit-tests-os,
         cloud-tests,
         marker-tests,
         py39-min-versions,
