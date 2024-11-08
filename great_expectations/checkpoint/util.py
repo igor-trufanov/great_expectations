@@ -129,7 +129,7 @@ def send_email(  # noqa: C901, PLR0913
     receiver_emails_list,
     use_tls,
     use_ssl,
-):
+) -> str | None:
     msg = MIMEMultipart()
     msg["From"] = sender_alias
     msg["To"] = ", ".join(receiver_emails_list)
@@ -168,7 +168,7 @@ def send_email(  # noqa: C901, PLR0913
 
 def send_sns_notification(
     sns_topic_arn: str, sns_subject: str, validation_results: str, **kwargs
-) -> str:
+) -> tuple[bool, str]:
     """
     Send JSON results to an SNS topic with a schema of:
 
@@ -182,7 +182,7 @@ def send_sns_notification(
     """
     if not aws.boto3:
         logger.warning("boto3 is not installed")
-        return "boto3 is not installed"
+        return False, "boto3 is not installed"
 
     message_dict = {
         "TopicArn": sns_topic_arn,
@@ -200,6 +200,9 @@ def send_sns_notification(
     except sns.exceptions.InvalidParameterException:
         error_msg = f"Received invalid for message: {validation_results}"
         logger.error(error_msg)  # noqa: TRY400
-        return error_msg
+        return False, error_msg
     else:
-        return f"Successfully posted results to {response['MessageId']} with Subject {sns_subject}"
+        return (
+            True,
+            f"Successfully posted results to {response['MessageId']} with Subject {sns_subject}",
+        )

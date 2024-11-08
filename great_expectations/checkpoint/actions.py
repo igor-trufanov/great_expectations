@@ -93,7 +93,7 @@ class ValidationActionRunStatus(enum.Enum):
 
 
 class ValidationActionResult(BaseModel):
-    success: ValidationActionRunStatus
+    status: ValidationActionRunStatus
     run_info: dict
 
 
@@ -283,9 +283,7 @@ class SlackNotificationAction(DataDocsAction):
         result = {"slack_notification_result": "none required"}
 
         if not _should_notify(success=success, notify_on=self.notify_on):
-            return ValidationActionResult(
-                success=ValidationActionRunStatus.NOT_RUN, run_info=result
-            )
+            return ValidationActionResult(status=ValidationActionRunStatus.NOT_RUN, run_info=result)
 
         checkpoint_text_blocks: list[dict] = []
         for (
@@ -316,14 +314,12 @@ class SlackNotificationAction(DataDocsAction):
             )
         )
 
-        success = (
+        status = (
             ValidationActionRunStatus.SUCCESS
             if response is not None
             else ValidationActionRunStatus.FAILURE
         )
-        return ValidationActionResult(
-            success=success, result={"slack_notification_result": response}
-        )
+        return ValidationActionResult(status=status, result={"slack_notification_result": response})
 
     def _render_validation_result(
         self,
@@ -414,7 +410,9 @@ class PagerdutyAlertAction(ValidationAction):
 
         return self._run_pypd_alert(dedup_key=checkpoint_name, message=summary, success=success)
 
-    def _run_pypd_alert(self, dedup_key: str, message: str, success: bool):
+    def _run_pypd_alert(
+        self, dedup_key: str, message: str, success: bool
+    ) -> ValidationActionResult:
         if _should_notify(success=success, notify_on=self.notify_on):
             pypd.api_key = self.api_key
             pypd.EventV2.create(
@@ -430,9 +428,15 @@ class PagerdutyAlertAction(ValidationAction):
                 }
             )
 
-            return {"pagerduty_alert_result": "success"}
+            return ValidationActionResult(
+                status=ValidationActionRunStatus.SUCCESS,
+                run_info={"pagerduty_alert_result": "success"},
+            )
 
-        return {"pagerduty_alert_result": "none sent"}
+        return ValidationActionResult(
+            status=ValidationActionRunStatus.NOT_RUN,
+            run_info={"pagerduty_alert_result": "none sent"},
+        )
 
 
 @public_api
@@ -490,7 +494,10 @@ class MicrosoftTeamsNotificationAction(ValidationAction):
     ) -> ValidationActionResult:
         success = checkpoint_result.success or False
         if not _should_notify(success=success, notify_on=self.notify_on):
-            return {"microsoft_teams_notification_result": None}
+            return ValidationActionResult(
+                status=ValidationActionRunStatus.NOT_RUN,
+                run_info={"microsoft_teams_notification_result": None},
+            )
 
         data_docs_pages = self._get_data_docs_pages_from_prior_action(action_context=action_context)
 
@@ -516,7 +523,14 @@ class MicrosoftTeamsNotificationAction(ValidationAction):
             )
         )
 
-        return {"microsoft_teams_notification_result": teams_notif_result}
+        success = (
+            ValidationActionRunStatus.SUCCESS
+            if teams_notif_result is not None
+            else ValidationActionRunStatus.FAILURE
+        )
+        return ValidationActionRunStatus(
+            success=success, run_info={"microsoft_teams_notification_result": teams_notif_result}
+        )
 
 
 class OpsgenieAlertAction(ValidationAction):
@@ -589,9 +603,19 @@ class OpsgenieAlertAction(ValidationAction):
                 query=description, message=message, settings=settings
             )
 
-            return {"opsgenie_alert_result": alert_result}
+            status = (
+                ValidationActionRunStatus.SUCCESS
+                if alert_result
+                else ValidationActionRunStatus.FAILURE
+            )
+            return ValidationActionResult(
+                status=status, run_info={"opsgenie_alert_result": "No alert sent"}
+            )
         else:
-            return {"opsgenie_alert_result": "No alert sent"}
+            return ValidationActionResult(
+                status=ValidationActionRunStatus.NOT_RUN,
+                run_info={"opsgenie_alert_result": "No alert sent"},
+            )
 
 
 @public_api
@@ -693,7 +717,9 @@ class EmailAction(ValidationAction):
     ) -> ValidationActionResult:
         success = checkpoint_result.success or False
         if not _should_notify(success=success, notify_on=self.notify_on):
-            return {"email_result": ""}
+            return ValidationActionResult(
+                status=ValidationActionRunStatus.NOT_RUN, run_info={"email_result": ""}
+            )
 
         title, html = self.renderer.render(checkpoint_result=checkpoint_result)
         substituted_receiver_emails = (
@@ -725,8 +751,10 @@ class EmailAction(ValidationAction):
             )
         )
 
-        # sending payload back as dictionary
-        return {"email_result": email_result}
+        status = (
+            ValidationActionRunStatus.SUCCESS if email_result else ValidationActionRunStatus.FAILURE
+        )
+        return ValidationActionResult(status=status, run_info={"email_result": email_result})
 
 
 @public_api
@@ -781,9 +809,12 @@ class UpdateDataDocsAction(DataDocsAction):
                 validation_result_suite_identifier=result_identifier,
                 expectation_suite_identifier=expectation_suite_identifier,
             )
-            action_results[result_identifier] = action_result
+            if action_result:
+                action_results[result_identifier] = action_result
 
-        return action_results
+        return ValidationActionResult(
+            status=ValidationActionRunStatus.SUCCESS, run_info=action_results
+        )
 
     def _run(
         self,
@@ -864,7 +895,7 @@ class SNSNotificationAction(ValidationAction):
     def run(
         self, checkpoint_result: CheckpointResult, action_context: ActionContext | None = None
     ) -> ValidationActionResult:
-        msg = send_sns_notification(
+        success, msg = send_sns_notification(
             sns_topic_arn=self.sns_topic_arn,
             sns_subject=self.sns_message_subject or checkpoint_result.name,
             validation_results=json.dumps(
@@ -872,7 +903,9 @@ class SNSNotificationAction(ValidationAction):
                 indent=4,
             ),
         )
-        return {"result": msg}
+
+        status = ValidationActionRunStatus.SUCCESS if success else ValidationActionRunStatus.FAILURE
+        return ValidationActionResult(status=status, run_info={"result": msg})
 
 
 class APINotificationAction(ValidationAction):
@@ -898,7 +931,10 @@ class APINotificationAction(ValidationAction):
             aggregate_payload.append(payload)
 
         response = self.send_results(aggregate_payload)
-        return {"result": f"Posted results to API, status code - {response.status_code}"}
+        return ValidationActionResult(
+            status=ValidationActionRunStatus.SUCCESS,
+            run_info={"result": f"Posted results to API, status code - {response.status_code}"},
+        )
 
     def send_results(self, payload) -> requests.Response:
         try:
