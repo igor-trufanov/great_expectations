@@ -979,12 +979,14 @@ class TestCheckpointResult:
             "batch_parameters",
             "batch_spec",
             "checkpoint_id",
+            "checkpoint_name",
             "great_expectations_version",
             "run_id",
             "validation_id",
             "validation_time",
         ]
         assert meta["checkpoint_id"] == checkpoint.id
+        assert meta["checkpoint_name"] == checkpoint.name
         assert meta["validation_id"] == checkpoint.validation_definitions[0].id
 
     @pytest.mark.filesystem

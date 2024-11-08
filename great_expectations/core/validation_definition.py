@@ -241,9 +241,10 @@ class ValidationDefinition(BaseModel):
         return batch_definition
 
     @public_api
-    def run(
+    def run(  # noqa: PLR0913
         self,
         *,
+        checkpoint_name: Optional[str] = None,
         checkpoint_id: Optional[str] = None,
         batch_parameters: Optional[BatchParameters] = None,
         expectation_parameters: Optional[SuiteParameterDict] = None,
@@ -289,6 +290,8 @@ class ValidationDefinition(BaseModel):
         results = validator.validate_expectation_suite(self.suite, expectation_parameters)
         results.meta["validation_id"] = self.id
         results.meta["checkpoint_id"] = checkpoint_id
+        if checkpoint_name:
+            results.meta["checkpoint_name"] = checkpoint_name
 
         # NOTE: We should promote this to a top-level field of the result.
         #       Meta should be reserved for user-defined information.

@@ -317,12 +317,14 @@ class TestValidationRun:
 
         output = dataframe_validation_definition.run(
             checkpoint_id=None,
+            checkpoint_name="checkpoint_name",
             batch_parameters={"dataframe": pd.DataFrame({"a": ["1", "2", "3", "4", "5"]})},
         )
 
         assert output.meta == {
             "validation_id": dataframe_validation_definition.id,
             "checkpoint_id": None,
+            "checkpoint_name": "checkpoint_name",
             "batch_parameters": {"dataframe": "<DATAFRAME>"},
             "batch_spec": ACTIVE_BATCH_SPEC,
             "batch_markers": BATCH_MARKERS,

@@ -356,6 +356,7 @@ class Checkpoint(BaseModel):
     ) -> CheckpointResult:
         for result in run_results.values():
             result.meta["checkpoint_id"] = self.id
+            result.meta["checkpoint_name"] = self.name
 
         return CheckpointResult(
             run_id=run_id,
