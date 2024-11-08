@@ -91,8 +91,9 @@ class ValidationActionRunStatus(enum.Enum):
     FAILURE = "failure"
     NOT_RUN = "not_run"
 
+
 class ValidationActionResult(BaseModel):
-    success: ValidationActionRunStatus 
+    success: ValidationActionRunStatus
     run_info: dict
 
 
@@ -282,7 +283,9 @@ class SlackNotificationAction(DataDocsAction):
         result = {"slack_notification_result": "none required"}
 
         if not _should_notify(success=success, notify_on=self.notify_on):
-            return ValidationActionResult(success=ValidationActionRunStatus.NOT_RUN, run_info=result)
+            return ValidationActionResult(
+                success=ValidationActionRunStatus.NOT_RUN, run_info=result
+            )
 
         checkpoint_text_blocks: list[dict] = []
         for (
@@ -313,7 +316,11 @@ class SlackNotificationAction(DataDocsAction):
             )
         )
 
-        success = ValidationActionRunStatus.SUCCESS if response is not None else ValidationActionRunStatus.FAILURE
+        success = (
+            ValidationActionRunStatus.SUCCESS
+            if response is not None
+            else ValidationActionRunStatus.FAILURE
+        )
         return ValidationActionResult(
             success=success, result={"slack_notification_result": response}
         )
