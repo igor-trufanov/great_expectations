@@ -151,7 +151,7 @@ class ValidationAction(BaseModel):
             data_docs_results = action_context.filter_results(class_=UpdateDataDocsAction)
             data_docs_pages = {}
             for result in data_docs_results:
-                data_docs_pages.update(result)
+                data_docs_pages.update(result.run_info)
             return data_docs_pages
 
         return None
