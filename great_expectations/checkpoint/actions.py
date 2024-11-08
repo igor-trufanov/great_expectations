@@ -93,6 +93,14 @@ class ValidationActionRunStatus(enum.Enum):
 
 
 class ValidationActionResult(BaseModel):
+    """
+    The result of running a ValidationAction.
+
+    Args:
+        status: The status of the action run. If the action was not run, the status is "not_run".
+        run_info: A dictionary containing information about the run.
+    """
+
     status: ValidationActionRunStatus
     run_info: dict
 
