@@ -6,6 +6,7 @@ The only requirement from an action is for it to have a take_action method.
 
 from __future__ import annotations
 
+import enum
 import json
 import logging
 from typing import (
@@ -85,8 +86,13 @@ def _build_renderer(config: dict) -> Renderer:
     return renderer
 
 
+class ValidationActionRunStatus(enum.Enum):
+    SUCCESS = "success"
+    FAILURE = "failure"
+    NOT_RUN = "not_run"
+
 class ValidationActionResult(BaseModel):
-    success: bool | None # None if not run at all but could be an enum
+    success: ValidationActionRunStatus 
     run_info: dict
 
 
@@ -276,7 +282,7 @@ class SlackNotificationAction(DataDocsAction):
         result = {"slack_notification_result": "none required"}
 
         if not _should_notify(success=success, notify_on=self.notify_on):
-            return ValidationActionResult(success=None, run_info=result)
+            return ValidationActionResult(success=ValidationActionRunStatus.NOT_RUN, run_info=result)
 
         checkpoint_text_blocks: list[dict] = []
         for (
@@ -307,8 +313,9 @@ class SlackNotificationAction(DataDocsAction):
             )
         )
 
+        success = ValidationActionRunStatus.SUCCESS if response is not None else ValidationActionRunStatus.FAILURE
         return ValidationActionResult(
-            success=response is not None, result={"slack_notification_result": response}
+            success=success, result={"slack_notification_result": response}
         )
 
     def _render_validation_result(

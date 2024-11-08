@@ -299,10 +299,7 @@ class Checkpoint(BaseModel):
         )
 
         checkpoint_result = self._construct_result(run_id=run_id, run_results=run_results)
-        action_results = self._run_actions(checkpoint_result=checkpoint_result)
-
-        # Do something with action results and/or add to checkpoint result payload
-        # checkpoint_result.run_info or something?
+        checkpoint_result.action_info = self._run_actions(checkpoint_result=checkpoint_result)
 
         self._submit_analytics_event()
 
