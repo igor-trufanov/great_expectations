@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import logging
+import os
 from contextlib import contextmanager
 from datetime import datetime, timezone
 from types import ModuleType
@@ -431,6 +432,9 @@ class TestMicrosoftTeamsNotificationAction:
         self,
         checkpoint_result: CheckpointResult,
     ):
+        if not os.environ.get("GX_MS_TEAMS_WEBHOOK"):
+            pytest.skip("GX_MS_TEAMS_WEBHOOK environment variable not set; skipping test.")
+
         # Necessary to retrieve config provider
         gx.get_context(mode="ephemeral")
 
@@ -459,7 +463,10 @@ class TestMicrosoftTeamsNotificationAction:
         with caplog.at_level(logging.WARNING):
             result = action.run(checkpoint_result=checkpoint_result)
 
-        assert result == {"microsoft_teams_notification_result": None}
+        assert result == ValidationActionResult(
+            status=ValidationActionRunStatus.FAILURE,
+            run_info={"microsoft_teams_notification_result": None},
+        )
         assert caplog.records[-1].message.startswith("Failed to connect to Microsoft Teams webhook")
 
 
