@@ -86,7 +86,7 @@ def _build_renderer(config: dict) -> Renderer:
 
 
 class ValidationActionResult(BaseModel):
-    success: bool | None
+    success: bool | None # None if not run at all but could be an enum
     run_info: dict
 
 
