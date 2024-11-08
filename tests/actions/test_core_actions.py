@@ -433,7 +433,7 @@ class TestMicrosoftTeamsNotificationAction:
         checkpoint_result: CheckpointResult,
     ):
         if not os.environ.get("GX_MS_TEAMS_WEBHOOK"):
-            pytest.skip("GX_MS_TEAMS_WEBHOOK environment variable not set; skipping test.")
+            pytest.xfail("GX_MS_TEAMS_WEBHOOK environment variable must be set.")
 
         # Necessary to retrieve config provider
         gx.get_context(mode="ephemeral")
