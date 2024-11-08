@@ -319,7 +319,9 @@ class SlackNotificationAction(DataDocsAction):
             if response is not None
             else ValidationActionRunStatus.FAILURE
         )
-        return ValidationActionResult(status=status, result={"slack_notification_result": response})
+        return ValidationActionResult(
+            status=status, run_info={"slack_notification_result": response}
+        )
 
     def _render_validation_result(
         self,
@@ -523,13 +525,13 @@ class MicrosoftTeamsNotificationAction(ValidationAction):
             )
         )
 
-        success = (
+        status = (
             ValidationActionRunStatus.SUCCESS
             if teams_notif_result is not None
             else ValidationActionRunStatus.FAILURE
         )
-        return ValidationActionRunStatus(
-            success=success, run_info={"microsoft_teams_notification_result": teams_notif_result}
+        return ValidationActionResult(
+            status=status, run_info={"microsoft_teams_notification_result": teams_notif_result}
         )
 
 
@@ -609,7 +611,7 @@ class OpsgenieAlertAction(ValidationAction):
                 else ValidationActionRunStatus.FAILURE
             )
             return ValidationActionResult(
-                status=status, run_info={"opsgenie_alert_result": "No alert sent"}
+                status=status, run_info={"opsgenie_alert_result": alert_result}
             )
         else:
             return ValidationActionResult(

@@ -19,8 +19,9 @@ def test_send_sns_notification(sns, aws_credentials):
     result = ExpectationSuiteValidationResult(**results)
     topic = "test"
     created = sns.create_topic(Name=topic)
-    response = send_sns_notification(
+    success, response = send_sns_notification(
         created.get("TopicArn"), str(result.success), str(result.results)
     )
 
+    assert success
     assert response.startswith("Successfully")

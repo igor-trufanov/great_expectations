@@ -23,6 +23,8 @@ from great_expectations.checkpoint.actions import (
     SNSNotificationAction,
     UpdateDataDocsAction,
     ValidationAction,
+    ValidationActionResult,
+    ValidationActionRunStatus,
 )
 from great_expectations.checkpoint.checkpoint import Checkpoint, CheckpointResult
 from great_expectations.core.batch import IDDict, LegacyBatchDefinition
@@ -461,7 +463,9 @@ class TestV1ActionRun:
             use_ssl=None,
             use_tls=None,
         )
-        assert out == {"email_result": mock_send_email()}
+        assert out == ValidationActionResult(
+            status=ValidationActionRunStatus.SUCCESS, run_info={"email_result": mock_send_email()}
+        )
 
     @pytest.mark.unit
     def test_EmailAction_run_smptp_address_substitution(
@@ -612,7 +616,9 @@ class TestV1ActionRun:
 
         mock_post.assert_called_once()
         assert message in mock_post.call_args.kwargs["json"]["message"]
-        assert output == {"opsgenie_alert_result": True}
+        assert output == ValidationActionResult(
+            status=ValidationActionRunStatus.SUCCESS, run_info={"opsgenie_alert_result": True}
+        )
 
     @pytest.mark.unit
     def test_PagerdutyAlertAction_run_emits_events(
@@ -628,14 +634,16 @@ class TestV1ActionRun:
             checkpoint_name = checkpoint_result.checkpoint_config.name
 
             checkpoint_result.success = True
-            assert action.run(checkpoint_result=checkpoint_result) == {
-                "pagerduty_alert_result": "success"
-            }
+            assert action.run(checkpoint_result=checkpoint_result) == ValidationActionResult(
+                status=ValidationActionRunStatus.SUCCESS,
+                run_info={"pagerduty_alert_result": "success"},
+            )
 
             checkpoint_result.success = False
-            assert action.run(checkpoint_result=checkpoint_result) == {
-                "pagerduty_alert_result": "success"
-            }
+            assert action.run(checkpoint_result=checkpoint_result) == ValidationActionResult(
+                status=ValidationActionRunStatus.SUCCESS,
+                run_info={"pagerduty_alert_result": "success"},
+            )
 
             assert mock_pypd_event.call_count == 2
             mock_pypd_event.assert_has_calls(
@@ -681,9 +689,10 @@ class TestV1ActionRun:
         )
 
         checkpoint_result.success = True
-        assert action.run(checkpoint_result=checkpoint_result) == {
-            "pagerduty_alert_result": "none sent"
-        }
+        assert action.run(checkpoint_result=checkpoint_result) == ValidationActionResult(
+            status=ValidationActionRunStatus.NOT_RUN,
+            run_info={"pagerduty_alert_result": "none sent"},
+        )
 
         mock_pypd_event.assert_not_called()
 
@@ -731,7 +740,10 @@ class TestV1ActionRun:
             },
         )
 
-        assert output == {"slack_notification_result": "Slack notification succeeded."}
+        assert output == ValidationActionResult(
+            status=ValidationActionRunStatus.SUCCESS,
+            run_info={"slack_notification_result": "Slack notification succeeded."},
+        )
 
     @pytest.mark.unit
     def test_SlackNotificationAction_run_with_assets(
@@ -773,7 +785,10 @@ class TestV1ActionRun:
             },
         )
 
-        assert output == {"slack_notification_result": "Slack notification succeeded."}
+        assert output == ValidationActionResult(
+            status=ValidationActionRunStatus.SUCCESS,
+            run_info={"slack_notification_result": "Slack notification succeeded."},
+        )
 
     @pytest.mark.unit
     def test_SlackNotificationAction_grabs_data_docs_pages(
@@ -852,7 +867,10 @@ class TestV1ActionRun:
         assert site_path in docs_block_1
         assert "*DataDocs*" in docs_block_2
         assert site_path in docs_block_2
-        assert output == {"slack_notification_result": "Slack notification succeeded."}
+        assert output == ValidationActionResult(
+            status=ValidationActionRunStatus.SUCCESS,
+            run_info={"slack_notification_result": "Slack notification succeeded."},
+        )
 
     @pytest.mark.unit
     def test_SNSNotificationAction_run(
@@ -868,7 +886,7 @@ class TestV1ActionRun:
         )
 
         result = action.run(checkpoint_result=checkpoint_result)
-        assert "Successfully posted results" in result["result"]
+        assert "Successfully posted results" in result.run_info["result"]
 
     @pytest.mark.unit
     def test_UpdateDataDocsAction_equality(self):
@@ -904,7 +922,7 @@ class TestV1ActionRun:
 
         # Act
         action = UpdateDataDocsAction(name="my_action", site_names=site_names)
-        res = action.run(checkpoint_result=checkpoint_result)
+        result = action.run(checkpoint_result=checkpoint_result)
 
         # Assert
         validation_identifier_a, validation_identifier_b = tuple(
@@ -935,7 +953,7 @@ class TestV1ActionRun:
                 ),
             ]
         )
-        assert res == {
+        assert result.run_info == {
             validation_identifier_a: {
                 site_names[0]: site_urls[0],
                 site_names[1]: site_urls[1],
