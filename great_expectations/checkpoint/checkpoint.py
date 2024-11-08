@@ -24,8 +24,6 @@ from great_expectations.checkpoint.actions import (
     ActionContext,
     CheckpointAction,
     UpdateDataDocsAction,
-    ValidationAction,
-    ValidationActionResult,
 )
 from great_expectations.compatibility.pydantic import (
     BaseModel,
@@ -368,7 +366,7 @@ class Checkpoint(BaseModel):
     def _run_actions(
         self,
         checkpoint_result: CheckpointResult,
-    ) -> list[tuple[ValidationAction, ValidationActionResult]]:
+    ) -> None:
         action_context = ActionContext()
         sorted_actions = self._sort_actions()
         for action in sorted_actions:
@@ -377,8 +375,6 @@ class Checkpoint(BaseModel):
                 action_context=action_context,
             )
             action_context.update(action=action, action_result=action_result)
-
-        return action_context.data
 
     def _sort_actions(self) -> List[CheckpointAction]:
         """
