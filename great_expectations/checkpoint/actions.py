@@ -85,6 +85,11 @@ def _build_renderer(config: dict) -> Renderer:
     return renderer
 
 
+class ValidationActionResult(BaseModel):
+    success: bool | None
+    run_info: dict
+
+
 class ActionContext:
     """
     Shared context for all actions in a checkpoint run.
@@ -92,16 +97,16 @@ class ActionContext:
     """
 
     def __init__(self) -> None:
-        self._data: list[tuple[ValidationAction, dict]] = []
+        self._data: list[tuple[ValidationAction, ValidationActionResult]] = []
 
     @property
-    def data(self) -> list[tuple[ValidationAction, dict]]:
+    def data(self) -> list[tuple[ValidationAction, ValidationActionResult]]:
         return self._data
 
-    def update(self, action: ValidationAction, action_result: dict) -> None:
+    def update(self, action: ValidationAction, action_result: ValidationActionResult) -> None:
         self._data.append((action, action_result))
 
-    def filter_results(self, class_: Type[ValidationAction]) -> list[dict]:
+    def filter_results(self, class_: Type[ValidationAction]) -> list[ValidationActionResult]:
         return [action_result for action, action_result in self._data if isinstance(action, class_)]
 
 
@@ -129,7 +134,7 @@ class ValidationAction(BaseModel):
 
     def run(
         self, checkpoint_result: CheckpointResult, action_context: ActionContext | None = None
-    ) -> dict:
+    ) -> ValidationActionResult:
         raise NotImplementedError
 
     def _get_data_docs_pages_from_prior_action(
@@ -265,13 +270,13 @@ class SlackNotificationAction(DataDocsAction):
     @override
     def run(
         self, checkpoint_result: CheckpointResult, action_context: ActionContext | None = None
-    ) -> dict:
+    ) -> ValidationActionResult:
         success = checkpoint_result.success or False
         checkpoint_name = checkpoint_result.checkpoint_config.name
         result = {"slack_notification_result": "none required"}
 
         if not _should_notify(success=success, notify_on=self.notify_on):
-            return result
+            return ValidationActionResult(success=None, run_info=result)
 
         checkpoint_text_blocks: list[dict] = []
         for (
@@ -293,7 +298,7 @@ class SlackNotificationAction(DataDocsAction):
             run_id=checkpoint_result.run_id,
         )
 
-        result = self._send_slack_notification(payload=payload)
+        response = self._send_slack_notification(payload=payload)
 
         checkpoint = checkpoint_result.checkpoint_config
         submit_event(
@@ -302,7 +307,9 @@ class SlackNotificationAction(DataDocsAction):
             )
         )
 
-        return result
+        return ValidationActionResult(
+            success=response is not None, result={"slack_notification_result": response}
+        )
 
     def _render_validation_result(
         self,
@@ -337,7 +344,7 @@ class SlackNotificationAction(DataDocsAction):
             validation_result_urls=validation_result_urls,
         )
 
-    def _send_slack_notification(self, payload: dict) -> dict:
+    def _send_slack_notification(self, payload: dict) -> str | None:
         substituted_slack_webhook = self._substitute_config_str_if_needed(self.slack_webhook)
         substituted_slack_token = self._substitute_config_str_if_needed(self.slack_token)
         substituted_slack_channel = self._substitute_config_str_if_needed(self.slack_channel)
@@ -349,7 +356,7 @@ class SlackNotificationAction(DataDocsAction):
             slack_token=substituted_slack_token,
             slack_channel=substituted_slack_channel,
         )
-        return {"slack_notification_result": slack_notif_result}
+        return slack_notif_result
 
 
 class PagerdutyAlertAction(ValidationAction):
@@ -382,7 +389,7 @@ class PagerdutyAlertAction(ValidationAction):
     @override
     def run(
         self, checkpoint_result: CheckpointResult, action_context: ActionContext | None = None
-    ) -> dict:
+    ) -> ValidationActionResult:
         success = checkpoint_result.success or False
         checkpoint_name = checkpoint_result.checkpoint_config.name
         summary = f"Great Expectations Checkpoint {checkpoint_name} has "
@@ -464,7 +471,9 @@ class MicrosoftTeamsNotificationAction(ValidationAction):
         return renderer
 
     @override
-    def run(self, checkpoint_result: CheckpointResult, action_context: ActionContext | None = None):
+    def run(
+        self, checkpoint_result: CheckpointResult, action_context: ActionContext | None = None
+    ) -> ValidationActionResult:
         success = checkpoint_result.success or False
         if not _should_notify(success=success, notify_on=self.notify_on):
             return {"microsoft_teams_notification_result": None}
@@ -542,7 +551,7 @@ class OpsgenieAlertAction(ValidationAction):
     @override
     def run(
         self, checkpoint_result: CheckpointResult, action_context: ActionContext | None = None
-    ) -> dict:
+    ) -> ValidationActionResult:
         validation_success = checkpoint_result.success or False
         checkpoint_name = checkpoint_result.checkpoint_config.name
 
@@ -667,7 +676,7 @@ class EmailAction(ValidationAction):
         self,
         checkpoint_result: CheckpointResult,
         action_context: ActionContext | None = None,
-    ) -> dict:
+    ) -> ValidationActionResult:
         success = checkpoint_result.success or False
         if not _should_notify(success=success, notify_on=self.notify_on):
             return {"email_result": ""}
@@ -740,7 +749,7 @@ class UpdateDataDocsAction(DataDocsAction):
     @override
     def run(
         self, checkpoint_result: CheckpointResult, action_context: ActionContext | None = None
-    ) -> dict:
+    ) -> ValidationActionResult:
         action_results: dict[ValidationResultIdentifier, dict[str, str]] = {}
         for result_identifier, result in checkpoint_result.run_results.items():
             suite_name = result.suite_name
@@ -840,7 +849,7 @@ class SNSNotificationAction(ValidationAction):
     @override
     def run(
         self, checkpoint_result: CheckpointResult, action_context: ActionContext | None = None
-    ) -> dict:
+    ) -> ValidationActionResult:
         msg = send_sns_notification(
             sns_topic_arn=self.sns_topic_arn,
             sns_subject=self.sns_message_subject or checkpoint_result.name,
@@ -860,7 +869,7 @@ class APINotificationAction(ValidationAction):
     @override
     def run(
         self, checkpoint_result: CheckpointResult, action_context: ActionContext | None = None
-    ) -> dict:
+    ) -> ValidationActionResult:
         aggregate_payload = []
         for run_id, run_result in checkpoint_result.run_results.items():
             suite_name = run_result.suite_name
