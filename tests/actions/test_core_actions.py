@@ -800,15 +800,18 @@ class TestV1ActionRun:
         action_context = ActionContext()
         action_context.update(
             action=UpdateDataDocsAction(name="docs_action"),
-            action_result={
-                ValidationResultIdentifier(
-                    expectation_suite_identifier=ExpectationSuiteIdentifier(name="my_suite"),
-                    run_id=RunIdentifier(run_name="prod_20240401"),
-                    batch_identifier="my_datasource-my_first_asset",
-                ): {
-                    "local_site": site_path,
-                }
-            },
+            action_result=ValidationActionResult(
+                status=ValidationActionRunStatus.SUCCESS,
+                run_info={
+                    ValidationResultIdentifier(
+                        expectation_suite_identifier=ExpectationSuiteIdentifier(name="my_suite"),
+                        run_id=RunIdentifier(run_name="prod_20240401"),
+                        batch_identifier="my_datasource-my_first_asset",
+                    ): {
+                        "local_site": site_path,
+                    }
+                },
+            ),
         )
         with mock.patch.object(Session, "post") as mock_post:
             output = action.run(

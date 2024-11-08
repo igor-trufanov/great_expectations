@@ -129,7 +129,7 @@ def send_email(  # noqa: C901, PLR0913
     receiver_emails_list,
     use_tls,
     use_ssl,
-) -> str | None:
+):
     msg = MIMEMultipart()
     msg["From"] = sender_alias
     msg["To"] = ", ".join(receiver_emails_list)
@@ -164,6 +164,7 @@ def send_email(  # noqa: C901, PLR0913
         logger.error(str(e))  # noqa: TRY400
     else:
         return "success"
+    return None
 
 
 def send_sns_notification(
