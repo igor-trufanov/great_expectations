@@ -24,6 +24,7 @@ from great_expectations.checkpoint.actions import (
     ActionContext,
     CheckpointAction,
     UpdateDataDocsAction,
+    ValidationActionResult,
 )
 from great_expectations.compatibility.pydantic import (
     BaseModel,
@@ -297,7 +298,10 @@ class Checkpoint(BaseModel):
         )
 
         checkpoint_result = self._construct_result(run_id=run_id, run_results=run_results)
-        self._run_actions(checkpoint_result=checkpoint_result)
+
+        action_results = self._run_actions(checkpoint_result=checkpoint_result)
+        # TODO(cdkini): Figure out how to handle action results
+        print(action_results)  # We could add these to our checkpoint result or logger.warning?
 
         self._submit_analytics_event()
 
@@ -366,7 +370,7 @@ class Checkpoint(BaseModel):
     def _run_actions(
         self,
         checkpoint_result: CheckpointResult,
-    ) -> None:
+    ) -> dict[str, ValidationActionResult]:
         action_context = ActionContext()
         sorted_actions = self._sort_actions()
         for action in sorted_actions:
@@ -375,6 +379,8 @@ class Checkpoint(BaseModel):
                 action_context=action_context,
             )
             action_context.update(action=action, action_result=action_result)
+
+        return {action.name: result for action, result in action_context.data}
 
     def _sort_actions(self) -> List[CheckpointAction]:
         """
