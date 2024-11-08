@@ -370,7 +370,7 @@ class Checkpoint(BaseModel):
     def _run_actions(
         self,
         checkpoint_result: CheckpointResult,
-    ) -> dict[str, ValidationActionResult]:
+    ) -> Dict[str, ValidationActionResult]:
         action_context = ActionContext()
         sorted_actions = self._sort_actions()
         for action in sorted_actions:
