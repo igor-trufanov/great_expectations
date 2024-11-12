@@ -4,6 +4,7 @@ from typing import Any, Dict
 import pytest
 import responses
 
+from great_expectations.data_context.cloud_constants import CLOUD_DEFAULT_SERVICE_NAME
 from great_expectations.data_context.data_context.cloud_data_context import CloudDataContext
 
 CLOUD_BASE_URL = "https://api.greatexpectations.io/fake"
@@ -126,10 +127,13 @@ def test_parses_v0_config_from_cloud(config: dict):
         status=200,
     )
 
-    CloudDataContext(
+    ctx = CloudDataContext(
         cloud_base_url=CLOUD_BASE_URL,
         cloud_access_token=ACCESS_TOKEN,
         cloud_organization_id=ORG_ID,
     )
 
     # if we didn't raise when instantiating the context, we are good!
+
+    # The default service name should be used
+    assert ctx.ge_cloud_config.service_name == CLOUD_DEFAULT_SERVICE_NAME

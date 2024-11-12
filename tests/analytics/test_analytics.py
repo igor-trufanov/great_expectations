@@ -46,6 +46,24 @@ TESTING_UUID = UUID("00000000-c000-0000-0000-000000000000")
             None,
             {"data_context_id": None, "oss_id": None, "service": "gx-core"},
         ),
+        (
+            Config(
+                organization_id=TESTING_UUID,
+                user_id=TESTING_UUID,
+                data_context_id=None,
+                oss_id=None,
+                cloud_mode=False,
+                service="gx-runner",
+            ),
+            TESTING_UUID,
+            {
+                "user_id": TESTING_UUID,
+                "organization_id": TESTING_UUID,
+                "data_context_id": None,
+                "oss_id": None,
+                "service": "gx-runner",
+            },
+        ),
     ],
 )
 def analytics_config(request):
@@ -63,8 +81,8 @@ def test_event_identifiers(analytics_config):
     properties = event.properties()
     # All base properties should be in the event properties
     assert base_properties.items() <= properties.items()
-    # Service should be set to gx-core
-    assert properties["service"] == "gx-core"
+    # Service should be set to given service or default to "gx-core"
+    assert properties["service"] == base_properties.get("service", "gx-core")
     # The distinct_id should be the user_id if it is set, otherwise the oss_id
     assert event.distinct_id == distinct_id
     if "user_id" in base_properties:
