@@ -1090,7 +1090,7 @@ class GXCloudConfig(DictDot):
             "base_url": self.base_url,
             "organization_id": self.organization_id,
             "access_token": PasswordMasker.MASKED_PASSWORD_STRING,
-            "service_name": self.service_name
+            "service_name": self.service_name,
         }
 
 

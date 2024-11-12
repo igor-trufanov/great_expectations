@@ -11,6 +11,8 @@ from typing import (
     Union,
 )
 
+from requests import HTTPError, Response
+
 import great_expectations.exceptions as gx_exceptions
 from great_expectations import __version__
 from great_expectations._docs_decorators import public_api
@@ -59,7 +61,6 @@ from great_expectations.data_context.util import instantiate_class_from_config
 from great_expectations.datasource.datasource_dict import DatasourceDict
 from great_expectations.datasource.fluent import Datasource as FluentDatasource
 from great_expectations.exceptions.exceptions import DataContextError
-from requests import HTTPError, Response
 
 if TYPE_CHECKING:
     from great_expectations.alias_types import PathStr
@@ -68,6 +69,7 @@ if TYPE_CHECKING:
     from great_expectations.render.renderer.site_builder import SiteBuilder
 
 logger = logging.getLogger(__name__)
+
 
 class NoUserIdError(Exception):
     def __init__(self):
