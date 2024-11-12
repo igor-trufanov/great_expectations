@@ -12,7 +12,7 @@ from great_expectations.expectations.model_field_descriptions import (
 )
 
 MostlyField = Annotated[
-    float,
+    Union[float, SuiteParameterDict],
     pydantic.Field(
         description=MOSTLY_DESCRIPTION,
         ge=0.0,
