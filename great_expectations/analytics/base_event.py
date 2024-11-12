@@ -52,7 +52,11 @@ class Event:
 
     @property
     def service(self) -> str:
-        return "gx-cloud" if get_config().cloud_mode else "gx-core"
+        return get_config().service
+
+    @property
+    def cloud_mode(self) -> bool:
+        return get_config().cloud_mode
 
     @property
     def distinct_id(self) -> UUID | None:
@@ -79,6 +83,7 @@ class Event:
             "oss_id": self.oss_id,
             "gx_version": gx_version,
             "service": self.service,
+            "cloud_mode": self.cloud_mode,
         }
         if self.user_id is not None:
             props.update({"user_id": self.user_id, "organization_id": self.organization_id})

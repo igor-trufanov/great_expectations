@@ -1061,6 +1061,7 @@ class GXCloudConfig(DictDot):
         base_url: str,
         access_token: Optional[str] = None,
         organization_id: Optional[str] = None,
+        service_name: Optional[str] = None,
     ) -> None:
         # access_token was given a default value to maintain arg position of organization_id
         if access_token is None:
@@ -1074,6 +1075,7 @@ class GXCloudConfig(DictDot):
         self.base_url = base_url if base_url[-1] == "/" else base_url + "/"
         self.organization_id = organization_id
         self.access_token = access_token
+        self.service_name = service_name
 
     def to_json_dict(self) -> Dict[str, JSONValues]:
         """Returns a JSON-serializable dict representation of this GXCloudConfig.
@@ -1088,6 +1090,7 @@ class GXCloudConfig(DictDot):
             "base_url": self.base_url,
             "organization_id": self.organization_id,
             "access_token": PasswordMasker.MASKED_PASSWORD_STRING,
+            "service_name": self.service_name
         }
 
 

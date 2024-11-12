@@ -6,12 +6,14 @@ from typing import Final
 SUPPORT_EMAIL = "support@greatexpectations.io"
 CLOUD_DEFAULT_BASE_URL: Final[str] = "https://api.greatexpectations.io/"
 CLOUD_APP_DEFAULT_BASE_URL: Final[str] = "https://app.greatexpectations.io/"
-
+CLOUD_VALID_SERVICE_NAMES = ["gx-agent", "gx-runner"]
+CLOUD_DEFAULT_SERVICE_NAME: Final[str] = "gx-agent"
 
 class GXCloudEnvironmentVariable(str, Enum):
     BASE_URL = "GX_CLOUD_BASE_URL"
     ORGANIZATION_ID = "GX_CLOUD_ORGANIZATION_ID"
     ACCESS_TOKEN = "GX_CLOUD_ACCESS_TOKEN"
+    SERVICE_NAME = "GX_CLOUD_SERVICE_NAME"
 
 
 class GXCloudRESTResource(str, Enum):

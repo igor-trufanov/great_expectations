@@ -11,8 +11,6 @@ from typing import (
     Union,
 )
 
-from requests import HTTPError, Response
-
 import great_expectations.exceptions as gx_exceptions
 from great_expectations import __version__
 from great_expectations._docs_decorators import public_api
@@ -28,6 +26,8 @@ from great_expectations.core.serializer import JsonConfigSerializer
 from great_expectations.data_context._version_checker import _VersionChecker
 from great_expectations.data_context.cloud_constants import (
     CLOUD_DEFAULT_BASE_URL,
+    CLOUD_DEFAULT_SERVICE_NAME,
+    CLOUD_VALID_SERVICE_NAMES,
     GXCloudEnvironmentVariable,
     GXCloudRESTResource,
 )
@@ -59,6 +59,7 @@ from great_expectations.data_context.util import instantiate_class_from_config
 from great_expectations.datasource.datasource_dict import DatasourceDict
 from great_expectations.datasource.fluent import Datasource as FluentDatasource
 from great_expectations.exceptions.exceptions import DataContextError
+from requests import HTTPError, Response
 
 if TYPE_CHECKING:
     from great_expectations.alias_types import PathStr
@@ -67,7 +68,6 @@ if TYPE_CHECKING:
     from great_expectations.render.renderer.site_builder import SiteBuilder
 
 logger = logging.getLogger(__name__)
-
 
 class NoUserIdError(Exception):
     def __init__(self):
@@ -95,6 +95,7 @@ class CloudDataContext(SerializableDataContext):
         cloud_base_url: Optional[str] = None,
         cloud_access_token: Optional[str] = None,
         cloud_organization_id: Optional[str] = None,
+        cloud_service_name: Optional[str] = None,
     ) -> None:
         """
         CloudDataContext constructor
@@ -110,6 +111,7 @@ class CloudDataContext(SerializableDataContext):
             cloud_base_url=cloud_base_url,
             cloud_access_token=cloud_access_token,
             cloud_organization_id=cloud_organization_id,
+            cloud_service_name=cloud_service_name,
         )
         self._context_root_directory = self.determine_context_root_directory(
             context_root_dir=context_root_dir,
@@ -140,6 +142,7 @@ class CloudDataContext(SerializableDataContext):
             organization_id=uuid.UUID(organization_id) if organization_id else None,
             oss_id=self._get_oss_id(),
             cloud_mode=True,
+            service=self.ge_cloud_config.service_name,
         )
 
     def _get_cloud_user_id(self) -> uuid.UUID | None:
@@ -356,6 +359,7 @@ class CloudDataContext(SerializableDataContext):
         cloud_base_url: Optional[str] = None,
         cloud_access_token: Optional[str] = None,
         cloud_organization_id: Optional[str] = None,
+        cloud_service_name: Optional[str] = None,
     ) -> GXCloudConfig:
         """
         Build a GXCloudConfig object. Config attributes are collected from any combination of args passed in at
@@ -371,7 +375,8 @@ class CloudDataContext(SerializableDataContext):
                 via environment variable GX_CLOUD_ACCESS_TOKEN or within a config file.
             cloud_organization_id: Optional, you may provide this alternatively
                 via environment variable GX_CLOUD_ORGANIZATION_ID or within a config file.
-
+            cloud_service_name: Optional, you may provide this alternatively
+                via environment variable GX_CLOUD_SERVICE_NAME or within a config file.
         Returns:
             GXCloudConfig
 
@@ -382,6 +387,7 @@ class CloudDataContext(SerializableDataContext):
             cloud_base_url=cloud_base_url,
             cloud_access_token=cloud_access_token,
             cloud_organization_id=cloud_organization_id,
+            cloud_service_name=cloud_service_name,
         )
 
         missing_keys = []
@@ -413,6 +419,7 @@ class CloudDataContext(SerializableDataContext):
         cloud_base_url: Optional[str] = None,
         cloud_access_token: Optional[str] = None,
         cloud_organization_id: Optional[str] = None,
+        cloud_service_name: Optional[str] = None,
     ) -> Dict[GXCloudEnvironmentVariable, Optional[str]]:
         cloud_base_url = (
             cloud_base_url
@@ -433,10 +440,21 @@ class CloudDataContext(SerializableDataContext):
             conf_file_section="ge_cloud_config",
             conf_file_option="access_token",
         )
+        # Only allow specific service names to be used
+        cloud_service_name = cloud_service_name or cls._get_global_config_value(
+            environment_variable=GXCloudEnvironmentVariable.SERVICE_NAME,
+            conf_file_section="ge_cloud_config",
+            conf_file_option="service_name",
+        )
+        if cloud_service_name not in CLOUD_VALID_SERVICE_NAMES:
+            # In the event of misconfiguration, default to "gx-agent"
+            cloud_service_name = CLOUD_DEFAULT_SERVICE_NAME
+
         return {
             GXCloudEnvironmentVariable.BASE_URL: cloud_base_url,
             GXCloudEnvironmentVariable.ORGANIZATION_ID: cloud_organization_id,
             GXCloudEnvironmentVariable.ACCESS_TOKEN: cloud_access_token,
+            GXCloudEnvironmentVariable.SERVICE_NAME: cloud_service_name,
         }
 
     @override

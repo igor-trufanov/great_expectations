@@ -40,6 +40,7 @@ class Config(GenericModel):
     data_context_id: Optional[UUID] = None
     oss_id: Optional[UUID] = None
     cloud_mode: bool = False
+    service: Optional[str] = None
 
 
 ENV_CONFIG = _EnvConfig()

@@ -269,6 +269,7 @@ class AbstractDataContext(ConfigPeer, ABC):
             data_context_id=self._data_context_id,
             organization_id=None,
             oss_id=self._get_oss_id(),
+            service="gx-core",
         )
 
     def _determine_analytics_enabled(self) -> bool:
