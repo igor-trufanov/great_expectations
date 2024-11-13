@@ -206,11 +206,6 @@ module.exports = {
         },
         {
           type: 'link',
-          label: 'Add an Expectation to a Data Asset column',
-          href: '/docs/cloud/data_assets/manage_data_assets#add-an-expectation-to-a-data-asset-column',
-        },
-        {
-          type: 'link',
           label: 'Add a Data Asset to an Existing Data Source',
           href: '/docs/cloud/data_assets/manage_data_assets#add-a-data-asset-to-an-existing-data-source',
         },
@@ -265,11 +260,6 @@ module.exports = {
           type: 'link',
           label: 'Edit an Expectation',
           href: '/docs/cloud/expectations/manage_expectations#edit-an-expectation',
-        },
-        {
-          type: 'link',
-          label: 'View Expectation history',
-          href: '/docs/cloud/expectations/manage_expectations#view-expectation-history',
         },
         {
           type: 'link',
