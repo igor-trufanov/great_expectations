@@ -36,6 +36,10 @@ except (ImportError, AttributeError):
     sqliteDialect = SQLALCHEMY_NOT_IMPORTED  # type: ignore[assignment]
 
 
+def explode() -> bool:
+    raise Exception("it's big query time!!")  # noqa: TRY002 # whatever
+
+
 def pytest_generate_tests(metafunc):  # noqa C901 - 35
     # Load all the JSON files in the directory
     dir_path = os.path.dirname(os.path.realpath(__file__))  # noqa: PTH120
@@ -201,6 +205,7 @@ def pytest_generate_tests(metafunc):  # noqa C901 - 35
                                                 )
                                                 and validator_with_data.active_batch_data.sql_engine_dialect.name  # noqa: E501
                                                 == "bigquery"
+                                                and explode()
                                             )
                                         )
                                     ):
