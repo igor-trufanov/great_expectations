@@ -36,8 +36,6 @@ In this dataset, `purchase_amount` represents the amount spent by customers in v
 
 GX offers a collection of Expectations used to validate data distribution. These Expectations can be added via the GX Cloud UI or using the GX Core Python library.
 
-![Add a distribution Expectation in GX Cloud](./distribution_resources/distribution_add_expectation.gif)
-
 :::note[Distribution Expectation availability]
 `ExpectColumnKLDivergenceToBeLessThan` and `ExpectColumnQuantileValuesToBeBetween` can be added to a GX Cloud deployment, but currently must be added using the GX API instead of the GX Cloud UI.
 :::
@@ -104,7 +102,6 @@ For example, if using `ExpectColumnMeanToBeBetween`:
 To use the `ExpectColumnQuantileValuesToBeBetween` Expectation, specify the `quantiles` and `value_ranges` as arguments.
 ```python title="Python" name="docs/docusaurus/docs/reference/learn/data_quality_use_cases/distribution_resources/distribution_expectations.py ExpectColumnQuantileValuesToBeBetween"
 ```
-
 
 :::tip[GX tips for distribution Expectations]
 - Use the `mostly` parameter to allow for acceptable deviations in your data, providing flexibility in your validations.
