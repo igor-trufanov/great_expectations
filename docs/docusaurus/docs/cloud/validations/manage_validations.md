@@ -4,10 +4,10 @@ title: 'Manage Validations'
 description: Create and manage Validations in GX Cloud.
 ---
 
-You can manually run a Validation through the GX Cloud UI. This is useful for exploring your data and fine-tuning your Expectations. To run recurring Validations, use a [schedule](/docs/cloud/schedules/manage_schedules) or an [orchestrator](/cloud/connect/connect_airflow).
+You can manually run a Validation through the GX Cloud UI. This is useful for exploring your data and fine-tuning your Expectations. To run recurring Validations, use a [schedule](/docs/cloud/schedules/manage_schedule.md) or an [orchestrator](/cloud/connect/connect_airflow.md).
 
 :::tip Manual validations are for GX-managed Expectations only
-To run a validation for an (API-managed Expectation)[cloud/expectations/manage_expectations#gx-managed-vs-api-managed-expectations], create and run a [Validation Definition](/core/run_validations/create_a_validation_definition).
+To run a validation for an (API-managed Expectation)[cloud/expectations/manage_expectations#gx-managed-vs-api-managed-expectations], create and run a [Validation Definition](/core/run_validations/create_a_validation_definition.md).
 :::
 
 <!-- [//]: # (TODO: To learn more about Validations, see Validator.) -->
@@ -32,7 +32,7 @@ To run a validation for an (API-managed Expectation)[cloud/expectations/manage_e
 
 ## Run a Validation on a subset of a Data Asset
 
-If you've [defined a batch](/cloud/expectations/manage_expectations#optional-define-a-batch), you can run a Validation on the latest Batch of data, or you can select a specific year, year and month, or year, month, and day period for the Validation. If a batch is defined, batch information appears in the Data Asset **Overview** page and on the **Validations** page in the **Batches & run history** pane.
+If you've [defined a batch](/cloud/expectations/manage_expectations.md#optional-define-a-batch), you can run a Validation on the latest Batch of data, or you can select a specific year, year and month, or year, month, and day period for the Validation. If a batch is defined, batch information appears in the Data Asset **Overview** page and on the **Validations** page in the **Batches & run history** pane.
 
 To run a Validation for a specific Batch, do the following:
 

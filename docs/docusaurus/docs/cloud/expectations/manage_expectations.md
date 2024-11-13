@@ -111,7 +111,7 @@ When you select your `n` run count, and:
 
 4. Select an Expectation type. See [Available Expectations](#available-expectations).
 
-5. Complete the mandatory and optional fields for the Expectation. A recurring [validation schedule](/cloud/schedules/manage_schedules/) will be applied automatically to your Expectation, 
+5. Complete the mandatory and optional fields for the Expectation. A recurring [validation schedule](/cloud/schedules/manage_schedules.md) will be applied automatically to your Expectation, 
 
 6. Click **Save** or click **Save & Add More** and then repeat steps 3 through 6 to add additional Expectations.
 
@@ -178,5 +178,5 @@ Here is a comparison of key characteristics of GX-managed and API-managed Expect
 | Expectation Suite  | Automatically organized in a hidden default Expectation Suite | Manually grouped into custom Expectation Suites via the API                  |
 
 :::note Hidden resources for GX-managed Expectations
-To support GX-managed Expectations, we create resources that you typically won't directly interact with. For example, we create a GX-managed Expectation Suite that we use to organize your Expectations. For some workflows you may need to work with these hidden resources, for example, you may need to [find the name of an automatically created Checkpoint](/cloud/connect/connect_airflow#create-a-dag-file-for-your-gx-cloud-checkpoint). But, typically you can ignore the existence of these hidden resources. 
+To support GX-managed Expectations, we create resources that you typically won't directly interact with. For example, we create a GX-managed Expectation Suite that we use to organize your Expectations. For some workflows you may need to work with these hidden resources, for example, you may need to [find the name of an automatically created Checkpoint](/cloud/connect/connect_airflow.md#create-a-dag-file-for-your-gx-cloud-checkpoint). But, typically you can ignore the existence of these hidden resources. 
 :::
