@@ -115,6 +115,7 @@ def test_ephemeral_context_init(monkeypatch):
         organization_id=None,
         oss_id=mock.ANY,
         user_id=None,
+        service="gx-core",
     )
     mock_submit.assert_called_once_with(
         mock.ANY,
@@ -205,6 +206,7 @@ def test_analytics_enabled_on_load(
         organization_id=mock.ANY,
         oss_id=mock.ANY,
         user_id=mock.ANY,
+        service=mock.ANY,
     )
 
 
@@ -241,4 +243,5 @@ def test_analytics_enabled_after_setting_explicitly(
         organization_id=mock.ANY,
         oss_id=mock.ANY,
         user_id=mock.ANY,
+        service=mock.ANY,
     )
