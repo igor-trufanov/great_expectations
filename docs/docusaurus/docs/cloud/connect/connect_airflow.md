@@ -76,8 +76,12 @@ Apache Airflow is an orchestration tool that allows you to schedule and monitor 
             # You can also set GX_CLOUD_ACCESS_TOKEN and GX_CLOUD_ORGANIZATION_ID as environment variables
             GX_CLOUD_ACCESS_TOKEN = "<YOUR_ACCESS_TOKEN>"
             GX_CLOUD_ORGANIZATION_ID = "<YOUR_CLOUD_ORGANIZATION_ID>"
-            # Find the checkpoint name with the GX API
-            CHECKPOINT_NAME = ""
+            # Find the Checkpoint name in the GX Cloud UI. 
+            # - Go to the "Expectations" tab.
+            # - Next to the "Validate" button, click the code snippet icon.
+            # - Click "Generate snippet" 
+            # - Copy the Checkpoint name from the code snippet and use it below
+            CHECKPOINT_NAME = "my_data_asset 123ABC - Default Checkpoint"
             context = gx.get_context(
                 mode="cloud", 
                 cloud_organization_id=GX_CLOUD_ACCESS_TOKEN, 

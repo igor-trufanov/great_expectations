@@ -21,7 +21,8 @@ batch = context.data_sources.pandas_default.read_csv(
 # <snippet name="tutorials/quickstart/quickstart.py create_expectation">
 suite = context.suites.add(ExpectationSuite(name="my_suite"))
 
-# TODO: update where these expectations are imported
+import great_expectations.expectations as gxe
+
 suite.add_expectation(gxe.ExpectColumnValuesToNotBeNull(column="pickup_datetime"))
 suite.add_expectation(
     gxe.ExpectColumnValuesToBeBetween(
