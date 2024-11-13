@@ -319,11 +319,6 @@ module.exports = {
       items: [
         {
           type: 'link',
-          label: 'Add a schedule',
-          href: '/docs/cloud/schedules/manage_schedules#create-a-schedule-for-an-existing-expectation-suite',
-        },
-        {
-          type: 'link',
           label: 'Edit a schedule',
           href: '/docs/cloud/schedules/manage_schedules#edit-a-schedule',
         },
