@@ -303,7 +303,7 @@ module.exports = {
         {
           type: 'link',
           label: 'Run a Validation on a Data Asset containing partitions',
-          href: '/docs/cloud/validations/manage_validations#run-a-validation-on-a-data-asset-containing-partitions',
+          href: '/docs/cloud/validations/manage_validations#run-a-validation-on-a-subset-of-a-data-asset',
         },
         {
           type: 'link',
