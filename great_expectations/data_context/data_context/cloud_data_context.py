@@ -11,6 +11,8 @@ from typing import (
     Union,
 )
 
+from requests import HTTPError, Response
+
 import great_expectations.exceptions as gx_exceptions
 from great_expectations import __version__
 from great_expectations._docs_decorators import public_api
@@ -59,7 +61,6 @@ from great_expectations.data_context.util import instantiate_class_from_config
 from great_expectations.datasource.datasource_dict import DatasourceDict
 from great_expectations.datasource.fluent import Datasource as FluentDatasource
 from great_expectations.exceptions.exceptions import DataContextError
-from requests import HTTPError, Response
 
 if TYPE_CHECKING:
     from great_expectations.alias_types import PathStr
@@ -179,9 +180,7 @@ class CloudDataContext(SerializableDataContext):
         Note that it is registered last as it takes the highest precedence.
         """
         super()._register_providers(config_provider)
-        config_provider.register_provider(
-            _CloudConfigurationProvider(self.ge_cloud_config)
-        )
+        config_provider.register_provider(_CloudConfigurationProvider(self.ge_cloud_config))
 
     @classmethod
     def is_cloud_config_available(
@@ -278,9 +277,7 @@ class CloudDataContext(SerializableDataContext):
         ):
             val = config.pop(var, None)
             if val:
-                logger.info(
-                    f"Removed {var} from DataContextConfig while preparing V1 config"
-                )
+                logger.info(f"Removed {var} from DataContextConfig while preparing V1 config")
 
         # V1 renamed Validations to ValidationResults
         # so this is a temporary patch until Cloud implements a V1 endpoint for DataContextConfig
@@ -321,9 +318,7 @@ class CloudDataContext(SerializableDataContext):
         return config
 
     @staticmethod
-    def _change_key_from_v0_to_v1(
-        config: dict, v0_key: str, v1_key: str
-    ) -> Optional[dict]:
+    def _change_key_from_v0_to_v1(config: dict, v0_key: str, v1_key: str) -> Optional[dict]:
         """Update the key if we have a V0 key and no V1 key in the config.
 
         Mutates the config object and returns the value that was renamed
@@ -334,17 +329,13 @@ class CloudDataContext(SerializableDataContext):
         return config.get(v1_key)
 
     @staticmethod
-    def _change_value_from_v0_to_v1(
-        config: dict, key: str, v0_value: str, v1_value: str
-    ) -> dict:
+    def _change_value_from_v0_to_v1(config: dict, key: str, v0_value: str, v1_value: str) -> dict:
         if config.get(key) == v0_value:
             config[key] = v1_value
         return config
 
     @classmethod
-    def _request_cloud_backend(
-        cls, cloud_config: GXCloudConfig, resource: str
-    ) -> Response:
+    def _request_cloud_backend(cls, cloud_config: GXCloudConfig, resource: str) -> Response:
         access_token = cloud_config.access_token
         base_url = cloud_config.base_url
         organization_id = cloud_config.organization_id
@@ -352,9 +343,7 @@ class CloudDataContext(SerializableDataContext):
             raise OrganizationIdNotSpecifiedError()
 
         with create_session(access_token=access_token) as session:
-            url = GXCloudStoreBackend.construct_versioned_url(
-                base_url, organization_id, resource
-            )
+            url = GXCloudStoreBackend.construct_versioned_url(base_url, organization_id, resource)
             response = session.get(url)
 
         try:
@@ -409,9 +398,7 @@ class CloudDataContext(SerializableDataContext):
                 missing_keys.append(key)
         if len(missing_keys) > 0:
             missing_keys_str = [f'"{key}"' for key in missing_keys]
-            global_config_path_str = [
-                f'"{path}"' for path in super().GLOBAL_CONFIG_PATHS
-            ]
+            global_config_path_str = [f'"{path}"' for path in super().GLOBAL_CONFIG_PATHS]
             raise DataContextError(  # noqa: TRY003
                 f"{(', ').join(missing_keys_str)} arg(s) required for ge_cloud_mode but neither provided nor found in "  # noqa: E501
                 f"environment or in global configs ({(', ').join(global_config_path_str)})."
