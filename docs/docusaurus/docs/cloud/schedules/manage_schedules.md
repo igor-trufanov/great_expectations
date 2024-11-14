@@ -23,7 +23,7 @@ To automate data quality checks for [API-managed Expectations](/cloud/expectatio
 
 5. Change the **Frequency** and/or the **Start time** for the first run of the new schedule.
 
-5. Click **Save**.
+6. Click **Save**.
 
 ## Disable a schedule
 
