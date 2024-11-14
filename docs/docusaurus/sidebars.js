@@ -271,6 +271,11 @@ module.exports = {
           label: 'Delete an Expectation',
           href: '/docs/cloud/expectations/manage_expectations#delete-an-expectation',
         },
+        {
+          type: 'link',
+          label: 'GX-managed vs. API-managed Expectations',
+          href: '/docs/cloud/expectations/manage_expectations#gx-managed-vs-api-managed-expectations',
+        },
       ]
     },
     {
@@ -285,7 +290,7 @@ module.exports = {
         },
         {
           type: 'link',
-          label: 'Run a Validation on a Data Asset containing partitions',
+          label: 'Run a Validation on a subset of a Data Asset',
           href: '/docs/cloud/validations/manage_validations#run-a-validation-on-a-subset-of-a-data-asset',
         },
         {
