@@ -33,4 +33,4 @@ To automate data quality checks for [API-managed Expectations](/cloud/expectatio
 
 3. Click the **Expectations** tab.
 
-4. Pause the schedule for the Expectation Suite using the toggle in the Scheduling component.
+4. Pause the schedule using the toggle in the Scheduling component.
