@@ -125,8 +125,8 @@ Use the GX Cloud UI to walk through the following steps.
 8. Set the **Batch column** to `transfer_ts`.
 9. Click **Save**.
 10. Click the **Validate** button and define which batch to validate.
-   * **Latest Batch** validates data for the most recent batch found in the Data Asset.
-   * **Custom Batch** validates data for the batch provided.
+   * **Latest** validates data for the most recent batch found in the Data Asset.
+   * **Custom** validates data for the batch provided.
 11. Click **Validate**.
 12. Review Validation Results.
 
