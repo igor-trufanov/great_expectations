@@ -111,7 +111,7 @@ When you select your `n` run count, and:
 
 4. Select an Expectation type. See [Available Expectations](#available-expectations).
 
-5. Complete the mandatory and optional fields for the Expectation. A recurring [validation schedule](/cloud/schedules/manage_schedules.md) will be applied automatically to your Expectation, 
+5. Complete the mandatory and optional fields for the Expectation. A recurring [validation schedule](/cloud/schedules/manage_schedules.md) will be applied automatically to your Expectation. 
 
 6. Click **Save** or click **Save & Add More** and then repeat steps 3 through 6 to add additional Expectations.
 
@@ -126,11 +126,13 @@ If your Data Asset has at least one DATE or DATETIME column, you can define a Ba
 
 2. In the **Data Assets** list, click the Data Asset name.
 
-3. Click **Define batch**
+3. Click the **Expectations** tab.
 
-4. Choose how to **Validate by**. Select the **Entire Asset** tab provide all Data Asset records to your Expectations and validations, or select one of the **Year**/**Month**/**Day** tabs to use subsets of Data Asset records for your Expectations and validations. **Year** partitions Data Asset records by year, **Month** partitions Data Asset records by year and month, **Day** partitions Data Asset records by year, month, and day.
+4. Click **Define batch**
 
-5. Select the **Batch column** that contains the DATE or DATETIME data to partition on.
+5. Choose how to **Validate by**. Select the **Entire Asset** tab provide all Data Asset records to your Expectations and validations, or select one of the **Year**/**Month**/**Day** tabs to use subsets of Data Asset records for your Expectations and validations. **Year** partitions Data Asset records by year, **Month** partitions Data Asset records by year and month, **Day** partitions Data Asset records by year, month, and day.
+
+6. Select the **Batch column** that contains the DATE or DATETIME data to partition on.
 
 ## Edit an Expectation
 
@@ -164,7 +166,7 @@ In GX Cloud, Expectations can be GX-managed or API-managed.
 - GX-managed Expectations are created through the GX Cloud UI.
 - API-managed Expectations are created with the API in a GX Cloud Data Context.
 
-If you have both kinds of Expectations, they will be organized in separate tables on the Expectations tab as they have different capabilities in the Cloud UI. 
+If you have both kinds of Expectations, they will be organized in separate tables on the **Expectations** tab as they have different capabilities in the Cloud UI. 
 
 Here is a comparison of key characteristics of GX-managed and API-managed Expectations. 
 
