@@ -32,7 +32,7 @@ To run a validation for an [API-managed Expectation](/cloud/expectations/manage_
 
 ## Run a Validation on a subset of a Data Asset
 
-If you've [defined a batch](/cloud/expectations/manage_expectations.md#optional-define-a-batch), you can run a Validation on the latest Batch of data, or you can select a specific year, year and month, or year, month, and day period for the Validation. If a batch is defined, batch information appears in the Data Asset **Overview** page and on the **Validations** page in the **Batches & run history** pane.
+If you've [defined a Batch](/cloud/expectations/manage_expectations.md#optional-define-a-batch), you can run a Validation on the latest Batch of data, or you can select a specific year, year and month, or year, month, and day period for the Validation. If a Batch is defined, Batch information appears on the Data Asset **Overview** page and on the **Validations** page in the **Batches & run history** pane.
 
 To run a Validation for a specific Batch, do the following:
 
@@ -48,7 +48,7 @@ To run a Validation for a specific Batch, do the following:
 
     - **Latest** - Run the Validation on the latest Batch of data.
 
-    - **Custom** - Select the **year**, **month**, or the **day** to run the Validation on a Batch of data for a specific period.
+    - **Custom** - Select the **year**, **month**, or **day** to run the Validation on a Batch of data for a specific period.
 
 6. Click **Validate**.
 
@@ -68,7 +68,7 @@ To run a Validation for a specific Batch, do the following:
 
     - To view only run validation failures, click **Failures Only**.
 
-    - To view the run history for specific Validation, select a Validation in the **Batches & run History** pane.
+    - To view the run history for specific Validation, select a Validation in the **Batches & run history** pane.
     
     - To view the run history of all Validations, select **All Runs** to view a graph showing the Validation run history for all columns.
 
