@@ -13,7 +13,6 @@ from tests.integration.test_utils.data_source_config.base import (
     dict_to_tuple,
     hash_data_frame,
 )
-from tests.integration.test_utils.data_source_config.sql import SQLBatchTestSetup
 
 _F = TypeVar("_F", bound=Callable)
 
@@ -162,12 +161,3 @@ def batch_for_datasource(
     """
     set_context(_batch_setup_for_datasource.context)
     yield _batch_setup_for_datasource.make_batch()
-
-
-@pytest.fixture
-def extra_table_names_for_datasource(
-    _batch_setup_for_datasource: BatchTestSetup,
-) -> Generator[Mapping[str, str], None, None]:
-    """Fixture that yields extra table names"""
-    assert isinstance(_batch_setup_for_datasource, SQLBatchTestSetup)
-    yield {key: t.name for key, t in _batch_setup_for_datasource.extra_table_data.items()}

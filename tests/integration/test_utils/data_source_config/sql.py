@@ -85,12 +85,12 @@ class SQLBatchTestSetup(BatchTestSetup, ABC, Generic[_ConfigT]):
     @cached_property
     def extra_table_data(self) -> Mapping[str, _TableData]:
         return {
-            label: self._create_table_data(
-                name=self._create_table_name(label),
+            name: self._create_table_data(
+                name=name,
                 df=df,
-                column_types=self.config.extra_column_types.get(label, {}),
+                column_types=self.config.extra_column_types.get(name, {}),
             )
-            for label, df in self.extra_data.items()
+            for name, df in self.extra_data.items()
         }
 
     @cached_property
