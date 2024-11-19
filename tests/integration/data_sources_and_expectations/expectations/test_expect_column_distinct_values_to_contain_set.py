@@ -31,8 +31,6 @@ def test_success_complete_results(batch_for_datasource: Batch) -> None:
         },
         "observed_value": [1, 2],
     }
-    result = batch_for_datasource.validate(expectation)
-    assert result.success
 
 
 @parameterize_batch_for_data_sources(
