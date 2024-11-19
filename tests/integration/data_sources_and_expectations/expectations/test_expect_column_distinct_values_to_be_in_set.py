@@ -49,12 +49,12 @@ def test_strings(batch_for_datasource: Batch) -> None:
 
 @parameterize_batch_for_data_sources(
     data_source_configs=ALL_DATA_SOURCES,
-    data=pd.DataFrame({COL_NAME: [datetime(2024, 11, 19), datetime(2024, 11, 20)]}),  # noqa: DTZ001
+    data=pd.DataFrame({COL_NAME: [datetime(2024, 11, 19).date(), datetime(2024, 11, 20).date()]}),  # noqa: DTZ001
 )
 def test_dates(batch_for_datasource: Batch) -> None:
     expectation = gxe.ExpectColumnDistinctValuesToBeInSet(
         column=COL_NAME,
-        value_set=[datetime(2024, 11, 19), datetime(2024, 11, 20)],  # noqa: DTZ001
+        value_set=[datetime(2024, 11, 19).date(), datetime(2024, 11, 20).date()],  # noqa: DTZ001
     )
     result = batch_for_datasource.validate(expectation)
     assert result.success
