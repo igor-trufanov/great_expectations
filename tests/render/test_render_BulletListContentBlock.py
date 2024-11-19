@@ -78,7 +78,7 @@ def test_all_expectations_using_test_definitions():
 
     # Historically, collecting all the JSON tests was an issue - this step ensures we actually have test data.  # noqa: E501
     assert (
-        len(test_files) == 61
+        len(test_files) == 60
     ), "Something went wrong when collecting JSON Expectation test fixtures"
 
     # Not ported over to V1 so ignore for purposes of this test
