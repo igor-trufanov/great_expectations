@@ -15,10 +15,10 @@ from tests.integration.data_sources_and_expectations.test_canonical_expectations
 
 COL_NAME = "my_col"
 
-ONES_AND_TWOS = pd.DataFrame({COL_NAME: [3, 5]})
+THREES_AND_FIVES = pd.DataFrame({COL_NAME: [3, 5]})
 
 
-@parameterize_batch_for_data_sources(data_source_configs=ALL_DATA_SOURCES, data=ONES_AND_TWOS)
+@parameterize_batch_for_data_sources(data_source_configs=ALL_DATA_SOURCES, data=THREES_AND_FIVES)
 def test_success_complete_results(batch_for_datasource: Batch) -> None:
     expectation = gxe.ExpectColumnMinToBeBetween(column=COL_NAME, min_value=1, max_value=4)
     result = batch_for_datasource.validate(expectation, result_format=ResultFormat.COMPLETE)
@@ -110,7 +110,7 @@ def test_ignores_nulls(batch_for_datasource: Batch) -> None:
     ],
 )
 @parameterize_batch_for_data_sources(
-    data_source_configs=JUST_PANDAS_DATA_SOURCES, data=ONES_AND_TWOS
+    data_source_configs=JUST_PANDAS_DATA_SOURCES, data=THREES_AND_FIVES
 )
 def test_failure(batch_for_datasource: Batch, expectation: gxe.ExpectColumnMinToBeBetween) -> None:
     result = batch_for_datasource.validate(expectation)
