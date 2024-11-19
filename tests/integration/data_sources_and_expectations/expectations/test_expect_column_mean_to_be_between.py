@@ -12,7 +12,7 @@ from tests.integration.data_sources_and_expectations.test_canonical_expectations
 
 COL_NAME = "my_col"
 
-DATA_WITH_NULLS = pd.DataFrame({COL_NAME: [1, 4, None]})
+DATA_WITH_NULLS = pd.DataFrame({COL_NAME: [1, 4, None]}, dtype="object")
 
 
 @parameterize_batch_for_data_sources(data_source_configs=ALL_DATA_SOURCES, data=DATA_WITH_NULLS)

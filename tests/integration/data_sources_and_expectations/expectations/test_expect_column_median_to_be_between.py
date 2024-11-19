@@ -12,8 +12,8 @@ from tests.integration.data_sources_and_expectations.test_canonical_expectations
 
 COL_NAME = "my_col"
 
-ODD_COUNT = pd.DataFrame({COL_NAME: [1, 10, 11, None]})
-EVEN_COUNT = pd.DataFrame({COL_NAME: [1, 10, 11, 12, None]})
+ODD_COUNT = pd.DataFrame({COL_NAME: [1, 10, 11, None]}, dtype="object")
+EVEN_COUNT = pd.DataFrame({COL_NAME: [1, 10, 11, 12, None]}, dtype="object")
 
 
 @parameterize_batch_for_data_sources(data_source_configs=ALL_DATA_SOURCES, data=EVEN_COUNT)

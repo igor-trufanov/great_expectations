@@ -190,7 +190,7 @@ class SQLBatchTestSetup(BatchTestSetup[_ConfigT, TableAsset], ABC, Generic[_Conf
         inferred_column_types: Dict[str, TypeEngine] = {}
         for column, value_list in data.to_dict("list").items():
             python_type = type(value_list[0])
-            if not all(isinstance(val, python_type) for val in value_list):
+            if not all(isinstance(val, python_type) for val in value_list if val is not None):
                 raise RuntimeError(
                     f"Cannot infer type of column {column}. "
                     "Please provide an explicit column type in the test config."
