@@ -1,3 +1,5 @@
+from datetime import datetime
+
 import pandas as pd
 import pytest
 
@@ -29,6 +31,31 @@ def test_success_complete_results(batch_for_datasource: Batch) -> None:
         },
         "observed_value": [1, 2],
     }
+    result = batch_for_datasource.validate(expectation)
+    assert result.success
+
+
+@parameterize_batch_for_data_sources(
+    data_source_configs=ALL_DATA_SOURCES,
+    data=pd.DataFrame({COL_NAME: ["foo", "bar"]}),
+)
+def test_strings(batch_for_datasource: Batch) -> None:
+    expectation = gxe.ExpectColumnDistinctValuesToBeInSet(
+        column=COL_NAME, value_set=["foo", "bar", "baz"]
+    )
+    result = batch_for_datasource.validate(expectation)
+    assert result.success
+
+
+@parameterize_batch_for_data_sources(
+    data_source_configs=ALL_DATA_SOURCES,
+    data=pd.DataFrame({COL_NAME: [datetime(2024, 11, 19), datetime(2024, 11, 20)]}),  # noqa: DTZ001
+)
+def test_dates(batch_for_datasource: Batch) -> None:
+    expectation = gxe.ExpectColumnDistinctValuesToBeInSet(
+        column=COL_NAME,
+        value_set=[datetime(2024, 11, 19), datetime(2024, 11, 20)],  # noqa: DTZ001
+    )
     result = batch_for_datasource.validate(expectation)
     assert result.success
 
