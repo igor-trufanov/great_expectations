@@ -492,3 +492,6 @@ docs/guides/setup/configuring_data_docs/how_to_host_and_share_data_docs_on_azure
 /docs/reference/api/* /docs/0.18/reference/api/:splat
 
 /docs/cloud/expectation_suites/manage_expectation_suites /docs/cloud/expectations/manage_expectations
+
+## Redirects for renamed core docs
+/docs/core/customize_expectations/expectation_row_conditions /docs/core/customize_expectations/expectation_conditions
