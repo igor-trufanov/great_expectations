@@ -33,6 +33,8 @@ ALL_DATA_SOURCES: Sequence[DataSourceTestConfig] = [
     SqliteDatasourceTestConfig(),
 ]
 
+JUST_PANDAS_DATA_SOURCES: Sequence[DataSourceTestConfig] = [PandasDataFrameDatasourceTestConfig()]
+
 
 @parameterize_batch_for_data_sources(
     data_source_configs=ALL_DATA_SOURCES,
