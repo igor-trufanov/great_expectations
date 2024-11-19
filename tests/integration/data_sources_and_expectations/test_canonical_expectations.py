@@ -33,6 +33,17 @@ ALL_DATA_SOURCES: Sequence[DataSourceTestConfig] = [
     SqliteDatasourceTestConfig(),
 ]
 
+DATA_SOURCES_THAT_SUPPORT_DATE_COMPARISONS: Sequence[DataSourceTestConfig] = [
+    BigQueryDatasourceTestConfig(),
+    DatabricksDatasourceTestConfig(),
+    MSSQLDatasourceTestConfig(),
+    MySQLDatasourceTestConfig(),
+    PandasDataFrameDatasourceTestConfig(),
+    PostgreSQLDatasourceTestConfig(),
+    SnowflakeDatasourceTestConfig(),
+    SparkFilesystemCsvDatasourceTestConfig(),
+]
+
 JUST_PANDAS_DATA_SOURCES: Sequence[DataSourceTestConfig] = [PandasDataFrameDatasourceTestConfig()]
 
 
