@@ -13,7 +13,7 @@ from tests.integration.data_sources_and_expectations.test_canonical_expectations
     JUST_PANDAS_DATA_SOURCES,
 )
 
-COL_NAME = "my-col"
+COL_NAME = "my_col"
 
 ONES_AND_TWOS = pd.DataFrame({COL_NAME: [1, 2, 2, 2]})
 
