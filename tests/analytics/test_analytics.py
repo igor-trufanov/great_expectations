@@ -148,12 +148,14 @@ def test_cloud_context_init(cloud_api_fake, cloud_details, monkeypatch):
         ) as mock_init,
         mock.patch("posthog.capture") as mock_submit,
     ):
-        _ = gx.get_context(
+        context = gx.get_context(
             cloud_access_token=cloud_details.access_token,
             cloud_organization_id=cloud_details.org_id,
             cloud_base_url=cloud_details.base_url,
             cloud_mode=True,
+            mode="cloud",
         )
+        assert isinstance(context, gx.CloudDataContext)
 
     mock_init.assert_called_once_with(
         enable=True,
