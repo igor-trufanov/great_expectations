@@ -12,29 +12,23 @@ from tests.integration.data_sources_and_expectations.test_canonical_expectations
     JUST_PANDAS_DATA_SOURCES,
 )
 
-NUM_COL = "my_nums"
-STRING_COL = "my_strings"
+COL_NAME = "my_strings"
 
-DATA = pd.DataFrame(
-    {
-        NUM_COL: [1, 2, 1, None],
-        STRING_COL: ["one", "two", "one", None],
-    }
-)
+DATA = pd.DataFrame({COL_NAME: ["AA", "AAA", None]})
 
 
 @parameterize_batch_for_data_sources(data_source_configs=ALL_DATA_SOURCES, data=DATA)
 def test_success_complete(batch_for_datasource: Batch) -> None:
-    expectation = gxe.ExpectColumnValueLengthsToBeBetween(column=NUM_COL, min_value=3, max_value=3)
+    expectation = gxe.ExpectColumnValueLengthsToBeBetween(column=COL_NAME, min_value=2, max_value=3)
     result = batch_for_datasource.validate(expectation, result_format=ResultFormat.COMPLETE)
     assert result.success
     assert result.to_json_dict()["result"] == {
-        "element_count": 4,
+        "element_count": 3,
         "unexpected_count": 0,
         "unexpected_percent": 0.0,
         "partial_unexpected_list": [],
         "missing_count": 1,
-        "missing_percent": 25.0,
+        "missing_percent": pytest.approx(33.33333333333),
         "unexpected_percent_total": 0.0,
         "unexpected_percent_nonmissing": 0.0,
         "partial_unexpected_counts": [],
@@ -49,23 +43,19 @@ def test_success_complete(batch_for_datasource: Batch) -> None:
     "expectation",
     [
         pytest.param(
-            gxe.ExpectColumnValueLengthsToBeBetween(column=STRING_COL, min_value=3, max_value=3),
-            id="strings",
-        ),
-        pytest.param(
-            gxe.ExpectColumnValueLengthsToBeBetween(column=NUM_COL, min_value=3),
+            gxe.ExpectColumnValueLengthsToBeBetween(column=COL_NAME, min_value=2),
             id="no_max",
         ),
         pytest.param(
-            gxe.ExpectColumnValueLengthsToBeBetween(column=NUM_COL, max_value=6),
+            gxe.ExpectColumnValueLengthsToBeBetween(column=COL_NAME, max_value=3),
             id="no_min",
         ),
         pytest.param(
             gxe.ExpectColumnValueLengthsToBeBetween(
-                column=NUM_COL, min_value=1, max_value=5, strict_min=True, strict_max=True
+                column=COL_NAME, min_value=1, max_value=4, strict_min=True, strict_max=True
             ),
-            id="strict_bounds",
             marks=pytest.mark.xfail(strict=True),
+            id="strict_bounds",
         ),
     ],
 )
@@ -81,15 +71,19 @@ def test_success(
     "expectation",
     [
         pytest.param(
-            gxe.ExpectColumnValueLengthsToBeBetween(column=NUM_COL, min_value=6, max_value=8),
-            id="bad_range",
+            gxe.ExpectColumnValueLengthsToBeBetween(column=COL_NAME, min_value=0, max_value=1),
+            id="range_too_low",
         ),
         pytest.param(
-            gxe.ExpectColumnValueLengthsToBeBetween(column=NUM_COL, min_value=3, strict_min=True),
+            gxe.ExpectColumnValueLengthsToBeBetween(column=COL_NAME, min_value=6, max_value=8),
+            id="range_too_high",
+        ),
+        pytest.param(
+            gxe.ExpectColumnValueLengthsToBeBetween(column=COL_NAME, min_value=2, strict_min=True),
             id="strict_min",
         ),
         pytest.param(
-            gxe.ExpectColumnValueLengthsToBeBetween(column=NUM_COL, max_value=3, strict_max=True),
+            gxe.ExpectColumnValueLengthsToBeBetween(column=COL_NAME, max_value=3, strict_max=True),
             id="strict_max",
         ),
     ],
