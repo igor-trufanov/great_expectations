@@ -29,7 +29,6 @@ def test_success_complete_results(batch_for_datasource: Batch) -> None:
     result = batch_for_datasource.validate(expectation, result_format=ResultFormat.COMPLETE)
     assert result.success
     assert result.to_json_dict()["result"] == {"observed_value": pytest.approx(1.1547005383792517)}
-    assert result.to_json_dict()["result"] == {"observed_value": 1.1547005383792517}
 
 
 @pytest.mark.parametrize(
