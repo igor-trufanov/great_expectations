@@ -38,8 +38,8 @@ TESTING_UUID = UUID("00000000-c000-0000-0000-000000000000")
                 "organization_id": TESTING_UUID,
                 "data_context_id": None,
                 "oss_id": None,
-                "service": "gx-core",
                 "cloud_mode": False,
+                "service": "gx-core",
             },
         ),
         (
@@ -48,8 +48,8 @@ TESTING_UUID = UUID("00000000-c000-0000-0000-000000000000")
             {
                 "data_context_id": None,
                 "oss_id": None,
-                "service": "gx-core",
                 "cloud_mode": False,
+                "service": "gx-core",
             },
         ),
         (
@@ -58,7 +58,7 @@ TESTING_UUID = UUID("00000000-c000-0000-0000-000000000000")
                 user_id=TESTING_UUID,
                 data_context_id=None,
                 oss_id=None,
-                cloud_mode=False,
+                cloud_mode=True,
                 service="gx-runner",
             ),
             TESTING_UUID,
@@ -68,7 +68,7 @@ TESTING_UUID = UUID("00000000-c000-0000-0000-000000000000")
                 "data_context_id": None,
                 "oss_id": None,
                 "service": "gx-runner",
-                "cloud_mode": False,
+                "cloud_mode": True,
             },
         ),
     ],

@@ -9,6 +9,8 @@ from great_expectations.compatibility.pydantic import (
     HttpUrl,
 )
 
+DEFAULT_SERVICE_NAME = "gx-core"
+
 
 class _EnvConfig(BaseSettings):
     gx_analytics_enabled: Optional[bool] = None
@@ -40,7 +42,7 @@ class Config(GenericModel):
     data_context_id: Optional[UUID] = None
     oss_id: Optional[UUID] = None
     cloud_mode: bool = False
-    service: Optional[str] = None
+    service: Optional[str] = DEFAULT_SERVICE_NAME
 
 
 ENV_CONFIG = _EnvConfig()

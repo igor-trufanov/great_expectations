@@ -7,7 +7,7 @@ SUPPORT_EMAIL = "support@greatexpectations.io"
 CLOUD_DEFAULT_BASE_URL: Final[str] = "https://api.greatexpectations.io/"
 CLOUD_APP_DEFAULT_BASE_URL: Final[str] = "https://app.greatexpectations.io/"
 CLOUD_VALID_SERVICE_NAMES = ["gx-agent", "gx-runner", "gx-core"]
-CLOUD_DEFAULT_SERVICE_NAME: Final[str] = "gx-core"
+CLOUD_DEFAULT_SERVICE_NAME: Final[str] = "gx-agent"
 
 
 class GXCloudEnvironmentVariable(str, Enum):
