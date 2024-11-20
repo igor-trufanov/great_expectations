@@ -162,6 +162,7 @@ def test_cloud_context_init(cloud_api_fake, cloud_details, monkeypatch):
         organization_id=UUID(cloud_details.org_id),
         oss_id=mock.ANY,
         cloud_mode=True,
+        service="gx-agent",
     )
     mock_submit.assert_called_once_with(
         mock.ANY,
@@ -169,8 +170,9 @@ def test_cloud_context_init(cloud_api_fake, cloud_details, monkeypatch):
         {
             "data_context_id": mock.ANY,
             "oss_id": mock.ANY,
-            "service": "gx-core",
+            "service": "gx-agent",
             "gx_version": mock.ANY,
+            "cloud_mode": True,
         },
         groups={"data_context": mock.ANY},
     )
