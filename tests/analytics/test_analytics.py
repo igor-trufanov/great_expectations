@@ -118,12 +118,11 @@ def test_ephemeral_context_init(monkeypatch):
 
     mock_init.assert_called_once_with(
         enable=True,
+        user_id=None,
         data_context_id=mock.ANY,
         organization_id=None,
         oss_id=mock.ANY,
-        user_id=None,
         service="gx-core",
-        cloud_mode=False,
     )
     mock_submit.assert_called_once_with(
         mock.ANY,
