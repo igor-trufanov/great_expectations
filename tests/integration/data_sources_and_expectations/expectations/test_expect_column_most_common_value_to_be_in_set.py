@@ -18,9 +18,7 @@ DATA = pd.DataFrame({COL_NAME: [0, 1, 1, 2, 2, 2, 3, 4, 4, 4, *A_LOT_OF_NONES]},
 
 @parameterize_batch_for_data_sources(data_source_configs=ALL_DATA_SOURCES, data=DATA)
 def test_success_complete_results(batch_for_datasource: Batch) -> None:
-    expectation = gxe.ExpectColumnMostCommonValueToBeInSet(
-        column=COL_NAME, value_set=[2, 4], ties_okay=True
-    )
+    expectation = gxe.ExpectColumnMostCommonValueToBeInSet(column=COL_NAME, value_set=[2, 4])
     result = batch_for_datasource.validate(expectation, result_format=ResultFormat.COMPLETE)
     assert result.success
     assert result.to_json_dict()["result"] == {"observed_value": [2, 4]}
@@ -33,7 +31,7 @@ def test_success_complete_results(batch_for_datasource: Batch) -> None:
 def test_strings(batch_for_datasource: Batch) -> None:
     """Ensure the median is calculated as the mean of the two middle values."""
     expectation = gxe.ExpectColumnMostCommonValueToBeInSet(
-        column=COL_NAME, value_set=["bar", "something_else"], ties_okay=True
+        column=COL_NAME, value_set=["bar", "something_else"]
     )
     result = batch_for_datasource.validate(expectation)
     assert result.success
@@ -43,16 +41,12 @@ def test_strings(batch_for_datasource: Batch) -> None:
     "expectation",
     [
         pytest.param(
-            gxe.ExpectColumnMostCommonValueToBeInSet(
-                column=COL_NAME, value_set=[2, 4, 100], ties_okay=True
-            ),
+            gxe.ExpectColumnMostCommonValueToBeInSet(column=COL_NAME, value_set=[2, 4, 100]),
             id="value_set_has_extra_values",
         ),
         pytest.param(
             # This test case surprises me
-            gxe.ExpectColumnMostCommonValueToBeInSet(
-                column=COL_NAME, value_set=[2], ties_okay=True
-            ),
+            gxe.ExpectColumnMostCommonValueToBeInSet(column=COL_NAME, value_set=[2]),
             id="value_set_is_subset",
         ),
     ],
