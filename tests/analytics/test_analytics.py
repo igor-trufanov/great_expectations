@@ -39,12 +39,18 @@ TESTING_UUID = UUID("00000000-c000-0000-0000-000000000000")
                 "data_context_id": None,
                 "oss_id": None,
                 "service": "gx-core",
+                "cloud_mode": False,
             },
         ),
         (
             Config(),
             None,
-            {"data_context_id": None, "oss_id": None, "service": "gx-core"},
+            {
+                "data_context_id": None,
+                "oss_id": None,
+                "service": "gx-core",
+                "cloud_mode": False,
+            },
         ),
         (
             Config(
@@ -62,6 +68,7 @@ TESTING_UUID = UUID("00000000-c000-0000-0000-000000000000")
                 "data_context_id": None,
                 "oss_id": None,
                 "service": "gx-runner",
+                "cloud_mode": False,
             },
         ),
     ],
@@ -116,6 +123,7 @@ def test_ephemeral_context_init(monkeypatch):
         oss_id=mock.ANY,
         user_id=None,
         service="gx-core",
+        cloud_mode=False,
     )
     mock_submit.assert_called_once_with(
         mock.ANY,
@@ -125,6 +133,7 @@ def test_ephemeral_context_init(monkeypatch):
             "oss_id": mock.ANY,
             "service": "gx-core",
             "gx_version": mock.ANY,
+            "cloud_mode": False,
         },
         groups={"data_context": mock.ANY},
     )
