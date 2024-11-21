@@ -6,7 +6,6 @@ from typing import TYPE_CHECKING, Any, ClassVar, Dict, Optional, Tuple, Type, Un
 
 import numpy as np
 import pandas as pd
-
 from great_expectations.compatibility import aws, pydantic, pyspark, trino
 from great_expectations.compatibility.sqlalchemy import sqlalchemy as sa
 from great_expectations.compatibility.typing_extensions import override
@@ -407,7 +406,6 @@ class ExpectColumnValuesToBeOfType(ColumnMapExpectation):
         }
 
     def _validate_sqlalchemy(self, actual_column_type, expected_type, execution_engine):
-        breakpoint()
         success = False
         if expected_type is None:
             success = True
@@ -509,7 +507,7 @@ class ExpectColumnValuesToBeOfType(ColumnMapExpectation):
             except AttributeError:
                 logger.debug(f"Unrecognized type: {expected_type}")
             if len(types) == 0:
-                raise ValueError("No recognized spark types in expected_types_list")
+                raise ValueError("No recognized spark types in expected_types_list")  # noqa: TRY003
             types = tuple(types)
             success = isinstance(actual_column_type, types)
         return {

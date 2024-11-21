@@ -406,7 +406,7 @@ class CaseInsensitiveNameDict(UserDict):
         return item
 
 
-def get_sqlalchemy_column_metadata(
+def get_sqlalchemy_column_metadata(  # noqa: C901
     execution_engine: SqlAlchemyExecutionEngine,
     table_selectable: sqlalchemy.Select,
     schema_name: Optional[str] = None,
@@ -435,11 +435,6 @@ def get_sqlalchemy_column_metadata(
                     table_name=table_name,
                     schema=schema_name,
                 )
-                # WARNING: Do not edit columns in place. This will affect the underlying inspector object.
-                columns_copy = [column.copy() for column in columns]
-                for column in columns_copy:
-                    column["type"] = column["type"].compile(dialect=engine.dialect)
-                return columns_copy
         except (
             KeyError,
             AttributeError,
@@ -464,21 +459,28 @@ def get_sqlalchemy_column_metadata(
                 sqlalchemy_engine=engine,
             )
 
+        columns_copy = []
         dialect_name = execution_engine.dialect.name
         if dialect_name == GXSqlDialect.SNOWFLAKE:
-            return [
+            columns_copy = [
                 # TODO: SmartColumn should know the dialect and do lookups based on that
                 CaseInsensitiveNameDict(column)
                 for column in columns
             ]
+        else:
+            # WARNING: Do not edit columns in place. It will affect the underlying inspector object.
+            columns_copy = [column.copy() for column in columns]
 
-        return columns
+        for column in columns_copy:
+            column["type"] = column["type"].compile(dialect=engine.dialect)
+
+        return columns_copy
     except AttributeError as e:
         logger.debug(f"Error while introspecting columns: {e!r}", exc_info=e)
         return None
 
 
-def column_reflection_fallback(  # noqa: C901, PLR0915
+def column_reflection_fallback(  # noqa: C901, PLR0912, PLR0915
     selectable: sqlalchemy.Select,
     dialect: sqlalchemy.Dialect,
     sqlalchemy_engine: sqlalchemy.Engine,
@@ -1023,7 +1025,7 @@ def validate_distribution_parameters(  # noqa: C901, PLR0912, PLR0915
         "chi2",
         "expon",
     ]:
-        raise AttributeError(f"Unsupported  distribution provided: {distribution}")
+        raise AttributeError(f"Unsupported  distribution provided: {distribution}")  # noqa: TRY003
 
     if isinstance(params, dict):
         # `params` is a dictionary
@@ -1052,27 +1054,27 @@ def validate_distribution_parameters(  # noqa: C901, PLR0912, PLR0915
         # `params` is a tuple or a list
         if distribution == "beta":
             if len(params) < 2:  # noqa: PLR2004
-                raise ValueError(f"Missing required parameters: {beta_msg}")
+                raise ValueError(f"Missing required parameters: {beta_msg}")  # noqa: TRY003
             if params[0] <= 0 or params[1] <= 0:
                 raise ValueError(f"Invalid parameters: {beta_msg}")  # noqa: TRY003
             if len(params) == 4:  # noqa: PLR2004
                 scale = params[3]
             elif len(params) > 4:  # noqa: PLR2004
-                raise ValueError(f"Too many parameters provided: {beta_msg}")
+                raise ValueError(f"Too many parameters provided: {beta_msg}")  # noqa: TRY003
 
         elif distribution == "norm":
             if len(params) > 2:  # noqa: PLR2004
-                raise ValueError(f"Too many parameters provided: {norm_msg}")
+                raise ValueError(f"Too many parameters provided: {norm_msg}")  # noqa: TRY003
             if len(params) == 2:  # noqa: PLR2004
                 scale = params[1]
 
         elif distribution == "gamma":
             if len(params) < 1:
-                raise ValueError(f"Missing required parameters: {gamma_msg}")
+                raise ValueError(f"Missing required parameters: {gamma_msg}")  # noqa: TRY003
             if len(params) == 3:  # noqa: PLR2004
                 scale = params[2]
             if len(params) > 3:  # noqa: PLR2004
-                raise ValueError(f"Too many parameters provided: {gamma_msg}")
+                raise ValueError(f"Too many parameters provided: {gamma_msg}")  # noqa: TRY003
             elif params[0] <= 0:
                 raise ValueError(f"Invalid parameters: {gamma_msg}")  # noqa: TRY003
 
@@ -1088,15 +1090,15 @@ def validate_distribution_parameters(  # noqa: C901, PLR0912, PLR0915
             if len(params) == 2:  # noqa: PLR2004
                 scale = params[1]
             if len(params) > 2:  # noqa: PLR2004
-                raise ValueError(f"Too many arguments provided: {uniform_msg}")
+                raise ValueError(f"Too many arguments provided: {uniform_msg}")  # noqa: TRY003
 
         elif distribution == "chi2":
             if len(params) < 1:
-                raise ValueError(f"Missing required parameters: {chi2_msg}")
+                raise ValueError(f"Missing required parameters: {chi2_msg}")  # noqa: TRY003
             elif len(params) == 3:  # noqa: PLR2004
                 scale = params[2]
             elif len(params) > 3:  # noqa: PLR2004
-                raise ValueError(f"Too many arguments provided: {chi2_msg}")
+                raise ValueError(f"Too many arguments provided: {chi2_msg}")  # noqa: TRY003
             if params[0] <= 0:
                 raise ValueError(f"Invalid parameters: {chi2_msg}")  # noqa: TRY003
 
@@ -1104,7 +1106,7 @@ def validate_distribution_parameters(  # noqa: C901, PLR0912, PLR0915
             if len(params) == 2:  # noqa: PLR2004
                 scale = params[1]
             if len(params) > 2:  # noqa: PLR2004
-                raise ValueError(f"Too many arguments provided: {expon_msg}")
+                raise ValueError(f"Too many arguments provided: {expon_msg}")  # noqa: TRY003
 
         if scale is not None and scale <= 0:
             raise ValueError("std_dev and scale must be positive.")  # noqa: TRY003

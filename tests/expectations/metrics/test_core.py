@@ -1013,7 +1013,7 @@ def test_column_partition_metric_pd():
                     11,
                 ],
                 "b": [
-                    datetime.datetime(2021, 1, 1, 0, 0, 0) + datetime.timedelta(days=(week_idx * 7))
+                    datetime.datetime(2021, 1, 1, 0, 0, 0) + datetime.timedelta(days=(week_idx * 7))  # noqa: DTZ001
                     for week_idx in range(12)
                 ],
             },
@@ -1174,7 +1174,7 @@ def test_column_partition_metric_sa(sa):  # noqa: PLR0915
                     11,
                 ],
                 "b": [
-                    datetime.datetime(2021, 1, 1, 0, 0, 0) + datetime.timedelta(days=(week_idx * 7))
+                    datetime.datetime(2021, 1, 1, 0, 0, 0) + datetime.timedelta(days=(week_idx * 7))  # noqa: DTZ001
                     for week_idx in range(12)
                 ],
             },
@@ -1350,7 +1350,7 @@ def test_column_partition_metric_sa(sa):  # noqa: PLR0915
     assert all(
         isclose(
             operand_a=element,
-            operand_b=(datetime.datetime(2021, 1, 1, 0, 0, 0) + (increment * idx)),
+            operand_b=(datetime.datetime(2021, 1, 1, 0, 0, 0) + (increment * idx)),  # noqa: DTZ001
         )
         for idx, element in enumerate(results[desired_metric.id])
     )
@@ -1391,7 +1391,7 @@ def test_column_partition_metric_spark(spark_session):  # noqa: PLR0915
                     11,
                 ],
                 "b": [
-                    datetime.datetime(2021, 1, 1, 0, 0, 0) + datetime.timedelta(days=(week_idx * 7))
+                    datetime.datetime(2021, 1, 1, 0, 0, 0) + datetime.timedelta(days=(week_idx * 7))  # noqa: DTZ001
                     for week_idx in range(12)
                 ],
             },
@@ -1573,7 +1573,7 @@ def test_column_partition_metric_spark(spark_session):  # noqa: PLR0915
     assert all(
         isclose(
             operand_a=element,
-            operand_b=(datetime.datetime(2021, 1, 1, 0, 0, 0) + (increment * idx)),
+            operand_b=(datetime.datetime(2021, 1, 1, 0, 0, 0) + (increment * idx)),  # noqa: DTZ001
         )
         for idx, element in enumerate(results[desired_metric.id])
     )
