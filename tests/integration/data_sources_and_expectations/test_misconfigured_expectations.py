@@ -15,7 +15,11 @@ from tests.integration.data_sources_and_expectations.test_canonical_expectations
 )
 def test_numeric_expectation_against_str_data_misconfiguration(batch_for_datasource) -> None:
     expectation = gxe.ExpectColumnStdevToBeBetween(
-        column="a", min_value=0, max_value=1, strict_max=True
+        column="a",
+        min_value=0,
+        max_value=1,
+        strict_min=True,
+        strict_max=True,
     )
     result = batch_for_datasource.validate(expectation)
     assert not result.success
