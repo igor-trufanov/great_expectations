@@ -14,7 +14,9 @@ from tests.integration.data_sources_and_expectations.test_canonical_expectations
     data=pd.DataFrame({"a": ["b", "c"]}),
 )
 def test_numeric_expectation_against_str_data_misconfiguration(batch_for_datasource) -> None:
-    expectation = gxe.ExpectColumnStdevToBeBetween(column="a", min_value=0, max_value=1)
+    expectation = gxe.ExpectColumnStdevToBeBetween(
+        column="a", min_value=0, max_value=1, strict_max=True
+    )
     result = batch_for_datasource.validate(expectation)
     assert not result.success
     assert "could not convert string to float" in str(result.exception_info)
@@ -29,6 +31,7 @@ def test_datetime_expectation_against_numeric_data_misconfiguration(batch_for_da
         column="a",
         min_value=dt.datetime(2024, 1, 1, tzinfo=dt.timezone.utc),
         max_value=dt.datetime(2024, 1, 2, tzinfo=dt.timezone.utc),
+        strict_max=True,
     )
     result = batch_for_datasource.validate(expectation)
     assert not result.success
