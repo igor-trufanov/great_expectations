@@ -6,7 +6,7 @@ cd assets/docker/postgresql
 docker compose up
 
 2. Run the following command from the repo root dir in a second terminal:
-pytest --postgresql --docs-tests -k "data_quality_use_case_integration_workflow" tests/integration/test_script_runner.py
+pytest --postgresql --docs-tests -k "data_quality_use_case_freshness_workflow" tests/integration/test_script_runner.py
 """
 
 # <snippet name="docs/docusaurus/docs/reference/learn/data_quality_use_cases/freshness_resources/freshness_workflow.py full workflow">

@@ -80,7 +80,7 @@ Use ExpectColumnMaxToBeBetween to validate the most recent data point, ensuring 
 <TabItem value="gx_core" label="GX Core">
 Run the following GX Core workflow.
 
-```python title="Python" name="docs/docusaurus/docs/reference/learn/data_quality_use_cases/freshness_resources/freshness_workflow.py full example code"
+```python title="Python" name="docs/docusaurus/docs/reference/learn/data_quality_use_cases/freshness_resources/freshness_workflow.py full workflow"
 ```
 
 **Result**:
