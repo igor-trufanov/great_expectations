@@ -459,7 +459,6 @@ def get_sqlalchemy_column_metadata(  # noqa: C901
                 sqlalchemy_engine=engine,
             )
 
-        columns_copy = []
         dialect_name = execution_engine.dialect.name
         if dialect_name == GXSqlDialect.SNOWFLAKE:
             columns_copy = [
@@ -467,14 +466,18 @@ def get_sqlalchemy_column_metadata(  # noqa: C901
                 CaseInsensitiveNameDict(column)
                 for column in columns
             ]
+            for column in columns_copy:
+                column["type"] = column["type"].compile(dialect=engine.dialect)
+
+            return columns_copy
         else:
             # WARNING: Do not edit columns in place. It will affect the underlying inspector object.
             columns_copy = [column.copy() for column in columns]
 
-        for column in columns_copy:
-            column["type"] = column["type"].compile(dialect=engine.dialect)
+            for column in columns_copy:
+                column["type"] = column["type"].compile(dialect=engine.dialect)
 
-        return columns_copy
+            return columns_copy
     except AttributeError as e:
         logger.debug(f"Error while introspecting columns: {e!r}", exc_info=e)
         return None
