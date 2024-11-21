@@ -19,11 +19,9 @@ from typing import (
     overload,
 )
 
+import great_expectations.exceptions as gx_exceptions
 import numpy as np
 from dateutil.parser import parse
-from packaging import version
-
-import great_expectations.exceptions as gx_exceptions
 from great_expectations.compatibility import aws, sqlalchemy, trino
 from great_expectations.compatibility.sqlalchemy import (
     sqlalchemy as sa,
@@ -40,6 +38,7 @@ from great_expectations.execution_engine.sqlalchemy_dialect import (
     GXSqlDialect,
 )
 from great_expectations.execution_engine.util import check_sql_engine_dialect
+from packaging import version
 
 try:
     import psycopg2  # noqa: F401
@@ -78,8 +77,9 @@ from great_expectations.compatibility import bigquery as sqla_bigquery
 from great_expectations.compatibility.bigquery import bigquery_types_tuple
 
 if TYPE_CHECKING:
-    import pandas as pd
     from typing_extensions import TypeAlias
+
+    import pandas as pd
 
 try:
     import teradatasqlalchemy.dialect
@@ -202,7 +202,9 @@ def get_dialect_regex_expression(  # noqa: C901, PLR0911, PLR0912, PLR0915
             if positive:
                 return sa.func.REGEXP_CONTAINS(column, sqlalchemy.literal(regex))
             else:
-                return sa.not_(sa.func.REGEXP_CONTAINS(column, sqlalchemy.literal(regex)))
+                return sa.not_(
+                    sa.func.REGEXP_CONTAINS(column, sqlalchemy.literal(regex))
+                )
     except (
         AttributeError,
         TypeError,
@@ -250,7 +252,9 @@ def get_dialect_regex_expression(  # noqa: C901, PLR0911, PLR0912, PLR0915
             if positive:
                 return sa.func.REGEXP_MATCHES(column, sqlalchemy.literal(regex))
             else:
-                return sa.not_(sa.func.REGEXP_MATCHES(column, sqlalchemy.literal(regex)))
+                return sa.not_(
+                    sa.func.REGEXP_MATCHES(column, sqlalchemy.literal(regex))
+                )
     except (
         AttributeError,
         TypeError,
@@ -282,7 +286,9 @@ def get_dialect_regex_expression(  # noqa: C901, PLR0911, PLR0912, PLR0915
         # regex_match for sqlite introduced in sqlalchemy v1.4
         if issubclass(dialect.dialect, sa.dialects.sqlite.dialect) and version.parse(  # type: ignore[union-attr]
             sa.__version__
-        ) >= version.parse("1.4"):
+        ) >= version.parse(
+            "1.4"
+        ):
             if positive:
                 return column.regexp_match(sqlalchemy.literal(regex))
             else:
@@ -303,7 +309,9 @@ def _get_dialect_type_module(
     dialect: ModuleType | Type[sa.Dialect] | sa.Dialect | None = None,
 ) -> ModuleType | Type[sa.Dialect] | sa.Dialect:
     if dialect is None:
-        logger.warning("No sqlalchemy dialect found; relying in top-level sqlalchemy types.")
+        logger.warning(
+            "No sqlalchemy dialect found; relying in top-level sqlalchemy types."
+        )
         return sa
 
     # Redshift does not (yet) export types to top level; only recognize base SA types
@@ -350,9 +358,12 @@ def attempt_allowing_relative_error(dialect):
         candidate_sql_engine_dialect=aws.redshiftdialect.RedshiftDialect,
     )
     # noinspection PyTypeChecker
-    detected_psycopg2: bool = sqlalchemy_psycopg2 is not None and check_sql_engine_dialect(
-        actual_sql_engine_dialect=dialect,
-        candidate_sql_engine_dialect=sqlalchemy_psycopg2.PGDialect_psycopg2,
+    detected_psycopg2: bool = (
+        sqlalchemy_psycopg2 is not None
+        and check_sql_engine_dialect(
+            actual_sql_engine_dialect=dialect,
+            candidate_sql_engine_dialect=sqlalchemy_psycopg2.PGDialect_psycopg2,
+        )
     )
     return detected_redshift or detected_psycopg2
 
@@ -441,8 +452,12 @@ def get_sqlalchemy_column_metadata(  # noqa: C901
             sa.exc.NoSuchTableError,
             sa.exc.ProgrammingError,
         ) as exc:
-            logger.debug(f"{type(exc).__name__} while introspecting columns", exc_info=exc)
-            logger.info(f"While introspecting columns {exc!r}; attempting reflection fallback")
+            logger.debug(
+                f"{type(exc).__name__} while introspecting columns", exc_info=exc
+            )
+            logger.info(
+                f"While introspecting columns {exc!r}; attempting reflection fallback"
+            )
             # we will get a KeyError for temporary tables, since
             # reflection will not find the temporary schema
             columns = column_reflection_fallback(
@@ -461,15 +476,15 @@ def get_sqlalchemy_column_metadata(  # noqa: C901
 
         dialect_name = execution_engine.dialect.name
         if dialect_name == GXSqlDialect.SNOWFLAKE:
-            columns_copy = [
+            case_insensitive_columns = [
                 # TODO: SmartColumn should know the dialect and do lookups based on that
                 CaseInsensitiveNameDict(column)
                 for column in columns
             ]
-            for column in columns_copy:
+            for column in case_insensitive_columns:
                 column["type"] = column["type"].compile(dialect=engine.dialect)
 
-            return columns_copy
+            return case_insensitive_columns
         else:
             # WARNING: Do not edit columns in place. It will affect the underlying inspector object.
             columns_copy = [column.copy() for column in columns]
@@ -508,11 +523,15 @@ def column_reflection_fallback(  # noqa: C901, PLR0912, PLR0915
                 sa.column("schema_id"),
                 sa.column("name"),
                 schema="sys",
-            ).alias("sys_tables_table_clause")
+            ).alias(
+                "sys_tables_table_clause"
+            )
             tables_table_query: sqlalchemy.Select = (
                 sa.select(  # type: ignore[assignment]
                     tables_table_clause.columns.object_id.label("object_id"),
-                    sa.func.schema_name(tables_table_clause.columns.schema_id).label("schema_name"),
+                    sa.func.schema_name(tables_table_clause.columns.schema_id).label(
+                        "schema_name"
+                    ),
                     tables_table_clause.columns.name.label("table_name"),
                 )
                 .select_from(tables_table_clause)
@@ -527,7 +546,9 @@ def column_reflection_fallback(  # noqa: C901, PLR0912, PLR0915
                 sa.column("max_length"),
                 sa.column("precision"),
                 schema="sys",
-            ).alias("sys_columns_table_clause")
+            ).alias(
+                "sys_columns_table_clause"
+            )
             columns_table_query: sqlalchemy.Select = (
                 sa.select(  # type: ignore[assignment]
                     columns_table_clause.columns.object_id.label("object_id"),
@@ -545,7 +566,9 @@ def column_reflection_fallback(  # noqa: C901, PLR0912, PLR0915
                 sa.column("user_type_id"),
                 sa.column("name"),
                 schema="sys",
-            ).alias("sys_types_table_clause")
+            ).alias(
+                "sys_types_table_clause"
+            )
             types_table_query: sqlalchemy.Select = (
                 sa.select(  # type: ignore[assignment]
                     types_table_clause.columns.user_type_id.label("user_type_id"),
@@ -644,7 +667,8 @@ def column_reflection_fallback(  # noqa: C901, PLR0912, PLR0915
             conditions = sa.and_(
                 *(
                     tables_table_query.c.table_name == columns_table_query.c.table_name,
-                    tables_table_query.c.schema_name == columns_table_query.c.schema_name,
+                    tables_table_query.c.schema_name
+                    == columns_table_query.c.schema_name,
                 )
             )
             col_info_query = (
@@ -795,7 +819,9 @@ def get_dbms_compatible_column_names(
     Returns:
         Single property-typed column name object or list of property-typed column name objects (depending on input).
     """  # noqa: E501
-    normalized_typed_batch_columns_mappings: List[Tuple[str, str | sqlalchemy.quoted_name]] = (
+    normalized_typed_batch_columns_mappings: List[
+        Tuple[str, str | sqlalchemy.quoted_name]
+    ] = (
         _verify_column_names_exist_and_get_normalized_typed_column_names_map(
             column_names=column_names,
             batch_columns_list=batch_columns_list,
@@ -864,15 +890,26 @@ def _verify_column_names_exist_and_get_normalized_typed_column_names_map(  # noq
 
             # use explicit identifier if passed in by user
             if isinstance(typed_column_name_cursor, str) and (
-                (column_name.casefold().strip('"') == typed_column_name_cursor.casefold())
-                or (column_name.casefold().strip("[]") == typed_column_name_cursor.casefold())
-                or (column_name.casefold().strip("`") == typed_column_name_cursor.casefold())
+                (
+                    column_name.casefold().strip('"')
+                    == typed_column_name_cursor.casefold()
+                )
+                or (
+                    column_name.casefold().strip("[]")
+                    == typed_column_name_cursor.casefold()
+                )
+                or (
+                    column_name.casefold().strip("`")
+                    == typed_column_name_cursor.casefold()
+                )
             ):
                 return column_name, column_name
 
         return None
 
-    normalized_batch_columns_mappings: List[Tuple[str, str | sqlalchemy.quoted_name]] = []
+    normalized_batch_columns_mappings: List[
+        Tuple[str, str | sqlalchemy.quoted_name]
+    ] = []
 
     normalized_column_name_mapping: Tuple[str, str | sqlalchemy.quoted_name] | None
     column_name: str
@@ -892,7 +929,9 @@ def _verify_column_names_exist_and_get_normalized_typed_column_names_map(  # noq
 
 
 def parse_value_set(value_set: Iterable) -> list:
-    parsed_value_set = [parse(value) if isinstance(value, str) else value for value in value_set]
+    parsed_value_set = [
+        parse(value) if isinstance(value, str) else value for value in value_set
+    ]
     return parsed_value_set
 
 
@@ -1009,15 +1048,19 @@ def validate_distribution_parameters(  # noqa: C901, PLR0912, PLR0915
 
     """  # noqa: E501
 
-    norm_msg = "norm distributions require 0 parameters and optionally 'mean', 'std_dev'."
-    beta_msg = "beta distributions require 2 positive parameters 'alpha', 'beta' and optionally 'loc', 'scale'."  # noqa: E501
-    gamma_msg = (
-        "gamma distributions require 1 positive parameter 'alpha' and optionally 'loc','scale'."
+    norm_msg = (
+        "norm distributions require 0 parameters and optionally 'mean', 'std_dev'."
     )
+    beta_msg = "beta distributions require 2 positive parameters 'alpha', 'beta' and optionally 'loc', 'scale'."  # noqa: E501
+    gamma_msg = "gamma distributions require 1 positive parameter 'alpha' and optionally 'loc','scale'."
     # poisson_msg = "poisson distributions require 1 positive parameter 'lambda' and optionally 'loc'."  # noqa: E501
-    uniform_msg = "uniform distributions require 0 parameters and optionally 'loc', 'scale'."
+    uniform_msg = (
+        "uniform distributions require 0 parameters and optionally 'loc', 'scale'."
+    )
     chi2_msg = "chi2 distributions require 1 positive parameter 'df' and optionally 'loc', 'scale'."
-    expon_msg = "expon distributions require 0 parameters and optionally 'loc', 'scale'."
+    expon_msg = (
+        "expon distributions require 0 parameters and optionally 'loc', 'scale'."
+    )
 
     if distribution not in [
         "norm",
@@ -1028,7 +1071,9 @@ def validate_distribution_parameters(  # noqa: C901, PLR0912, PLR0915
         "chi2",
         "expon",
     ]:
-        raise AttributeError(f"Unsupported  distribution provided: {distribution}")  # noqa: TRY003
+        raise AttributeError(
+            f"Unsupported  distribution provided: {distribution}"
+        )  # noqa: TRY003
 
     if isinstance(params, dict):
         # `params` is a dictionary
@@ -1036,7 +1081,9 @@ def validate_distribution_parameters(  # noqa: C901, PLR0912, PLR0915
             raise ValueError("std_dev and scale must be positive.")  # noqa: TRY003
 
         # alpha and beta are required and positive
-        if distribution == "beta" and (params.get("alpha", -1) <= 0 or params.get("beta", -1) <= 0):
+        if distribution == "beta" and (
+            params.get("alpha", -1) <= 0 or params.get("beta", -1) <= 0
+        ):
             raise ValueError(f"Invalid parameters: {beta_msg}")  # noqa: TRY003
 
         # alpha is required and positive
@@ -1057,27 +1104,37 @@ def validate_distribution_parameters(  # noqa: C901, PLR0912, PLR0915
         # `params` is a tuple or a list
         if distribution == "beta":
             if len(params) < 2:  # noqa: PLR2004
-                raise ValueError(f"Missing required parameters: {beta_msg}")  # noqa: TRY003
+                raise ValueError(
+                    f"Missing required parameters: {beta_msg}"
+                )  # noqa: TRY003
             if params[0] <= 0 or params[1] <= 0:
                 raise ValueError(f"Invalid parameters: {beta_msg}")  # noqa: TRY003
             if len(params) == 4:  # noqa: PLR2004
                 scale = params[3]
             elif len(params) > 4:  # noqa: PLR2004
-                raise ValueError(f"Too many parameters provided: {beta_msg}")  # noqa: TRY003
+                raise ValueError(
+                    f"Too many parameters provided: {beta_msg}"
+                )  # noqa: TRY003
 
         elif distribution == "norm":
             if len(params) > 2:  # noqa: PLR2004
-                raise ValueError(f"Too many parameters provided: {norm_msg}")  # noqa: TRY003
+                raise ValueError(
+                    f"Too many parameters provided: {norm_msg}"
+                )  # noqa: TRY003
             if len(params) == 2:  # noqa: PLR2004
                 scale = params[1]
 
         elif distribution == "gamma":
             if len(params) < 1:
-                raise ValueError(f"Missing required parameters: {gamma_msg}")  # noqa: TRY003
+                raise ValueError(
+                    f"Missing required parameters: {gamma_msg}"
+                )  # noqa: TRY003
             if len(params) == 3:  # noqa: PLR2004
                 scale = params[2]
             if len(params) > 3:  # noqa: PLR2004
-                raise ValueError(f"Too many parameters provided: {gamma_msg}")  # noqa: TRY003
+                raise ValueError(
+                    f"Too many parameters provided: {gamma_msg}"
+                )  # noqa: TRY003
             elif params[0] <= 0:
                 raise ValueError(f"Invalid parameters: {gamma_msg}")  # noqa: TRY003
 
@@ -1093,15 +1150,21 @@ def validate_distribution_parameters(  # noqa: C901, PLR0912, PLR0915
             if len(params) == 2:  # noqa: PLR2004
                 scale = params[1]
             if len(params) > 2:  # noqa: PLR2004
-                raise ValueError(f"Too many arguments provided: {uniform_msg}")  # noqa: TRY003
+                raise ValueError(
+                    f"Too many arguments provided: {uniform_msg}"
+                )  # noqa: TRY003
 
         elif distribution == "chi2":
             if len(params) < 1:
-                raise ValueError(f"Missing required parameters: {chi2_msg}")  # noqa: TRY003
+                raise ValueError(
+                    f"Missing required parameters: {chi2_msg}"
+                )  # noqa: TRY003
             elif len(params) == 3:  # noqa: PLR2004
                 scale = params[2]
             elif len(params) > 3:  # noqa: PLR2004
-                raise ValueError(f"Too many arguments provided: {chi2_msg}")  # noqa: TRY003
+                raise ValueError(
+                    f"Too many arguments provided: {chi2_msg}"
+                )  # noqa: TRY003
             if params[0] <= 0:
                 raise ValueError(f"Invalid parameters: {chi2_msg}")  # noqa: TRY003
 
@@ -1109,7 +1172,9 @@ def validate_distribution_parameters(  # noqa: C901, PLR0912, PLR0915
             if len(params) == 2:  # noqa: PLR2004
                 scale = params[1]
             if len(params) > 2:  # noqa: PLR2004
-                raise ValueError(f"Too many arguments provided: {expon_msg}")  # noqa: TRY003
+                raise ValueError(
+                    f"Too many arguments provided: {expon_msg}"
+                )  # noqa: TRY003
 
         if scale is not None and scale <= 0:
             raise ValueError("std_dev and scale must be positive.")  # noqa: TRY003
@@ -1294,7 +1359,9 @@ def get_unexpected_indices_for_multiple_pandas_named_indices(  # noqa: C901
                 failed_metrics=["unexpected_index_list"],
             )
         else:
-            tuple_index[column_name] = domain_records_df_index_names.index(column_name, 0)
+            tuple_index[column_name] = domain_records_df_index_names.index(
+                column_name, 0
+            )
 
     unexpected_index_list: UnexpectedIndexList = []
 
@@ -1304,7 +1371,9 @@ def get_unexpected_indices_for_multiple_pandas_named_indices(  # noqa: C901
         }
         for index in unexpected_indices:
             for column_name in unexpected_index_column_names:
-                primary_key_dict_list[column_name].append(index[tuple_index[column_name]])
+                primary_key_dict_list[column_name].append(
+                    index[tuple_index[column_name]]
+                )
 
         unexpected_index_list.append(primary_key_dict_list)
 
@@ -1342,7 +1411,9 @@ def get_unexpected_indices_for_single_pandas_named_index(
     """  # noqa: E501
     if not expectation_domain_column_list:
         return []
-    unexpected_index_values_by_named_index: List[int | str] = list(domain_records_df.index)
+    unexpected_index_values_by_named_index: List[int | str] = list(
+        domain_records_df.index
+    )
     unexpected_index_list: UnexpectedIndexList = []
     if not (
         len(unexpected_index_column_names) == 1
@@ -1354,7 +1425,9 @@ def get_unexpected_indices_for_single_pandas_named_index(
         )
 
     if exclude_unexpected_values and len(unexpected_index_values_by_named_index) != 0:
-        primary_key_dict_list: dict[str, List[Any]] = {unexpected_index_column_names[0]: []}
+        primary_key_dict_list: dict[str, List[Any]] = {
+            unexpected_index_column_names[0]: []
+        }
         for index in unexpected_index_values_by_named_index:
             primary_key_dict_list[unexpected_index_column_names[0]].append(index)
         unexpected_index_list.append(primary_key_dict_list)
@@ -1363,7 +1436,9 @@ def get_unexpected_indices_for_single_pandas_named_index(
         for index in unexpected_index_values_by_named_index:
             primary_key_dict: Dict[str, Any] = dict()
             for domain_column in expectation_domain_column_list:
-                primary_key_dict[domain_column] = domain_records_df.at[index, domain_column]
+                primary_key_dict[domain_column] = domain_records_df.at[
+                    index, domain_column
+                ]
             column_name: str = unexpected_index_column_names[0]
             primary_key_dict[column_name] = index
             unexpected_index_list.append(primary_key_dict)
@@ -1395,7 +1470,9 @@ def compute_unexpected_pandas_indices(  # noqa: C901
     """  # noqa: E501
     unexpected_index_column_names: List[str]
     unexpected_index_list: UnexpectedIndexList
-    exclude_unexpected_values: bool = result_format.get("exclude_unexpected_values", False)
+    exclude_unexpected_values: bool = result_format.get(
+        "exclude_unexpected_values", False
+    )
 
     if domain_records_df.index.name is not None:
         unexpected_index_column_names = result_format.get(
@@ -1412,11 +1489,13 @@ def compute_unexpected_pandas_indices(  # noqa: C901
         unexpected_index_column_names = result_format.get(
             "unexpected_index_column_names", list(domain_records_df.index.names)
         )
-        unexpected_index_list = get_unexpected_indices_for_multiple_pandas_named_indices(
-            domain_records_df=domain_records_df,
-            unexpected_index_column_names=unexpected_index_column_names,
-            expectation_domain_column_list=expectation_domain_column_list,
-            exclude_unexpected_values=exclude_unexpected_values,
+        unexpected_index_list = (
+            get_unexpected_indices_for_multiple_pandas_named_indices(
+                domain_records_df=domain_records_df,
+                unexpected_index_column_names=unexpected_index_column_names,
+                expectation_domain_column_list=expectation_domain_column_list,
+                exclude_unexpected_values=exclude_unexpected_values,
+            )
         )
     # named columns
     elif result_format.get("unexpected_index_column_names"):
@@ -1460,7 +1539,9 @@ def compute_unexpected_pandas_indices(  # noqa: C901
                             batch_columns_list=metrics["table.columns"],
                             error_message_template='Error: The unexpected_index_column "{column_name:s}" does not exist in Dataframe. Please check your configuration and try again.',  # noqa: E501
                         )
-                        primary_key_dict[column_name] = domain_records_df.at[index, column_name]
+                        primary_key_dict[column_name] = domain_records_df.at[
+                            index, column_name
+                        ]
                 unexpected_index_list.append(primary_key_dict)
 
     else:
