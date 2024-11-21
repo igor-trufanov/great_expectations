@@ -1028,7 +1028,7 @@ def validate_distribution_parameters(  # noqa: C901, PLR0912, PLR0915
         "chi2",
         "expon",
     ]:
-        raise AttributeError(f"Unsupported  distribution provided: {distribution}")
+        raise AttributeError(f"Unsupported  distribution provided: {distribution}")  # noqa: TRY003
 
     if isinstance(params, dict):
         # `params` is a dictionary
@@ -1057,27 +1057,27 @@ def validate_distribution_parameters(  # noqa: C901, PLR0912, PLR0915
         # `params` is a tuple or a list
         if distribution == "beta":
             if len(params) < 2:  # noqa: PLR2004
-                raise ValueError(f"Missing required parameters: {beta_msg}")
+                raise ValueError(f"Missing required parameters: {beta_msg}")  # noqa: TRY003
             if params[0] <= 0 or params[1] <= 0:
                 raise ValueError(f"Invalid parameters: {beta_msg}")  # noqa: TRY003
             if len(params) == 4:  # noqa: PLR2004
                 scale = params[3]
             elif len(params) > 4:  # noqa: PLR2004
-                raise ValueError(f"Too many parameters provided: {beta_msg}")
+                raise ValueError(f"Too many parameters provided: {beta_msg}")  # noqa: TRY003
 
         elif distribution == "norm":
             if len(params) > 2:  # noqa: PLR2004
-                raise ValueError(f"Too many parameters provided: {norm_msg}")
+                raise ValueError(f"Too many parameters provided: {norm_msg}")  # noqa: TRY003
             if len(params) == 2:  # noqa: PLR2004
                 scale = params[1]
 
         elif distribution == "gamma":
             if len(params) < 1:
-                raise ValueError(f"Missing required parameters: {gamma_msg}")
+                raise ValueError(f"Missing required parameters: {gamma_msg}")  # noqa: TRY003
             if len(params) == 3:  # noqa: PLR2004
                 scale = params[2]
             if len(params) > 3:  # noqa: PLR2004
-                raise ValueError(f"Too many parameters provided: {gamma_msg}")
+                raise ValueError(f"Too many parameters provided: {gamma_msg}")  # noqa: TRY003
             elif params[0] <= 0:
                 raise ValueError(f"Invalid parameters: {gamma_msg}")  # noqa: TRY003
 
@@ -1093,15 +1093,15 @@ def validate_distribution_parameters(  # noqa: C901, PLR0912, PLR0915
             if len(params) == 2:  # noqa: PLR2004
                 scale = params[1]
             if len(params) > 2:  # noqa: PLR2004
-                raise ValueError(f"Too many arguments provided: {uniform_msg}")
+                raise ValueError(f"Too many arguments provided: {uniform_msg}")  # noqa: TRY003
 
         elif distribution == "chi2":
             if len(params) < 1:
-                raise ValueError(f"Missing required parameters: {chi2_msg}")
+                raise ValueError(f"Missing required parameters: {chi2_msg}")  # noqa: TRY003
             elif len(params) == 3:  # noqa: PLR2004
                 scale = params[2]
             elif len(params) > 3:  # noqa: PLR2004
-                raise ValueError(f"Too many arguments provided: {chi2_msg}")
+                raise ValueError(f"Too many arguments provided: {chi2_msg}")  # noqa: TRY003
             if params[0] <= 0:
                 raise ValueError(f"Invalid parameters: {chi2_msg}")  # noqa: TRY003
 
@@ -1109,7 +1109,7 @@ def validate_distribution_parameters(  # noqa: C901, PLR0912, PLR0915
             if len(params) == 2:  # noqa: PLR2004
                 scale = params[1]
             if len(params) > 2:  # noqa: PLR2004
-                raise ValueError(f"Too many arguments provided: {expon_msg}")
+                raise ValueError(f"Too many arguments provided: {expon_msg}")  # noqa: TRY003
 
         if scale is not None and scale <= 0:
             raise ValueError("std_dev and scale must be positive.")  # noqa: TRY003
