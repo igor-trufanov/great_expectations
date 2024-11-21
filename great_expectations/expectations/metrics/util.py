@@ -466,8 +466,8 @@ def get_sqlalchemy_column_metadata(  # noqa: C901
                 CaseInsensitiveNameDict(column)
                 for column in columns
             ]
-            for column in case_insensitive_columns:
-                column["type"] = column["type"].compile(dialect=engine.dialect)
+            for col in case_insensitive_columns:
+                col["type"] = col["type"].compile(dialect=engine.dialect)
 
             return case_insensitive_columns
         else:
