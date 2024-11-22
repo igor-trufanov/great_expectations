@@ -413,6 +413,7 @@ class ExpectColumnValuesToBeOfType(ColumnMapExpectation):
 
         if (
             isinstance(actual_column_type, str)
+            and isinstance(expected_type, str)
             and actual_column_type.lower() == expected_type.lower()
         ):
             # In newer versions of GX, metric.column_type returns a string
