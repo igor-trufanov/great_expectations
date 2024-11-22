@@ -10,30 +10,14 @@ from tests.integration.data_sources_and_expectations.test_canonical_expectations
     JUST_PANDAS_DATA_SOURCES,
 )
 
-# Basic types test data
 INTEGER_COLUMN = "integers"
 INTEGER_AND_NULL_COLUMN = "integers_and_nulls"
 STRING_COLUMN = "strings"
 BOOLEAN_COLUMN = "booleans"
 NULL_COLUMN = "nulls"
 
-# ALL_DATA_SOURCES: Sequence[DataSourceTestConfig] = [
-#     BigQueryDatasourceTestConfig(column_types=COLUMN_TYPES),
-#     DatabricksDatasourceTestConfig(column_types=COLUMN_TYPES),
-#     MSSQLDatasourceTestConfig(column_types=COLUMN_TYPES),
-#     MySQLDatasourceTestConfig(column_types=COLUMN_TYPES),
-#     PandasDataFrameDatasourceTestConfig(),
-#     PandasFilesystemCsvDatasourceTestConfig(),
-#     PostgreSQLDatasourceTestConfig(column_types=COLUMN_TYPES),
-#     SnowflakeDatasourceTestConfig(column_types=COLUMN_TYPES),
-#     SparkFilesystemCsvDatasourceTestConfig(),
-#     SqliteDatasourceTestConfig(column_types=COLUMN_TYPES),
-# ]
 
-# # Create a series of nulls with float dtype
-# null_series = pd.Series([None, None, None, None, None], dtype="float64")
-
-BASIC_DATA = pd.DataFrame(
+DATA = pd.DataFrame(
     {
         INTEGER_COLUMN: [1, 2, 3, 4, 5],
         INTEGER_AND_NULL_COLUMN: [1, 2, 3, 4, None],
@@ -44,7 +28,7 @@ BASIC_DATA = pd.DataFrame(
 )
 
 
-@parameterize_batch_for_data_sources(data_source_configs=ALL_DATA_SOURCES, data=BASIC_DATA)
+@parameterize_batch_for_data_sources(data_source_configs=ALL_DATA_SOURCES, data=DATA)
 def test_success_complete_pandas(batch_for_datasource: Batch) -> None:
     type_list = ["INTEGER", "int", "int64", "int32", "IntegerType"]
     expectation = gxe.ExpectColumnValuesToBeInTypeList(column=INTEGER_COLUMN, type_list=type_list)
@@ -80,7 +64,7 @@ def test_success_complete_pandas(batch_for_datasource: Batch) -> None:
         ),
     ],
 )
-@parameterize_batch_for_data_sources(data_source_configs=JUST_PANDAS_DATA_SOURCES, data=BASIC_DATA)
+@parameterize_batch_for_data_sources(data_source_configs=JUST_PANDAS_DATA_SOURCES, data=DATA)
 def test_success(
     batch_for_datasource: Batch,
     expectation: gxe.ExpectColumnValuesToBeInTypeList,
@@ -104,7 +88,7 @@ def test_success(
         ),
     ],
 )
-@parameterize_batch_for_data_sources(data_source_configs=JUST_PANDAS_DATA_SOURCES, data=BASIC_DATA)
+@parameterize_batch_for_data_sources(data_source_configs=JUST_PANDAS_DATA_SOURCES, data=DATA)
 def test_failure(
     batch_for_datasource: Batch,
     expectation: gxe.ExpectColumnValuesToBeInTypeList,
