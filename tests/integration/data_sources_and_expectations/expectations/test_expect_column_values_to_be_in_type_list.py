@@ -33,8 +33,11 @@ def test_success_complete_pandas(batch_for_datasource: Batch) -> None:
     type_list = ["INTEGER", "int", "int64", "int32", "IntegerType"]
     expectation = gxe.ExpectColumnValuesToBeInTypeList(column=INTEGER_COLUMN, type_list=type_list)
     result = batch_for_datasource.validate(expectation, result_format=ResultFormat.COMPLETE)
+    result_dict = result.to_json_dict()["result"]
+
     assert result.success
-    assert result.to_json_dict()["result"]["observed_value"] in type_list  # type: ignore
+    assert isinstance(result_dict, dict)
+    assert result_dict["observed_value"] in type_list
 
 
 @pytest.mark.parametrize(
