@@ -189,13 +189,18 @@ class SQLBatchTestSetup(BatchTestSetup[_ConfigT, TableAsset], ABC, Generic[_Conf
     def _infer_column_types(self, data: pd.DataFrame) -> Dict[str, TypeEngine]:
         inferred_column_types: Dict[str, TypeEngine] = {}
         for column, value_list in data.to_dict("list").items():
-            python_type = type(value_list[0])
-            if not all(isinstance(val, python_type) for val in value_list if val is not None):
-                raise RuntimeError(
-                    f"Cannot infer type of column {column}. "
-                    "Please provide an explicit column type in the test config."
-                )
-            inferred_type = self.inferrable_types_lookup.get(python_type)
-            if inferred_type:
-                inferred_column_types[str(column)] = inferred_type
+            non_null_value_list = [val for val in value_list if val is not None]
+            if not non_null_value_list:
+                # if we have an all null column, just arbitrarily use INTEGER
+                inferred_column_types[str(column)] = sqltypes.INTEGER  # type: ignore[dict-item]
+            else:
+                python_type = type(non_null_value_list[0])
+                if not all(isinstance(val, python_type) for val in non_null_value_list):
+                    raise RuntimeError(
+                        f"Cannot infer type of column {column}. "
+                        "Please provide an explicit column type in the test config."
+                    )
+                inferred_type = self.inferrable_types_lookup.get(python_type)
+                if inferred_type:
+                    inferred_column_types[str(column)] = inferred_type
         return inferred_column_types
