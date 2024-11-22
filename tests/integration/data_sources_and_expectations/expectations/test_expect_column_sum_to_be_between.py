@@ -12,11 +12,7 @@ from tests.integration.data_sources_and_expectations.test_canonical_expectations
 
 COL_NAME = "my_col"
 
-DATA = pd.DataFrame(
-    {
-        COL_NAME: [None, 0, -1, 1, 2, 100, 9000, -1, -40, -60, None],
-    }
-)
+DATA = pd.DataFrame({COL_NAME: [0, -1, 1, 2, 100, 9000, -1, -40, -60, None, None]}, dtype="object")
 
 
 @parameterize_batch_for_data_sources(data_source_configs=ALL_DATA_SOURCES, data=DATA)

@@ -1,14 +1,35 @@
+from collections.abc import Sequence
+
 import pandas as pd
 import pytest
+from sqlalchemy import types as sqlatypes
 
 import great_expectations.expectations as gxe
 from great_expectations.core.result_format import ResultFormat
 from great_expectations.datasource.fluent.interfaces import Batch
 from tests.integration.conftest import parameterize_batch_for_data_sources
 from tests.integration.data_sources_and_expectations.test_canonical_expectations import (
-    ALL_DATA_SOURCES,
     JUST_PANDAS_DATA_SOURCES,
 )
+from tests.integration.test_utils.data_source_config.base import DataSourceTestConfig
+from tests.integration.test_utils.data_source_config.big_query import BigQueryDatasourceTestConfig
+from tests.integration.test_utils.data_source_config.databricks import (
+    DatabricksDatasourceTestConfig,
+)
+from tests.integration.test_utils.data_source_config.mssql import MSSQLDatasourceTestConfig
+from tests.integration.test_utils.data_source_config.mysql import MySQLDatasourceTestConfig
+from tests.integration.test_utils.data_source_config.pandas_data_frame import (
+    PandasDataFrameDatasourceTestConfig,
+)
+from tests.integration.test_utils.data_source_config.pandas_filesystem_csv import (
+    PandasFilesystemCsvDatasourceTestConfig,
+)
+from tests.integration.test_utils.data_source_config.postgres import PostgreSQLDatasourceTestConfig
+from tests.integration.test_utils.data_source_config.snowflake import SnowflakeDatasourceTestConfig
+from tests.integration.test_utils.data_source_config.spark_filesystem_csv import (
+    SparkFilesystemCsvDatasourceTestConfig,
+)
+from tests.integration.test_utils.data_source_config.sqlite import SqliteDatasourceTestConfig
 
 ALL_UNIQUE_COL = "all_unique"
 NO_UNIQUE_COL = "one_unique"
@@ -23,8 +44,24 @@ DATA = pd.DataFrame(
         NO_UNIQUE_COL: [None, None, None, None, *A_LOT_OF_NONES],
         SOME_UNIQUE_COL: [1, 2, 3, 3, *A_LOT_OF_NONES],
         STRING_COL: ["foo", "foo", "bar", "baz", *A_LOT_OF_NONES],
-    }
+    },
+    dtype="object",
 )
+
+COLUMN_TYPES = {NO_UNIQUE_COL: sqlatypes.INTEGER}
+
+ALL_DATA_SOURCES: Sequence[DataSourceTestConfig] = [
+    BigQueryDatasourceTestConfig(column_types=COLUMN_TYPES),
+    DatabricksDatasourceTestConfig(column_types=COLUMN_TYPES),
+    MSSQLDatasourceTestConfig(column_types=COLUMN_TYPES),
+    MySQLDatasourceTestConfig(column_types=COLUMN_TYPES),
+    PandasDataFrameDatasourceTestConfig(),
+    PandasFilesystemCsvDatasourceTestConfig(),
+    PostgreSQLDatasourceTestConfig(column_types=COLUMN_TYPES),
+    SnowflakeDatasourceTestConfig(column_types=COLUMN_TYPES),
+    SparkFilesystemCsvDatasourceTestConfig(),
+    SqliteDatasourceTestConfig(column_types=COLUMN_TYPES),
+]
 
 
 @parameterize_batch_for_data_sources(data_source_configs=ALL_DATA_SOURCES, data=DATA)
