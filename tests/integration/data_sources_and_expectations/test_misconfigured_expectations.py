@@ -46,43 +46,39 @@ ALL_DATA_SOURCES: list[DataSourceTestConfig] = (
 
 
 class TestNumericExpectationAgainstStrDataMisconfiguration:
+    _DATA = pd.DataFrame({"a": ["b", "c"]})
+
     @parameterize_batch_for_data_sources(
         data_source_configs=PANDAS_DATA_SOURCES,
-        data=pd.DataFrame({"a": ["b", "c"]}),
+        data=_DATA,
     )
     def test_pandas(self, batch_for_datasource) -> None:
-        expectation = gxe.ExpectColumnStdevToBeBetween(
-            column="a",
-            min_value=0,
-            max_value=1,
-            strict_min=True,
-            strict_max=True,
+        self._test_misconfiguration(
+            batch_for_datasource=batch_for_datasource,
+            exception_message="could not convert string to float",
         )
-        result = batch_for_datasource.validate(expectation)
-        assert not result.success
-        assert "could not convert string to float" in str(result.exception_info)
 
     @parameterize_batch_for_data_sources(
         data_source_configs=SQL_DATA_SOURCES,
-        data=pd.DataFrame({"a": ["b", "c"]}),
+        data=_DATA,
     )
     def test_sql(self, batch_for_datasource) -> None:
-        expectation = gxe.ExpectColumnStdevToBeBetween(
-            column="a",
-            min_value=0,
-            max_value=1,
-            strict_min=True,
-            strict_max=True,
+        self._test_misconfiguration(
+            batch_for_datasource=batch_for_datasource,
+            exception_message="could not convert string to float",
         )
-        result = batch_for_datasource.validate(expectation)
-        assert not result.success
-        assert "could not convert string to float" in str(result.exception_info)
 
     @parameterize_batch_for_data_sources(
         data_source_configs=SPARK_DATA_SOURCES,
-        data=pd.DataFrame({"a": ["b", "c"]}),
+        data=_DATA,
     )
     def test_spark(self, batch_for_datasource) -> None:
+        self._test_misconfiguration(
+            batch_for_datasource=batch_for_datasource,
+            exception_message="could not convert string to float",
+        )
+
+    def _test_misconfiguration(self, batch_for_datasource, exception_message: str) -> None:
         expectation = gxe.ExpectColumnStdevToBeBetween(
             column="a",
             min_value=0,
@@ -92,32 +88,37 @@ class TestNumericExpectationAgainstStrDataMisconfiguration:
         )
         result = batch_for_datasource.validate(expectation)
         assert not result.success
-        assert "could not convert string to float" in str(result.exception_info)
+        assert exception_message in str(result.exception_info)
 
 
 class TestNonExistentColumnMisconfiguration:
+    _DATA = pd.DataFrame({"a": [1, 2]})
+
     @parameterize_batch_for_data_sources(
         data_source_configs=PANDAS_DATA_SOURCES + SPARK_DATA_SOURCES,
-        data=pd.DataFrame({"a": [1, 2]}),
+        data=_DATA,
     )
     def test_pandas_and_sql(self, batch_for_datasource) -> None:
-        expectation = gxe.ExpectColumnMedianToBeBetween(column="b", min_value=5, max_value=10)
-        result = batch_for_datasource.validate(expectation)
-        assert not result.success
-        assert 'The column "b" in BatchData does not exist' in str(result.exception_info)
+        self._test_misconfiguration(
+            batch_for_datasource=batch_for_datasource,
+            exception_message='The column "b" in BatchData does not exist',
+        )
 
     @parameterize_batch_for_data_sources(
         data_source_configs=SPARK_DATA_SOURCES,
-        data=pd.DataFrame({"a": [1, 2]}),
+        data=_DATA,
     )
     def test_spark(self, batch_for_datasource) -> None:
+        self._test_misconfiguration(
+            batch_for_datasource=batch_for_datasource,
+            exception_message="[UNRESOLVED_COLUMN.WITH_SUGGESTION] A column or function parameter with name `b` cannot be resolved",  # noqa: E501
+        )
+
+    def _test_misconfiguration(self, batch_for_datasource, exception_message: str) -> None:
         expectation = gxe.ExpectColumnMedianToBeBetween(column="b", min_value=5, max_value=10)
         result = batch_for_datasource.validate(expectation)
         assert not result.success
-        assert (
-            "[UNRESOLVED_COLUMN.WITH_SUGGESTION] A column or function parameter with name `b` cannot be resolved"  # noqa: E501
-            in str(result.exception_info)
-        )
+        assert exception_message in str(result.exception_info)
 
 
 @parameterize_batch_for_data_sources(
