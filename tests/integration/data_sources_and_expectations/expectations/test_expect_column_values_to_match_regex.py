@@ -23,7 +23,12 @@ SUPPORTED_SQL_DATA_SOURCES: Sequence[DataSourceTestConfig] = [
     PostgreSQLDatasourceTestConfig(),
     SqliteDatasourceTestConfig(),
 ]
-ALL_SUPPORTED_DATA_SOURCES = SUPPORTED_SQL_DATA_SOURCES + [SparkFilesystemCsvDatasourceTestConfig()]
+SUPPORTED_NON_SQL_DATA_SOURCES: Sequence[DataSourceTestConfig] = [
+    SparkFilesystemCsvDatasourceTestConfig()
+]
+ALL_SUPPORTED_DATA_SOURCES: Sequence[DataSourceTestConfig] = list(
+    *SUPPORTED_SQL_DATA_SOURCES, *SUPPORTED_NON_SQL_DATA_SOURCES
+)
 
 BASIC_STRINGS = "basic_strings"
 COMPLEX_STRINGS = "complex_strings"
