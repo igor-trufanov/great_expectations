@@ -1,4 +1,4 @@
-from typing import cast
+from typing import Sequence, cast
 from unittest.mock import ANY
 
 import pandas as pd
@@ -8,10 +8,15 @@ import great_expectations.expectations as gxe
 from great_expectations.core.result_format import ResultFormat
 from great_expectations.datasource.fluent.interfaces import Batch
 from tests.integration.conftest import parameterize_batch_for_data_sources
-from tests.integration.data_sources_and_expectations.test_canonical_expectations import (
-    SQL_DATA_SOURCES,
+from tests.integration.test_utils.data_source_config import (
+    BigQueryDatasourceTestConfig,
+    DataSourceTestConfig,
+    MSSQLDatasourceTestConfig,
+    MySQLDatasourceTestConfig,
+    PostgreSQLDatasourceTestConfig,
+    SnowflakeDatasourceTestConfig,
+    SqliteDatasourceTestConfig,
 )
-from tests.integration.test_utils.data_source_config import PostgreSQLDatasourceTestConfig
 
 BASIC_PATTERNS = "basic_patterns"
 PREFIXED_PATTERNS = "prefixed_patterns"
@@ -27,8 +32,17 @@ DATA = pd.DataFrame(
     }
 )
 
+SUPPORTED_DATA_SOURCES: Sequence[DataSourceTestConfig] = [
+    BigQueryDatasourceTestConfig(),
+    MSSQLDatasourceTestConfig(),
+    MySQLDatasourceTestConfig(),
+    PostgreSQLDatasourceTestConfig(),
+    SnowflakeDatasourceTestConfig(),
+    SqliteDatasourceTestConfig(),
+]
 
-@parameterize_batch_for_data_sources(data_source_configs=SQL_DATA_SOURCES, data=DATA)
+
+@parameterize_batch_for_data_sources(data_source_configs=SUPPORTED_DATA_SOURCES, data=DATA)
 def test_basic_success(batch_for_datasource: Batch) -> None:
     expectation = gxe.ExpectColumnValuesToMatchLikePattern(
         column=PREFIXED_PATTERNS,
@@ -38,7 +52,7 @@ def test_basic_success(batch_for_datasource: Batch) -> None:
     assert result.success
 
 
-@parameterize_batch_for_data_sources(data_source_configs=SQL_DATA_SOURCES, data=DATA)
+@parameterize_batch_for_data_sources(data_source_configs=SUPPORTED_DATA_SOURCES, data=DATA)
 def test_basic_failure(batch_for_datasource: Batch) -> None:
     expectation = gxe.ExpectColumnValuesToMatchLikePattern(
         column=BASIC_PATTERNS,
