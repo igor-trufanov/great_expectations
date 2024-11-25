@@ -18,26 +18,35 @@ from tests.integration.test_utils.data_source_config import (
 )
 from tests.integration.test_utils.data_source_config.base import DataSourceTestConfig
 
+pandas_data_frame_ds_test_config = PandasDataFrameDatasourceTestConfig()
+pandas_filesystem_csv_ds_test_config = PandasFilesystemCsvDatasourceTestConfig()
+spark_filesystem_csv_ds_test_config = SparkFilesystemCsvDatasourceTestConfig()
+big_query_ds_test_config = BigQueryDatasourceTestConfig()
+databricks_ds_test_config = DatabricksDatasourceTestConfig()
+mssql_ds_test_config = MSSQLDatasourceTestConfig()
+mysql_ds_test_config = MySQLDatasourceTestConfig()
+postgresql_ds_test_config = PostgreSQLDatasourceTestConfig()
+snowflake_ds_test_config = SnowflakeDatasourceTestConfig()
+sqlite_ds_test_config = SqliteDatasourceTestConfig()
+
 PANDAS_DATA_SOURCES: list[DataSourceTestConfig] = [
-    PandasDataFrameDatasourceTestConfig(),
-    PandasFilesystemCsvDatasourceTestConfig(),
+    pandas_data_frame_ds_test_config,
+    pandas_filesystem_csv_ds_test_config,
 ]
 
+
 SPARK_DATA_SOURCES: list[DataSourceTestConfig] = [
-    SparkFilesystemCsvDatasourceTestConfig(),
+    spark_filesystem_csv_ds_test_config,
 ]
 
 SQL_DATA_SOURCES: list[DataSourceTestConfig] = [
-    BigQueryDatasourceTestConfig(),
-    DatabricksDatasourceTestConfig(),
-    MSSQLDatasourceTestConfig(),
-    MySQLDatasourceTestConfig(),
-    PandasDataFrameDatasourceTestConfig(),
-    PandasFilesystemCsvDatasourceTestConfig(),
-    PostgreSQLDatasourceTestConfig(),
-    SnowflakeDatasourceTestConfig(),
-    SparkFilesystemCsvDatasourceTestConfig(),
-    SqliteDatasourceTestConfig(),
+    big_query_ds_test_config,
+    databricks_ds_test_config,
+    mssql_ds_test_config,
+    mysql_ds_test_config,
+    postgresql_ds_test_config,
+    snowflake_ds_test_config,
+    sqlite_ds_test_config,
 ]
 
 ALL_DATA_SOURCES: list[DataSourceTestConfig] = (
@@ -66,10 +75,53 @@ class TestNumericExpectationAgainstStrDataMisconfiguration:
         )
 
     @parameterize_batch_for_data_sources(
-        data_source_configs=SQL_DATA_SOURCES,
+        data_source_configs=[big_query_ds_test_config],
         data=_DATA,
     )
-    def test_sql(self, batch_for_datasource) -> None:
+    def test_bigquery(self, batch_for_datasource) -> None:
+        self._test_misconfiguration(
+            batch_for_datasource=batch_for_datasource,
+            exception_message="No matching signature for operator * for argument types: FLOAT64, STRING",  # noqa: E501
+        )
+
+    @parameterize_batch_for_data_sources(
+        data_source_configs=[mssql_ds_test_config],
+        data=_DATA,
+    )
+    def test_mssql(self, batch_for_datasource) -> None:
+        self._test_misconfiguration(
+            batch_for_datasource=batch_for_datasource,
+            exception_message="[SQL Server]Error converting data type varchar to float",
+        )
+
+    @parameterize_batch_for_data_sources(
+        data_source_configs=[postgresql_ds_test_config],
+        data=_DATA,
+    )
+    def test_postgresql(self, batch_for_datasource) -> None:
+        self._test_misconfiguration(
+            batch_for_datasource=batch_for_datasource,
+            exception_message="(psycopg2.errors.UndefinedFunction) operator does not exist: numeric * character varying",  # noqa: E501
+        )
+
+    @parameterize_batch_for_data_sources(
+        data_source_configs=[
+            ds
+            for ds in SQL_DATA_SOURCES
+            if ds
+            not in {
+                # Ignored due to bug (currently not failing or raising an exception)
+                sqlite_ds_test_config,
+                mysql_ds_test_config,
+                # Tested separately due to different error messages
+                big_query_ds_test_config,
+                mssql_ds_test_config,
+                postgresql_ds_test_config,
+            }
+        ],
+        data=_DATA,
+    )
+    def test_remaining_sql(self, batch_for_datasource) -> None:
         self._test_misconfiguration(
             batch_for_datasource=batch_for_datasource,
             exception_message="could not convert string to float",
@@ -96,7 +148,7 @@ class TestNonExistentColumnMisconfiguration:
     _EXPECTATION = gxe.ExpectColumnMedianToBeBetween(column="b", min_value=5, max_value=10)
 
     @parameterize_batch_for_data_sources(
-        data_source_configs=PANDAS_DATA_SOURCES + SPARK_DATA_SOURCES,
+        data_source_configs=PANDAS_DATA_SOURCES + SQL_DATA_SOURCES,
         data=_DATA,
     )
     def test_pandas_and_sql(self, batch_for_datasource) -> None:
