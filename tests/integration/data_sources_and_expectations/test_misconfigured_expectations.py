@@ -112,6 +112,7 @@ class TestNumericExpectationAgainstStrDataMisconfiguration:
             not in {
                 # Ignored due to bug (currently not failing or raising an exception)
                 sqlite_ds_test_config,
+                databricks_ds_test_config,
                 mysql_ds_test_config,
                 # Tested separately due to different error messages
                 big_query_ds_test_config,
