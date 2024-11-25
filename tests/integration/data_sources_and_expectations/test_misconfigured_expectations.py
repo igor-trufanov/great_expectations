@@ -1,30 +1,16 @@
 import datetime as dt
-from typing import Sequence
 
 import pandas as pd
 
 import great_expectations.expectations as gxe
 from tests.integration.conftest import parameterize_batch_for_data_sources
-from tests.integration.test_utils.data_source_config.base import DataSourceTestConfig
-from tests.integration.test_utils.data_source_config.pandas_filesystem_csv import (
-    PandasFilesystemCsvDatasourceTestConfig,
+from tests.integration.data_sources_and_expectations.test_canonical_expectations import (
+    ALL_DATA_SOURCES,
 )
-from tests.integration.test_utils.data_source_config.postgres import PostgreSQLDatasourceTestConfig
-from tests.integration.test_utils.data_source_config.spark_filesystem_csv import (
-    SparkFilesystemCsvDatasourceTestConfig,
-)
-
-# As metrics are split by Panda, Spark, and SQL, we deem it appropriate to
-# use a single data source for each category
-DATA_SOURCES_FOR_MISCONFIGURATION_TESTS: Sequence[DataSourceTestConfig] = [
-    PandasFilesystemCsvDatasourceTestConfig(),
-    PostgreSQLDatasourceTestConfig(),
-    SparkFilesystemCsvDatasourceTestConfig(),
-]
 
 
 @parameterize_batch_for_data_sources(
-    data_source_configs=DATA_SOURCES_FOR_MISCONFIGURATION_TESTS,
+    data_source_configs=ALL_DATA_SOURCES,
     data=pd.DataFrame({"a": ["b", "c"]}),
 )
 def test_numeric_expectation_against_str_data_misconfiguration(batch_for_datasource) -> None:
@@ -41,7 +27,7 @@ def test_numeric_expectation_against_str_data_misconfiguration(batch_for_datasou
 
 
 @parameterize_batch_for_data_sources(
-    data_source_configs=DATA_SOURCES_FOR_MISCONFIGURATION_TESTS,
+    data_source_configs=ALL_DATA_SOURCES,
     data=pd.DataFrame({"a": [1, 2]}),
 )
 def test_datetime_expectation_against_numeric_data_misconfiguration(batch_for_datasource) -> None:
@@ -59,7 +45,7 @@ def test_datetime_expectation_against_numeric_data_misconfiguration(batch_for_da
 
 
 @parameterize_batch_for_data_sources(
-    data_source_configs=DATA_SOURCES_FOR_MISCONFIGURATION_TESTS,
+    data_source_configs=ALL_DATA_SOURCES,
     data=pd.DataFrame({"a": [1, 2]}),
 )
 def test_nonexistent_column_misconfiguration(batch_for_datasource) -> None:
@@ -70,7 +56,7 @@ def test_nonexistent_column_misconfiguration(batch_for_datasource) -> None:
 
 
 @parameterize_batch_for_data_sources(
-    data_source_configs=DATA_SOURCES_FOR_MISCONFIGURATION_TESTS,
+    data_source_configs=ALL_DATA_SOURCES,
     data=pd.DataFrame({"a": [1, 2]}),
 )
 def test_column_min_max_mismatch_misconfiguration(batch_for_datasource) -> None:
@@ -81,7 +67,7 @@ def test_column_min_max_mismatch_misconfiguration(batch_for_datasource) -> None:
 
 
 @parameterize_batch_for_data_sources(
-    data_source_configs=DATA_SOURCES_FOR_MISCONFIGURATION_TESTS,
+    data_source_configs=ALL_DATA_SOURCES,
     data=pd.DataFrame({"a": [1, 2]}),
 )
 def test_column_min_max_missing_misconfiguration(batch_for_datasource) -> None:
