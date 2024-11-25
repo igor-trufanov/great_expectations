@@ -131,6 +131,10 @@ def test_success(
             gxe.ExpectColumnValuesToBeInSet(column=NUMBERS_COLUMN, value_set=[1, 2], mostly=0.7),
             id="mostly_threshold_not_met",
         ),
+        pytest.param(
+            gxe.ExpectColumnValuesToBeInSet(column=NUMBERS_COLUMN, value_set=[]),
+            id="empty_set",
+        ),
     ],
 )
 @parameterize_batch_for_data_sources(data_source_configs=JUST_PANDAS_DATA_SOURCES, data=DATA)
@@ -142,11 +146,10 @@ def test_failure(
     assert not result.success
 
 
-@pytest.mark.xfail(strict=True, reason="Shouldn't this be a success?")
 @parameterize_batch_for_data_sources(
     data_source_configs=JUST_PANDAS_DATA_SOURCES, data=pd.DataFrame({NUMBERS_COLUMN: []})
 )
-def test_empty_data(batch_for_datasource: Batch) -> None:
+def test_empty_data_empty_set(batch_for_datasource: Batch) -> None:
     expectation = gxe.ExpectColumnValuesToBeInSet(column=NUMBERS_COLUMN, value_set=[])
     result = batch_for_datasource.validate(expectation)
     assert result.success
