@@ -5,11 +5,11 @@ title: 'Validate data freshness with GX'
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-Data freshness, a critical aspect of data quality, refers to how up-to-date or current the data is relative to the source system or the real-world events it represents. In today's fast-paced business environment, stale data can lead to significant consequences across industries. For example, in e-commerce, outdated inventory data can result in oversold products and frustrated customers. In financial trading, stale market data can lead to missed opportunities and potential compliance issues. These scenarios underscore the critical importance of data freshness validation to ensure accurate insights and timely decision-making.
+Data freshness refers to how up-to-date, or current, data is relative to its source system or the real-world events it represents. Freshness is about the recency of data relative to its generation; its primary metric is the time since data was generated or updated.
 
-Great Expectations (GX) offers a powerful set of tools for monitoring and validating data freshness through its freshness-focused Expectations. By integrating these Expectations into your data pipelines, you can establish robust checks that ensure your datasets maintain the expected level of freshness, catch staleness issues early, and prevent downstream problems in your data workflows.
+Data informs many time-sensitive tasks and decision-making processes in today's business environment. Stale data can lead to significant consequences in applications across industries. For example, in e-commerce, outdated inventory data can result in oversold products and frustrated customers. In financial trading, stale market data can lead to missed opportunities and potential compliance issues. These scenarios underscore the critical importance of data freshness validation to ensure accurate insights and timely decision-making.
 
-This guide will empower you to effectively manage and validate data freshness using GX, ensuring your organization has high-quality, up-to-date datasets for accurate insights and timely actions.
+Great Expectations (GX) can be used to monitor and validate the freshness of your organization's data. Through use of the Expectations and features offered by both GX Cloud and GX Core, you can establish checks that ensure your datasets maintain the expected levels of freshness, catch staleness issues early, and prevent downstream issues in your data workflows. This article will discuss how to effectively manage and validate data freshness using GX, ensuring your organization has high-quality, up-to-date datasets for accurate insights and timely actions.
 
 ## Prerequisite knowledge
 
@@ -17,146 +17,153 @@ This article assumes basic familiarity with GX components and workflows. If you'
 
 ## Data preview
 
-The examples in this article use a sample financial transaction dataset that is provided from a public Postgres database table. The sample data is also available in [CSV format](https://raw.githubusercontent.com/great-expectations/great_expectations/develop/tests/test_sets/learn_data_quality_use_cases/freshness_financial_transfers.csv).
+The examples presented in this article use a synthetic sensor reading dataset; a sample of this dataset is shown below. The data is available a public Postgres database table, as described in the examples, and is also available in [CSV format](https://raw.githubusercontent.com/great-expectations/great_expectations/develop/tests/test_sets/learn_data_quality_use_cases/freshness_sensor_readings.csv).
 
-| transfer_type     | sender_account_number  | recipient_fullname | transfer_amount | transfer_ts       |
-|----------|------------------------|--------------------|-----------------|---------------------|
-| domestic | 244084670977           | Jaxson Duke        | 9143.40         | 2024-05-01 01:12    |
-| domestic | 954005011218           | Nelson O’Connell   | 3285.21         | 2024-05-01 05:08    |
+| reading_id | sensor_id | temperature_k | reading_ts          | created_at          |
+|:-----------|:----------|:--------------|:--------------------|:--------------------|
+| 1001       | factory-1 | 305.00        | 2024-11-22 13:38:07 | 2024-11-22 13:47:00 |
+| 1002       | factory-2 | 310.00        | 2024-11-22 13:38:54 | 2024-11-22 13:47:00 |
+| 1003       | factory-3 | 308.00        | 2024-11-22 13:39:54 | 2024-11-22 13:47:00 |
+| 1004       | factory-1 | 303.75        | 2024-11-22 13:40:10 | 2024-11-22 13:47:00 |
+| 1005       | factory-2 | 311.00        | 2024-11-22 13:40:53 | 2024-11-22 13:47:00 |
 
-The `transfer_ts` column in this dataset captures the timestamp of each financial transaction. By validating the freshness of this column against expected thresholds, we can ensure the data pipeline is delivering timely and up-to-date information for downstream consumers.
+This dataset is representative of a scenario in which environment readings are captured by remote IOT sensors and reported back through the cloud to a central database. Freshness needs might center on timely reporting of temperature in a factory, to monitor that rooms maintain required ranges for temperature-sensitive manufacturing processes. If fresh sensor data is not received, analysts and machine learning models are not able to determine if action needs to be taken on factory premises. Most notably:
+* `reading_ts` captures the timestamp that the reading was taken by the sensor
+* `created_at` is the creation timestamp of the row in the database, indicating when data became available for analysis
 
-This article will demonstrate how to define and implement effective freshness Expectations using GX, focusing on the `transfer_ts` column as a practical example.
+Freshness checks can be run against both the the `reading_ts` and `created_at` columns to ensure that the sensors are reporting fresh data and that the infrastructure responsible for delivering the readings is functioning in an expected, timely manner.
 
 ## Key freshness Expectations
 
-### ExpectColumnMaxToBeBetween
+GX Cloud and GX Core provide several options to use Expectations to validate freshness:
+1. Built-in Expectations, such as those discussed in this section, can be used on timestamp columns to create freshness checks. Built-in expectations can be added in the GX Cloud UI or when using a GX Core Python workflow.
+2. Custom SQL Expectations can be used in [GX Cloud](/cloud/expectations/manage_expectations.md#custom-sql-expectations) or [GX Core](/core/customize_expectations/use_sql_to_define_a_custom_expectation.md) to define and check data freshness based on SQL logic.
+3. In GX Core, you can [customize Expectation classes](/core/customize_expectations/define_a_custom_expectation_class.md) to create Expectations that use Python logic to define and validate data freshness.
 
-Expect the column maximum to be between a minimum value and a maximum value.
+### Expect column maximum to be between
 
-For the sample financial transaction data, we could validate the freshness of the `transfer_ts` column like:
+This Expectation can be used on a timestamp column to expect that the maximum, or the most recent, timestamp, in a column is within an expected range of time.
+
+**Example**: Validate that the most recent timestamp occurred after a specified time.
 
 ```python title="Python" name="docs/docusaurus/docs/reference/learn/data_quality_use_cases/freshness_resources/freshness_expectations.py ExpectColumnMaxToBeBetween"
 ```
 
-This expects the latest transaction timestamp to be between April 30, 2024 and May 2, 2024, allowing for some small delay in data arrival.
-
 <small>View `ExpectColumnMaxToBeBetween` in the [Expectation Gallery](https://greatexpectations.io/expectations/expect_column_max_to_be_between).</small>
 
-### ExpectColumnMinToBeBetween
+### Expect column minimum to be between
 
-Expect the column minimum to be between a minimum value and a maximum value.
+Checking for data freshness may also center on validating how old the data is. This Expectation can be used on a timestamp column to validate the the minimum, or oldest, timestamp in a column is within an expected range of time.
 
-Again for the `transfer_ts` column:
+**Example**: Validate that the oldest data is no older than a certain time.
 
 ```python title="Python" name="docs/docusaurus/docs/reference/learn/data_quality_use_cases/freshness_resources/freshness_expectations.py ExpectColumnMinToBeBetween"
 ```
-
-This expects the earliest transaction to have occurred sometime between the start of April 30, 2024 and the start of May 1, 2024.
 
 <small>View `ExpectColumnMinToBeBetween` in the [Expectation Gallery](https://greatexpectations.io/expectations/expect_column_min_to_be_between).</small>
 
 <br/>
 <br/>
 
-:::tip[When to use MaxToBeBetween vs MinToBeBetween]
-Use ExpectColumnMaxToBeBetween to validate the most recent data point, ensuring your dataset is up-to-date. Use ExpectColumnMinToBeBetween to check the oldest data point, which is useful for verifying data retention policies or identifying unexpectedly old records. Often, using both in combination provides a comprehensive freshness check.
+:::tip[GX tips for freshness Expectations]
+Use `ExpectColumnMaxToBeBetween` to validate the most recent data point, ensuring your dataset is up-to-date. Use `ExpectColumnMinToBeBetween` to check the oldest data point, which is useful for verifying data retention policies or identifying unexpectedly old records. Using both in combination can provide a comprehensive freshness check.
 :::
 
-## Example: Setting appropriate freshness thresholds
+## Examples
 
-**Context**: In the sample financial transaction dataset, the `transfer_ts` column captures the timestamp of each transaction. To ensure the data pipeline delivers timely and up-to-date information, we need to validate the freshness of this column against expected thresholds.
+Data freshness is often calculated relative to the current point in time. For instance, using the sample data shown above, a baseline freshness check might be to validate that data has arrived in the database within the last 5 minutes.
 
-**Goal**: Using the `ExpectColumnMaxToBeBetween` and `ExpectColumnMinToBeBetween` Expectations in either GX Core or GX Cloud, validate the freshness of the `transfer_ts` column to ensure transactions fall within the expected time range.
+Data freshness might also be validated relative to multiple events. For instance, using the sample data above, another freshness check might be that sensor readings are available in the database no later than 10 minutes after they are captured by the sensor.
 
-<Tabs
-   defaultValue="gx_cloud"
-   values={[
-      {value: 'gx_core', label: 'GX Core'},
-      {value: 'gx_cloud', label: 'GX Cloud'}
-   ]}
->
+The examples in this section showcase how to use available features in GX Cloud and GX Core to create and run Expectations that accommodate the dynamic nature of nature of freshness checks, including the use of `now()`-type functions and timestamp differences.
 
-<TabItem value="gx_core" label="GX Core">
-Run the following GX Core workflow.
+### Create a freshness custom SQL Expectation using GX Cloud
+
+**Goal**: Create a custom SQL Expectations in GX Cloud to validate data freshness and schedule data validation to run hourly.
+
+Use the GX Cloud UI to walk through the following steps:
+
+1. Using the following connection string to create a Postgres Data Source, create a Data Asset for the `freshness_sensor_readings` table:
+   ```
+   postgresql+psycopg2://try_gx:try_gx@postgres.workshops.greatexpectations.io/gx_learn_data_quality
+   ```
+
+2. Using the query below, create a custom SQL Expectation on the `freshness_sensor_readings` Data Asset which expects that sensor readings are available in the database no more than 10 minutes after they are initially captured on the sensor.
+   ```sql
+   select *
+   from {batch}
+   where extract(epoch from (age(created_at, reading_ts))) > 10*60
+   ```
+
+3. Add a second custom SQL Expectation on the same Data Asset which expects that new sensor readings have arrived in the database within the last 5 minutes.
+   ```sql
+   select *
+   from (
+      select max(created_at) as most_recent_reading
+      from {batch}
+   ) t
+   where extract(epoch from (age(current_timestamp, most_recent_reading))) > 5*60
+   ```
+
+5. Edit the active Expectation Suite Validation schedule to modify the frequency of recurring data validation. Select a **Frequency** of *Every 1 hour* to run recurring freshness checks each hour.
+
+6. Inspect the Validation Results on the `freshness_sensor_readings` Data Asset once validation has run.
+
+**Result**: One freshness Expectation passes, and the other fails.
+
+* The freshness Expectation that sensor readings are available in the database no more than 10 minutes after initial capture passes, as this condition holds true for all sensor readings accumulated in the database.
+
+* The freshness Expectation that new sensor readings have arrived in the database within the last 5 minutes fails, as the sample data represents readings from a past point in time and reading are not being continually refreshed in the Postgres database. However, if sensor readings were to be arriving regularly, this Expectation would be able validate whether or not fresh data was arriving in the required time frame.
+
+**GX solution**: GX enables dynamic data freshness validation, relative to the current point in time, through the use of custom SQL Expectations. Though this example showcased use of a custom SQL Expectation in GX Cloud, this feature is also available in GX Core.
+
+
+### Create a freshness custom Expectation class using GX Core
+
+**Goal**: Create a custom Expectation class in GX Core to validate data freshness relative to the current point in time.
+
+Run the following GX Core workflow:
 
 ```python title="Python" name="docs/docusaurus/docs/reference/learn/data_quality_use_cases/freshness_resources/freshness_workflow.py full workflow"
 ```
 
 **Result**:
-The validation results will indicate whether the `transfer_ts` column values fall within the expected freshness range, helping ensure the timeliness and reliability of the financial transaction data.
+```python title="Python output"
+Freshness check passed: False
+Most recent reading timestamp: 2024-11-22 14:49:00
+```
 
-</TabItem>
+The Expectation fails because the sample data represents readings from a past point in time, the sample data is not being continually refreshed in Postgres. However, were new sensor readings to be arriving in the database, the custom Expectation could be used to check that new readings had arrived within the desired time frame.
 
-<TabItem value="gx_cloud" label="GX Cloud">
+**GX solution**: GX Core enables using custom, Python-based logic to define and validate data freshness. Custom Expectation classes in GX Core can be used to complement and extend GX Cloud workflows.
 
-Use the GX Cloud UI to walk through the following steps.
+## Identifying and setting freshness thresholds
 
-Use the GX Cloud UI to walk through the following steps.
+Effective data freshness validation requires an understanding of appropriate thresholds based on usage of the delivered data. Use the following steps to guide the process for identifying and codifying freshness thresholds.
 
-1. Create a Postgres Data Asset for the `freshness_financial_transfers` table, using the connection string:
-   ```
-   postgresql+psycopg2://try_gx:try_gx@postgres.workshops.greatexpectations.io/gx_learn_data_quality
-   ```
+1. **Start with business requirements**: Identify downstream data consumers, assess impact of stale data, and define acceptable freshness levels with stakeholders.
 
-2. Profile the Data Asset.
-3. Add an **Expect column max to be between** Expectation to the `transfer_ts` column.
-4. Populate the Expectation:
-   * Provide a **Min Value** of `2024-05-01 00:00` and a **Max Value** of `2024-05-02 00:00`.
-5. Save the Expectation.
-6. Add an **Expect column min to be between** Expectation to the `transfer_ts` column.
-7. Populate the Expectation:
-   * Provide a **Min Value** of `2024-04-30 00:00` and a **Max Value** of `2024-05-01 00:00`.
-8. Save the Expectation.
-9. Click the **Validate** button to run the freshness Expectations against the Data Asset.
-10. Review Validation Results to ensure the `transfer_ts` values fall within the expected range.
+2. **Evaluate data source characteristics**: Determine expected update frequency, identify sources with inherent delays, and align thresholds with source capabilities.
 
-</TabItem>
-</Tabs>
+3. **Analyze pipeline complexity**: Map data flow through pipeline, estimate processing time per stage, and account for total pipeline lag.
 
-**GX solution**: GX enables easy validation of data freshness by setting expectations on the min and max values of timestamp columns. These Expectations can be defined and run using either GX Core or GX Cloud, allowing teams to ensure their data pipelines consistently deliver fresh and up-to-date information.
+4. **Incorporate temporal patterns**: Identify cyclical patterns (daily, weekly, etc.), determine expected gaps or inactivity, and adjust for known patterns.
 
-## Factors to consider when setting freshness thresholds
+5. **Ensure regulatory compliance**: Research industry-specific freshness and timeliness regulations and verify that thresholds meet mandatory requirements.
 
-Use this checklist to guide your freshness threshold setting process:
-
-1. **Start with business requirements**
-   - [ ] Identify downstream data consumers
-   - [ ] Assess impact of stale data
-   - [ ] Define acceptable freshness levels with stakeholders
-
-2. **Evaluate data source characteristics**
-   - [ ] Determine expected update frequency
-   - [ ] Identify sources with inherent delays
-   - [ ] Align thresholds with source capabilities
-
-3. **Analyze pipeline complexity**
-   - [ ] Map data flow through pipeline
-   - [ ] Estimate processing time per stage
-   - [ ] Account for total pipeline lag
-
-4. **Incorporate temporal patterns**
-   - [ ] Identify cyclical patterns (daily, weekly, etc.)
-   - [ ] Determine expected gaps or inactivity
-   - [ ] Adjust for known patterns
-
-5. **Ensure regulatory compliance**
-   - [ ] Research industry-specific timeliness regulations
-   - [ ] Verify thresholds meet mandatory requirements
-
-For example, let's consider a retail case of validating sales transaction data. The business impact of stale data is high - it can lead to stockouts and lost revenue. The source systems (in-store PoS and ecommerce platform) provide near real-time data. The data pipeline has moderate complexity with several transformation steps. There are clear daily/weekly sales cycles, with lower volume overnight and on Sundays.
+For example, consider a case of validating freshness for sales transaction data generated by a hypothetical retail store. The business impact of stale data is high—it can lead to stockouts and lost revenue. The source systems (in-store point of sales terminals and an an e-commerce platform) provide near real-time data. The data pipeline has moderate complexity with several transformation steps. There are clear daily and weekly sales cycles, with lower volumes sold overnight and on Sundays.
 
 Balancing these factors, appropriate freshness thresholds for this retail sales data could be:
-- During peak hours: latest transaction timestamp within last 30 minutes
-- During off-hours: latest transaction timestamp within last 2 hours
+- During peak hours: The latest transaction timestamp occurred within the last 30 minutes.
+- During off-hours: The latest transaction timestamp occurred within the last 2 hours.
 
-The thresholds are aggressive enough to quickly detect stale data that could impact the business, while accommodating source system realities and known temporal patterns. They would be set using `ExpectColumnMaxToBeBetween` in a GX Checkpoint run hourly.
+The thresholds are aggressive enough to quickly detect stale data that could impact the business, while accommodating source system realities and known temporal patterns. Thresholds could be set using the GX `ExpectColumnMaxToBeBetween` Expectation on the transaction timestamp column, and scheduled to run in GX Cloud on an hourly basis.
 
-By systematically working through this checklist and considering a holistic set of factors, you can define optimal freshness thresholds for your specific data assets and use cases. GX enables codifying these thresholds and validating them consistently to drive data quality.
+By systematically working through the above steps and considering a holistic set of factors, you can define optimal freshness thresholds for your specific data assets and use cases. GX enables codifying these thresholds through data freshness validation to consistently to drive high data quality.
 
 ## Scenarios
 
-The retail example illustrates the process of setting freshness thresholds based on specific business needs. To further understand the wide-ranging impact of data freshness validation, consider the following scenarios across different industries that you might encounter in your work.
+To further understand the wide-ranging impact of data freshness validation across different industries, consider the following scenarios, and how GX can be used to monitor data freshness.
 
 ### Social media analytics
 
@@ -176,20 +183,20 @@ The retail example illustrates the process of setting freshness thresholds based
 
 **GX Solution**: GX empowers the company to set up Expectations like `ExpectColumnMinToBeBetween` and `ExpectColumnMaxToBeBetween` on the timestamp columns in the vehicle data. By incorporating these Expectations into their data pipelines, the company can verify that the data from the connected vehicles is consistently fresh, enabling real-time fleet tracking and quick response to deviations from planned routes or aggressive driving patterns.
 
-## Avoid common freshness analysis pitfalls
+## Avoid common freshness validation pitfalls
 
-As these scenarios demonstrate, data freshness is critical across various domains. However, teams often encounter common pitfalls when implementing freshness validation:
+While data freshness is critical across various domains, teams often encounter common pitfalls when implementing freshness validation:
 
-- **Not defining clear SLAs for data freshness**: Teams should establish and document clear service level agreements (SLAs) for how fresh different datasets need to be. Without clear targets, it's easy for freshness to degrade over time.
+- **Not defining clear SLAs for data freshness**: Teams should establish and document clear service level agreements (SLAs) for how fresh different datasets need to be. Without clear targets, freshness can degrade over time.
 
 - **Not considering end-to-end pipeline freshness**: Data can become stale at any stage, from ingestion through transformation. Account for total pipeline lag, not just source system freshness. Add validation checks after key processing steps.
 
-- **Averaging timestamps can conceal issues**: Calculating the average timestamp can make the overall data appear misleadingly fresh. Use min/max values instead to bound the full range.
+- **Averaging timestamps can conceal issues**: Calculating the average timestamp can make the overall data appear misleadingly fresh. Instead, use minimum and maximum values instead to bound the full range.
 
-- **Sampling data inappropriately for freshness checks**: When validating freshness, be sure to check the full dataset or use a statistically valid sampling method. Cherry-picking rows can mask staleness issues.
+- **Sampling data inappropriately for freshness checks**: When validating freshness, check the full dataset or use a statistically valid sampling method. Cherry-picking rows can mask staleness issues.
 
 ## The path forward
 
-By understanding these common freshness analysis pitfalls and adhering to best practices, you can ensure that your data pipelines consistently deliver fresh and reliable data to drive accurate insights and timely decision-making. Implementing robust freshness validation using GX empowers you to catch staleness issues early, prevent downstream problems, and maintain the highest standards of data quality.
+By adhering to best practices and understanding common freshness validation pitfalls, you can ensure that your data pipelines consistently deliver fresh data to drive insights and timely decision-making. Implementing freshness validation using GX empowers you to catch staleness issues early, prevent downstream problems, and maintain the high standards of data quality.
 
-As you progress on your data quality journey, remember that freshness is just one critical aspect of a comprehensive data quality strategy. By exploring our broader [data quality series](/reference/learn/data_quality_use_cases/dq_use_cases_lp.md), you'll gain valuable insights into how other essential dimensions of data quality, such as accuracy, completeness, and consistency, can be seamlessly integrated into your workflows using GX.
+As you progress on your data quality journey, remember that freshness is just one critical aspect of a comprehensive data quality strategy. By exploring our broader [data quality series](/reference/learn/data_quality_use_cases/dq_use_cases_lp.md), you'll gain valuable insights into how other essential dimensions of data quality, such as integrity, completeness, distribution, and schema, can be seamlessly integrated into your workflows using GX.

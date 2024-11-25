@@ -22,10 +22,10 @@ GX_ROOT_DIR = pathlib.Path(gx.__file__).parent.parent
 
 # Add test data to database for testing.
 load_data_into_test_database(
-    table_name="transactions",
+    table_name="freshness_sensor_readings",
     csv_path=str(
         GX_ROOT_DIR
-        / "tests/test_sets/learn_data_quality_use_cases/freshness_financial_transfers.csv"
+        / "tests/test_sets/learn_data_quality_use_cases/freshness_sensor_readings.csv"
     ),
     connection_string=CONNECTION_STRING,
 )
@@ -36,7 +36,7 @@ datasource = context.data_sources.add_postgres(
     "postgres database", connection_string=CONNECTION_STRING
 )
 
-data_asset = datasource.add_table_asset(name="data asset", table_name="transactions")
+data_asset = datasource.add_table_asset(name="sensor readings", table_name="freshness_sensor_readings")
 batch_definition = data_asset.add_batch_definition_whole_table("batch definition")
 batch = batch_definition.get_batch()
 
@@ -48,9 +48,8 @@ suite = context.suites.add(gx.ExpectationSuite(name="example freshness expectati
 suite.add_expectation(
     # <snippet name="docs/docusaurus/docs/reference/learn/data_quality_use_cases/freshness_resources/freshness_expectations.py ExpectColumnMaxToBeBetween">
     gxe.ExpectColumnMaxToBeBetween(
-        column="transfer_ts",
-        min_value="2024-04-30 00:00",
-        max_value="2024-05-02 00:00",
+        column="reading_ts",
+        min_value="2024-11-22 14:42:00",
     )
     # </snippet>
 )
@@ -58,10 +57,10 @@ suite.add_expectation(
 suite.add_expectation(
     # <snippet name="docs/docusaurus/docs/reference/learn/data_quality_use_cases/freshness_resources/freshness_expectations.py ExpectColumnMinToBeBetween">
     gxe.ExpectColumnMinToBeBetween(
-        column="transfer_ts", min_value="2024-04-30 00:00", max_value="2024-05-01 00:00"
+        column="reading_ts",
+        min_value="2024-11-22 00:00:00",
     )
     # </snippet>
 )
-
 
 results = batch.validate(suite)

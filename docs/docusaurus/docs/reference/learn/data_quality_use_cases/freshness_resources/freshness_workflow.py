@@ -10,41 +10,39 @@ pytest --postgresql --docs-tests -k "data_quality_use_case_freshness_workflow" t
 """
 
 # <snippet name="docs/docusaurus/docs/reference/learn/data_quality_use_cases/freshness_resources/freshness_workflow.py full workflow">
-from datetime import datetime, timedelta
-
+import datetime
 import great_expectations as gx
 import great_expectations.expectations as gxe
 
 # Create Data Context.
-context = gx.get_context()
+context = gx.get_context(mode="ephemeral")
 
-# Connect to sample data, create Data Source and Data Asset.
+# Connect to sample data and create Data Source, Data Asset, Batch Definition, and Batch.
 CONNECTION_STRING = "postgresql+psycopg2://try_gx:try_gx@postgres.workshops.greatexpectations.io/gx_learn_data_quality"
 
 data_source = context.data_sources.add_postgres(
     "postgres database", connection_string=CONNECTION_STRING
 )
 data_asset = data_source.add_table_asset(
-    name="financial transfers table", table_name="freshness_financial_transfers"
+    name="sensor readings", table_name="freshness_sensor_readings"
 )
+batch_definition = data_asset.add_batch_definition_whole_table("batch definition")
+batch = batch_definition.get_batch()
 
+# Define the custom Expectation class by subclassing the built-in ExpectColumnMaxToBeBetween Expectation.
+class ExpectSensorDataToBeFresh(gxe.ExpectColumnMaxToBeBetween):
+    """Custom Expectation class to validate the freshness of sensor readings in the database."""
 
-# Define freshness thresholds
-expected_min_timestamp = datetime(2024, 4, 30, 0, 0)
-expected_max_timestamp = datetime(2024, 5, 2, 0, 0)
+    column: str = "created_at"
+    min_value = datetime.datetime.now() - datetime.timedelta(minutes=5)
+    description = "New sensor readings should have arrived in the database within the last 5 minutes."
 
-# Create Expectations testing the min and max values of the transfer_ts column
-min_timestamp_expectation = gxe.ExpectColumnMinToBeBetween(
-    column="transfer_ts",
-    min_value=expected_min_timestamp,
-    max_value=expected_max_timestamp - timedelta(days=1),
-)
-max_timestamp_expectation = gxe.ExpectColumnMaxToBeBetween(
-    column="transfer_ts",
-    min_value=expected_min_timestamp + timedelta(days=1),
-    max_value=expected_max_timestamp,
-)
+# Validate the sample data with the custom freshness Expectation.
+validation_result = batch.validate(ExpectSensorDataToBeFresh())
 
-results = data_asset.validate([min_timestamp_expectation, max_timestamp_expectation])
-print(results)
+print(f"Freshness check passed: {validation_result['success']}")
+print(f"Most recent reading timestamp: {validation_result['result']['observed_value']}")
 # </snippet>
+
+assert validation_result["success"] is False
+assert validation_result["result"]["observed_value"] == datetime.datetime(2024, 11, 22, 14, 49)
