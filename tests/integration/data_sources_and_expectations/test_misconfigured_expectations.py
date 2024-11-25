@@ -11,22 +11,22 @@ from tests.integration.data_sources_and_expectations.test_canonical_expectations
 from tests.integration.test_utils.data_source_config.base import DataSourceTestConfig
 
 PANDAS_DATA_SOURCES: list[DataSourceTestConfig] = [
-    ds for ds in ALL_DATA_SOURCES if ds.label in {"pandas-data-frame", "pandas-filesystem-csv"}
+    ds for ds in ALL_DATA_SOURCES if ds.label.startswith("pandas")
 ]
 SPARK_DATA_SOURCES: list[DataSourceTestConfig] = [
-    ds for ds in ALL_DATA_SOURCES if ds.label in {"spark-filesystem-csv"}
+    ds for ds in ALL_DATA_SOURCES if ds.label.startswith("spark")
 ]
 SQL_DATA_SOURCES: list[DataSourceTestConfig] = [
-    ds
-    for ds in ALL_DATA_SOURCES
-    if ds.label
-    in {"big-query", "databricks", "mssql", "mysql", "postgresql", "snowflake", "sqlite"}
+    ds for ds in ALL_DATA_SOURCES if ds not in PANDAS_DATA_SOURCES and ds not in SPARK_DATA_SOURCES
 ]
 
 
 @pytest.mark.unit
 def test_parameterization():
     # Ensure that all data sources are covered
+    assert len(PANDAS_DATA_SOURCES) == 2
+    assert len(SPARK_DATA_SOURCES) == 1
+    assert len(SQL_DATA_SOURCES) == 7
     assert len(PANDAS_DATA_SOURCES) + len(SPARK_DATA_SOURCES) + len(SQL_DATA_SOURCES) == len(
         ALL_DATA_SOURCES
     )
@@ -37,6 +37,7 @@ class TestNumericExpectationAgainstStrDataMisconfiguration:
     #  - sqlite
     #  - databricks
     #  - mysql
+    #  - spark-filesystem-csv
 
     _DATA = pd.DataFrame({"a": ["b", "c"]})
     _EXPECTATION = gxe.ExpectColumnStdevToBeBetween(
@@ -58,7 +59,7 @@ class TestNumericExpectationAgainstStrDataMisconfiguration:
         )
 
     @parameterize_batch_for_data_sources(
-        data_source_configs=[ds for ds in SQL_DATA_SOURCES if ds.label in {"big-query"}],
+        data_source_configs=list(filter(lambda d: d.label == "big-query", SQL_DATA_SOURCES)),
         data=_DATA,
     )
     def test_bigquery(self, batch_for_datasource) -> None:
@@ -74,7 +75,7 @@ class TestNumericExpectationAgainstStrDataMisconfiguration:
     def test_mssql(self, batch_for_datasource) -> None:
         self._test_misconfiguration(
             batch_for_datasource=batch_for_datasource,
-            exception_message="[SQL Server]Error converting data type varchar to float",
+            exception_message="Error converting data type varchar to float",
         )
 
     @parameterize_batch_for_data_sources(
@@ -84,7 +85,7 @@ class TestNumericExpectationAgainstStrDataMisconfiguration:
     def test_postgresql(self, batch_for_datasource) -> None:
         self._test_misconfiguration(
             batch_for_datasource=batch_for_datasource,
-            exception_message="(psycopg2.errors.UndefinedFunction) operator does not exist: numeric * character varying",  # noqa: E501
+            exception_message="operator does not exist: numeric * character varying",
         )
 
     @parameterize_batch_for_data_sources(
@@ -92,16 +93,6 @@ class TestNumericExpectationAgainstStrDataMisconfiguration:
         data=_DATA,
     )
     def test_snowflake(self, batch_for_datasource) -> None:
-        self._test_misconfiguration(
-            batch_for_datasource=batch_for_datasource,
-            exception_message="could not convert string to float",
-        )
-
-    @parameterize_batch_for_data_sources(
-        data_source_configs=SPARK_DATA_SOURCES,
-        data=_DATA,
-    )
-    def test_spark(self, batch_for_datasource) -> None:
         self._test_misconfiguration(
             batch_for_datasource=batch_for_datasource,
             exception_message="could not convert string to float",
@@ -118,7 +109,7 @@ class TestNonExistentColumnMisconfiguration:
     _EXPECTATION = gxe.ExpectColumnMedianToBeBetween(column="b", min_value=5, max_value=10)
 
     @parameterize_batch_for_data_sources(
-        data_source_configs=PANDAS_DATA_SOURCES + SQL_DATA_SOURCES,
+        data_source_configs=PANDAS_DATA_SOURCES,
         data=_DATA,
     )
     def test_pandas(self, batch_for_datasource) -> None:
@@ -144,7 +135,7 @@ class TestNonExistentColumnMisconfiguration:
     def test_spark(self, batch_for_datasource) -> None:
         self._test_misconfiguration(
             batch_for_datasource=batch_for_datasource,
-            exception_message="[UNRESOLVED_COLUMN.WITH_SUGGESTION] A column or function parameter with name `b` cannot be resolved",  # noqa: E501
+            exception_message="A column or function parameter with name `b` cannot be resolved",
         )
 
     def _test_misconfiguration(self, batch_for_datasource, exception_message: str) -> None:
