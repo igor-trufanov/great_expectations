@@ -26,9 +26,10 @@ SUPPORTED_SQL_DATA_SOURCES: Sequence[DataSourceTestConfig] = [
 SUPPORTED_NON_SQL_DATA_SOURCES: Sequence[DataSourceTestConfig] = [
     SparkFilesystemCsvDatasourceTestConfig()
 ]
-ALL_SUPPORTED_DATA_SOURCES: Sequence[DataSourceTestConfig] = list(
-    *SUPPORTED_SQL_DATA_SOURCES, *SUPPORTED_NON_SQL_DATA_SOURCES
-)
+ALL_SUPPORTED_DATA_SOURCES: Sequence[DataSourceTestConfig] = [
+    *SUPPORTED_SQL_DATA_SOURCES,
+    *SUPPORTED_NON_SQL_DATA_SOURCES,
+]
 
 BASIC_STRINGS = "basic_strings"
 COMPLEX_STRINGS = "complex_strings"
