@@ -47,6 +47,13 @@ ALL_DATA_SOURCES: list[DataSourceTestConfig] = (
 
 class TestNumericExpectationAgainstStrDataMisconfiguration:
     _DATA = pd.DataFrame({"a": ["b", "c"]})
+    _EXPECTATION = gxe.ExpectColumnStdevToBeBetween(
+        column="a",
+        min_value=0,
+        max_value=1,
+        strict_min=True,
+        strict_max=True,
+    )
 
     @parameterize_batch_for_data_sources(
         data_source_configs=PANDAS_DATA_SOURCES,
@@ -79,20 +86,14 @@ class TestNumericExpectationAgainstStrDataMisconfiguration:
         )
 
     def _test_misconfiguration(self, batch_for_datasource, exception_message: str) -> None:
-        expectation = gxe.ExpectColumnStdevToBeBetween(
-            column="a",
-            min_value=0,
-            max_value=1,
-            strict_min=True,
-            strict_max=True,
-        )
-        result = batch_for_datasource.validate(expectation)
+        result = batch_for_datasource.validate(self._EXPECTATION)
         assert not result.success
         assert exception_message in str(result.exception_info)
 
 
 class TestNonExistentColumnMisconfiguration:
     _DATA = pd.DataFrame({"a": [1, 2]})
+    _EXPECTATION = gxe.ExpectColumnMedianToBeBetween(column="b", min_value=5, max_value=10)
 
     @parameterize_batch_for_data_sources(
         data_source_configs=PANDAS_DATA_SOURCES + SPARK_DATA_SOURCES,
@@ -115,8 +116,7 @@ class TestNonExistentColumnMisconfiguration:
         )
 
     def _test_misconfiguration(self, batch_for_datasource, exception_message: str) -> None:
-        expectation = gxe.ExpectColumnMedianToBeBetween(column="b", min_value=5, max_value=10)
-        result = batch_for_datasource.validate(expectation)
+        result = batch_for_datasource.validate(self._EXPECTATION)
         assert not result.success
         assert exception_message in str(result.exception_info)
 
