@@ -26,6 +26,7 @@ SQL_DATA_SOURCES: list[DataSourceTestConfig] = [
 
 @pytest.mark.unit
 def test_parameterization():
+    # Ensure that all data sources are covered
     assert len(PANDAS_DATA_SOURCES) + len(SPARK_DATA_SOURCES) + len(SQL_DATA_SOURCES) == len(
         ALL_DATA_SOURCES
     )
@@ -67,7 +68,7 @@ class TestNumericExpectationAgainstStrDataMisconfiguration:
         )
 
     @parameterize_batch_for_data_sources(
-        data_source_configs=[ds for ds in SQL_DATA_SOURCES if ds.label in {"mssql"}],
+        data_source_configs=list(filter(lambda d: d.label == "mssql", SQL_DATA_SOURCES)),
         data=_DATA,
     )
     def test_mssql(self, batch_for_datasource) -> None:
@@ -77,7 +78,7 @@ class TestNumericExpectationAgainstStrDataMisconfiguration:
         )
 
     @parameterize_batch_for_data_sources(
-        data_source_configs=[ds for ds in SQL_DATA_SOURCES if ds.label in {"postgresql"}],
+        data_source_configs=list(filter(lambda d: d.label == "postgresql", SQL_DATA_SOURCES)),
         data=_DATA,
     )
     def test_postgresql(self, batch_for_datasource) -> None:
@@ -87,7 +88,7 @@ class TestNumericExpectationAgainstStrDataMisconfiguration:
         )
 
     @parameterize_batch_for_data_sources(
-        data_source_configs=[ds for ds in SQL_DATA_SOURCES if ds.label in {"snowflake"}],
+        data_source_configs=list(filter(lambda d: d.label == "snowflake", SQL_DATA_SOURCES)),
         data=_DATA,
     )
     def test_snowflake(self, batch_for_datasource) -> None:
@@ -120,7 +121,17 @@ class TestNonExistentColumnMisconfiguration:
         data_source_configs=PANDAS_DATA_SOURCES + SQL_DATA_SOURCES,
         data=_DATA,
     )
-    def test_pandas_and_sql(self, batch_for_datasource) -> None:
+    def test_pandas(self, batch_for_datasource) -> None:
+        self._test_misconfiguration(
+            batch_for_datasource=batch_for_datasource,
+            exception_message='The column "b" in BatchData does not exist',
+        )
+
+    @parameterize_batch_for_data_sources(
+        data_source_configs=SQL_DATA_SOURCES,
+        data=_DATA,
+    )
+    def test_sql(self, batch_for_datasource) -> None:
         self._test_misconfiguration(
             batch_for_datasource=batch_for_datasource,
             exception_message='The column "b" in BatchData does not exist',
