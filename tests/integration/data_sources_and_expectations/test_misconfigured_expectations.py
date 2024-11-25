@@ -1,5 +1,4 @@
 import datetime as dt
-from typing import Sequence
 
 import pandas as pd
 
@@ -19,16 +18,16 @@ from tests.integration.test_utils.data_source_config import (
 )
 from tests.integration.test_utils.data_source_config.base import DataSourceTestConfig
 
-PANDAS_DATA_SOURCES: Sequence[DataSourceTestConfig] = [
+PANDAS_DATA_SOURCES: list[DataSourceTestConfig] = [
     PandasDataFrameDatasourceTestConfig(),
     PandasFilesystemCsvDatasourceTestConfig(),
 ]
 
-SPARK_DATA_SOURCES: Sequence[DataSourceTestConfig] = [
+SPARK_DATA_SOURCES: list[DataSourceTestConfig] = [
     SparkFilesystemCsvDatasourceTestConfig(),
 ]
 
-SQL_DATA_SOURCES: Sequence[DataSourceTestConfig] = [
+SQL_DATA_SOURCES: list[DataSourceTestConfig] = [
     BigQueryDatasourceTestConfig(),
     DatabricksDatasourceTestConfig(),
     MSSQLDatasourceTestConfig(),
@@ -41,7 +40,7 @@ SQL_DATA_SOURCES: Sequence[DataSourceTestConfig] = [
     SqliteDatasourceTestConfig(),
 ]
 
-ALL_DATA_SOURCES: Sequence[DataSourceTestConfig] = (
+ALL_DATA_SOURCES: list[DataSourceTestConfig] = (
     PANDAS_DATA_SOURCES + SPARK_DATA_SOURCES + SQL_DATA_SOURCES
 )
 
