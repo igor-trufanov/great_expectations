@@ -1,29 +1,124 @@
 import datetime as dt
+from typing import Sequence
 
 import pandas as pd
 
 import great_expectations.expectations as gxe
 from tests.integration.conftest import parameterize_batch_for_data_sources
-from tests.integration.data_sources_and_expectations.test_canonical_expectations import (
-    ALL_DATA_SOURCES,
+from tests.integration.test_utils.data_source_config import (
+    BigQueryDatasourceTestConfig,
+    DatabricksDatasourceTestConfig,
+    MSSQLDatasourceTestConfig,
+    MySQLDatasourceTestConfig,
+    PandasDataFrameDatasourceTestConfig,
+    PandasFilesystemCsvDatasourceTestConfig,
+    PostgreSQLDatasourceTestConfig,
+    SnowflakeDatasourceTestConfig,
+    SparkFilesystemCsvDatasourceTestConfig,
+    SqliteDatasourceTestConfig,
+)
+from tests.integration.test_utils.data_source_config.base import DataSourceTestConfig
+
+PANDAS_DATA_SOURCES: Sequence[DataSourceTestConfig] = [
+    PandasDataFrameDatasourceTestConfig(),
+    PandasFilesystemCsvDatasourceTestConfig(),
+]
+
+SPARK_DATA_SOURCES: Sequence[DataSourceTestConfig] = [
+    SparkFilesystemCsvDatasourceTestConfig(),
+]
+
+SQL_DATA_SOURCES: Sequence[DataSourceTestConfig] = [
+    BigQueryDatasourceTestConfig(),
+    DatabricksDatasourceTestConfig(),
+    MSSQLDatasourceTestConfig(),
+    MySQLDatasourceTestConfig(),
+    PandasDataFrameDatasourceTestConfig(),
+    PandasFilesystemCsvDatasourceTestConfig(),
+    PostgreSQLDatasourceTestConfig(),
+    SnowflakeDatasourceTestConfig(),
+    SparkFilesystemCsvDatasourceTestConfig(),
+    SqliteDatasourceTestConfig(),
+]
+
+ALL_DATA_SOURCES: Sequence[DataSourceTestConfig] = (
+    PANDAS_DATA_SOURCES + SPARK_DATA_SOURCES + SQL_DATA_SOURCES
 )
 
 
-@parameterize_batch_for_data_sources(
-    data_source_configs=ALL_DATA_SOURCES,
-    data=pd.DataFrame({"a": ["b", "c"]}),
-)
-def test_numeric_expectation_against_str_data_misconfiguration(batch_for_datasource) -> None:
-    expectation = gxe.ExpectColumnStdevToBeBetween(
-        column="a",
-        min_value=0,
-        max_value=1,
-        strict_min=True,
-        strict_max=True,
+class TestNumericExpectationAgainstStrDataMisconfiguration:
+    @parameterize_batch_for_data_sources(
+        data_source_configs=PANDAS_DATA_SOURCES,
+        data=pd.DataFrame({"a": ["b", "c"]}),
     )
-    result = batch_for_datasource.validate(expectation)
-    assert not result.success
-    assert "could not convert string to float" in str(result.exception_info)
+    def test_pandas(self, batch_for_datasource) -> None:
+        expectation = gxe.ExpectColumnStdevToBeBetween(
+            column="a",
+            min_value=0,
+            max_value=1,
+            strict_min=True,
+            strict_max=True,
+        )
+        result = batch_for_datasource.validate(expectation)
+        assert not result.success
+        assert "could not convert string to float" in str(result.exception_info)
+
+    @parameterize_batch_for_data_sources(
+        data_source_configs=SQL_DATA_SOURCES,
+        data=pd.DataFrame({"a": ["b", "c"]}),
+    )
+    def test_sql(self, batch_for_datasource) -> None:
+        expectation = gxe.ExpectColumnStdevToBeBetween(
+            column="a",
+            min_value=0,
+            max_value=1,
+            strict_min=True,
+            strict_max=True,
+        )
+        result = batch_for_datasource.validate(expectation)
+        assert not result.success
+        assert "could not convert string to float" in str(result.exception_info)
+
+    @parameterize_batch_for_data_sources(
+        data_source_configs=SPARK_DATA_SOURCES,
+        data=pd.DataFrame({"a": ["b", "c"]}),
+    )
+    def test_spark(self, batch_for_datasource) -> None:
+        expectation = gxe.ExpectColumnStdevToBeBetween(
+            column="a",
+            min_value=0,
+            max_value=1,
+            strict_min=True,
+            strict_max=True,
+        )
+        result = batch_for_datasource.validate(expectation)
+        assert not result.success
+        assert "could not convert string to float" in str(result.exception_info)
+
+
+class TestNonExistentColumnMisconfiguration:
+    @parameterize_batch_for_data_sources(
+        data_source_configs=PANDAS_DATA_SOURCES + SPARK_DATA_SOURCES,
+        data=pd.DataFrame({"a": [1, 2]}),
+    )
+    def test_pandas_and_sql(self, batch_for_datasource) -> None:
+        expectation = gxe.ExpectColumnMedianToBeBetween(column="b", min_value=5, max_value=10)
+        result = batch_for_datasource.validate(expectation)
+        assert not result.success
+        assert 'The column "b" in BatchData does not exist' in str(result.exception_info)
+
+    @parameterize_batch_for_data_sources(
+        data_source_configs=SPARK_DATA_SOURCES,
+        data=pd.DataFrame({"a": [1, 2]}),
+    )
+    def test_spark(self, batch_for_datasource) -> None:
+        expectation = gxe.ExpectColumnMedianToBeBetween(column="b", min_value=5, max_value=10)
+        result = batch_for_datasource.validate(expectation)
+        assert not result.success
+        assert (
+            "[UNRESOLVED_COLUMN.WITH_SUGGESTION] A column or function parameter with name `b` cannot be resolved"  # noqa: E501
+            in str(result.exception_info)
+        )
 
 
 @parameterize_batch_for_data_sources(
@@ -42,17 +137,6 @@ def test_datetime_expectation_against_numeric_data_misconfiguration(batch_for_da
     assert "Could not parse" in str(
         result.exception_info
     ) and "into datetime representation" in str(result.exception_info)
-
-
-@parameterize_batch_for_data_sources(
-    data_source_configs=ALL_DATA_SOURCES,
-    data=pd.DataFrame({"a": [1, 2]}),
-)
-def test_nonexistent_column_misconfiguration(batch_for_datasource) -> None:
-    expectation = gxe.ExpectColumnMedianToBeBetween(column="b", min_value=5, max_value=10)
-    result = batch_for_datasource.validate(expectation)
-    assert not result.success
-    assert 'The column "b" in BatchData does not exist' in str(result.exception_info)
 
 
 @parameterize_batch_for_data_sources(
