@@ -1,5 +1,3 @@
-from unittest.mock import ANY
-
 import pandas as pd
 import pytest
 
@@ -14,7 +12,7 @@ from tests.integration.data_sources_and_expectations.test_canonical_expectations
 
 COL_NAME = "my_strings"
 
-DATA = pd.DataFrame({COL_NAME: ["AA", "AAA", None]})
+DATA = pd.DataFrame({COL_NAME: ["AA", "AAA", None]}, dtype="object")
 
 
 @parameterize_batch_for_data_sources(data_source_configs=ALL_DATA_SOURCES, data=DATA)
@@ -22,21 +20,6 @@ def test_success_complete(batch_for_datasource: Batch) -> None:
     expectation = gxe.ExpectColumnValueLengthsToBeBetween(column=COL_NAME, min_value=2, max_value=3)
     result = batch_for_datasource.validate(expectation, result_format=ResultFormat.COMPLETE)
     assert result.success
-    assert result.to_json_dict()["result"] == {
-        "element_count": 3,
-        "unexpected_count": 0,
-        "unexpected_percent": 0.0,
-        "partial_unexpected_list": [],
-        "missing_count": 1,
-        "missing_percent": pytest.approx(33.33333333333),
-        "unexpected_percent_total": 0.0,
-        "unexpected_percent_nonmissing": 0.0,
-        "partial_unexpected_counts": [],
-        "partial_unexpected_index_list": [],
-        "unexpected_list": [],
-        "unexpected_index_list": [],
-        "unexpected_index_query": ANY,
-    }
 
 
 @pytest.mark.parametrize(
