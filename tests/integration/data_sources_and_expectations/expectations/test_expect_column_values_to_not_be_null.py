@@ -9,8 +9,12 @@ from great_expectations.datasource.fluent.interfaces import Batch
 from tests.integration.conftest import parameterize_batch_for_data_sources
 from tests.integration.data_sources_and_expectations.test_canonical_expectations import (
     JUST_PANDAS_DATA_SOURCES,
-    NON_SQL_DATA_SOURCES,
     SQL_DATA_SOURCES,
+)
+from tests.integration.test_utils.data_source_config import (
+    PandasDataFrameDatasourceTestConfig,
+    PandasFilesystemCsvDatasourceTestConfig,
+    SparkFilesystemCsvDatasourceTestConfig,
 )
 
 NON_NULL_COLUMN = "none_nulls"
@@ -26,8 +30,10 @@ DATA = pd.DataFrame(
 )
 
 
-@parameterize_batch_for_data_sources(data_source_configs=NON_SQL_DATA_SOURCES, data=DATA)
-def test_failure_complete_non_sql(batch_for_datasource: Batch) -> None:
+@parameterize_batch_for_data_sources(
+    data_source_configs=[PandasDataFrameDatasourceTestConfig()], data=DATA
+)
+def test_failure_pandas_dataframe(batch_for_datasource: Batch) -> None:
     expectation = gxe.ExpectColumnValuesToNotBeNull(column=MOSTLY_NULL_COLUMN)
     result = batch_for_datasource.validate(expectation, result_format=ResultFormat.COMPLETE)
     assert not result.success
@@ -43,6 +49,52 @@ def test_failure_complete_non_sql(batch_for_datasource: Batch) -> None:
         "unexpected_list": [None, None, None, None],
         "unexpected_index_list": [1, 2, 3, 4],
         "unexpected_index_query": "df.filter(items=[1, 2, 3, 4], axis=0)",
+    }
+
+
+@parameterize_batch_for_data_sources(
+    data_source_configs=[PandasFilesystemCsvDatasourceTestConfig()], data=DATA
+)
+def test_failure_pandas_csv(batch_for_datasource: Batch) -> None:
+    expectation = gxe.ExpectColumnValuesToNotBeNull(column=MOSTLY_NULL_COLUMN)
+    result = batch_for_datasource.validate(expectation, result_format=ResultFormat.COMPLETE)
+    assert not result.success
+    assert result.to_json_dict()["result"] == {
+        "element_count": 5,
+        "unexpected_count": 4,
+        "unexpected_percent": 80.0,
+        "partial_unexpected_list": [None, None, None, None],
+        "partial_unexpected_index_list": [1, 2, 3, 4],
+        "partial_unexpected_counts": [
+            # TODO: NOT THIS
+            {"count": 1, "value": None},
+            {"count": 1, "value": None},
+            {"count": 1, "value": None},
+            {"count": 1, "value": None},
+        ],
+        "unexpected_list": [None, None, None, None],
+        "unexpected_index_list": [1, 2, 3, 4],
+        "unexpected_index_query": "df.filter(items=[1, 2, 3, 4], axis=0)",
+    }
+
+
+@parameterize_batch_for_data_sources(
+    data_source_configs=[SparkFilesystemCsvDatasourceTestConfig()], data=DATA
+)
+def test_failure_spark(batch_for_datasource: Batch) -> None:
+    expectation = gxe.ExpectColumnValuesToNotBeNull(column=MOSTLY_NULL_COLUMN)
+    result = batch_for_datasource.validate(expectation, result_format=ResultFormat.COMPLETE)
+    assert not result.success
+    assert result.to_json_dict()["result"] == {
+        "element_count": 5,
+        "unexpected_count": 4,
+        "unexpected_percent": 80.0,
+        "partial_unexpected_list": [None, None, None, None],
+        "partial_unexpected_counts": [
+            {"count": 4, "value": None},
+        ],
+        "unexpected_list": [None, None, None, None],
+        "unexpected_index_query": ANY,
     }
 
 
