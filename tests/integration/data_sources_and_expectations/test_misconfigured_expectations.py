@@ -1,60 +1,45 @@
 import datetime as dt
 
 import pandas as pd
+import pytest
 
 import great_expectations.expectations as gxe
 from tests.integration.conftest import parameterize_batch_for_data_sources
-from tests.integration.test_utils.data_source_config import (
-    BigQueryDatasourceTestConfig,
-    DatabricksDatasourceTestConfig,
-    MSSQLDatasourceTestConfig,
-    MySQLDatasourceTestConfig,
-    PandasDataFrameDatasourceTestConfig,
-    PandasFilesystemCsvDatasourceTestConfig,
-    PostgreSQLDatasourceTestConfig,
-    SnowflakeDatasourceTestConfig,
-    SparkFilesystemCsvDatasourceTestConfig,
-    SqliteDatasourceTestConfig,
+from tests.integration.data_sources_and_expectations.test_canonical_expectations import (
+    ALL_DATA_SOURCES,
 )
 from tests.integration.test_utils.data_source_config.base import DataSourceTestConfig
 
-pandas_data_frame_ds_test_config = PandasDataFrameDatasourceTestConfig()
-pandas_filesystem_csv_ds_test_config = PandasFilesystemCsvDatasourceTestConfig()
-spark_filesystem_csv_ds_test_config = SparkFilesystemCsvDatasourceTestConfig()
-big_query_ds_test_config = BigQueryDatasourceTestConfig()
-databricks_ds_test_config = DatabricksDatasourceTestConfig()
-mssql_ds_test_config = MSSQLDatasourceTestConfig()
-mysql_ds_test_config = MySQLDatasourceTestConfig()
-postgresql_ds_test_config = PostgreSQLDatasourceTestConfig()
-snowflake_ds_test_config = SnowflakeDatasourceTestConfig()
-sqlite_ds_test_config = SqliteDatasourceTestConfig()
-
 PANDAS_DATA_SOURCES: list[DataSourceTestConfig] = [
-    pandas_data_frame_ds_test_config,
-    pandas_filesystem_csv_ds_test_config,
+    ds for ds in ALL_DATA_SOURCES if ds.label in {"pandas-data-frame", "pandas-filesystem-csv"}
 ]
-
-
 SPARK_DATA_SOURCES: list[DataSourceTestConfig] = [
-    spark_filesystem_csv_ds_test_config,
+    ds for ds in ALL_DATA_SOURCES if ds.label in {"spark-filesystem-csv"}
 ]
-
 SQL_DATA_SOURCES: list[DataSourceTestConfig] = [
-    big_query_ds_test_config,
-    databricks_ds_test_config,
-    mssql_ds_test_config,
-    mysql_ds_test_config,
-    postgresql_ds_test_config,
-    snowflake_ds_test_config,
-    sqlite_ds_test_config,
+    ds
+    for ds in ALL_DATA_SOURCES
+    if ds.label
+    in {"big-query", "databricks", "mssql", "mysql", "postgresql", "snowflake", "sqlite"}
 ]
 
-ALL_DATA_SOURCES: list[DataSourceTestConfig] = (
-    PANDAS_DATA_SOURCES + SPARK_DATA_SOURCES + SQL_DATA_SOURCES
-)
+
+@pytest.mark.unit
+def test_parameterization():
+    assert len(PANDAS_DATA_SOURCES) == 2
+    assert len(SPARK_DATA_SOURCES) == 1
+    assert len(SQL_DATA_SOURCES) == 7
+    assert len(PANDAS_DATA_SOURCES) + len(SPARK_DATA_SOURCES) + len(SQL_DATA_SOURCES) == len(
+        ALL_DATA_SOURCES
+    )
 
 
 class TestNumericExpectationAgainstStrDataMisconfiguration:
+    # Currently bugs with the following (not raising misconfiguration errors at all):
+    #  - sqlite
+    #  - databricks
+    #  - mysql
+
     _DATA = pd.DataFrame({"a": ["b", "c"]})
     _EXPECTATION = gxe.ExpectColumnStdevToBeBetween(
         column="a",
@@ -75,7 +60,7 @@ class TestNumericExpectationAgainstStrDataMisconfiguration:
         )
 
     @parameterize_batch_for_data_sources(
-        data_source_configs=[big_query_ds_test_config],
+        data_source_configs=[ds for ds in SQL_DATA_SOURCES if ds.label in {"big-query"}],
         data=_DATA,
     )
     def test_bigquery(self, batch_for_datasource) -> None:
@@ -85,7 +70,7 @@ class TestNumericExpectationAgainstStrDataMisconfiguration:
         )
 
     @parameterize_batch_for_data_sources(
-        data_source_configs=[mssql_ds_test_config],
+        data_source_configs=[ds for ds in SQL_DATA_SOURCES if ds.label in {"mssql"}],
         data=_DATA,
     )
     def test_mssql(self, batch_for_datasource) -> None:
@@ -95,7 +80,7 @@ class TestNumericExpectationAgainstStrDataMisconfiguration:
         )
 
     @parameterize_batch_for_data_sources(
-        data_source_configs=[postgresql_ds_test_config],
+        data_source_configs=[ds for ds in SQL_DATA_SOURCES if ds.label in {"postgresql"}],
         data=_DATA,
     )
     def test_postgresql(self, batch_for_datasource) -> None:
@@ -105,24 +90,10 @@ class TestNumericExpectationAgainstStrDataMisconfiguration:
         )
 
     @parameterize_batch_for_data_sources(
-        data_source_configs=[
-            ds
-            for ds in SQL_DATA_SOURCES
-            if ds
-            not in {
-                # Ignored due to bug (currently not failing or raising an exception)
-                sqlite_ds_test_config,
-                databricks_ds_test_config,
-                mysql_ds_test_config,
-                # Tested separately due to different error messages
-                big_query_ds_test_config,
-                mssql_ds_test_config,
-                postgresql_ds_test_config,
-            }
-        ],
+        data_source_configs=[ds for ds in SQL_DATA_SOURCES if ds.label in {"snowflake"}],
         data=_DATA,
     )
-    def test_remaining_sql(self, batch_for_datasource) -> None:
+    def test_snowflake(self, batch_for_datasource) -> None:
         self._test_misconfiguration(
             batch_for_datasource=batch_for_datasource,
             exception_message="could not convert string to float",
