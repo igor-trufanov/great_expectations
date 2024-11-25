@@ -4,94 +4,35 @@
     {
       "dataset_name": "expect_column_values_to_be_of_type_1",
       "data": {
-        "x": [1, 2, 4],
-        "y": [1.0, 2.2, 5.3],
-        "z": ["hello", "jello", "mello"],
-        "n": [null, null, null],
-        "b": [false, true, false],
-        "s": [2.1, 3.1, 4.1],
-        "s1": [1, 2, 3]
+        "x": [1, 2, 4]
       },
       "schemas": {
         "pandas": {
-          "x": "int",
-          "y": "float",
-          "z": "str",
-          "n": "str",
-          "b": "bool",
-          "s": "float64",
-          "s1": "int64"
+          "x": "int"
         },
         "spark": {
-          "x": "IntegerType",
-          "y": "FloatType",
-          "z": "StringType",
-          "n": "StringType",
-          "b": "BooleanType",
-          "s": "FloatType",
-          "s1": "LongType"
+          "x": "IntegerType"
         },
         "sqlite": {
-          "x": "INTEGER",
-          "y": "FLOAT",
-          "z": "VARCHAR",
-          "n": "VARCHAR",
-          "b": "BOOLEAN",
-          "s": "FLOAT",
-          "s1": "INTEGER"
+          "x": "INTEGER"
         },
         "postgresql": {
-          "x": "INTEGER",
-          "y": "DOUBLE_PRECISION",
-          "z": "TEXT",
-          "n": "TEXT",
-          "b": "BOOLEAN",
-          "s": "DOUBLE_PRECISION",
-          "s1": "BIGINT"
+          "x": "INTEGER"
         },
         "mysql": {
-          "x": "INTEGER",
-          "y": "FLOAT",
-          "z": "TEXT",
-          "n": "TEXT",
-          "b": "TINYINT",
-          "s": "FLOAT",
-          "s1": "BIGINT"
+          "x": "INTEGER"
         },
         "mssql": {
-          "x": "INTEGER",
-          "y": "FLOAT",
-          "z": "VARCHAR",
-          "n": "VARCHAR",
-          "b": "BIT",
-          "s": "FLOAT",
-          "s1": "BIGINT"
+          "x": "INTEGER"
         },
         "trino": {
-          "x": "INTEGER",
-          "y": "DOUBLE",
-          "z": "VARCHAR",
-          "n": "VARCHAR",
-          "b": "BOOLEAN",
-          "s": "DOUBLE",
-          "s1": "BIGINT"
+          "x": "INTEGER"
         },
         "snowflake": {
-          "x": "NUMBER",
-          "y": "DOUBLE",
-          "z": "STRING",
-          "n": "STRING",
-          "s": "DOUBLE",
-          "s1": "NUMBER"
+          "x": "NUMBER"
         },
         "redshift": {
-          "x": "INTEGER",
-          "y": "DOUBLE_PRECISION",
-          "z": "VARCHAR",
-          "n": "VARCHAR",
-          "b": "BOOLEAN",
-          "s": "DOUBLE_PRECISION",
-          "s1": "BIGINT"
+          "x": "INTEGER"
         }
       },
       "tests": [
