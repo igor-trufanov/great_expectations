@@ -11,6 +11,7 @@ pytest --postgresql --docs-tests -k "data_quality_use_case_freshness_workflow" t
 
 # <snippet name="docs/docusaurus/docs/reference/learn/data_quality_use_cases/freshness_resources/freshness_workflow.py full workflow">
 import datetime
+
 import great_expectations as gx
 import great_expectations.expectations as gxe
 
@@ -29,6 +30,7 @@ data_asset = data_source.add_table_asset(
 batch_definition = data_asset.add_batch_definition_whole_table("batch definition")
 batch = batch_definition.get_batch()
 
+
 # Define the custom Expectation class by subclassing the built-in ExpectColumnMaxToBeBetween Expectation.
 class ExpectSensorDataToBeFresh(gxe.ExpectColumnMaxToBeBetween):
     """Custom Expectation class to validate the freshness of sensor readings in the database."""
@@ -36,6 +38,7 @@ class ExpectSensorDataToBeFresh(gxe.ExpectColumnMaxToBeBetween):
     column: str = "created_at"
     min_value = datetime.datetime.now() - datetime.timedelta(minutes=5)
     description = "New sensor readings should have arrived in the database within the last 5 minutes."
+
 
 # Validate the sample data with the custom freshness Expectation.
 validation_result = batch.validate(ExpectSensorDataToBeFresh())
@@ -45,4 +48,6 @@ print(f"Most recent reading timestamp: {validation_result['result']['observed_va
 # </snippet>
 
 assert validation_result["success"] is False
-assert validation_result["result"]["observed_value"] == datetime.datetime(2024, 11, 22, 14, 49)
+assert validation_result["result"]["observed_value"] == datetime.datetime(
+    2024, 11, 22, 14, 49
+)
