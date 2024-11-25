@@ -21,6 +21,7 @@ from tests.integration.test_utils.data_source_config import (
 BASIC_PATTERNS = "basic_patterns"
 PREFIXED_PATTERNS = "prefixed_patterns"
 SUFFIXED_PATTERNS = "suffixed_patterns"
+COMMON_PATTERN = "suffixed_patterns"
 WITH_NULL = "with_null"
 
 DATA = pd.DataFrame(
@@ -28,6 +29,7 @@ DATA = pd.DataFrame(
         BASIC_PATTERNS: ["abc", "def", "ghi"],
         PREFIXED_PATTERNS: ["foo_abc", "foo_def", "foo_ghi"],
         SUFFIXED_PATTERNS: ["abc_foo", "def_foo", "ghi_foo"],
+        COMMON_PATTERN: ["abc_foo", "def_foo", "ghi_foo"],
         WITH_NULL: ["ba", None, "ab"],
     }
 )
@@ -44,9 +46,9 @@ SUPPORTED_DATA_SOURCES: Sequence[DataSourceTestConfig] = [
 
 @parameterize_batch_for_data_sources(data_source_configs=SUPPORTED_DATA_SOURCES, data=DATA)
 def test_basic_success(batch_for_datasource: Batch) -> None:
-    expectation = gxe.ExpectColumnValuesToMatchLikePattern(
+    expectation = gxe.ExpectColumnValuesToMatchLikePatternList(
         column=PREFIXED_PATTERNS,
-        like_pattern="foo%",
+        like_pattern_list=["foo%"],
     )
     result = batch_for_datasource.validate(expectation)
     assert result.success
@@ -54,9 +56,9 @@ def test_basic_success(batch_for_datasource: Batch) -> None:
 
 @parameterize_batch_for_data_sources(data_source_configs=SUPPORTED_DATA_SOURCES, data=DATA)
 def test_basic_failure(batch_for_datasource: Batch) -> None:
-    expectation = gxe.ExpectColumnValuesToMatchLikePattern(
+    expectation = gxe.ExpectColumnValuesToMatchLikePatternList(
         column=BASIC_PATTERNS,
-        like_pattern="xyz%",
+        like_pattern_list=["xyz%"],
     )
     result = batch_for_datasource.validate(expectation)
     assert not result.success
@@ -67,9 +69,9 @@ def test_basic_failure(batch_for_datasource: Batch) -> None:
 )
 def test_complete_results_failure(batch_for_datasource: Batch) -> None:
     ABOUT_TWO_THIRDS = pytest.approx(2 / 3 * 100)
-    expectation = gxe.ExpectColumnValuesToMatchLikePattern(
+    expectation = gxe.ExpectColumnValuesToMatchLikePatternList(
         column=BASIC_PATTERNS,
-        like_pattern="%b%",
+        like_pattern_list=["%b%"],
     )
     result = batch_for_datasource.validate(expectation, result_format=ResultFormat.COMPLETE)
     json_dict = result.to_json_dict()
@@ -102,29 +104,52 @@ def test_complete_results_failure(batch_for_datasource: Batch) -> None:
     "expectation",
     [
         pytest.param(
-            gxe.ExpectColumnValuesToMatchLikePattern(
-                column=BASIC_PATTERNS,
-                like_pattern="%",
+            gxe.ExpectColumnValuesToMatchLikePatternList(
+                column=COMMON_PATTERN, like_pattern_list=["%foo"], match_on="any"
             ),
             id="match_all",
         ),
         pytest.param(
-            gxe.ExpectColumnValuesToMatchLikePattern(
-                column=PREFIXED_PATTERNS,
-                like_pattern="foo%",
+            gxe.ExpectColumnValuesToMatchLikePatternList(
+                column=BASIC_PATTERNS, like_pattern_list=["abc", "def", "ghi"], match_on="any"
+            ),
+            id="multiple_patterns",
+        ),
+        pytest.param(
+            gxe.ExpectColumnValuesToMatchLikePatternList(
+                column=BASIC_PATTERNS, like_pattern_list=["a%", "d%", "g%"], match_on="any"
+            ),
+            id="multiple_patterns_with_prefix",
+        ),
+        pytest.param(
+            gxe.ExpectColumnValuesToMatchLikePatternList(
+                column=COMMON_PATTERN, like_pattern_list=["%foo"], match_on="any"
+            ),
+            id="match_all",
+        ),
+        pytest.param(
+            gxe.ExpectColumnValuesToMatchLikePatternList(
+                column=PREFIXED_PATTERNS, like_pattern_list=["foo%"], match_on="any"
             ),
             id="prefixed_pattern",
         ),
         pytest.param(
-            gxe.ExpectColumnValuesToMatchLikePattern(
-                column=SUFFIXED_PATTERNS,
-                like_pattern="%foo",
+            gxe.ExpectColumnValuesToMatchLikePatternList(
+                column=SUFFIXED_PATTERNS, like_pattern_list=["%foo"], match_on="any"
             ),
             id="suffixed_pattern",
         ),
         pytest.param(
-            gxe.ExpectColumnValuesToMatchLikePattern(
-                column=BASIC_PATTERNS, like_pattern="%b%", mostly=0.3
+            gxe.ExpectColumnValuesToMatchLikePatternList(
+                column=PREFIXED_PATTERNS,
+                like_pattern_list=["foo%", "bar%"],
+                match_on="any",
+            ),
+            id="matches_one_of",
+        ),
+        pytest.param(
+            gxe.ExpectColumnValuesToMatchLikePatternList(
+                column=BASIC_PATTERNS, like_pattern_list=["%b%"], match_on="any", mostly=0.3
             ),
             id="mostly",
         ),
@@ -135,7 +160,7 @@ def test_complete_results_failure(batch_for_datasource: Batch) -> None:
 )
 def test_success(
     batch_for_datasource: Batch,
-    expectation: gxe.ExpectColumnValuesToMatchLikePattern,
+    expectation: gxe.ExpectColumnValuesToMatchLikePatternList,
 ) -> None:
     result = batch_for_datasource.validate(expectation)
     assert result.success
@@ -145,19 +170,29 @@ def test_success(
     "expectation",
     [
         pytest.param(
-            gxe.ExpectColumnValuesToMatchLikePattern(
+            gxe.ExpectColumnValuesToMatchLikePatternList(
                 column=BASIC_PATTERNS,
-                like_pattern="%xyz%",
+                like_pattern_list=["%xyz%"],
+                match_on="any",
             ),
             id="no_matches",
         ),
         pytest.param(
-            gxe.ExpectColumnValuesToMatchLikePattern(
+            gxe.ExpectColumnValuesToMatchLikePatternList(
                 column=BASIC_PATTERNS,
-                like_pattern="%b%",
+                like_pattern_list=["%b%"],
+                match_on="any",
                 mostly=0.4,
             ),
             id="mostly_threshold_not_met",
+        ),
+        pytest.param(
+            gxe.ExpectColumnValuesToMatchLikePatternList(
+                column=PREFIXED_PATTERNS,
+                like_pattern_list=["foo%", "bar%"],
+                match_on="all",
+            ),
+            id="does_not_match_all",
         ),
     ],
 )
@@ -166,7 +201,7 @@ def test_success(
 )
 def test_failure(
     batch_for_datasource: Batch,
-    expectation: gxe.ExpectColumnValuesToMatchLikePattern,
+    expectation: gxe.ExpectColumnValuesToMatchLikePatternList,
 ) -> None:
     result = batch_for_datasource.validate(expectation)
     assert not result.success
@@ -176,9 +211,17 @@ def test_failure(
     "expectation",
     [
         pytest.param(
-            gxe.ExpectColumnValuesToMatchLikePattern(
+            gxe.ExpectColumnValuesToMatchLikePatternList(
                 column=BASIC_PATTERNS,
-                like_pattern="[adg]*",
+                like_pattern_list=["[adg]*"],
+                match_on="any",
+            ),
+        ),
+        pytest.param(
+            gxe.ExpectColumnValuesToMatchLikePatternList(
+                column=BASIC_PATTERNS,
+                like_pattern_list=["[a]%", "[d]%", "[g]%"],
+                match_on="any",
             ),
         ),
     ],
@@ -186,7 +229,7 @@ def test_failure(
 @parameterize_batch_for_data_sources(data_source_configs=[MSSQLDatasourceTestConfig()], data=DATA)
 def test_msql_fancy_syntax(
     batch_for_datasource: Batch,
-    expectation: gxe.ExpectColumnValuesToMatchLikePattern,
+    expectation: gxe.ExpectColumnValuesToMatchLikePatternList,
 ) -> None:
     result = batch_for_datasource.validate(expectation)
     assert result.success
