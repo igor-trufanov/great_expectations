@@ -18,11 +18,7 @@ from tests.integration.test_utils.data_source_config import (
 COL_NAME = "col_name"
 
 
-DATA = pd.DataFrame(
-    {
-        COL_NAME: ["aa", "ab", "ac", None],
-    },
-)
+DATA = pd.DataFrame({COL_NAME: ["aa", "ab", "ac", None]})
 
 REGULAR_DATA_SOURCES: Sequence[DataSourceTestConfig] = [
     MySQLDatasourceTestConfig(),
@@ -132,7 +128,9 @@ class TestMSSQL:
             ),
         ],
     )
-    @parameterize_batch_for_data_sources(data_source_configs=REGULAR_DATA_SOURCES, data=DATA)
+    @parameterize_batch_for_data_sources(
+        data_source_configs=[MSSQLDatasourceTestConfig()], data=DATA
+    )
     def test_failure(
         self,
         batch_for_datasource: Batch,
