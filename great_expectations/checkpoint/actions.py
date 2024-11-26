@@ -395,10 +395,20 @@ class PagerdutyAlertAction(ValidationAction):
 
     type: Literal["pagerduty"] = "pagerduty"
 
-    api_key: str
-    routing_key: str
+    api_key: Optional[Union[ConfigStr, str]] = None
+    routing_key: Optional[Union[ConfigStr, str]] = None
     notify_on: Literal["all", "failure", "success"] = "failure"
     severity: Literal["critical", "error", "warning", "info"] = "critical"
+
+    @root_validator
+    def _root_validate_pagerduty_params(cls, values: dict) -> dict:
+        api_key = values["api_key"]
+        routing_key = values["routing_key"]
+
+        if not api_key and not routing_key:
+            raise ValueError("Please provide PagerDuty key.")
+
+        return values
 
     @override
     def run(
@@ -416,10 +426,10 @@ class PagerdutyAlertAction(ValidationAction):
 
     def _run_pypd_alert(self, dedup_key: str, message: str, success: bool):
         if _should_notify(success=success, notify_on=self.notify_on):
-            pypd.api_key = self.api_key
+            pypd.api_key = self._substitute_config_str_if_needed(self.api_key)
             pypd.EventV2.create(
                 data={
-                    "routing_key": self.routing_key,
+                    "routing_key": self._substitute_config_str_if_needed(self.routing_key),
                     "dedup_key": dedup_key,
                     "event_action": "trigger",
                     "payload": {
