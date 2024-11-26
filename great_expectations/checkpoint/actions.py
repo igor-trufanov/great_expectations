@@ -372,7 +372,7 @@ class SlackNotificationAction(DataDocsAction):
 
         return {"slack_notification_result": "Slack notification succeeded."}
 
-
+@public_api
 class PagerdutyAlertAction(ValidationAction):
     """Sends a PagerDuty event.
 
@@ -1015,6 +1015,7 @@ CheckpointAction = Annotated[
         MicrosoftTeamsNotificationAction,
         SlackNotificationAction,
         UpdateDataDocsAction,
+        PagerdutyAlertAction
     ],
     Field(discriminator="type"),
 ]
