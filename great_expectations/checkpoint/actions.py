@@ -400,16 +400,6 @@ class PagerdutyAlertAction(ValidationAction):
     notify_on: Literal["all", "failure", "success"] = "failure"
     severity: Literal["critical", "error", "warning", "info"] = "critical"
 
-    @root_validator
-    def _root_validate_pagerduty_params(cls, values: dict) -> dict:
-        api_key = values["api_key"]
-        routing_key = values["routing_key"]
-
-        if not api_key and not routing_key:
-            raise ValueError("Please provide PagerDuty key.")
-
-        return values
-
     @override
     def run(
         self, checkpoint_result: CheckpointResult, action_context: ActionContext | None = None
