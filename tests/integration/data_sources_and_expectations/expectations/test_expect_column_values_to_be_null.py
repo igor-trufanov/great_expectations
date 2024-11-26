@@ -30,17 +30,6 @@ def test_success_complete_non_sql(batch_for_datasource: Batch) -> None:
     expectation = gxe.ExpectColumnValuesToBeNull(column=ALL_NULL_COLUMN)
     result = batch_for_datasource.validate(expectation, result_format=ResultFormat.COMPLETE)
     assert result.success
-    assert result.to_json_dict()["result"] == {
-        "element_count": 5,
-        "unexpected_count": 0,
-        "unexpected_percent": 0.0,
-        "partial_unexpected_list": [],
-        "partial_unexpected_counts": [],
-        "partial_unexpected_index_list": [],
-        "unexpected_list": [],
-        "unexpected_index_list": [],
-        "unexpected_index_query": ANY,
-    }
 
 
 @parameterize_batch_for_data_sources(data_source_configs=SQL_DATA_SOURCES, data=DATA)

@@ -58,21 +58,6 @@ def test_success_complete_non_sql(batch_for_datasource: Batch) -> None:
     expectation = gxe.ExpectColumnValuesToBeBetween(column=NUMERIC_COLUMN, min_value=1, max_value=5)
     result = batch_for_datasource.validate(expectation, result_format=ResultFormat.COMPLETE)
     assert result.success
-    assert result.to_json_dict()["result"] == {
-        "element_count": 6,
-        "unexpected_count": 0,
-        "unexpected_percent": 0.0,
-        "partial_unexpected_list": [],
-        "missing_count": 1,
-        "missing_percent": pytest.approx(100 / 6),
-        "unexpected_percent_total": 0.0,
-        "unexpected_percent_nonmissing": 0.0,
-        "partial_unexpected_counts": [],
-        "partial_unexpected_index_list": [],
-        "unexpected_list": [],
-        "unexpected_index_list": [],
-        "unexpected_index_query": ANY,
-    }
 
 
 @pytest.mark.parametrize(

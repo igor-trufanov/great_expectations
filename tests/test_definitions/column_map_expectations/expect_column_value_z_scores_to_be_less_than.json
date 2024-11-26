@@ -8,10 +8,7 @@
       },
       "schemas": {
         "spark": {
-          "dist1": "IntegerType",
-          "dist2": "LongType",
-          "mostly_zero": "IntegerType",
-          "missing": "IntegerType"
+          "dist1": "IntegerType"
         }
       },
       "tests": [

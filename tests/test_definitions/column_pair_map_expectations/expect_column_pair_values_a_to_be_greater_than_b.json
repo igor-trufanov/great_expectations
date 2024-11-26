@@ -10,12 +10,7 @@
       "schemas": {
         "spark": {
           "w": "IntegerType",
-          "x": "IntegerType",
-          "y": "IntegerType",
-          "z": "IntegerType",
-          "a": "StringType",
-          "b": "StringType",
-          "c": "IntegerType"
+          "x": "IntegerType"
         }
       },
       "tests": [
