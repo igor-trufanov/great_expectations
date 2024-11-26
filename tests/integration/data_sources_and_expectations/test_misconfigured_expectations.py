@@ -95,7 +95,7 @@ class TestNumericExpectationAgainstStrDataMisconfiguration:
     def test_snowflake(self, batch_for_datasource) -> None:
         self._test_misconfiguration(
             batch_for_datasource=batch_for_datasource,
-            exception_message="could not convert string to float",
+            exception_message="numeric value 'b' is not recognized",
         )
 
     def _test_misconfiguration(self, batch_for_datasource, exception_message: str) -> None:
