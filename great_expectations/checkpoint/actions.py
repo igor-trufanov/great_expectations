@@ -422,8 +422,8 @@ class PagerdutyAlertAction(ValidationAction):
             pypd.api_key = self._substitute_config_str_if_needed(self.api_key)
             pypd.EventV2.create(
                 data={
-                    "client": client,
-                    "client_url": client_url,
+                    "client": self.client,
+                    "client_url": self.client_url,
                     "routing_key": self._substitute_config_str_if_needed(self.routing_key),
                     "dedup_key": dedup_key,
                     "event_action": "trigger",
@@ -431,7 +431,7 @@ class PagerdutyAlertAction(ValidationAction):
                         "summary": message,
                         "severity": self.severity,
                         "source": "Great Expectations",
-                        "custom_details": custom_details
+                        "custom_details": self.custom_details
                     },
                 }
             )
