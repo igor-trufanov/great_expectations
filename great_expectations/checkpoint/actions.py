@@ -408,8 +408,9 @@ class PagerdutyAlertAction(ValidationAction):
         self, checkpoint_result: CheckpointResult, action_context: ActionContext | None = None
     ) -> dict:
         success = checkpoint_result.success or False
+        run_name = checkpoint_result.run_id.run_name
         checkpoint_name = checkpoint_result.checkpoint_config.name
-        summary = f"Great Expectations Checkpoint {checkpoint_name} has "
+        summary = f"Great Expectations Checkpoint [{checkpoint_name}] run name [{run_name}] has "
         if success:
             summary += "succeeded"
         else:
