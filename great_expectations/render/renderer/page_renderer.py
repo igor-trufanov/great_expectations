@@ -348,6 +348,7 @@ class ValidationResultsPageRenderer(Renderer):
         batch_kwargs = (
             validation_results.meta.get("batch_kwargs", {})
             or validation_results.meta.get("batch_spec", {})
+            or validation_results.meta.get("active_batch_definition", {})
             or {}
         )
         data_asset_name = batch_kwargs.get("data_asset_name")
