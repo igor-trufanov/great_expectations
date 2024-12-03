@@ -345,13 +345,12 @@ class ValidationResultsPageRenderer(Renderer):
         )
         expectation_suite_path = f"{os.path.join(*expectation_suite_path_components)}.html"  # noqa: PTH118
         # TODO: deprecate dual batch api support in 0.14
-        batch_kwargs = (
-            validation_results.meta.get("batch_kwargs", {})
-            or validation_results.meta.get("batch_spec", {})
-            or validation_results.meta.get("active_batch_definition", {})
-            or {}
+        data_asset_name = (
+            validation_results.meta.get("batch_kwargs", {}).get("data_asset_name", None)
+            or validation_results.meta.get("batch_spec", {}).get("data_asset_name", None)
+            or validation_results.meta.get("active_batch_definition", {}).get("data_asset_name", None)
+            or None
         )
-        data_asset_name = batch_kwargs.get("data_asset_name")
 
         if success:
             success = "Succeeded"
