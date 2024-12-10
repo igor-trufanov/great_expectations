@@ -372,7 +372,7 @@ diagnose and repair the underlying issue.  Detailed information follows:
                     "collapse": [notes_block],
                     "inline_link": True,
                     "styling": {
-                        "body": {"classes": ["card", "card-body", "p-1"]},
+                        "body": {"classes": ["card", "card-body", "p-1", "show"]},
                         "parent": {"styles": {"list-style-type": "none"}},
                     },
                 }
