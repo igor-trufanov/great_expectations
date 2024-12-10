@@ -214,6 +214,6 @@ footer a:hover {
 .table-bordered.table-sm.mt-3 span {
     margin: 5px;
 }
-.table-bordered.table-sm.m-0 span {
-    white-space: pre-wrap;
+.table.table-sm.m-0 span {
+    white-space: pre;
 }
