@@ -208,3 +208,12 @@ footer a:hover {
     color: #ff6210;
   }
 }
+
+/* Custom Styling */
+
+.table-bordered.table-sm.mt-3 span {
+    margin: 5px;
+}
+.table-bordered.table-sm.m-0 span {
+    white-space: pre-wrap;
+}
