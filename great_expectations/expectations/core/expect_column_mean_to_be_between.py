@@ -9,6 +9,7 @@ from great_expectations.expectations.expectation import (
     ColumnAggregateExpectation,
     render_suite_parameter_string,
 )
+from great_expectations.expectations.metadata_types import DataQualityIssues
 from great_expectations.expectations.model_field_descriptions import COLUMN_DESCRIPTION
 from great_expectations.render import (
     LegacyDescriptiveRendererType,
@@ -57,8 +58,9 @@ SUPPORTED_DATA_SOURCES = [
     "Redshift",
     "BigQuery",
     "Snowflake",
+    "Databricks (SQL)",
 ]
-DATA_QUALITY_ISSUES = ["Numerical data"]
+DATA_QUALITY_ISSUES = [DataQualityIssues.NUMERIC.value]
 
 
 class ExpectColumnMeanToBeBetween(ColumnAggregateExpectation):
@@ -110,7 +112,7 @@ class ExpectColumnMeanToBeBetween(ColumnAggregateExpectation):
         [ExpectColumnMedianToBeBetween](https://greatexpectations.io/expectations/expect_column_median_to_be_between)
         [ExpectColumnStdevToBeBetween](https://greatexpectations.io/expectations/expect_column_stdev_to_be_between)
 
-    Supported Datasources:
+    Supported Data Sources:
         [{SUPPORTED_DATA_SOURCES[0]}](https://docs.greatexpectations.io/docs/application_integration_support/)
         [{SUPPORTED_DATA_SOURCES[1]}](https://docs.greatexpectations.io/docs/application_integration_support/)
         [{SUPPORTED_DATA_SOURCES[2]}](https://docs.greatexpectations.io/docs/application_integration_support/)
@@ -121,7 +123,7 @@ class ExpectColumnMeanToBeBetween(ColumnAggregateExpectation):
         [{SUPPORTED_DATA_SOURCES[7]}](https://docs.greatexpectations.io/docs/application_integration_support/)
         [{SUPPORTED_DATA_SOURCES[8]}](https://docs.greatexpectations.io/docs/application_integration_support/)
 
-    Data Quality Category:
+    Data Quality Issues:
         {DATA_QUALITY_ISSUES[0]}
 
     Example Data:

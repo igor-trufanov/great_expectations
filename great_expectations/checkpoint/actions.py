@@ -23,7 +23,7 @@ from typing import (
 )
 
 import requests
-from typing_extensions import Annotated
+from typing_extensions import dataclass_transform
 
 from great_expectations._docs_decorators import public_api
 from great_expectations.analytics.client import submit as submit_event
@@ -35,6 +35,7 @@ from great_expectations.compatibility.pydantic import (
     BaseModel,
     Extra,
     Field,
+    ModelMetaclass,
     root_validator,
     validator,
 )
@@ -50,6 +51,10 @@ from great_expectations.data_context.types.resource_identifiers import (
 from great_expectations.data_context.util import instantiate_class_from_config
 from great_expectations.datasource.fluent.config_str import ConfigStr
 from great_expectations.exceptions import ClassInstantiationError
+from great_expectations.exceptions.exceptions import (
+    ValidationActionAlreadyRegisteredError,
+    ValidationActionRegistryRetrievalError,
+)
 from great_expectations.render.renderer import (
     EmailRenderer,
     MicrosoftTeamsRenderer,
@@ -83,10 +88,11 @@ def _build_renderer(config: dict) -> Renderer:
     return renderer
 
 
+@public_api
 class ActionContext:
     """
-    Shared context for all actions in a checkpoint run.
-    Note that order matters in the action list, as the context is updated with each action's result.
+    Shared context for all Actions in a Checkpoint run.
+    Note that order matters in the Action list, as the context is updated with each Action's result.
     """
 
     def __init__(self) -> None:
@@ -99,17 +105,98 @@ class ActionContext:
     def update(self, action: ValidationAction, action_result: dict) -> None:
         self._data.append((action, action_result))
 
+    @public_api
     def filter_results(self, class_: Type[ValidationAction]) -> list[dict]:
+        """
+        Filter the results of the actions in the context by class.
+
+        Args:
+            class_: The class to filter by.
+
+        Returns:
+            A list of action results.
+        """
         return [action_result for action, action_result in self._data if isinstance(action, class_)]
 
 
-@public_api
-class ValidationAction(BaseModel):
+class ValidationActionRegistry:
     """
-    ValidationActions define a set of steps to be run after a validation result is produced.
+    Registers ValidationActions to enable deserialization based on their configuration.
+
+    Uses the `type` key from the action configuration to determine which registered class
+    to instantiate.
+    """
+
+    def __init__(self):
+        self._registered_actions: dict[str, Type[ValidationAction]] = {}
+
+    def register(self, action_type: str, action_class: Type[ValidationAction]) -> None:
+        """
+        Register a ValidationAction class with the registry.
+
+        Args:
+            action_type: The type of the action to register.
+            action_class: The ValidationAction class to register.
+
+        Raises:
+            ValidationActionAlreadyRegisteredError: If the action type is already registered.
+        """
+        if action_type in self._registered_actions:
+            raise ValidationActionAlreadyRegisteredError(action_type)
+
+        self._registered_actions[action_type] = action_class
+
+    def get(self, action_type: str | None) -> Type[ValidationAction]:
+        """
+        Return a ValidationAction class based on its type.
+        Used when instantiating actions from a checkpoint configuration.
+
+        Args:
+            action_type: The 'type' key from the action configuration.
+
+        Returns:
+            The ValidationAction class corresponding to the configuration.
+
+        Raises:
+            ValidationActionRegistryRetrievalError: If the action type is not registered.
+        """
+        if action_type not in self._registered_actions:
+            raise ValidationActionRegistryRetrievalError(action_type)
+
+        return self._registered_actions[action_type]
+
+
+_VALIDATION_ACTION_REGISTRY = ValidationActionRegistry()
+
+
+@dataclass_transform(kw_only_default=True, field_specifiers=(Field,))  # Enables type hinting
+class MetaValidationAction(ModelMetaclass):
+    """MetaValidationAction registers ValidationAction as they are defined, adding them to
+    the registry.
+
+    Any class inheriting from ValidationAction will be registered based on the value of the
+    "type" class attribute.
+    """
+
+    def __new__(cls, clsname, bases, attrs):
+        newclass = super().__new__(cls, clsname, bases, attrs)
+
+        action_type = newclass.__fields__.get("type")
+        if action_type and action_type.default:  # Excludes base classes
+            _VALIDATION_ACTION_REGISTRY.register(
+                action_type=action_type.default, action_class=newclass
+            )
+
+        return newclass
+
+
+@public_api
+class ValidationAction(BaseModel, metaclass=MetaValidationAction):
+    """
+    Actions define a set of steps to run after a Validation Result is produced. Subclass `ValidationAction` to create a [custom Action](/docs/core/trigger_actions_based_on_results/create_a_custom_action).
 
     Through a Checkpoint, one can orchestrate the validation of data and configure notifications, data documentation updates,
-    and other actions to take place after the validation result is produced.
+    and other actions to take place after the Validation Result is produced.
     """  # noqa: E501
 
     class Config:
@@ -125,9 +212,20 @@ class ValidationAction(BaseModel):
     def _using_cloud_context(self) -> bool:
         return project_manager.is_using_cloud()
 
+    @public_api
     def run(
         self, checkpoint_result: CheckpointResult, action_context: ActionContext | None = None
     ) -> dict:
+        """
+        Run the action.
+
+        Args:
+            checkpoint_result: The result of the checkpoint run.
+            action_context: The context in which the action is run.
+
+        Returns:
+            A dictionary containing the result of the action.
+        """
         raise NotImplementedError
 
     def _get_data_docs_pages_from_prior_action(
@@ -1015,14 +1113,4 @@ class APINotificationAction(ValidationAction):
             "validation_results": validation_results_serializable,
         }
 
-
-CheckpointAction = Annotated[
-    Union[
-        EmailAction,
-        MicrosoftTeamsNotificationAction,
-        SlackNotificationAction,
-        UpdateDataDocsAction,
         PagerdutyAlertAction
-    ],
-    Field(discriminator="type"),
-]

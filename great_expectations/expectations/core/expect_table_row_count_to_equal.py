@@ -11,6 +11,7 @@ from great_expectations.expectations.expectation import (
     BatchExpectation,
     render_suite_parameter_string,
 )
+from great_expectations.expectations.metadata_types import DataQualityIssues
 from great_expectations.expectations.model_field_types import ConditionParser  # noqa: TCH001
 from great_expectations.render import LegacyRendererType, RenderedStringTemplateContent
 from great_expectations.render.renderer.renderer import renderer
@@ -41,8 +42,9 @@ SUPPORTED_DATA_SOURCES = [
     "Redshift",
     "BigQuery",
     "Snowflake",
+    "Databricks (SQL)",
 ]
-DATA_QUALITY_ISSUES = ["Volume"]
+DATA_QUALITY_ISSUES = [DataQualityIssues.VOLUME.value]
 
 
 class ExpectTableRowCountToEqual(BatchExpectation):
@@ -77,7 +79,7 @@ class ExpectTableRowCountToEqual(BatchExpectation):
     See Also:
         [ExpectTableRowCountToBeBetween](https://greatexpectations.io/expectations/expect_table_row_count_to_be_between)
 
-    Supported Datasources:
+    Supported Data Sources:
         [{SUPPORTED_DATA_SOURCES[0]}](https://docs.greatexpectations.io/docs/application_integration_support/)
         [{SUPPORTED_DATA_SOURCES[1]}](https://docs.greatexpectations.io/docs/application_integration_support/)
         [{SUPPORTED_DATA_SOURCES[2]}](https://docs.greatexpectations.io/docs/application_integration_support/)
@@ -88,7 +90,7 @@ class ExpectTableRowCountToEqual(BatchExpectation):
         [{SUPPORTED_DATA_SOURCES[7]}](https://docs.greatexpectations.io/docs/application_integration_support/)
         [{SUPPORTED_DATA_SOURCES[8]}](https://docs.greatexpectations.io/docs/application_integration_support/)
 
-    Data Quality Category:
+    Data Quality Issues:
         {DATA_QUALITY_ISSUES[0]}
 
     Example Data:

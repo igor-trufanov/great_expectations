@@ -9,6 +9,7 @@ from great_expectations.expectations.expectation import (
     ColumnAggregateExpectation,
     render_suite_parameter_string,
 )
+from great_expectations.expectations.metadata_types import DataQualityIssues
 from great_expectations.render import (
     LegacyDescriptiveRendererType,
     LegacyRendererType,
@@ -56,8 +57,9 @@ SUPPORTED_DATA_SOURCES = [
     "Redshift",
     "BigQuery",
     "Snowflake",
+    "Databricks (SQL)",
 ]
-DATA_QUALITY_ISSUES = ["Cardinality"]
+DATA_QUALITY_ISSUES = [DataQualityIssues.UNIQUENESS.value]
 
 
 class ExpectColumnUniqueValueCountToBeBetween(ColumnAggregateExpectation):
@@ -108,7 +110,7 @@ class ExpectColumnUniqueValueCountToBeBetween(ColumnAggregateExpectation):
     See Also:
         [ExpectColumnProportionOfUniqueValuesToBeBetween](https://greatexpectations.io/expectations/expect_column_proportion_of_unique_values_to_be_between)
 
-    Supported Datasources:
+    Supported Data Sources:
         [{SUPPORTED_DATA_SOURCES[0]}](https://docs.greatexpectations.io/docs/application_integration_support/)
         [{SUPPORTED_DATA_SOURCES[1]}](https://docs.greatexpectations.io/docs/application_integration_support/)
         [{SUPPORTED_DATA_SOURCES[2]}](https://docs.greatexpectations.io/docs/application_integration_support/)
@@ -119,7 +121,7 @@ class ExpectColumnUniqueValueCountToBeBetween(ColumnAggregateExpectation):
         [{SUPPORTED_DATA_SOURCES[7]}](https://docs.greatexpectations.io/docs/application_integration_support/)
         [{SUPPORTED_DATA_SOURCES[8]}](https://docs.greatexpectations.io/docs/application_integration_support/)
 
-    Data Quality Category:
+    Data Quality Issues:
         {DATA_QUALITY_ISSUES[0]}
 
     Example Data:
@@ -175,14 +177,18 @@ class ExpectColumnUniqueValueCountToBeBetween(ColumnAggregateExpectation):
                 }}
     """  # noqa: E501
 
-    min_value: Optional[Comparable] = pydantic.Field(None, description=MIN_VALUE_DESCRIPTION)
-    max_value: Optional[Comparable] = pydantic.Field(None, description=MAX_VALUE_DESCRIPTION)
+    min_value: Optional[Comparable] = pydantic.Field(
+        default=None, description=MIN_VALUE_DESCRIPTION
+    )
+    max_value: Optional[Comparable] = pydantic.Field(
+        default=None, description=MAX_VALUE_DESCRIPTION
+    )
     strict_min: bool = pydantic.Field(
-        False,
+        default=False,
         description=STRICT_MIN_DESCRIPTION,
     )
     strict_max: bool = pydantic.Field(
-        False,
+        default=False,
         description=STRICT_MAX_DESCRIPTION,
     )
 

@@ -7,6 +7,7 @@ from great_expectations.expectations.expectation import (
     ColumnAggregateExpectation,
     render_suite_parameter_string,
 )
+from great_expectations.expectations.metadata_types import DataQualityIssues
 from great_expectations.expectations.model_field_descriptions import (
     COLUMN_DESCRIPTION,
     VALUE_SET_DESCRIPTION,
@@ -14,7 +15,14 @@ from great_expectations.expectations.model_field_descriptions import (
 from great_expectations.expectations.model_field_types import (
     ValueSetField,  # noqa: TCH001  # type needed in pydantic validation
 )
-from great_expectations.render import LegacyRendererType, RenderedStringTemplateContent
+from great_expectations.render import (
+    AtomicDiagnosticRendererType,
+    LegacyRendererType,
+    RenderedAtomicContent,
+    RenderedStringTemplateContent,
+    renderedAtomicValueSchema,
+)
+from great_expectations.render.renderer.observed_value_renderer import ObservedValueRenderState
 from great_expectations.render.renderer.renderer import renderer
 from great_expectations.render.renderer_configuration import (
     RendererConfiguration,
@@ -46,8 +54,9 @@ SUPPORTED_DATA_SOURCES = [
     "Redshift",
     "BigQuery",
     "Snowflake",
+    "Databricks (SQL)",
 ]
-DATA_QUALITY_ISSUES = ["Sets"]
+DATA_QUALITY_ISSUES = [DataQualityIssues.UNIQUENESS.value]
 
 
 class ExpectColumnDistinctValuesToContainSet(ColumnAggregateExpectation):
@@ -86,7 +95,7 @@ class ExpectColumnDistinctValuesToContainSet(ColumnAggregateExpectation):
         [ExpectColumnDistinctValuesToBeInSet](https://greatexpectations.io/expectations/expect_column_distinct_values_to_be_in_set)
         [ExpectColumnDistinctValuesToEqualSet](https://greatexpectations.io/expectations/expect_column_distinct_values_to_equal_set)
 
-    Supported Datasources:
+    Supported Data Sources:
         [{SUPPORTED_DATA_SOURCES[0]}](https://docs.greatexpectations.io/docs/application_integration_support/)
         [{SUPPORTED_DATA_SOURCES[1]}](https://docs.greatexpectations.io/docs/application_integration_support/)
         [{SUPPORTED_DATA_SOURCES[2]}](https://docs.greatexpectations.io/docs/application_integration_support/)
@@ -97,7 +106,7 @@ class ExpectColumnDistinctValuesToContainSet(ColumnAggregateExpectation):
         [{SUPPORTED_DATA_SOURCES[7]}](https://docs.greatexpectations.io/docs/application_integration_support/)
         [{SUPPORTED_DATA_SOURCES[8]}](https://docs.greatexpectations.io/docs/application_integration_support/)
 
-    Data Quality Category:
+    Data Quality Issues:
         {DATA_QUALITY_ISSUES[0]}
 
     Example Data:
@@ -359,3 +368,89 @@ class ExpectColumnDistinctValuesToContainSet(ColumnAggregateExpectation):
                 "details": {"value_counts": observed_value_counts},
             },
         }
+
+    @classmethod
+    @renderer(renderer_type=AtomicDiagnosticRendererType.OBSERVED_VALUE)
+    @override
+    def _atomic_diagnostic_observed_value(
+        cls,
+        configuration: Optional[ExpectationConfiguration] = None,
+        result: Optional[ExpectationValidationResult] = None,
+        runtime_configuration: Optional[dict] = None,
+    ) -> RenderedAtomicContent:
+        renderer_configuration: RendererConfiguration = RendererConfiguration(
+            configuration=configuration,
+            result=result,
+            runtime_configuration=runtime_configuration,
+        )
+        expected_param_prefix = "exp__"
+        expected_param_name = "expected_value"
+        ov_param_prefix = "ov__"
+        ov_param_name = "observed_value"
+
+        renderer_configuration.add_param(
+            name=expected_param_name,
+            param_type=RendererValueType.ARRAY,
+            value=renderer_configuration.kwargs.get("value_set", []),
+        )
+        renderer_configuration = cls._add_array_params(
+            array_param_name=expected_param_name,
+            param_prefix=expected_param_prefix,
+            renderer_configuration=renderer_configuration,
+        )
+
+        renderer_configuration.add_param(
+            name=ov_param_name,
+            param_type=RendererValueType.ARRAY,
+            value=result.get("result", {}).get("observed_value", []) if result else [],
+        )
+        renderer_configuration = cls._add_array_params(
+            array_param_name=ov_param_name,
+            param_prefix=ov_param_prefix,
+            renderer_configuration=renderer_configuration,
+        )
+
+        observed_value_set = set(
+            result.get("result", {}).get("observed_value", []) if result else []
+        )
+
+        observed_values = (
+            (name, sch)
+            for name, sch in renderer_configuration.params
+            if name.startswith(ov_param_prefix)
+        )
+        expected_values = (
+            (name, sch)
+            for name, sch in renderer_configuration.params
+            if name.startswith(expected_param_prefix)
+        )
+
+        template_str_list = []
+        for name, schema in observed_values:
+            renderer_configuration.params.__dict__[
+                name
+            ].render_state = ObservedValueRenderState.EXPECTED.value
+            template_str_list.append(f"${name}")
+
+        for name, schema in expected_values:
+            if schema.value not in observed_value_set:
+                renderer_configuration.params.__dict__[
+                    name
+                ].render_state = ObservedValueRenderState.MISSING.value
+                template_str_list.append(f"${name}")
+
+        renderer_configuration.template_str = " ".join(template_str_list)
+
+        value_obj = renderedAtomicValueSchema.load(
+            {
+                "template": renderer_configuration.template_str,
+                "params": renderer_configuration.params.dict(),
+                "meta_notes": renderer_configuration.meta_notes,
+                "schema": {"type": "com.superconductive.rendered.string"},
+            }
+        )
+        return RenderedAtomicContent(
+            name=AtomicDiagnosticRendererType.OBSERVED_VALUE,
+            value=value_obj,
+            value_type="StringValueType",
+        )

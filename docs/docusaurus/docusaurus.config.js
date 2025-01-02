@@ -44,10 +44,10 @@ module.exports = {
     announcementBar: {
       id: 'cta_bar',
       content:
-        '<a style="font-weight:600" href="https://hubs.li/Q02nK_ZH0">Get started with GX Cloud by joining our bi-weekly hands on workshop.</a>',
+          '<a style="font-weight:600" href="https://hubs.li/Q02nK_ZH0">Get started with GX Cloud by joining our bi-weekly hands on workshop.</a>',
       backgroundColor: '#141432',
       textColor: '#fff',
-      isCloseable: true,
+      isCloseable: false,
     },
     gxCard: {
       title: 'What is GX Cloud?',
@@ -155,6 +155,7 @@ module.exports = {
           to: 'docs/cloud/overview/gx_cloud_overview',
           position: 'right',
           className: 'non-versioned-section',
+          activeBaseRegex: `/cloud/`
         },
         {
           type: 'doc',
@@ -298,7 +299,7 @@ module.exports = {
           lastVersion: 'current',
           versions: {
             current: {
-              label: '1.2.3',
+              label: '1.2.6',
             },
             ['0.18']: {
               label: '0.18.21',

@@ -4,13 +4,13 @@ title: "Manage Expectations"
 description: Create and manage Expectations in GX Cloud.
 ---
 
-An Expectation is a verifiable assertion about your data. They make implicit assumptions about your data explicit, and they provide a flexible, declarative language for describing expected behavior. They can help you better understand your data and help you improve data quality. An Expectation Suite contains multiple Expectations.
+An Expectation is a verifiable assertion about your data. They make implicit assumptions about your data explicit, and they provide a flexible, declarative language for describing expected behavior. They can help you better understand your data and help you improve data quality.
 
 <!-- [//]: # (TODO: To learn more about Expectations, see Expectation.) -->
 
 ## Prerequisites
 
-- You have a [Data Asset](/cloud/data_assets/manage_data_assets.md#create-a-data-asset).
+- You have a [Data Asset](/cloud/data_assets/manage_data_assets.md).
 
 ## Available Expectations
 
@@ -100,6 +100,23 @@ When you select your `n` run count, and:
 
 ![GX Cloud dynamic parameters](./expectation_images/dynamic_parameters.png)
 
+## Expectation condition
+
+The Expectation condition is an optional field that applies to any Expectation validating row-level data. This condition allows you to filter your data so that only a specific subset of your Batch is validated. Rows will be validated only when the condition is true.
+
+You will need to select:
+
+1. A column to check the condition against.
+2. An operator that is used to compare the column against a parameter value.
+3. A parameter that will be compared against each row in the selected column.
+
+To clear the Expectation condition, click the clear button located on the right-hand side of the condition field.
+
+
+![GX Cloud Expectation condition field](./expectation_images/expectation_condition_field.png)
+
+
+![GX Cloud Expectation with condition](./expectation_images/expectation_with_condition.png)
 
 ## Add an Expectation
 
@@ -107,29 +124,34 @@ When you select your `n` run count, and:
 
 2. In the **Data Assets** list, click the Data Asset name.
 
-3. Click the **Expectations** tab.
+3. Click **New Expectation**.
 
-4. Click **New Expectation**.
+4. Select an Expectation type. See [Available Expectations](#available-expectations).
 
-5. Select an Expectation type. See [Available Expectations](#available-expectations).
+5. Complete the mandatory and optional fields for the Expectation. A recurring [validation schedule](/cloud/schedules/manage_schedules.md) will be applied automatically to your Expectation. 
 
-6. If you are adding your first expectation on this data asset, you may be able to select a time-based Batch interval for that asset.
+6. Click **Save** or click **Save & Add More** and then repeat steps 3 through 6 to add additional Expectations.
 
-   - A batch is a feature of the data asset, and allows you to validate your data incrementally. A batch interval can only be defined once per data asset; you cannot change it after setting it.
+7. Optional. Run a Validation. See [Run a Validation](/cloud/validations/manage_validations.md#run-a-validation).
 
-   - In order to be able to select a batch interval, the data asset must have at least one DATE or DATETIME column.
+:::tip Automate rules for schema change detection
+When you [create a new Data Asset](/cloud/data_assets/manage_data_assets.md#add-a-data-asset-from-an-existing-data-source), you can choose to automatically generate Expectations that detect column changes in that Data Asset.
+:::
 
-   - Select the **Entire table** tab to provide all Data Asset records to your Expectations and validations, or select the **Yearly**/**Monthly**/**Daily** tab to use subsets of Data Asset records for your Expectations and validations.
 
-   - Select **Yearly** to partition Data Asset records by year, select **Monthly** to partition Data Asset records by year and month, or select **Daily** to partition Data Asset records by year, month, and day.
+## Optional. Define a Batch
 
-   - **Batch column** - Select a name column from a prefilled list of DATE and DATETIME columns containing the date and time data.
+If your Data Asset has at least one DATE or DATETIME column, you can define a Batch to validate your data incrementally.
 
-7. Complete the mandatory and optional fields for the Expectation. A recurring validation schedule will be applied automatically to your Expectation, based on the settings of your Expectation Suite.
+1. In GX Cloud, click **Data Assets**.
 
-8. Click **Save** or click **Save & Add More** and then repeat steps 5 and 7 to add additional Expectations.
+2. In the **Data Assets** list, click the Data Asset name.
 
-9. Optional. Run a Validation. See [Run a Validation](/cloud/validations/manage_validations.md#run-a-validation).
+3. Click **Define batch**.
+
+4. Choose how to **Validate by**. Select the **Entire Asset** tab to provide all Data Asset records to your Expectations and validations, or select one of the **Year**/**Month**/**Day** tabs to use subsets of Data Asset records for your Expectations and validations. **Year** partitions Data Asset records by year, **Month** partitions Data Asset records by year and month, **Day** partitions Data Asset records by year, month, and day.
+
+5. Select the **Batch column** that contains the DATE or DATETIME data to partition on.
 
 ## Edit an Expectation
 
@@ -137,27 +159,11 @@ When you select your `n` run count, and:
 
 2. In the **Data Assets** list, click the Data Asset name.
 
-3. Click the **Expectations** tab.
+3. Click **Edit Expectation** for the Expectation that you want to edit.
 
-4. Click **Edit Expectation** for the Expectation that you want to edit.
+4. Edit the Expectation configuration.
 
-5. Edit the Expectation configuration.
-
-6. Click **Save**.
-
-## View Expectation history
-
-View the Expectation history to determine when an Expectation was changed and who made the change.
-
-1. In GX Cloud, click **Expectation Suites**.
-
-2. In the **Expectation Suites** list, click the Expectation Suite name.
-
-3. Click the **Change Log** tab.
-
-4. Optional. Select an Expectation in the **Columns** pane to view the change history for a specific Expectation.
-
-   The date, time, and email address of the users who created, edited, or deleted the Expectation appears below the Expectation name. Strikethrough text indicates an Expectation was deleted.
+5. Click **Save**.
 
 ## Delete an Expectation
 
@@ -165,12 +171,30 @@ View the Expectation history to determine when an Expectation was changed and wh
 
 2. In the **Data Assets** list, click the Data Asset name.
 
-3. Click the **Expectations** tab.
+3. Click **Delete Expectation** for the Expectation you want to delete.
 
-4. Click **Delete Expectation** for the Expectation you want to delete.
+4. Click **Yes, delete Expectation**.
 
-5. Click **Yes, delete Expectation**.
+## GX-managed vs. API-managed Expectations
 
-## Related documentation
+In GX Cloud, Expectations can be GX-managed or API-managed.
+- GX-managed Expectations are created through the GX Cloud UI.
+- API-managed Expectations are created with the API in a GX Cloud Data Context.
 
-- [Manage Expectation Suites](../expectation_suites/manage_expectation_suites.md)
+If you have both kinds of Expectations, they will be organized in separate tables on the **Expectations** tab as they have different capabilities in the Cloud UI. 
+
+Here is a comparison of key characteristics of GX-managed and API-managed Expectations. 
+
+| Characteristic     | GX-managed Expectation                                                                                                                                                                              | API-managed Expectation                                                                                                                                                                                                                                                                                                     |
+|--------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Edit               | [Edit parameters](/cloud/expectations/manage_expectations.md#edit-an-expectation) with the GX Cloud UI                                                                                              | [Edit parameters with the API](/reference/api/expectations/Expectation_class.mdx) or the GX Cloud UI                                                                                                                                                                                                                        |
+| Batch              | [Define a Batch](/cloud/expectations/manage_expectations.md#optional-define-a-batch) in the Cloud UI                                                                                                | Define a Batch with the API when connecting to [SQL](/core/connect_to_data/sql_data/sql_data.md#create-a-batch-definition), [filesystem](/core/connect_to_data/filesystem_data/filesystem_data.md#create-a-batch-definition), or [dataframe](/core/connect_to_data/dataframes/dataframes.md#create-a-batch-definition) data |
+| Validate           | [Run a Validation](/docs/cloud/validations/manage_validations.md#run-a-validation) through the Cloud UI or [run a Checkpoint](/core/trigger_actions_based_on_results/run_a_checkpoint.md) with the API | [Create a Validation Definition and run it](/core/run_validations/run_validations.md) with the API                                                                                                                                                                                                                          |
+| Validation Results | [Access results in the Validations tab](/cloud/validations/manage_validations.md#view-validation-run-history) of the Cloud UI                                                                       | [Access results with the API](/core/trigger_actions_based_on_results/choose_a_result_format/choose_a_result_format.md) or in the Validations tab of the Cloud UI                                                                                                                                                            |
+| Schedule           | Keep default schedule or [edit schedule](/cloud/schedules/manage_schedules.md) in the Cloud UI                                                                                                      | Not supported, use an [orchestrator](/cloud/connect/connect_airflow.md) to control recurring validations                                                                                                                                                                                                                    |
+| Expectation Suite  | Automatically organized in a hidden default Expectation Suite                                                                                                                                       | Manually grouped into [custom Expectation Suites](/core/define_expectations/organize_expectation_suites.md) via the API                                                                                                                                                                                                     |
+| Delete             | [Delete Expectation](/docs/cloud/expectations/manage_expectations/#delete-an-expectation) with the Cloud UI                                                                                         | [Delete Expectation with the API](/reference/api/ExpectationSuite_class.mdx#great_expectations.ExpectationSuite.delete_expectation) or the Cloud UI                                                                                                                                                                         |
+
+:::note Hidden resources for GX-managed Expectations
+To support GX-managed Expectations, we create resources that you typically won't directly interact with. For example, we create a GX-managed Expectation Suite that we use to organize your Expectations. For some workflows you may need to work with these hidden resources, for example, you may need to [find the name of an automatically created Checkpoint](/cloud/connect/connect_airflow.md#create-a-dag-file-for-your-gx-cloud-checkpoint). But, typically you can ignore the existence of these hidden resources. 
+:::
