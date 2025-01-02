@@ -208,7 +208,7 @@ class ValidationResultsPageRenderer(Renderer):
                 "collapse_toggle_link": "Show more info...",
                 "collapse": collapse_content_blocks,
                 "styling": {
-                    "body": {"classes": ["card", "card-body"]},
+                    "body": {"classes": ["card", "card-body", "show"]},
                     "classes": ["col-12", "p-1"],
                 },
             }
