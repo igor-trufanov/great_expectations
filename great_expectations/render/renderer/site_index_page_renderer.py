@@ -213,13 +213,6 @@ class SiteIndexPageRenderer(Renderer):
                 "filterControl": "select",
             },
             {
-                "field": "batch_identifier",
-                "title": "Batch ID",
-                "sortName": "_batch_identifier_sort",
-                "sortable": "true",
-                "filterControl": "input",
-            },
-            {
                 "field": "expectation_suite_name",
                 "title": "Expectation Suite",
                 "sortName": "_expectation_suite_name_sort",
