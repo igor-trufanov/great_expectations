@@ -301,10 +301,6 @@ class SiteIndexPageRenderer(Renderer):
             content_title = "Batch Kwargs"
             content = json.dumps(batch_kwargs, indent=2)
         else:
-            batch_reader_options = batch_spec.get("reader_options", None)
-            if batch_reader_options:
-                batch_reader_options.pop("sql", None)
-
             content_title = "Batch Spec"
             content = json.dumps(batch_spec, indent=2)
         return RenderedStringTemplateContent(
