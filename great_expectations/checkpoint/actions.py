@@ -500,6 +500,7 @@ class PagerdutyAlertAction(ValidationAction):
     client: Optional[str] = None
     client_url: Optional[str] = None
     custom_details: Optional[dict[str, str]] = {}
+    dedup_key_mode: Literal[0, 1] = 0
 
     @override
     def run(
@@ -508,13 +509,15 @@ class PagerdutyAlertAction(ValidationAction):
         success = checkpoint_result.success or False
         run_name = checkpoint_result.run_id.run_name
         checkpoint_name = checkpoint_result.checkpoint_config.name
+        dedup_key = checkpoint_name if self.dedup_key_mode == 0 else run_name
+
         summary = f"Great Expectations Checkpoint [{checkpoint_name}] run name [{run_name}] has "
         if success:
             summary += "succeeded"
         else:
             summary += "failed"
 
-        return self._run_pypd_alert(dedup_key=checkpoint_name, message=summary, success=success)
+        return self._run_pypd_alert(dedup_key=dedup_key, message=summary, success=success)
 
     def _run_pypd_alert(self, dedup_key: str, message: str, success: bool):
         if _should_notify(success=success, notify_on=self.notify_on):
