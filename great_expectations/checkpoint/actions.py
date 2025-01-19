@@ -509,7 +509,7 @@ class PagerdutyAlertAction(ValidationAction):
         success = checkpoint_result.success or False
         run_name = checkpoint_result.run_id.run_name
         checkpoint_name = checkpoint_result.checkpoint_config.name
-        dedup_key = checkpoint_name if self.dedup_key_mode == 0 else run_name
+        dedup_key = run_name if self.dedup_key_mode == 1 else checkpoint_name
 
         summary = f"Great Expectations Checkpoint [{checkpoint_name}] run name [{run_name}] has "
         if success:
